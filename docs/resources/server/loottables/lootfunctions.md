@@ -2,7 +2,7 @@
 
 战利品函数可用于修改[战利品条目][entry]的结果，或修改[战利品池][pool]、[战利品表][table]产生的多个结果。在这些情况下，会定义一个按顺序运行的函数列表。数据生成期间，可以通过调用 `#apply` 将战利品函数应用到 `LootPoolSingletonContainer.Builder<?>`、`LootPool.Builder` 和 `LootTable.Builder`。本文将介绍可用的战利品函数。要创建自定义战利品函数，请参阅[自定义战利品函数][custom]。
 
-:::note
+:::info
 战利品函数不能应用到复合战利品条目（`CompositeEntryBase` 的子类及其关联 builder 类），必须手动添加到每个单例条目。
 :::
 

@@ -83,7 +83,7 @@ public static void register(RegisterClientPayloadHandlersEvent event) {
     - 如果使用 `*ToClient` 方法，则需要通过 `RegisterClientPayloadHandlersEvent` 注册 payload 处理器，并传入 payload 类型和处理器。
     - 如果使用 `*Bidirectional` 方法，则两种方式都需要提供 payload 处理器。
 
-:::note
+:::info
 客户端 payload 处理器拥有自己的事件 `RegisterClientPayloadHandlersEvent`，目的是防止代码同时跨越逻辑[端和物理端][sides]。
 :::
 
@@ -132,7 +132,7 @@ public static void register(RegisterClientPayloadHandlersEvent event) {
 }
 ```
 
-:::note
+:::info
 一次 `executesOn` 调用之后注册的所有 payload，都会保持相同的线程执行位置，直到再次调用 `executesOn`。
 
 ```java

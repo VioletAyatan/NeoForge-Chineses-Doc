@@ -200,7 +200,7 @@ _另请参阅 [LivingEntity/自然生成][spawning]。_
 
 此生物群系修饰符类型向生物群系添加 Entity 生成。该修饰符接收要添加 Entity 生成的生物群系 id 或标签，以及要添加的 Entity 的 `SpawnerData`。每个 `SpawnerData` 包含 Entity id、生成权重，以及单次生成的 Entity 最小/最大数量。
 
-:::note
+:::info
 如果要添加新 Entity，请确保通过 `RegisterSpawnPlacementsEvent` 为其注册生成限制。生成限制用于让 Entity 安全地生成在表面或水中。如果不注册生成限制，Entity 可能生成在半空，随后坠落死亡。
 :::
 
@@ -328,7 +328,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 该修饰符接收要添加生成代价的生物群系 id 或标签、要为其添加生成代价的 Entity Type 的 `EntityType` id 或标签，以及 Entity 的 `MobSpawnSettings.MobSpawnCost`。`MobSpawnCost` 包含能量预算，用于根据每个已生成 Entity 提供的电荷，指示某个位置可生成的最大 Entity 数量。
 
-:::note
+:::info
 如果要添加新 Entity，请确保通过 `RegisterSpawnPlacementsEvent` 为其注册生成限制。
 :::
 

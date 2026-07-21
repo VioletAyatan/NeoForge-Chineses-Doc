@@ -54,7 +54,7 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 }
 ```
 
-:::note
+:::info
 
 如果 BER 中不需要 provider context，也可以移除构造器：
 

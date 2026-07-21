@@ -22,7 +22,7 @@
 - `DifferenceIngredient.of(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.PLANKS)), Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.NON_FLAMMABLE_WOOD)))` 返回一个 Ingredient，它匹配第一个 Ingredient 中所有不同时匹配第二个 Ingredient 的内容。此示例只匹配可燃烧的木板（即绯红木板、诡异木板和 mod 添加的下界木板之外的所有木板）。
 - `IntersectionIngredient.of(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.PLANKS)), Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ItemTags.NON_FLAMMABLE_WOOD)))` 返回一个 Ingredient，它匹配同时符合两个子 Ingredient 的所有内容。此示例只匹配不可燃烧的木板（即绯红木板、诡异木板和 mod 添加的下界木板）。
 
-:::note
+:::info
 如果在数据生成中使用的 Ingredient 会接收表示标签实例的 `HolderSet`（即调用 `Registry#getOrThrow` 的那些 Ingredient），则应通过 `HolderLookup.Provider` 获取该 `HolderSet`：先使用 `HolderLookup.Provider#lookupOrThrow` 获取 Item Registry，再以 `TagKey` 调用 `HolderGetter#getOrThrow` 获取 HolderSet。
 :::
 

@@ -28,7 +28,7 @@
 
 如果还想进一步修改构建流程，可以编辑 `build.gradle` 和 `settings.gradle` 文件。NeoForge 提供的 Gradle 插件（[ModDevGradle][mdg] 或 [NeoGradle][ng]）提供了多种配置选项，其中一些已在构建脚本中通过注释加以说明。
 
-:::caution
+:::warning
 只有在清楚自己正在做什么的情况下，才应编辑 `build.gradle` 和 `settings.gradle` 文件。所有基本属性都可以通过 `gradle.properties` 设置。
 :::
 

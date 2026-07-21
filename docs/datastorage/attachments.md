@@ -4,7 +4,7 @@
 
 _若要存储额外的 Level 数据，也可以使用[数据存档][saveddata]。_
 
-:::note
+:::info
 用于 ItemStack 的数据附件已由原版[数据组件][datacomponents]取代。
 :::
 
@@ -175,7 +175,7 @@ public static final Supplier<AttachmentType<ExampleData>> WITH_PREDICATE = ATTAC
 );
 ```
 
-:::note
+:::info
 使用 `StreamCodec` 重载意味着每次都会同步整个数据附件，并忽略客户端上已有的任何数据。
 :::
 

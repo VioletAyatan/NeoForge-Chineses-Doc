@@ -126,7 +126,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 );
 ```
 
-:::note
+:::info
 如果把已注册 Block 保存在独立类中，应先加载 Block 类，再加载 Item 类。
 :::
 
@@ -206,7 +206,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ### 现有创造模式标签页
 
-:::note
+:::info
 此方法用于把 Item 添加到 Minecraft 或其他模组的标签页。要把 Item 添加到自己的标签页，请参见下文。
 :::
 

@@ -95,7 +95,7 @@ Datagen 通过 Data 运行配置执行，该配置会与 Client 和 Server 运�
 
 它有两个按[**物理端**][physicalside]运行的子类型：`GatherDataEvent.Client` 和 `GatherDataEvent.Server`。`GatherDataEvent.Client` 可以包含所有要生成的 Provider。另一方面，`GatherDataEvent.Server` 只能包含用于生成 Data Pack 条目的 Provider。
 
-:::note
+:::info
 Provider 有两种推荐注册方式。第一种是全部注册到 `GatherDataEvent.Client`，并使用 `runClientData` 任务生成数据。第二种是把客户端 Provider 注册到 `GatherDataEvent.Client`，把服务端 Provider 注册到 `GatherDataEvent.Server`，再分别运行 `runClientData` 和 `runServerData` 任务生成它们。
 
 由于 MDK 通过设置默认 `clientData` 配置采用第一种方案，下面所有示例也会使用第一种方案，将所有 Provider 注册到 `GatherDataEvent.Client`。

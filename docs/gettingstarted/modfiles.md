@@ -61,7 +61,7 @@ com
 
 `neoforge.mods.toml` 可分为三部分：与模组文件关联的非模组特定属性；每个模组各有一节的模组属性；以及每个模组依赖项各有一节的依赖配置。`neoforge.mods.toml` 文件中的某些属性是必填项；必填属性必须指定值，否则会抛出异常。
 
-:::note
+:::info
 在默认 MDK 中，Gradle 会使用 `gradle.properties` 文件中指定的值替换此文件内的多个属性。例如，`license="${mod_license}"` 这一行表示 `license` 字段会替换为 `gradle.properties` 中的 `mod_license` 属性。对于这样替换的值，应在 `gradle.properties` 中修改，而不是在这里修改。
 :::
 
@@ -80,7 +80,7 @@ com
 | `properties`         | table    | `{}`           | 替换属性表。`StringSubstitutor` 使用它将 `${file.<key>}` 替换为对应值。                                                                                                                                                                                                                    | `properties={"example"="1.2.3"}`（随后可通过 `${file.example}` 引用） |
 | `issueTrackerURL`    | string   | _无_      | 表示模组问题报告和跟踪位置的 URL。                                                                                                                                                                                                                                                                            | `"https://github.com/neoforged/NeoForge/issues"`                               |
 
-:::note
+:::info
 `services` 属性在功能上等同于在模块中指定 [`uses` 指令][uses]，它允许[加载给定类型的 Service][serviceload]。
 
 也可以在 `src/main/resources/META-INF/services` 文件夹内的 Service 文件中定义它，其中，文件名是 Service 的完全限定名称，文件内容则是要加载的 Service 名称（另请参阅 [AtlasViewer 模组中的此示例][atlasviewer]）。
@@ -236,7 +236,7 @@ public class ExampleModClient {
 }
 ```
 
-:::note
+:::info
 `neoforge.mods.toml` 中的条目不必有对应的 `@Mod` 注解。同样，一个 `neoforge.mods.toml` 条目可以有多个 `@Mod` 注解，例如需要分离通用逻辑与仅客户端逻辑时。
 :::
 

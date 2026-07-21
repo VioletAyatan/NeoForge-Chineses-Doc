@@ -124,7 +124,7 @@ public final class ExampleResource implements Resource {
 }
 ```
 
-:::note
+:::info
 尽管 `Resource` 可用于 primitive，但并非严格必需（例如 energy 没有 `Resource`，因为它由 `long` 提供底层支持）。不过，这确实需要自行重新实现部分 Resource 行为，因为[下文所述的处理器系统][handler]要求使用 `Resource`。
 :::
 
@@ -176,7 +176,7 @@ FluidStacksResourceHandler fluidStorage = new FluidStacksResourceHandler(
 );
 ```
 
-:::note
+:::info
 如果计划将某个 `StacksResourceHandler` 用作物品栏，强烈建议覆盖 `onContentsChanged`，以处理磁盘写入或网络同步。
 
 ```java

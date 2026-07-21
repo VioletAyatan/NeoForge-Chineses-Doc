@@ -111,7 +111,7 @@ OBJ Model Loader 允许在游戏中使用 Wavefront `.obj` 3D Model，使 Model 
 - Bake Model 时，调用 `UnbakedGeometry#bake`，返回 `QuadCollection`。
 - 渲染 Model 时，使用 `QuadCollection` 以及[客户端 Item][citems] 或 [BlockState Definition][blockstatedefinition] 所需的其他信息进行渲染。
 
-:::note
+:::info
 如果要为 Item 或 BlockState 使用的 Model 创建自定义 Model Loader，根据用例，创建新的 `ItemModel` 或 `BlockStateModel` 可能更好。例如，使用或生成 `QuadCollection` 的 Model 更适合作为 `ItemModel` 或 `BlockStateModel`，而解析其他数据格式（例如 `.obj`）的 Model 应使用新的 Model Loader。
 :::
 

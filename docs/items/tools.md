@@ -103,7 +103,7 @@ public static final DeferredItem<Item> COPPER_SPEAR = ITEMS.registerItem(
 );
 ```
 
-:::note
+:::info
 `tool` 还接受两个额外参数：表示哪些 Block 可被挖掘的 `TagKey`，以及 blocker（例如盾牌）被命中后禁用的秒数。
 :::
 
@@ -161,7 +161,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 
 `Tool` 包含 `Tool.Rule` 列表、持有工具时的默认挖掘速度（默认为 `1`），以及挖掘 Block 时工具应承受的伤害值（默认为 `1`）。`Tool.Rule` 包含三项信息：要应用 rule 的 Block `HolderSet`、挖掘该集合中 Block 的可选速度，以及用于判断这些 Block 能否由此工具产生掉落物的可选 boolean。如果未设置可选项，就继续检查其他 rule。如果所有 rule 都失败，默认行为是使用默认挖掘速度，且 Block 无法产生掉落物。
 
-:::note
+:::info
 可以通过 `Registry#getOrThrow` 从 `TagKey` 创建 `HolderSet`。
 :::
 

@@ -29,7 +29,7 @@ public class ExampleSavedData extends SavedData {
 
 所有缺失目录都会自动创建，包括标识符本身所包含的目录。
 
-:::note
+:::info
 构造器还可接收第四个参数 `DataFixTypes`。不过 NeoForge 不支持数据修复器，因此所有原版用法都已经过修补，允许使用 null 值。
 :::
 

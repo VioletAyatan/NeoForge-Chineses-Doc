@@ -122,7 +122,7 @@ Codec         | Java 类型
 
 Minecraft 和 NeoForge 为经常需要编码与解码的对象定义了许多 codecs。例如：`Identifier` 使用 `Identifier#CODEC`，`DateTimeFormatter#ISO_INSTANT` 格式的 `Instant` 使用 `ExtraCodecs#INSTANT_ISO8601`，`CompoundTag` 使用 `CompoundTag#CODEC`。
 
-:::caution
+:::warning
 `CompoundTag` 无法通过 `JsonOps` 解码 JSON 中的数字列表。`JsonOps` 在转换时会把数字设为能够容纳它的最窄类型，而 `ListTag` 会强制其数据使用某一种特定类型，因此类型不同的数字（例如 `64` 会是 `byte`，`384` 会是 `short`）将在转换时抛出错误。
 :::
 
@@ -369,7 +369,7 @@ public static final Codec<Map<String, BlockPos>> MAP_CODEC = Codec.unboundedMap(
 
 使用无界 map codec 解码得到的 Map 对象会存储在**不可变** map 中。如果需要可变 map，应对该 map codec 应用[转换器][transformer]。
 
-:::caution
+:::warning
 无界 maps 只支持能够编码为字符串、或从字符串解码得到的键。可以使用键值[对][pair]组成的 list codec 绕过这一限制。
 :::
 

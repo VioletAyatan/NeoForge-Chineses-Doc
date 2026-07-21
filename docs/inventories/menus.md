@@ -23,7 +23,7 @@ public MyMenu(int containerId, Inventory playerInv) {
 }
 ```
 
-:::note
+:::info
 Container identifier 对单个玩家而言是唯一的。这意味着两个不同玩家上的相同 Container id 表示两个不同菜单，即使他们查看的是同一个数据 holder。
 :::
 
@@ -49,7 +49,7 @@ public MyMenuExtra(int containerId, Inventory playerInv, FriendlyByteBuf extraDa
 
 所有菜单都扩展自 `AbstractContainerMenu`。菜单接受两个参数：表示菜单自身类型的 [`MenuType`][mt]，以及表示当前访问者所用菜单唯一 identifier 的 Container id。
 
-:::note
+:::info
 菜单 identifier 在 0–99 之间循环，每当玩家打开菜单时递增。
 :::
 
@@ -67,7 +67,7 @@ public MyMenu(int containerId, Inventory playerInventory, /* Any additional para
 }
 ```
 
-:::note
+:::info
 如果菜单中不需要显示额外数据，只需一个构造器。
 :::
 
@@ -109,7 +109,7 @@ Minecraft 默认支持两种数据同步形式：通过 `Slot` 同步 [`ItemStac
 
 与 Slot 一样，每次初始化新菜单时都应重新创建它们。
 
-:::note
+:::info
 尽管 `DataSlot` 存储整数，但由于通过网络发送值的方式，它实际上被限制为 **short**（-32768 到 32767）。整数的高 16 bit 会被忽略。
 
 NeoForge 对 packet 进行了 patch，以向客户端提供完整整数。
@@ -325,7 +325,7 @@ public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
 
 注册 MenuType、完成菜单本身并附加 [screen][screen] 后，玩家即可打开菜单。在逻辑服务端对玩家调用 `IPlayerExtension#openMenu` 可以打开菜单。该方法接受服务端菜单的 `MenuProvider`；如果需要向客户端同步额外数据，还可选择接受 `Consumer<RegistryFriendlyByteBuf>`。
 
-:::note
+:::info
 只有当 MenuType 使用 [`IContainerFactory`][icf] 创建时，才应使用带 `Consumer<RegistryFriendlyByteBuf>` 参数的 `IPlayerExtension#openMenu`。
 :::
 
@@ -371,7 +371,7 @@ public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos 
 }
 ```
 
-:::note
+:::info
 这是实现逻辑最简单的方式，并不是唯一方式。如果只希望 Block 在特定条件下打开菜单，就需要事先将一些数据同步到客户端，以便条件不满足时返回 `InteractionResult#PASS` 或 `#FAIL`。
 :::
 
@@ -394,7 +394,7 @@ public class MyMob extends Mob implements MenuProvider {
 }
 ```
 
-:::note
+:::info
 同样，这是实现逻辑最简单的方式，并不是唯一方式。
 :::
 

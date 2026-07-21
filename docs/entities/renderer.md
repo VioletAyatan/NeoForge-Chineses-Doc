@@ -155,7 +155,7 @@ graph LR;
 
 为此，首先需要可供提交的 Model。我们使用 `Model` 类。`Model` 本质上是供 Renderer 使用的 Cube 及关联纹理列表。通常会在首次创建 Entity Renderer 的构造器时，以静态方式创建它。
 
-:::note
+:::info
 由于现在处理的是 `LivingEntityRenderer`，以下代码假定 `MyEntity extends LivingEntity` 且 `MyEntityRenderState extends LivingEntityRenderState`，以满足泛型类型边界。
 :::
 

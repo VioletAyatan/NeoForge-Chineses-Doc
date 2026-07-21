@@ -50,7 +50,7 @@ NeoForge 添加的 `ExtendedModelTemplate` 可以通过 `ExtendedModelTemplateBu
 
 有了 `ModelTemplate` 后，可以调用某个 `ModelTemplate#create*` 方法生成 Model 本身。虽然各 create 方法接收不同参数，但本质上都接收表示文件名的 `Identifier`、将 `TextureSlot` 映射到相对于 `textures` 目录的某个 `Identifier` 的 `TextureMapping`，以及作为 `BiConsumer<Identifier, ModelInstance>` 的 Model Output。随后，该方法实际创建用于生成 Model 的 `JsonObject`；如果提供任何重复项，则抛出错误。
 
-:::note
+:::info
 调用基础 `create` 方法不会应用已保存的后缀。只有接收 Block 或 Item 的 `create*` 方法才会应用。
 :::
 
@@ -125,7 +125,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 要实际生成 Blockstate 和 Block Model 文件，可以在 `ModelProvider#registerModels` 中调用 `BlockModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给 Blockstate 文件的 `blockStateOutput`、非简单客户端 Item 的 `itemModelOutput`，以及 Model JSON 的 `modelOutput`。
 
-:::note
+:::info
 如果为 Block 注册了关联 `BlockItem`，但没有生成客户端 Item，`ModelProvider` 会自动生成客户端 Item，并使用默认 Block Model 位置 `assets/<namespace>/models/block/<path>.json` 作为其 Model。
 :::
 

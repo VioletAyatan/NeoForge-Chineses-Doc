@@ -1202,7 +1202,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 首先是 `SpecialModelRenderer`。它的工作方式与其他 Renderer 类（例如 BlockEntity Renderer、Entity Renderer）类似，应接收提交过程中使用的静态数据（例如 `Model` 子类、纹理的 `SpriteId` 等）。需要注意两个方法。第一个是 `extractArgument`，它只提供 `ItemStack` 中的必要内容，从而限制 `submit` 方法可用的数据量。
 
-:::note
+:::info
 如果不确定需要哪些数据，可以直接让它返回相应 `ItemStack`。如果完全不需要 Stack 数据，则可使用已经替你实现该方法的 `NoDataSpecialModelRenderer`。
 :::
 
@@ -1347,7 +1347,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以在运行时重新设置自身纹理，以匹配所装流体。
 
-:::note
+:::info
 要把 Fluid Tint 应用于流体纹理，相应 Item 必须附加 `Capabilities.FluidHandler.ITEM`。如果 Item 没有直接使用 `BucketItem`（也不是其子类型），就需要[为 Item 注册 Capability][capability]。
 :::
 
@@ -1463,7 +1463,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 `ItemStackRenderState` 跟踪绘制所用数据。每个“Model”都有自己的 `ItemStackRenderState.LayerRenderState`，其中包含待渲染的 `BakedQuad`，以及 Render Type、Foil 状态、Tint 信息、Animated 标记、Extents 和所用 Special Renderer。使用 `newLayer` 创建 Layer，使用 `clear` 清除以便渲染。如果使用预先确定数量的 Layer，则用 `ensureCapacity` 确保存在足够的 `LayerRenderStates` 正确渲染。
 
-:::note
+:::info
 [Screen][screens] 使用子类 `TrackingItemStackRenderState` 保存 Model Identity Element，以便跨 Frame 缓存 Render State。
 :::
 

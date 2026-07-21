@@ -2,7 +2,7 @@
 
 `.mcmeta` 文件扩展名可用于保存游戏中任何 Asset 或 Data 对象的 JSON Metadata。它最常用于定义 Pack 信息以及纹理的应用方式；不过，只要在文件名末尾加上 `.mcmeta`，任何文件都可以使用它（例如，`apple.png` 的资源 Metadata 为 `apple.png.mcmeta`）。
 
-:::note
+:::info
 虽然 Data Pack 中的 JSON 对象可以拥有资源 Metadata，但它不会被使用，因为 Metadata 可以直接放在 JSON 文件本身中。
 :::
 
@@ -24,7 +24,7 @@ JSON Metadata 对象划分为多个 Section，其中键表示 Section 类型，�
 | `texture`                        | `TextureMetadataSection`                                      | `.png.mcmeta`（纹理） | [纹理][texture]                                           |
 | `villager`                       | `VillagerMetadataSection`                                     | `.png.mcmeta`（纹理） | Villager 帽子可见性                                       |
 
-:::note
+:::info
 主模组 `pack.mcmeta` 不需要 `PackMetadataSection`，因为 NeoForge 会以合成方式生成它。不过，通过 [`AddPackFindersEvent` 模组总线事件][events]添加的任何捆绑 Pack 都需要它。
 :::
 

@@ -6,7 +6,7 @@ Minecraft 提供了调试分析器（Debug Profiler），它会收集系统数�
 
 调试分析器的使用非常简单。按下调试快捷键 `F3 + L` 即可启动。它会在 10 秒后自动停止，也可以再次按下该快捷键提前停止。
 
-:::note
+:::info
 显然，你只能分析实际执行到的代码路径。要让希望分析的 [`Entity`][entity] 和 [`BlockEntity`][blockentity] 出现在结果中，它们必须实际存在于 Level 中。
 :::
 

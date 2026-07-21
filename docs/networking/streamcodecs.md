@@ -22,7 +22,7 @@ exampleStreamCodec.encode(buffer, exampleObject);
 ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 ```
 
-:::note
+:::info
 除非手动处理缓冲区对象，否则通常不会直接调用 `encode` 和 `decode`。
 :::
 
@@ -64,7 +64,7 @@ ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 
 `VAR_INT` 与 `VAR_LONG` 是尽可能以最小大小编码数值的流编解码器。其做法是每次编码七位，并用最高位标记该数值是否还有更多数据。对于 int，0 到 2^28-1 之间的数值所需字节数小于或等于普通 int；对于 long，0 到 2^56-1 之间的数值所需字节数小于或等于普通 long。如果数值通常位于这些范围内，且大多接近范围下端，就应使用这些可变流编解码器。
 
-:::note
+:::info
 `VAR_INT` 与 `VAR_LONG` 分别是 `INT` 与 `LONG` 的替代方案。
 :::
 
@@ -324,7 +324,7 @@ public static final StreamCodec<RegistryFriendlyByteBuf, Holder<SoundEvent>> STR
     );
 ```
 
-:::note
+:::info
 对于未同步的自定义 Registry，只有当 Holder 不是直接引用时，`holder` 才会抛出异常。
 :::
 

@@ -75,7 +75,7 @@ public static final Supplier<SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.register(
 );
 ```
 
-:::note
+:::info
 请注意，少数位置明确要求 `Holder` 或 `DeferredHolder`，而不接受任意 `Supplier`。如果需要这两种类型之一，最好按需要把 `Supplier` 类型改回 `Holder` 或 `DeferredHolder`。
 :::
 
@@ -149,7 +149,7 @@ for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entryS
 }
 ```
 
-:::note
+:::info
 查询操作始终使用 Vanilla `Registry`，而不是 `DeferredRegister`。这是因为 `DeferredRegister` 只是注册工具。
 :::
 

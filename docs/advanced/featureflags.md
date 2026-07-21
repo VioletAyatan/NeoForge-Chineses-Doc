@@ -150,7 +150,7 @@ server.getWorldData().enabledFeatures();
 
 要验证任意 `FeatureFlagSet` 是否启用，可以把已启用功能传给 `FeatureFlagSet#isSubsetOf`；要验证特定 `FeatureElement` 是否启用，可以调用 `FeatureElement#isEnabled`。
 
-:::note
+:::info
 `ItemStack` 有一个特殊的 `isItemEnabled(FeatureFlagSet)` 方法。这样，即使作为基础的 `Item` 所需功能与已启用功能不匹配，空 Stack 仍会被视为已启用。建议尽可能优先使用此方法，而不是 `Item#isEnabled`。
 :::
 
@@ -166,7 +166,7 @@ _另请参阅：[Resource Pack](../resources/index.md#assets)、[Data Pack](../r
 
 Feature Pack 是一种不仅能加载资源和/或数据，还能开启一组指定 Feature Flag 的 Pack。这些 Flag 定义在该 Pack 根目录的 `pack.mcmeta` JSON 文件中，其格式如下：
 
-:::note
+:::info
 此文件不同于模组 `resources/` 目录中的文件。它定义了一个全新的 Feature Pack，因此必须位于自己的文件夹中。
 :::
 
@@ -247,7 +247,7 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 
 此时游戏会警告你新选中的所有实验性功能，以及可能出现的缺陷、问题和崩溃。可以单击 `Proceed` 确认这些更改，也可以单击 `Details` 查看所有已选 Pack 及其将启用功能的完整列表。
 
-:::note
+:::info
 外部 Feature Pack 不会显示在 Experiments 界面中。Experiments 界面只显示内置 Feature Pack。
 
 如果要在启用后禁用外部 Feature Pack，请返回 Data Pack 界面，把外部 Pack 从 `Selected` 移回 `Available`。

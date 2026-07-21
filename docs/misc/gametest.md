@@ -662,7 +662,7 @@ public static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHe
 `#succeedWhen`       | 每个 tick 都测试所提供的 `Runnable`，直到超时；如果某个 tick 上的检查未抛出 `GameTestAssertException`，则成功。
 `#succeedOnTickWhen` | 在指定 tick 测试所提供的 `Runnable`；如果未抛出 `GameTestAssertException`，则成功。如果 `Runnable` 在其他任何 tick 成功，则标记为失败。
 
-:::caution
+:::warning
 GameTest 会在每个 tick 执行，直到测试标记为成功。因此，在给定 tick 调度成功的方法必须注意：在之前的每个 tick 上始终失败。
 :::
 
@@ -1027,7 +1027,7 @@ public static void registerTests(RegisterGameTestsEvent event) {
 | `runthese`   | 运行玩家 200 个 Block 范围内的测试。                  |
 | `runfailed`  | 运行上次执行中失败的所有测试。                        |
 
-:::note
+:::info
 Subcommand 跟在 test 命令之后：`/test <subcommand>`。
 :::
 

@@ -83,7 +83,7 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
 
 更多文档请参阅 `BlockBehaviour.Properties` 源码。如需更多示例或查看 Minecraft 使用的值，请查看 `Blocks` 类。
 
-:::note
+:::info
 务必理解：世界中的 Block 与物品栏中的内容并不是同一种东西。物品栏中看似 Block 的对象实际上是 `BlockItem`，它是一种特殊 [Item][item]，使用时会放置 Block。这也意味着创造模式物品栏标签页、最大堆叠数量等内容由相应 `BlockItem` 处理。
 
 `BlockItem` 必须与 Block 分开注册。这是因为 Block 不一定需要 Item，例如本就不应被收集的 Block（火就是一例）。
@@ -156,7 +156,7 @@ public static final Supplier<MapCodec<ComplexBlock>> COMPLEX_CODEC = REGISTRAR.r
 );
 ```
 
-:::note
+:::info
 尽管 Block type 目前基本没有使用，但随着 Mojang 继续转向以 Codec 为中心的结构，预计它将变得更加重要。
 :::
 

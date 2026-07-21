@@ -156,7 +156,7 @@ public class MyBlockEntity extends BaseContainerBlockEntity {
 
 请记住，此类同时是 `BlockEntity` 与 `Container`。这意味着可以将其用作 BlockEntity 的 supertype，从而得到带有预实现 Container 的可用 BlockEntity。
 
-:::note
+:::info
 实现 `Container` 的 `BlockEntity` 默认会处理其内容的掉落。如果选择不实现 `Container`，则需要自行处理[移除逻辑][beremove]。
 :::
 

@@ -113,7 +113,7 @@ Direction direction = endPortalFrameBlockState.getValue(EndPortalFrameBlock.FACI
 endPortalFrameBlockState = endPortalFrameBlockState.setValue(EndPortalFrameBlock.FACING, Direction.SOUTH);
 ```
 
-:::note
+:::info
 `BlockState` 是 immutable 的。这意味着调用 `#setValue(Property<T>, T)` 时，实际上并未修改 BlockState；内部会执行查找，并返回你所请求的 BlockState 对象，即具有这些确切 property 值、唯一存在的对象。这也意味着，仅调用 `state#setValue` 而不将结果保存到变量中（例如重新赋给 `state`）不会产生任何效果。
 :::
 

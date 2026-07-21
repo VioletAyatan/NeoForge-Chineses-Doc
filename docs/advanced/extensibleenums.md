@@ -120,7 +120,7 @@ public class MyEnumParams {
 - 如果枚举会通过网络发送，则应添加 `@NetworkedEnum` 注解，并通过注解参数指定允许在哪个方向发送值（clientbound、serverbound 或 bidirectional）
 - 如果枚举中存在模组无法使用的构造器（例如它们要求提供 Registry 对象，而该枚举可能在模组注册开始前就已初始化），就应为这些构造器添加 `@ReservedConstructor` 注解
 
-:::note
+:::info
 如果确实有任何条目被添加到枚举中，`getExtensionInfo` 方法会在运行时经过转换，提供动态生成的 `ExtensionInfo`。
 :::
 

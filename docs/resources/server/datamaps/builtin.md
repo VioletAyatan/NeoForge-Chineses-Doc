@@ -135,7 +135,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 }
 ```
 
-:::note
+:::info
 自定义 Block 必须实现 `WeatheringCopperFullBlock` 或 `WeatheringCopper`，并在 `randomTick` 中调用 `changeOverTime`，才能自然氧化。
 :::
 

@@ -2,7 +2,7 @@
 
 当 [BlockState][blockstate] 不适合时，BlockEntity 可在 [Block][block] 上存储数据。尤其是对于物品栏这种具有非有限数量选项的数据。BlockEntity 固定不动并绑定到 Block，但除此之外与 [Entity][entities] 有许多相似之处，名称也由此而来。
 
-:::note
+:::info
 如果你的 Block 只有数量有限且相对较少（最多几百种）的可能状态，可以考虑改用 [BlockState][blockstate]。
 :::
 
@@ -44,7 +44,7 @@ public static final Supplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY = B
 );
 ```
 
-:::note
+:::info
 请记住，必须把 `DeferredRegister` 注册到 [模组事件总线][modbus]！
 :::
 
@@ -267,7 +267,7 @@ public class MyBlockEntity extends BlockEntity {
 
 使用专用更新 packet 后，可以在任何需要的时候自行发送 packet。这是用途最广泛、但也最复杂的变体，因为它需要设置网络处理器。可以使用 `PacketDistrubtor#sendToPlayersTrackingChunk` 向所有正在追踪该 BlockEntity 的玩家发送 packet。更多信息请参阅[网络][networking]章节。
 
-:::caution
+:::warning
 执行安全检查十分重要，因为消息到达玩家时，`BlockEntity` 可能已被销毁或替换。还应通过 `Level#hasChunkAt` 检查 chunk 是否已加载。
 :::
 

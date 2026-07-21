@@ -106,7 +106,7 @@
 return InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.APPLE));
 ```
 
-:::note
+:::info
 通常绝不应在同一方法中同时使用 `SUCCESS` 与 `SUCCESS_SERVER`。如果客户端有足够信息判断何时挥手，就应始终使用 `SUCCESS`。否则，如果判断依赖客户端没有的服务端信息，就应使用 `SUCCESS_SERVER`。
 :::
 

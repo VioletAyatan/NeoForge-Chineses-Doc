@@ -182,7 +182,7 @@ protected void loadAdditional(ValueInput input) {
 
 `Codec` 通过 `ValueOutput#list` 为数据对象提供 list 形式。该方法接收键和某个 `Codec`，并返回 `ValueOutput.TypedOutputList`。`TypedOutputList` 与 `ValueOutputList` 类似，但它直接操作数据对象，而不是再使用一个 Value I/O。可以通过 `TypedOutputList#add` 向 list 添加元素。类似地，可以使用 `ValueInput#list` 或 `listOrEmpty` 读取 list，并得到 `TypedValueInput`。
 
-:::note
+:::info
 `TypedValueOutput` / `TypedValueInput` 与 `Codec#listOf` 的主要区别在于错误处理方式。对于 `Codec#listOf`，只要一个条目失败，整个对象都会被标记为错误的 `DataResult`；Typed Value I/O 通常通过 `ProblemReporter` 处理错误。在原版中，由于 `ProblemReporter` 是在创建 Value I/O 时指定的，`Codec#listOf` 提供了更高的灵活性。不过，自定义 Value I/O 可以根据使用场景选择任一方式。
 :::
 

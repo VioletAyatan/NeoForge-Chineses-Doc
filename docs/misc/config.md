@@ -11,7 +11,7 @@
 `build`      | 创建 `ModConfigSpec`。
 `configure`  | 创建一个 pair，其中包含保存配置值的类和 `ModConfigSpec`。
 
-:::note
+:::info
 `ModConfigSpec.Builder#configure` 通常与 `static` 块以及一个构造器接收 `ModConfigSpec.Builder` 的类配合使用，用于附加并保存值：
 
 ```java
@@ -82,7 +82,7 @@ private ExampleConfig(ModConfigSpec.Builder builder) {
         - 配置值允许的最小值和最大值。
         - 表示配置值数据类型的类。
 
-:::note
+:::info
 `DoubleValue`、`IntValue` 和 `LongValue` 都是范围值，分别把类指定为 `Double`、`Integer` 和 `Long`。
 :::
 
@@ -171,7 +171,7 @@ NeoForge 在其代码库中记录了[配置类型][type]。
 
 每当配置被加载、重新加载或卸载时，可以分别使用 `ModConfigEvent.Loading`、`ModConfigEvent.Reloading` 和 `ModConfigEvent.Unloading` 事件执行操作。这些事件必须[注册][events]到模组事件总线。
 
-:::caution
+:::warning
 这些事件会针对模组的所有配置调用；应使用事件提供的 `ModConfig` 对象判断正在加载或重新加载的是哪个配置。
 :::
 

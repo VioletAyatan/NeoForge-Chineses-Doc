@@ -12,7 +12,7 @@
 
 与 `DataComponentType` 关联的组件值必须实现 `hashCode` 与 `equals`，存储后应视为 **immutable**。
 
-:::note
+:::info
 使用 record 可以很容易地实现组件值。Record 字段是 immutable 的，并且会实现 `hashCode` 与 `equals`。
 :::
 

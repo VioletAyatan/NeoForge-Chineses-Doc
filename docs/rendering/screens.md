@@ -18,7 +18,7 @@ GUI 渲染分两个阶段进行：提交阶段与渲染阶段。
 
 有关如何将坐标相对化的信息，请参阅 [Screen][screen] 一节。
 
-:::caution
+:::warning
 如果使用固定坐标或错误缩放 Screen，渲染出的对象可能显得异常或位置错误。检查坐标是否正确相对化的简单方法，是点击视频设置中的“GUI 缩放”按钮。确定 GUI 的渲染缩放比例时，会用该值除以显示器的宽度和高度。
 :::
 
@@ -206,7 +206,7 @@ graphics.submitGuiElementRenderState(new GuiElementRenderState() {
 
 也可以使用 `ActiveTextCollector` 提交字符串；它提供使用特定元数据（例如对齐、不透明度和滚动）渲染字符串的方法。文本 Collector 可通过 `GuiGraphicsExtractor#textRenderer` 或 `textRendererForWidget` 创建，也可以继承 `ActiveTextCollector` 本身；通常会接收 `$HoveredTextEffects`，提供是否渲染工具提示或改变光标等基础选项。随后可以使用 `accept` 或 `acceptScrolling` 渲染文本，传入相对于对齐方式的 X 位置、Y 位置、来自 `GuiGraphicsExtractor` 的一组参数、文本本身，以及可选的文本对齐方式。`acceptScrolling` 还接收最左、最右、最上和最下位置，用于表示滚动 bounds。
 
-:::note
+:::info
 通常应以 [`Component`][component] 形式传入字符串，因为它能够处理多种用例，包括该方法的另外两个重载。
 :::
 
@@ -296,7 +296,7 @@ private static final Identifier SPRITE = Identifier.fromNamespaceAndPath("exampl
 }
 ```
 
-:::note
+:::info
 当 `blitSprite` 使用设置为平铺或九宫格切片的纹理时，会通过 `TiledBlitRenderState` 提交元素；除 `BlitRenderState` 中的其他参数外，它还指定 Tile 的宽度与高度。
 :::
 
@@ -320,7 +320,7 @@ Item 装饰（例如耐久条、冷却与数量）通过 `itemDecorations` 处�
 
 画中画（PiP）允许把任意对象绘制到 Screen。PiP 不会直接绘制到输出，而是先将对象绘制到中间纹理（即“画面”），再在渲染阶段默认以 `BlitRenderState` 的形式提交到 `GuiRenderState`。`GuiGraphicsExtractor` 为地图（`map`）、Entity（`entity`）、玩家皮肤（`skin`）、书本模型（`book`）、旗帜图案（`bannerPattern`）、告示牌（`sign`）和性能分析图表（`profilerChart`）提供了方法。
 
-:::note
+:::info
 当 `ClientItem.Properties#oversizedInGui` 为 true 时，超出默认 16x16 bounds 的 Item 会使用 `OversizedItemRenderer` PiP 作为渲染机制。
 :::
 
@@ -455,7 +455,7 @@ graphics.submitPictureInPictureRenderState(new ExampleRenderState(
 ));
 ```
 
-:::note
+:::info
 NeoForge 修复了一个错误；该错误会阻止在同一帧提交某种 PiP 渲染状态的多个实例。
 :::
 
@@ -479,7 +479,7 @@ Minecraft 中的所有 Screen 都实现 `GuiEventListener`。`GuiEventListener` 
 
 焦点机制允许在事件执行期间优先检查并处理特定子项，例如处理键盘事件或鼠标拖动时。焦点通常通过 `#setFocused` 设置。此外，可以使用 `#nextFocusPath` 在可交互子项之间循环，并根据传入的 `FocusNavigationEvent` 选择子项。
 
-:::note
+:::info
 Screen 通过 `AbstractContainerEventHandler` 实现 `ContainerEventHandler`；后者添加了拖动与子项焦点的 setter 和 getter 逻辑。
 :::
 
@@ -489,7 +489,7 @@ Screen 通过 `AbstractContainerEventHandler` 实现 `ContainerEventHandler`；�
 
 `NarratableEntry` 有四个方法：两个方法决定朗读元素时的优先级（`#narrationPriority` 与 `#getTabOrderGroup`）；一个方法决定是否朗读旁白（`#isActive`）；最后一个方法将旁白提供给关联输出，以供播报或阅读（`#updateNarration`）。
 
-:::note
+:::info
 Minecraft 的所有 Widget 都是 `NarratableEntry`，因此使用现有子类型时通常无需手动实现它。
 :::
 
@@ -621,7 +621,7 @@ public void removed() {
 
 `AbstractContainerScreen` 通常需要五个参数：正在打开的容器 Menu（由泛型 `T` 表示）、玩家物品栏（仅用于显示名称）、Screen 自身的标题，以及背景纹理的宽度与高度。
 
-:::note
+:::info
 如果背景纹理的宽度与高度为 176 x 166，可以从 super 构造器中省略。这并非指图像大小——图像通常是 256 x 256 的 PNG——而是其中具体的纹理 bounds。
 :::
 
@@ -635,7 +635,7 @@ public void removed() {
 `inventoryLabelX` | 玩家物品栏名称渲染位置的相对 X 坐标。
 `inventoryLabelY` | 玩家物品栏名称渲染位置的相对 Y 坐标。
 
-:::caution
+:::warning
 前文提到，预计算的相对坐标应在 `#init` 方法中设置。这一点仍然成立，因为这里提到的值并非预计算坐标，而是静态值与已相对化的坐标。
 
 图像值表示背景纹理大小，因此是静态且不变的。为简化渲染，会在 `init` 方法中预计算另外两个值（`leftPos` 与 `topPos`），标记背景渲染位置的左上角。标签坐标相对于这两个值。
@@ -720,7 +720,7 @@ protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mous
 }
 ```
 
-:::note
+:::info
 提交标签时，**不需要**指定 `leftPos` 与 `topPos` 偏移。它们已经在 `Matrix3x2fStack` 中完成平移，因此此方法内的所有内容都会相对于这些坐标提交。
 :::
 

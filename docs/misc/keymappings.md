@@ -46,7 +46,7 @@ public static void registerBindings(RegisterKeyMappingsEvent event) {
 
 原版提供三种输入类型：`KEYSYM` 使用所提供的 `GLFW` 按键 token 定义键盘；`SCANCODE` 使用平台特定的 scancode 定义键盘；`MOUSE` 定义鼠标。
 
-:::note
+:::info
 对于键盘，强烈建议使用 `KEYSYM` 而非 `SCANCODE`，因为 `GLFW` 按键 token 不绑定到特定系统。更多信息请参阅 [GLFW 文档][keyinput]。
 :::
 
@@ -61,7 +61,7 @@ new KeyMapping(
 )
 ```
 
-:::note
+:::info
 如果按键映射不应具有默认映射，应把输入设置为 `InputConstants#UNKNOWN`。使用原版构造器时，需要通过 `InputConstants$Key#getValue` 取出输入码；使用 NeoForge 构造器时，则可以直接提供原始输入字段。
 :::
 
@@ -117,7 +117,7 @@ public static void onClientTick(ClientTickEvent.Post event) {
 }
 ```
 
-:::caution
+:::warning
 不要使用 `InputEvent` 替代 `ClientTickEvent.Post`。目前只有分别处理键盘和鼠标输入的事件，无法处理任何额外输入。
 :::
 
@@ -139,7 +139,7 @@ public boolean keyPressed(KeyEvent event) {
 } 
 ```
 
-:::note
+:::info
 如果需要检查**按键**的 `Screen` 不属于你，可以改为监听[游戏事件总线][eventbus]上的 `ScreenEvent.KeyPressed` 的 `Pre` 或 `Post` 事件。
 :::
 
@@ -157,7 +157,7 @@ public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 } 
 ```
 
-:::note
+:::info
 如果需要检查**鼠标**的 `Screen` 不属于你，可以改为监听[游戏事件总线][eventbus]上的 `ScreenEvent.MouseButtonPressed` 的 `Pre` 或 `Post` 事件。
 :::
 

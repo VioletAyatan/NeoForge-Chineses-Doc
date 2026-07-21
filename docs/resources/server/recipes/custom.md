@@ -111,7 +111,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 }
 ```
 
-:::note
+:::info
 不强制使用 `CommonInfo` record，甚至不必在 JSON 中提供 `show_notification` 字段。是否适合使用由 mod 开发者决定。
 :::
 
@@ -165,7 +165,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 }
 ```
 
-:::note
+:::info
 与 `CommonInfo` 一样，不强制使用 `BookInfo`，甚至不必在 JSON 中提供相关字段。mod 开发者应自行判断其配方是否适合使用（例如，`Recipe#isSpecial` 返回 true 的配方不会出现在配方书中，因此不应使用 `BookInfo`）。不过，`Recipe#group` 与 `recipeBookCategory` 都必须是非 null 对象。
 :::
 
@@ -188,7 +188,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 `RecipeBookCategory` 只负责定义配方在配方书中显示于哪个分组。例如，铁镐合成配方会显示在 `RecipeBookCategories#CRAFTING_EQUIPMENT`，熟鳕鱼配方则显示在 `#FURNANCE_FOOD` 或 `#SMOKER_FOOD`。每个配方都关联一个 `RecipeBookCategory`。原版分类可在 `RecipeBookCategories` 中找到。
 
-:::note
+:::info
 熟鳕鱼有两个配方，一个用于熔炉，另一个用于烟熏炉；二者具有不同的配方书分类。
 :::
 
@@ -1003,7 +1003,7 @@ protected void buildRecipes(RecipeOutput output) {
 }
 ```
 
-:::note
+:::info
 也可以将 `SimpleRecipeBuilder` 合并进 `RightClickBlockRecipeBuilder`（或自己的配方 builder），尤其是在只有一两个配方 builder 时。此处的抽象旨在说明 builder 的哪些部分依赖配方、哪些部分不依赖。
 :::
 
