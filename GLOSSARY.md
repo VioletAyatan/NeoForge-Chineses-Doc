@@ -38,6 +38,17 @@
 | Stream Codec | 流编解码器 | Stream Codec（普通说明文字中） | 指用于网络流编码与解码的编解码器。类名 `StreamCodec` 及相关字段名保持原文。 |
 | Loot Table | 战利品表 | Loot Table（普通说明文字中） | 指用于生成战利品的数据文件与机制。类名 `LootTable`、JSON 键和资源路径保持原文。 |
 | Armor | 盔甲 | Armor（普通说明文字中） | 泛指角色穿戴的盔甲及其模型、槽位等概念。`ArmorItem`、`ArmorMaterial` 等类名和代码标识符保持原文。 |
+| registry | 注册表 | registry（普通说明文字中） | 一般概念使用"注册表"；代码中的 `Registry` 类名和 `BuiltInRegistries` 等标识符保持原文。 |
+| registry name | 注册名 | registry name（普通说明文字中） | 每个注册项对应的唯一名称。代码键 `registryName` 等保持原文。 |
+| registry entry | 注册项 | registry entry（普通说明文字中） | registry 中存储的已注册对象。 |
+| datapack registry | 数据包注册表 | datapack registry（普通说明文字中） | 从数据包 JSON 加载内容的特殊注册表。代码中的 `DataPackRegistryEvent` 等标识符保持原文。 |
+| dynamic registry | 动态注册表 | dynamic registry（普通说明文字中） | datapack registry 的别称，强调其运行时加载特性。 |
+| registry key | 注册表键（registry key） | registry key（普通说明文字中） | 用于标识一个注册表的 `ResourceKey`。代码中保持 `ResourceKey`、`RegistryKey`。 |
+| identifier | 标识符 | Identifier（普通说明文字中） | 泛指 `Identifier` 类所表示的资源标识符。类名 `Identifier`、`ResourceLocation` 在代码中保持原文。 |
+| namespace | 命名空间 | namespace（普通说明文字中） | Identifier 中 `:` 前的部分，表示所属模组或 Minecraft。代码键 `namespace` 保持原文。 |
+| data pack | 数据包 | data pack（普通说明文字中） | 存放服务端数据文件的包。`Datapack` 等代码标识符保持原文。 |
+| data generation / datagen | 数据生成（datagen） | 数据生成器 | NeoForge 的数据文件自动生成系统。代码中 `GatherDataEvent`、`datagen` 保持原文。 |
+| data provider | 数据提供器 | data provider（普通说明文字中） | 数据生成系统中负责为特定数据类型生成文件的类。`DataProvider` 类名保持原文。 |
 
 ## Java 语言术语
 
