@@ -1,9 +1,6 @@
----
-sidebar_position: 5
----
-# Entity Renderer
+# 实体渲染器（Entity Renderer）
 
-Entity Renderer 用于定义 Entity 的渲染行为。它只存在于[逻辑客户端和物理客户端][sides]。
+Entity Renderer 用于定义 Entity 的渲染行为。它只存在于 [逻辑客户端和物理客户端][sides]。
 
 Entity 渲染使用所谓的 Entity Render State。简单来说，它是一个保存 Renderer 所需全部值的对象。每次渲染 Entity 时，Render State 都会更新，随后 `#submit` 方法使用它提交所需的[功能][features]，以便稍后渲染 Entity。
 
@@ -114,6 +111,7 @@ public static void registerRenderStateModifiers(RegisterRenderStateModifiersEven
 ```java
 state.setRenderData(EXAMPLE_CONTEXT, null);
 ```
+
 :::
 
 需要时，可以通过 `EntityRenderState#getRenderData` 取回该数据。还可以使用 Helper Method `#getRenderDataOrThrow` 和 `#getRenderDataOrDefault`。

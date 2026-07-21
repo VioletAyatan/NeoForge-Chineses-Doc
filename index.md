@@ -8,7 +8,7 @@ hero:
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: NeoFroge编程入门
+      text: NeoFroge 编程入门
       link: /docs/gettingstarted/index
     - theme: alt
       text: API Examples

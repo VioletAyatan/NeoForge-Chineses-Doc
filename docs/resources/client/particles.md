@@ -1,4 +1,4 @@
-# Particle
+# 粒子（Particle）
 
 Particle 是一种视觉效果，通常使用其关联的 Particle Type 生成。客户端和服务端[两端][side]都可以生成 Particle，但由于它主要是视觉效果，关键部分只存在于物理（和逻辑）客户端。
 

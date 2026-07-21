@@ -1,4 +1,4 @@
-# Model
+# 模型（Model）
 
 Model 是决定 Block 或 Item 视觉形状和纹理的 JSON 文件。一个 Model 由多个各具尺寸的长方体 Element 组成，每个面都会分配纹理。
 

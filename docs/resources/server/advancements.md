@@ -1,30 +1,30 @@
-# 进度
+# 成就（Advancements）
 
-进度是玩家可以达成的、类似任务的目标。进度会根据进度条件授予，并可在完成时执行相应行为。
+成就是玩家可以达成的、类似任务的目标。成就会根据成就条件授予，并可在完成时执行相应行为。
 
 在命名空间的 `advancement` 子文件夹中创建 JSON 文件即可添加新进度。例如，要为 mod id 为 `examplemod` 的 mod 添加名为 `example_name` 的进度，文件应位于 `data/examplemod/advancement/example_name.json`。进度 ID 相对于 `advancement` 目录，因此该示例的 ID 是 `examplemod:example_name`。名称可以任意选择，游戏会自动发现该进度。只有在需要添加新条件，或从代码中触发某个条件时，才需要 Java 代码（见下文）。
 
 ## 规范
 
-进度 JSON 文件可以包含以下条目：
+成就 JSON 文件可以包含以下条目：
 
 - `parent`：此进度的父进度 ID。游戏会检测循环引用；出现循环引用会导致加载失败。可选；若省略，此进度将被视为根进度。根进度是未设置父项的进度，也是其[进度树][tree]的根。
 - `display`：包含进度在进度 GUI 中显示时所用若干属性的对象。可选；若省略，此进度不可见，但仍可被触发。
-    - `icon`：[ItemStack 的 JSON 表示形式][itemstackjson]。
-    - `title`：用作进度标题的[文本组件][text]。
-    - `description`：用作进度描述的[文本组件][text]。
-    - `frame`：进度的边框类型。接受 `challenge`、`goal` 和 `task`。可选，默认为 `task`。
-    - `background`：用作进度树背景的纹理。路径相对于 `textures` 目录，即不应包含 `textures/` 文件夹前缀。可选，默认为缺失纹理。仅对根进度有效。
-    - `show_toast`：完成时是否在右上角显示弹窗。可选，默认为 true。
-    - `announce_to_chat`：是否在聊天中宣布进度完成。可选，默认为 true。
-    - `hidden`：完成此进度前，是否在进度 GUI 中隐藏它及其所有子进度。对根进度本身无效，但仍会隐藏其所有子进度。可选，默认为 false。
+  - `icon`：[ItemStack 的 JSON 表示形式][itemstackjson]。
+  - `title`：用作进度标题的[文本组件][text]。
+  - `description`：用作进度描述的[文本组件][text]。
+  - `frame`：进度的边框类型。接受 `challenge`、`goal` 和 `task`。可选，默认为 `task`。
+  - `background`：用作进度树背景的纹理。路径相对于 `textures` 目录，即不应包含 `textures/` 文件夹前缀。可选，默认为缺失纹理。仅对根进度有效。
+  - `show_toast`：完成时是否在右上角显示弹窗。可选，默认为 true。
+  - `announce_to_chat`：是否在聊天中宣布进度完成。可选，默认为 true。
+  - `hidden`：完成此进度前，是否在进度 GUI 中隐藏它及其所有子进度。对根进度本身无效，但仍会隐藏其所有子进度。可选，默认为 false。
 - `criteria`：此进度需要跟踪的条件 Map。每个条件通过其 Map 键标识。Minecraft 添加的条件触发器列表可在 `CriteriaTriggers` 类中找到，其 JSON 规范可在 [Minecraft Wiki][triggers] 查阅。有关实现自定义条件或从代码触发条件的内容，请参阅下文。
 - `requirements`：确定所需条件的二维列表。它由多个 OR 列表组成，各列表之间再进行 AND 运算；换句话说，每个子列表中必须至少有一个条件匹配。可选，默认要求所有条件均满足。
 - `rewards`：表示完成此进度时授予奖励的对象。可选；该对象中的所有值也都是可选的。
-    - `experience`：授予玩家的经验值数量。
-    - `recipes`：要解锁的[配方][recipe] ID 列表。
-    - `loot`：要抽取并给予玩家的[战利品表][loottable]列表。
-    - `function`：要运行的[函数][function]。如果需要运行多个函数，请创建一个能够运行其他所有函数的包装函数。
+  - `experience`：授予玩家的经验值数量。
+  - `recipes`：要解锁的[配方][recipe] ID 列表。
+  - `loot`：要抽取并给予玩家的[战利品表][loottable]列表。
+  - `function`：要运行的[函数][function]。如果需要运行多个函数，请创建一个能够运行其他所有函数的包装函数。
 - `sends_telemetry_event`：决定完成此进度时是否收集遥测数据。只有处于 `minecraft` 命名空间时才真正起作用。可选，默认为 false。
 - `neoforge:conditions`：由 NeoForge 添加。加载此进度前必须通过的[条件][conditions]列表。可选。
 
@@ -275,7 +275,6 @@ builder.save(saver, Identifier.fromNamespaceAndPath("examplemod", "example_advan
 [loottable]: loottables/index.md
 [recipe]: recipes/index.md
 [registration]: ../../concepts/registries.md#methods-for-registering
-[root]: #root-advancements
 [text]: ../client/i18n.md#components
 [tree]: #advancement-trees
 [triggers]: https://minecraft.wiki/w/Advancement/JSON_format#List_of_triggers

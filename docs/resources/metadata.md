@@ -1,8 +1,4 @@
----
-sidebar_position: 1
----
-
-# 资源 Metadata
+# 资源元数据（Resource Metadata）
 
 `.mcmeta` 文件扩展名可用于保存游戏中任何 Asset 或 Data 对象的 JSON Metadata。它最常用于定义 Pack 信息以及纹理的应用方式；不过，只要在文件名末尾加上 `.mcmeta`，任何文件都可以使用它（例如，`apple.png` 的资源 Metadata 为 `apple.png.mcmeta`）。
 

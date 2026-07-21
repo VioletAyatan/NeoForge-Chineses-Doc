@@ -1,7 +1,4 @@
----
-sidebar_position: 4
----
-# Attribute
+# 属性（Attribute）
 
 Attribute 是 [LivingEntity][livingentity] 的特殊 field，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。Vanilla 提供了大量默认 attribute，你也可以添加自己的 attribute。
 

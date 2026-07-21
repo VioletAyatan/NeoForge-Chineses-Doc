@@ -1,4 +1,4 @@
-# 纹理
+# 纹理（Textures）
 
 Minecraft 中的所有纹理都是 PNG 文件，位于某个命名空间的 `textures` 文件夹中。不支持 JPG、GIF 和其他图像格式。引用纹理的 [Identifier][identifiers] 路径通常相对于 `textures` 文件夹；例如，Identifier `examplemod:block/example_block` 指向纹理文件 `assets/examplemod/textures/block/example_block.png`。
 

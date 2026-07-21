@@ -1,6 +1,6 @@
-# LivingEntity、Mob 与玩家
+# 生命实体、生物、玩家（Living Entity、Mob & Player）
 
-LivingEntity 是 [Entity][entities] 的一个大型子群体，它们都继承自共同的 `LivingEntity` superclass。其中包括 Mob（通过 `Mob` subclass）、玩家（通过 `Player` subclass）与盔甲架（通过 `ArmorStand` subclass）。
+生命实体（LivingEntity）是 [Entity][entities] 的一个大型子群体，它们都继承了同样的 `LivingEntity` 超类。其中包括生物（继承 `Mob` 超类）、玩家（继承 `Player` 超类）与盔甲架（继承 `ArmorStand` 超类）。
 
 LivingEntity 具有普通 Entity 所没有的多种额外 property，包括 [attribute][attributes]、[MobEffect][mobeffects]、伤害追踪等。
 
