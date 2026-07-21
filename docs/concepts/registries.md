@@ -1,18 +1,18 @@
 # 注册表（Registries）
 
-注册是将模组中的对象（例如 [Item][item]、[Block][block]、Entity 等）告知游戏的过程。注册非常重要，因为如果不注册，游戏根本不会知道这些对象的存在，从而引发难以解释的行为和崩溃。
+注册是将模组中的对象（例如 [物品][item]、[方块][block]、实体等）告知游戏的过程。注册非常重要，因为如果不注册，游戏根本不会知道这些对象的存在，从而引发难以解释的行为和崩溃。
 
-简单来说，registry 是一个对 map 的封装，它把 registry name（见下文）映射到已注册对象，后者通常称为 registry entry。Registry name 在同一个 registry 内必须唯一，但同一个 registry name 可以存在于多个 registry 中。最常见的例子是 Block（位于 `BLOCKS` registry 中）拥有相同 registry name 的 Item 形式（位于 `ITEMS` registry 中）。
+简单来说，注册表（registry）是对映射关系的封装：它将注册名（registry name，见下文）映射到已注册对象，这些对象称为注册项（registry entry）。注册名在同一个注册表内必须唯一，但相同的注册名可以分别存在于不同注册表中。最常见的例子是：方块注册表 `BLOCKS` 中的方块，可以与物品注册表 `ITEMS` 中对应的物品使用相同的注册名。
 
-每个已注册对象都有一个唯一名称，称为 registry name。该名称以 [`Identifier`][identifier] 表示。例如，泥土 Block 的 registry name 是 `minecraft:dirt`，僵尸的 registry name 是 `minecraft:zombie`。模组对象当然不会使用 `minecraft` namespace，而会改用其 mod id。
+每个注册项都有一个唯一名称，称为注册名。注册名以[标识符（Identifier）][identifier]表示。例如，泥土方块的注册名是 `minecraft:dirt`，僵尸的注册名是 `minecraft:zombie`。模组对象通常不会使用 `minecraft` 命名空间，而会使用自身的模组 ID。
 
-## 原版 VS 模组
+## 原版与模组
 
-为理解 NeoForge registry 系统中的一些设计决策，我们先看看 Minecraft 是如何处理注册的。这里使用 Block registry 作为示例，因为大多数其他 registry 的工作方式相同。
+为了理解 NeoForge 注册表系统中的一些设计决策，我们先看看 Minecraft 是如何处理注册的。这里以方块注册表为例，因为大多数其他注册表的工作方式相同。
 
-Registry 通常注册[单例][singleton]。这意味着每个 registry entry 只存在一个实例。例如，你在整个游戏中看到的所有石头 Block，实际上都是同一个石头 Block 被显示了许多次。需要石头 Block 时，可以引用已注册的 Block 实例来获取它。
+注册表中的对象通常以[单例][singleton]形式存在。这意味着每个注册项只有一个实例。例如，游戏中所有石头方块都引用同一个已注册的石头方块实例；需要石头方块时，直接获取并引用该实例即可。
 
-Minecraft 在 `Blocks` 类中注册所有 Block。通过 `register` 方法调用 `Registry#register()`，其第一个参数是位于 `BuiltInRegistries.BLOCK` 的 Block registry。注册完所有 Block 后，Minecraft 会基于 Block 列表执行各种检查，例如验证所有 Block 是否都加载了 model 的自检。
+Minecraft 在 `Blocks` 类中注册所有方块。其 `register` 方法会调用 `Registry#register()`，第一个参数是 `BuiltInRegistries.BLOCK` 中的方块注册表。注册完所有方块后，Minecraft 会基于方块列表执行各种检查，例如验证所有方块是否都已加载模型。
 
 这一切能够正常工作的主要原因，是 Minecraft 足够早地加载了 `Blocks` 类。Minecraft 不会自动加载模组的类，因此需要变通方案。
 
@@ -35,7 +35,7 @@ public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
 );
 ```
 
-然后可以使用以下方法之一，将 registry entry 添加为 `static final` 字段（有关 `new Block()` 应添加哪些参数，请参阅 [Block 一文][block]）：
+然后可以使用以下方法之一，将 registry entry 添加为 `static final` 字段（有关 `new Block()` 应添加哪些参数，请参阅 [Block][block] 一文）：
 
 ```java
 public static final DeferredHolder<Block, Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
@@ -54,9 +54,9 @@ public static final DeferredHolder<Block, SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.re
 );
 ```
 
-`DeferredHolder<R, T extends R>` 类持有我们的对象。类型参数 `R` 是正在注册到的 registry 的类型（本例为 `Block`）。类型参数 `T` 是 supplier 的类型。由于第一个示例直接注册 `Block`，因此提供 `Block` 作为第二个参数。如果注册的是 `Block` 的子类对象，例如 `SlabBlock`（如第二个示例所示），则应在此提供 `SlabBlock`。
+`DeferredHolder<R, T extends R>` 用于持有已注册对象。类型参数 `R` 表示目标注册表所存储的基础类型（本例为 `Block`），类型参数 `T` 表示当前注册项的具体类型。第一个示例直接注册 `Block`，因此第二个类型参数也是 `Block`；第二个示例注册的是 `Block` 的子类 `SlabBlock`，因此第二个类型参数应为 `SlabBlock`。
 
-`DeferredHolder<R, T extends R>` 是 `Supplier<T>` 的子类。需要已注册对象时，可以调用 `DeferredHolder#get()`。因为 `DeferredHolder` 扩展了 `Supplier`，还可以将 `Supplier` 用作字段的类型。这样，上面的代码就变成：
+`DeferredHolder<R, T extends R>` 实现了 `Supplier<T>` 接口。需要获取已注册对象时，可以调用 `DeferredHolder#get()`。因此，也可以将字段类型声明为 `Supplier`，上述代码可改写为：
 
 ```java
 public static final Supplier<Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
@@ -79,7 +79,7 @@ public static final Supplier<SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.register(
 请注意，少数位置明确要求 `Holder` 或 `DeferredHolder`，而不接受任意 `Supplier`。如果需要这两种类型之一，最好按需要把 `Supplier` 类型改回 `Holder` 或 `DeferredHolder`。
 :::
 
-最后，由于整个系统是对 registry Event 的封装，我们需要告诉 `DeferredRegister` 按需将自身挂接到 registry Event：
+最后，由于整个系统是对注册表事件的封装，需要让 `DeferredRegister` 按需将自身挂接到这些注册表事件上：
 
 ```java
 //This is our mod constructor
@@ -91,12 +91,12 @@ public ExampleMod(IEventBus modBus) {
 ```
 
 :::info
-针对 Block、Item、数据组件和 Entity，`DeferredRegister` 分别提供了带有辅助方法的专用变体：[`DeferredRegister.Blocks`][defregblocks]、[`DeferredRegister.Items`][defregitems]、[`DeferredRegister.DataComponents`][defregcomp] 和 [`DeferredRegister.Entities`][defregentity]。
+针对方块、物品、数据组件和实体，`DeferredRegister` 分别提供了带有辅助方法的专用变体：[`DeferredRegister.Blocks`][defregblocks]、[`DeferredRegister.Items`][defregitems]、[`DeferredRegister.DataComponents`][defregcomp] 和 [`DeferredRegister.Entities`][defregentity]。
 :::
 
 ### `RegisterEvent`
 
-`RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个 registry 触发，时间是在 mod 构造器之后（因为 `DeferredRegister` 会在其中注册内部事件处理器）、配置加载之前。`RegisterEvent` 在模组事件总线上触发。
+`RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个注册表触发，触发时间位于模组构造器执行之后、配置加载之前（这是因为 `DeferredRegister` 会在模组构造器中注册其内部事件处理器）。`RegisterEvent` 在模组事件总线上触发。
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -116,9 +116,9 @@ public static void register(RegisterEvent event) {
 }
 ```
 
-## 查询 Registry
+## 查询注册表
 
-有时你需要按给定 id 获取已注册对象，或获取某个已注册对象的 id。Registry 本质上是从 id（`Identifier`）到不同对象的 map，也就是可逆 map，因此这两种操作都可实现：
+有时需要根据给定 ID 获取注册项，或根据某个注册项查询其 ID。注册表本质上维护着从 ID（`Identifier`）到不同对象的映射，并支持反向查询，因此这两种操作都可以实现：
 
 ```java
 BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("minecraft", "dirt")); // returns the dirt block
@@ -129,16 +129,16 @@ BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("yourmodid", "e
 BuiltInRegistries.BLOCK.getKey(ExampleBlocksClass.EXAMPLE_BLOCK.get()); // returns the resource location "yourmodid:example_block"
 ```
 
-如果只想检查对象是否存在，也可以做到，不过只能使用 key：
+如果只想检查某个注册项是否存在，也可以做到，不过只能通过键进行判断：
 
 ```java
 BuiltInRegistries.BLOCK.containsKey(Identifier.fromNamespaceAndPath("minecraft", "dirt")); // true
 BuiltInRegistries.BLOCK.containsKey(Identifier.fromNamespaceAndPath("create", "brass_ingot")); // true only if Create is installed
 ```
 
-正如最后一个示例所示，可以对任意 mod id 执行此操作，因此这是检查其他模组中的某个 Item 是否存在的绝佳方法。
+正如最后一个示例所示，可以对任意模组 ID 执行此操作，因此这非常适合用于检查其他模组中的某个物品是否存在。
 
-最后，还可以迭代 registry 中的所有 entry，既可以遍历 key，也可以遍历 entry（entry 使用 Java 的 `Map.Entry` 类型）：
+最后，还可以遍历注册表中的全部内容：既可以遍历键，也可以遍历键值对（后者使用 Java 的 `Map.Entry` 类型）：
 
 ```java
 for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
@@ -154,14 +154,14 @@ for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entryS
 :::
 
 :::danger
-查询操作只有在注册完成后才是安全的。**注册仍在进行时，切勿查询 REGISTRY！**
+查询操作只有在注册完成后才是安全的。**注册仍在进行时，切勿查询注册表！**
 :::
 
-## 自定义 Registry
+## 自定义注册表
 
-自定义 registry 允许你指定额外系统，供你的模组的附加模组接入。例如，如果你的模组添加了法术，可以把法术做成 registry，从而允许其他模组向你的模组添加法术，而你无需进行额外处理。它还允许你自动完成同步 entry 等操作。
+自定义注册表允许你的模组定义可供附属模组接入的扩展系统。例如，如果你的模组添加了法术，可以将法术作为一种注册表，从而允许其他模组向该注册表添加法术，而无需由你的模组进行额外处理。自定义注册表还可以自动处理注册项同步等工作。
 
-首先创建 [registry key][resourcekey] 和 registry 本身：
+首先创建[注册表键（registry key）][resourcekey]和注册表本身：
 
 ```java
 // We use spells as an example for the registry here, without any details about what a spell actually is (as it doesn't matter).
@@ -179,7 +179,7 @@ public static final Registry<YourRegistryContents> SPELL_REGISTRY = new Registry
         .create();
 ```
 
-然后在 `NewRegistryEvent` 中将 registry 注册到根 registry，以告知游戏该 registry 的存在：
+然后在 `NewRegistryEvent` 中将该 Registry 注册到根 Registry，以告知游戏该注册表的存在：
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -188,7 +188,7 @@ public static void registerRegistries(NewRegistryEvent event) {
 }
 ```
 
-现在可以像处理其他 registry 一样，通过 `DeferredRegister` 和 `RegisterEvent` 注册新的 registry 内容：
+现在可以像处理其他注册表一样，通过 `DeferredRegister` 或 `RegisterEvent` 向该注册表添加注册项：
 
 ```java
 public static final DeferredRegister<Spell> SPELLS = DeferredRegister.create(SPELL_REGISTRY, "yourmodid");
@@ -203,20 +203,20 @@ public static void register(RegisterEvent event) {
 }
 ```
 
-## Datapack Registry
+## 数据包注册表（Datapack Registry）
 
-Datapack registry（也称 dynamic registry，或按其主要用途称为 worldgen registry）是一种特殊 registry：它在加载世界时从 [datapack][datapack] JSON 加载数据（名称由此而来），而不是在游戏启动时加载。默认 datapack registry 中最典型的是大多数 worldgen registry，此外还有少数其他 registry。
+数据包注册表（datapack registry）也称为动态注册表（dynamic registry）；由于其主要用于世界生成，也常称为世界生成注册表（worldgen registry）。它是一种特殊注册表：在加载世界时从[数据包][datapack]的 JSON 文件中加载数据，而不是在游戏启动时加载。默认提供的数据包注册表中，最常见的是各类世界生成注册表，此外还有少量其他注册表。
 
-Datapack registry 允许通过 JSON 文件指定其内容。这意味着不需要任何代码（如果不想手写 JSON 文件，则只需要 [datagen][datagen]）。每个 datapack registry 都关联一个用于序列化的 [`Codec`][codec]，而各 registry 的 id 决定其 datapack 路径：
+数据包注册表允许通过 JSON 文件指定其内容。这意味着无需编写代码；如果不想手写 JSON 文件，只需使用[数据生成（datagen）][datagen]即可。每个数据包注册表都关联一个用于序列化的 [`Codec`][codec]，而注册表的 ID 决定其数据包路径：
 
-- Minecraft 的 datapack registry 使用 `data/yourmodid/registrypath` 格式（例如 `data/yourmodid/worldgen/biome`，其中 `worldgen/biome` 是 registry path）。
-- 所有其他 datapack registry（NeoForge 或模组提供）使用 `data/yourmodid/registrynamespace/registrypath` 格式（例如 `data/yourmodid/neoforge/biome_modifier`，其中 `neoforge` 是 registry namespace，`biome_modifier` 是 registry path）。
+- Minecraft 提供的数据包注册表使用 `data/yourmodid/registrypath` 格式（例如 `data/yourmodid/worldgen/biome`，其中 `worldgen/biome` 是注册表路径）。
+- 其他数据包注册表（由 NeoForge 或模组提供）使用 `data/yourmodid/registrynamespace/registrypath` 格式（例如 `data/yourmodid/neoforge/biome_modifier`，其中 `neoforge` 是注册表命名空间，`biome_modifier` 是注册表路径）。
 
-可以从 `RegistryAccess` 获取 datapack registry。在服务端可调用 `ServerLevel#registryAccess()` 获取该 `RegistryAccess`，在客户端则可调用 `Minecraft.getInstance().getConnection()#registryAccess()`（后者只在确实已连接到世界时有效，否则 connection 为 null）。这些调用的结果可像其他 registry 一样使用，以获取特定元素或迭代内容。
+可以通过 `RegistryAccess` 访问数据包注册表。在服务端，可调用 `ServerLevel#registryAccess()` 获取 `RegistryAccess`；在客户端，可调用 `Minecraft.getInstance().getConnection()#registryAccess()`，但该调用仅在客户端确实已连接到世界时有效，否则连接对象为 `null`。取得 `RegistryAccess` 后，可以像操作其他注册表一样查询特定注册项或遍历其内容。
 
-### 自定义 Datapack Registry
+### 自定义数据包注册表
 
-自定义 datapack registry 不要求构造 `Registry`。它只需要一个 registry key，以及至少一个用于对内容进行序列化与反序列化的 [`Codec`][codec]。继续使用前面的法术示例，将法术 registry 注册为 datapack registry 大致如下：
+自定义数据包注册表不需要显式构造 `Registry`，只需要一个注册表键，以及至少一个用于对注册表内容进行序列化与反序列化的 [`Codec`][codec]。继续使用前面的法术示例，将法术注册表定义为数据包注册表的方式大致如下：
 
 ```java
 public static final ResourceKey<Registry<Spell>> SPELL_REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("yourmodid", "spells"));
@@ -241,11 +241,11 @@ public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry 
 }
 ```
 
-### 为 Datapack Registry 生成数据
+### 为数据包注册表生成数据
 
-手写所有 JSON 文件既繁琐又容易出错，因此 NeoForge 提供了一个[数据 provider][datagenindex] 来代你生成 JSON 文件。它既适用于内置 datapack registry，也适用于你自己的 datapack registry。
+手写所有 JSON 文件既繁琐又容易出错，因此 NeoForge 提供了一个[数据提供器][datagenindex]来代为生成 JSON 文件。它既适用于内置数据包注册表，也适用于自定义数据包注册表。
 
-首先创建 `RegistrySetBuilder` 并向其中添加 entry（一个 `RegistrySetBuilder` 可容纳多个 registry 的 entry）：
+首先创建 `RegistrySetBuilder`，并向其中添加注册项（一个 `RegistrySetBuilder` 可以容纳多个注册表的注册项）：
 
 ```java
 new RegistrySetBuilder()
@@ -257,7 +257,7 @@ new RegistrySetBuilder()
     });
 ```
 
-我们实际使用 `bootstrap` lambda 参数注册对象。它的类型是 `BootstrapContext`。要注册对象，可对其调用 `#register`，如下所示：
+实际注册对象时使用的是 `bootstrap` Lambda 参数，其类型为 `BootstrapContext`。要注册对象，可调用它的 `#register` 方法，如下所示：
 
 ```java
 // The resource key of our object.
@@ -280,7 +280,7 @@ new RegistrySetBuilder()
     });
 ```
 
-如有需要，`BootstrapContext` 还可用于查找其他 registry 中的 entry：
+如有需要，`BootstrapContext` 还可用于查找其他注册表中的注册项：
 
 ```java
 public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEATURE = ResourceKey.create(
@@ -305,7 +305,7 @@ new RegistrySetBuilder()
     });
 ```
 
-最后，在实际的数据 provider 中使用 `RegistrySetBuilder`，并将该数据 provider 注册到事件：
+最后，在实际的数据提供器中使用 `RegistrySetBuilder`，并将该数据提供器注册到事件：
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -332,7 +332,6 @@ public static void onGatherData(GatherDataEvent.Client event) {
 ```
 
 [block]: ../blocks/index.md
-[blockentity]: ../blockentities/index.md
 [codec]: ../datastorage/codecs.md
 [datagen]: #data-generation-for-datapack-registries
 [datagenindex]: ../resources/index.md#data-generation
