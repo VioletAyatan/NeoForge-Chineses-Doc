@@ -1,6 +1,3 @@
----
-sidebar_position: 5
----
 # 数据存档（Saved Data）
 
 数据存档（SD）系统可用于在 Level 上保存额外数据。

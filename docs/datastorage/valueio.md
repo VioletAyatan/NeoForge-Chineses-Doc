@@ -1,6 +1,3 @@
----
-sidebar_position: 3
----
 # Value I/O
 
 Value I/O 系统是一种标准化序列化方式，用于操作某个底层对象中的数据，例如[用于 NBT 的 `CompoundTag`][nbt]。

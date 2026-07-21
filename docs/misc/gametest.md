@@ -1,6 +1,3 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # GameTest
 
 GameTest 是运行游戏内单元测试的一种方式。该系统的设计目标是可扩展、可并行，以便高效运行大量不同测试。测试对象交互与行为只是此框架众多用途中的一小部分。由于该系统既可完全用代码实现，也可通过 [datapack][datapacks] 实现，下面将同时展示两种方式。

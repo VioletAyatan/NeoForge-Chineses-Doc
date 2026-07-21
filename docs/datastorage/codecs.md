@@ -1,6 +1,3 @@
----
-sidebar_position: 2
----
 # 编解码器（Codecs）
 
 Codecs 是 Mojang 的 [DataFixerUpper] 提供的序列化工具，用于描述如何在不同格式之间转换对象，例如 JSON 使用的 `JsonElement` 与 NBT 使用的 `Tag`。

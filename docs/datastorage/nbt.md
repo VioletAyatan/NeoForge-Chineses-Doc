@@ -1,6 +1,3 @@
----
-sidebar_position: 1
----
 # Named Binary Tag（NBT）
 
 NBT 是 Minecraft 早期便引入的一种格式，由 Notch 本人编写。Minecraft 的整个代码库广泛使用它存储数据。

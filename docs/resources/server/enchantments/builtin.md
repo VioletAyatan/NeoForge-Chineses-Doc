@@ -1,6 +1,3 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # 内置附魔效果组件
 
 原版 Minecraft 提供了许多不同类型的附魔效果组件，可用于[附魔][enchantment]定义。本文将逐一介绍它们，包括用法与代码中的定义。

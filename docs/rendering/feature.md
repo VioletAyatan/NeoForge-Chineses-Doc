@@ -1,6 +1,3 @@
----
-sidebar_position: 1
----
 # Feature
 
 渲染 Feature 定义了一组没有烘焙进 Level 几何体的对象，例如 Entity、文本和粒子。这些对象通常具有动态位置，因此下落中或被手持的 Block 和 Item 也属于这一类别。Feature renderer 的作用，是更好地批处理这些对象，并安排它们渲染到屏幕上的顺序。Feature renderer 分为两个阶段：提交阶段收集所有 Feature；渲染阶段渲染已经收集的 Feature。
