@@ -5,6 +5,10 @@ export default defineConfig({
 	title: 'NeoForge 中文编程手册',
 	description: 'Minecraft NeoForge 中文编程手册',
 	themeConfig: {
+		logo: {
+			src: '/logo.svg',
+			alt: 'NeoForge',
+		},
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
 			{ text: '首页', link: '/' },

@@ -3,16 +3,15 @@
 layout: home
 
 hero:
-  name: "Minecraft NeoForge Chineses document"
-  text: "Minecraft NeoForge Chineses document"
-  tagline: My great project tagline
+  name: "Minecraft NeoForge 中文编程手册"
+  tagline: 帮助你入门MC模组开发的第一课
   actions:
     - theme: brand
       text: NeoForge 编程入门
       link: /docs/gettingstarted/index
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 英文文档
+      link: https://docs.neoforged.net/docs/gettingstarted/
 
 features:
   - title: Feature A
