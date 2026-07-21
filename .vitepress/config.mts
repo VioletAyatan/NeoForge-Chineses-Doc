@@ -22,7 +22,7 @@ export default defineConfig({
 				link: '/docs/gettingstarted/index',
 				collapsed: false,
 				items: [
-					{ text: 'Mod文件', link: '/docs/gettingstarted/modfiles' },
+					{ text: '模组文件', link: '/docs/gettingstarted/modfiles' },
 					{ text: '组织你的模组', link: '/docs/gettingstarted/structuring' },
 					{ text: '版本管理', link: '/docs/gettingstarted/versioning' },
 				],
