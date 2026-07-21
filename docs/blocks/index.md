@@ -1,6 +1,6 @@
 # 方块（Block）
 
-Block 是 Minecraft 世界不可或缺的组成部分。所有地形、structure 与机器都由 Block 构成。如果你有兴趣制作模组，很可能也会想添加一些 Block。本页将引导你创建 Block，并介绍可利用它们实现的部分功能。
+Block 是 Minecraft 世界不可或缺的组成部分。所有地形、结构与机器都由 Block 构成。如果你有兴趣制作模组，很可能也会想添加一些 Block。本页将引导你创建 Block，并介绍可利用它们实现的部分功能。
 
 ## 每种 Block 只有一个
 
