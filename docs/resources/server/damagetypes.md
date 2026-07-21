@@ -1,4 +1,4 @@
-# Damage Type 与 Damage Source
+# 伤害类型、伤害来源（Damage Types & Damage Sources）
 
 Damage Type 表示正在对[实体][entity]施加何种伤害——例如物理伤害、火焰伤害、溺水伤害、魔法伤害、虚空伤害等。对 Damage Type 的区分可用于各种免疫机制（例如烈焰人不会受到火焰伤害）、附魔（例如爆炸保护只抵御爆炸伤害），以及许多其他场景。
 

@@ -107,7 +107,29 @@ export default defineConfig({
 					{
 						text: '服务端（Server）',
 						collapsed: true,
-						items: [{ text: '成就（Advancements）', link: '/docs/resources/server/advancements' }],
+						items: [
+							{ text: '成就（Advancements）', link: '/docs/resources/server/advancements' },
+							{
+								text: '数据加载条件（Data Load Conditions）',
+								link: '/docs/resources/server/conditions',
+							},
+							{
+								text: '伤害类型、伤害来源（Damage Types & Damage Sources）',
+								link: '/docs/resources/server/damagetypes',
+							},
+							{
+								text: '数据映射（Data Map）',
+								link: '/docs/resources/server/datamaps/index',
+								collapsed: true,
+								items: [],
+							},
+							{
+								text: '附魔（Enchantments）',
+								link: '/docs/resources/server/enchantments/index',
+								collapsed: true,
+								items: [],
+							},
+						],
 					},
 				],
 			},

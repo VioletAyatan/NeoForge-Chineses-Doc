@@ -1,6 +1,6 @@
 # 成就（Advancements）
 
-成就是玩家可以完成的、类似任务的目标。游戏根据成就中定义的条件判定其是否完成，并可在完成时发放奖励或执行函数等行为。
+成就是玩家可以完成的、类似任务的目标。游戏根据成就中定义的条件判定其是否完成，并可以在完成的时候执行一些行为。
 
 在命名空间的 `advancement` 子文件夹中创建 JSON 文件即可添加新成就。例如，要为 mod id 为 `examplemod` 的 mod 添加名为 `example_name` 的成就，文件应位于 `data/examplemod/advancement/example_name.json`。成就 ID 相对于 `advancement` 目录，因此该示例的 ID 是 `examplemod:example_name`。名称可以任意选择，游戏会自动发现该成就。只有在需要添加新的条件触发器，或从代码中触发某个条件时，才需要 Java 代码（见下文）。
 

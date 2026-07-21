@@ -1,7 +1,4 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-# 附魔
+# 附魔（Enchantments）
 
 附魔是可以应用于工具及其他 Item 的特殊效果。从 1.21 开始，附魔以[数据组件][Data Components]的形式存储在 Item 上，在 JSON 中定义，并由所谓的附魔效果组件构成。游戏运行期间，特定 Item 上的附魔存放在 `DataComponents.ENCHANTMENTS` 组件中的 `ItemEnchantments` 实例里。
 
