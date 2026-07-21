@@ -11,8 +11,8 @@
 `SynchedEntityData` 是用于在运行时存储值并通过网络同步这些值的系统。它分为三个 class：
 
 - `EntityDataSerializer` 基本上是对 [`StreamCodec`][streamcodec] 的封装。
-    - Minecraft 使用硬编码的 serializer map。NeoForge 将这个 map 转换为 registry，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
-    - Minecraft 在 `EntityDataSerializers` class 中定义了多种默认 `EntityDataSerializer`。
+  - Minecraft 使用硬编码的 serializer map。NeoForge 将这个 map 转换为 registry，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
+  - Minecraft 在 `EntityDataSerializers` class 中定义了多种默认 `EntityDataSerializer`。
 - `EntityDataAccessor` 由 Entity 持有，用于获取与设置数据值。
 - `SynchedEntityData` 本身持有某个 Entity 的所有 `EntityDataAccessor`，并根据需要自动调用 `EntityDataSerializer` 来同步值。
 
