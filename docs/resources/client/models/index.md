@@ -3,7 +3,7 @@
 Model 是决定 Block 或 Item 视觉形状和纹理的 JSON 文件。一个 Model 由多个各具尺寸的长方体 Element 组成，每个面都会分配纹理。
 
 Item 使用其[客户端 Item][citems] 定义的关联 Model，Block 则使用 [Blockstate 文件][bsfile]中的关联 Model。这些位置相对于 `models` 目录，因此名为 `examplemod:item/example_model` 的 Model 由 `assets/examplemod/models/item/example_model.json` 中的 JSON 定义。
- 
+
 ## 规范
 
 _另请参阅：[Minecraft Wiki][mcwiki] 上的 [Model][mcwikimodel]_
@@ -12,23 +12,23 @@ Model 是一种 JSON 文件，其根 Tag 中可包含以下可选属性：
 
 - `loader`：NeoForge 添加。设置自定义 Model Loader。更多信息参见 [Model Loader][custommodelloader]。
 - `parent`：设置 Parent Model，使用相对于 `models` 文件夹的 [Resource Location][rl]。所有 Parent 属性会先应用，再由当前 Model 中设置的属性覆盖。常用 Parent 包括：
-    - `minecraft:block/block`：所有 Block Model 的通用 Parent。
-    - `minecraft:block/cube`：所有使用 1x1x1 Cube Model 的 Model 的 Parent。
-    - `minecraft:block/cube_all`：Cube Model 的变体，六个面使用相同纹理，例如 Cobblestone 或 Planks。
-    - `minecraft:block/cube_bottom_top`：Cube Model 的变体，四个水平面使用相同纹理，顶部和底部使用独立纹理。常见示例有 Sandstone 或 Chiseled Quartz。
-    - `minecraft:block/cube_column`：具有侧面纹理以及底部/顶部纹理的 Cube Model 变体。例如原木、Quartz Pillar 和 Purpur Pillar。
-    - `minecraft:block/cross`：使用两个具有相同纹理的平面，一个顺时针旋转 45°，另一个逆时针旋转 45°，从上方看形成 X（名称由此而来）。大多数植物都使用它，例如 Grass、Sapling 和 Flower。
-    - `minecraft:item/generated`：经典 2D 平面 Item Model 的 Parent，游戏中大多数 Item 都会使用。由于 Quad 根据纹理生成，因此忽略 `elements` 块。
-    - `minecraft:item/handheld`：看起来确实由玩家手持的 2D 平面 Item Model 的 Parent，主要用于 Tool。它是 `item/generated` 的子 Model，因此同样忽略 `elements` 块。
-    - `BlockItem` 通常（但并非总是）将其对应的 Block Model 用作 [Item Model][itemmodels]。例如，Cobblestone 客户端 Item 使用 `minecraft:block/cobblestone` Model。
+  - `minecraft:block/block`：所有 Block Model 的通用 Parent。
+  - `minecraft:block/cube`：所有使用 1x1x1 Cube Model 的 Model 的 Parent。
+  - `minecraft:block/cube_all`：Cube Model 的变体，六个面使用相同纹理，例如 Cobblestone 或 Planks。
+  - `minecraft:block/cube_bottom_top`：Cube Model 的变体，四个水平面使用相同纹理，顶部和底部使用独立纹理。常见示例有 Sandstone 或 Chiseled Quartz。
+  - `minecraft:block/cube_column`：具有侧面纹理以及底部/顶部纹理的 Cube Model 变体。例如原木、Quartz Pillar 和 Purpur Pillar。
+  - `minecraft:block/cross`：使用两个具有相同纹理的平面，一个顺时针旋转 45°，另一个逆时针旋转 45°，从上方看形成 X（名称由此而来）。大多数植物都使用它，例如 Grass、Sapling 和 Flower。
+  - `minecraft:item/generated`：经典 2D 平面 Item Model 的 Parent，游戏中大多数 Item 都会使用。由于 Quad 根据纹理生成，因此忽略 `elements` 块。
+  - `minecraft:item/handheld`：看起来确实由玩家手持的 2D 平面 Item Model 的 Parent，主要用于 Tool。它是 `item/generated` 的子 Model，因此同样忽略 `elements` 块。
+  - `BlockItem` 通常（但并非总是）将其对应的 Block Model 用作 [Item Model][itemmodels]。例如，Cobblestone 客户端 Item 使用 `minecraft:block/cobblestone` Model。
 - `ambientocclusion`：是否启用 [Ambient Occlusion][ao]。只对 Block Model 生效，默认为 `true`。如果自定义 Block Model 出现异常阴影，请尝试设为 `false`。
 - `gui_light`：可以是 `"front"` 或 `"side"`。`"front"` 表示光线来自正面，适合平面 2D Model；`"side"` 表示光线来自侧面，适合 3D Model（尤其是 Block Model）。默认为 `"side"`，只对 Item Model 生效。
 - `textures`：将名称（称为 Material 变量）映射到 `Material` 的子对象。随后可在 [Element][elements] 中使用 Material 变量。也可以在 Element 中声明但不赋值，以便由 Child Model 指定。
-    - `sprite`：[纹理位置][textures]。
-    - `force_translucent`：为 `true` 时，强制应用该纹理的 Face 在 `translucent` Layer 中渲染。为 `false` 时：
-        - 如果纹理仅有不透明 Pixel（Alpha `255`），Face 在 `solid` Layer 中渲染
-        - 如果纹理 Pixel 仅有不透明或完全透明两种情况（Alpha 为 `0` 或 `255`），Face 在 `cutout` Layer 中渲染
-        - 否则，Face 在 `translucent` Layer 中渲染
+  - `sprite`：[纹理位置][textures]。
+  - `force_translucent`：为 `true` 时，强制应用该纹理的 Face 在 `translucent` Layer 中渲染。为 `false` 时：
+    - 如果纹理仅有不透明 Pixel（Alpha `255`），Face 在 `solid` Layer 中渲染
+    - 如果纹理 Pixel 仅有不透明或完全透明两种情况（Alpha 为 `0` 或 `255`），Face 在 `cutout` Layer 中渲染
+    - 否则，Face 在 `translucent` Layer 中渲染
 
 :::tip
 Block Model 还应指定 `particle` 纹理。在 Block 上跌落、跑过或破坏 Block 时会使用此纹理。
@@ -38,10 +38,10 @@ Item Model 也可以使用名为 `layer0`、`layer1` 等的 Layer 纹理；索�
 
 - `elements`：长方体 [Element][elements] 的列表。
 - `display`：保存不同[视角][perspectives]显示选项的子对象；可用键参见链接文章。只对 Item Model 生效，但通常会在 Block Model 中指定，以便 Item Model 继承显示选项。每个视角都是可选子对象，可按以下顺序包含选项：
-    - `translation`：Model 的平移，指定为 `[x, y, z]`。
-    - `rotation`：Model 的旋转，指定为 `[x, y, z]`。
-    - `scale`：Model 的缩放，指定为 `[x, y, z]`。
-    - `right_rotation`：NeoForge 添加。在缩放后应用的第二次旋转，指定为 `[x, y, z]`。
+  - `translation`：Model 的平移，指定为 `[x, y, z]`。
+  - `rotation`：Model 的旋转，指定为 `[x, y, z]`。
+  - `scale`：Model 的缩放，指定为 `[x, y, z]`。
+  - `right_rotation`：NeoForge 添加。在缩放后应用的第二次旋转，指定为 `[x, y, z]`。
 - `transform`：参见 [Root Transform][roottransforms]。
 
 :::tip
@@ -61,20 +61,20 @@ Minecraft 将 `from` 和 `to` 的值限制在 `[-16, 32]` 范围内。不过，�
 
 - `neoforge_data`：参见[额外 Face 数据][extrafacedata]。
 - `faces`：包含最多 6 个 Face 数据的对象，分别名为 `north`、`south`、`east`、`west`、`up` 和 `down`。每个 Face 包含以下数据：
-    - `uv`：Face 的 UV，指定为 `[u1, v1, u2, v2]`，其中 `u1, v1` 是左上 UV 坐标，`u2, v2` 是右下 UV 坐标。
-    - `texture`：Face 使用的纹理。必须是以 `#` 为前缀的 Texture 变量。例如，如果 Model 有名为 `wood` 的纹理，应使用 `#wood` 引用。技术上可选，缺失时使用 Missing Texture。
-    - `rotation`：可选。将纹理顺时针旋转 90、180 或 270 度。
-    - `cullface`：可选。指定方向存在与它接触的完整 Block 时，指示渲染引擎跳过该 Face。方向可为 `north`、`south`、`east`、`west`、`up` 或 `down`。
-    - `tintindex`：可选。指定可由 Color 处理器使用的 Tint Index；更多信息参见[着色][tinting]。默认为 -1，表示不着色。
-    - `neoforge_data`：参见[额外 Face 数据][extrafacedata]。
+  - `uv`：Face 的 UV，指定为 `[u1, v1, u2, v2]`，其中 `u1, v1` 是左上 UV 坐标，`u2, v2` 是右下 UV 坐标。
+  - `texture`：Face 使用的纹理。必须是以 `#` 为前缀的 Texture 变量。例如，如果 Model 有名为 `wood` 的纹理，应使用 `#wood` 引用。技术上可选，缺失时使用 Missing Texture。
+  - `rotation`：可选。将纹理顺时针旋转 90、180 或 270 度。
+  - `cullface`：可选。指定方向存在与它接触的完整 Block 时，指示渲染引擎跳过该 Face。方向可为 `north`、`south`、`east`、`west`、`up` 或 `down`。
+  - `tintindex`：可选。指定可由 Color 处理器使用的 Tint Index；更多信息参见[着色][tinting]。默认为 -1，表示不着色。
+  - `neoforge_data`：参见[额外 Face 数据][extrafacedata]。
 
 此外，还可以指定以下可选属性：
 
 - `shade`：仅供 Block Model 使用。可选。此 Element 的 Face 是否应有依赖方向的阴影，默认为 true。
 - `rotation`：对象旋转，指定为包含以下数据的子对象：
-    - `angle`：旋转角度，单位为度。
-    - `axis`：旋转所围绕的轴。目前无法让对象同时围绕多个轴旋转。
-    - `origin`：可选。旋转所围绕的原点，指定为 `[x, y, z]`。注意这些是绝对值，不相对于 Cube 位置。未指定时使用 `[0, 0, 0]`。
+  - `angle`：旋转角度，单位为度。
+  - `axis`：旋转所围绕的轴。目前无法让对象同时围绕多个轴旋转。
+  - `origin`：可选。旋转所围绕的原点，指定为 `[x, y, z]`。注意这些是绝对值，不相对于 Cube 位置。未指定时使用 `[0, 0, 0]`。
 
 #### 额外 Face 数据
 
@@ -108,10 +108,10 @@ Root Transform 有两种指定方式。第一种是使用名为 `matrix` 的单�
 
 - `translation`：相对平移，指定为三维 Vector（`[x, y, z]`），缺失时默认为 `[0, 0, 0]`。
 - `rotation` 或 `left_rotation`：缩放前，围绕平移后原点应用的旋转。默认为不旋转。可通过以下方式之一指定：
-    - 将单个轴映射到旋转的 JSON 对象，例如 `{"x": 90}`
-    - JSON 对象数组，每个对象将单个轴映射到旋转，并按指定顺序应用，例如 `[{"x": 90}, {"y": 45}, {"x": -22.5}]`
-    - 包含三个值的数组，分别指定围绕各轴的旋转，例如 `[90, 45, -22.5]`
-    - 包含四个值、直接指定 Quaternion 的数组，例如 `[0.38268346, 0, 0, 0.9238795]`（围绕 X 轴旋转 45 度）
+  - 将单个轴映射到旋转的 JSON 对象，例如 `{"x": 90}`
+  - JSON 对象数组，每个对象将单个轴映射到旋转，并按指定顺序应用，例如 `[{"x": 90}, {"y": 45}, {"x": -22.5}]`
+  - 包含三个值的数组，分别指定围绕各轴的旋转，例如 `[90, 45, -22.5]`
+  - 包含四个值、直接指定 Quaternion 的数组，例如 `[0.38268346, 0, 0, 0.9238795]`（围绕 X 轴旋转 45 度）
 - `scale`：相对于平移后原点的缩放，指定为三维 Vector（`[x, y, z]`），缺失时默认为 `[1, 1, 1]`。
 - `post_rotation` 或 `right_rotation`：缩放后围绕平移后原点应用的旋转。默认为不旋转，指定方式与 `rotation` 相同。
 - `origin`：用于旋转和缩放的原点。Transform 最后也会移动到此处。可指定为三维 Vector（`[x, y, z]`），或三个内置值之一：`"corner"`（`[0, 0, 0]`）、`"center"`（`[0.5, 0.5, 0.5]`）、`"opposing-corner"`（`[1, 1, 1]`，默认值）。
@@ -123,13 +123,14 @@ _另请参阅：[Minecraft Wiki][mcwiki] 上的 [Blockstate 文件][mcwikiblocks
 游戏使用 Blockstate 文件为不同 [BlockState][blockstates] 分配不同 Model。每个注册到游戏的 Block 必须恰好有一个 Blockstate 文件。为 BlockState 指定 Block Model 有三种互斥方式：Variant、Multipart 或 NeoForge 添加的 Definition Type。
 
 `variants` 块中，每个 BlockState 对应一个 Element。这是关联 BlockState 与 Model 的主要方式，绝大多数 Block 都使用它。
+
 - 键是不含 Block 名称的 BlockState String 表示，例如未含水上半 Slab 为 `"type=top,waterlogged=false"`，无 Property 的 Block 为 `""`。未使用的 Property 可以省略。例如，如果 `waterlogged` Property 不影响所选 Model，`type=top,waterlogged=false` 和 `type=top,waterlogged=true` 两个对象可合并为一个 `type=top` 对象。这也意味着空 String 对每个 Block 都有效。
 - 值是单个 Model Object 或 Model Object 数组。使用数组时，会随机选择一个 Model。Model Object 包含：
-    - `type`：NeoForge 添加。设置自定义 BlockState Model Loader。更多信息参见 [BlockState Model Loader][bsmmodelloader]。
-    - `model`：Model 文件位置的路径，相对于命名空间的 `models` 文件夹，例如 `minecraft:block/cobblestone`。
-    - `x` 和 `y`：Model 围绕 x 轴/y 轴的旋转，限制为 90 度的倍数。均为可选，默认为 0。
-    - `uvlock`：旋转时是否锁定 Model 的 UV。可选，默认为 false。
-    - `weight`：仅对 Model Object 数组有用。给对象分配用于随机选择的权重。可选，默认为 1。
+  - `type`：NeoForge 添加。设置自定义 BlockState Model Loader。更多信息参见 [BlockState Model Loader][bsmmodelloader]。
+  - `model`：Model 文件位置的路径，相对于命名空间的 `models` 文件夹，例如 `minecraft:block/cobblestone`。
+  - `x` 和 `y`：Model 围绕 x 轴/y 轴的旋转，限制为 90 度的倍数。均为可选，默认为 0。
+  - `uvlock`：旋转时是否锁定 Model 的 UV。可选，默认为 false。
+  - `weight`：仅对 Model Object 数组有用。给对象分配用于随机选择的权重。可选，默认为 1。
 
 相比之下，`multipart` 块中的 Element 会根据 BlockState Property 组合。该方式主要用于 Fence 和 Wall，它们根据 Boolean Property 启用四个方向 Part。Multipart Element 由 `when` 块和 `apply` 块两部分组成。
 
@@ -250,20 +251,14 @@ public static void registerAdditional(ModelEvent.RegisterStandalone event) {
 [bsmmodelloader]: modelloaders.md#block-state-model-loaders
 [custommodelloader]: modelloaders.md#model-loaders
 [elements]: #elements
-[event]: ../../../concepts/events.md
 [extrafacedata]: #extra-face-data
 [citems]: items.md
-[itemmodel]: items.md#a-basic-model
 [itemtints]: items.md#tinting
 [mcwiki]: https://minecraft.wiki
 [mcwikiblockstate]: https://minecraft.wiki/w/Tutorials/Models#Block_states
 [mcwikimodel]: https://minecraft.wiki/w/Model
-[mipmapping]: https://en.wikipedia.org/wiki/Mipmap
-[modbus]: ../../../concepts/events.md#事件总线
 [perspectives]: modelsystem.md#perspectives
-[rendertype]: #render-types
 [roottransforms]: #root-transforms
 [rl]: ../../../misc/identifier.md
 [textures]: ../textures.md
 [tinting]: #tinting
-
