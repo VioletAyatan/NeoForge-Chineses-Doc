@@ -1,7 +1,4 @@
----
-sidebar_position: 1
----
-# Registry
+# Registry（注册表）
 
 注册是将模组中的对象（例如 [Item][item]、[Block][block]、Entity 等）告知游戏的过程。注册非常重要，因为如果不注册，游戏根本不会知道这些对象的存在，从而引发难以解释的行为和崩溃。
 
@@ -9,7 +6,7 @@ sidebar_position: 1
 
 每个已注册对象都有一个唯一名称，称为 registry name。该名称以 [`Identifier`][identifier] 表示。例如，泥土 Block 的 registry name 是 `minecraft:dirt`，僵尸的 registry name 是 `minecraft:zombie`。模组对象当然不会使用 `minecraft` namespace，而会改用其 mod id。
 
-## Vanilla 与模组
+## 原版 VS 模组
 
 为理解 NeoForge registry 系统中的一些设计决策，我们先看看 Minecraft 是如何处理注册的。这里使用 Block registry 作为示例，因为大多数其他 registry 的工作方式相同。
 

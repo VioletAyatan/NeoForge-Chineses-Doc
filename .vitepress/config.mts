@@ -15,7 +15,7 @@ export default defineConfig({
 			{
 				text: '入门',
 				items: [
-					{ text: 'NeoFroge编程入门', link: '/docs/gettingstarted/index' },
+					{ text: 'NeoFroge入门', link: '/docs/gettingstarted/index' },
 					{ text: 'Mod文件', link: '/docs/gettingstarted/modfiles' },
 					{ text: '组织你的模组', link: '/docs/gettingstarted/structuring' },
 					{ text: '版本管理', link: '/docs/gettingstarted/versioning' },
@@ -24,9 +24,9 @@ export default defineConfig({
 			{
 				text: '基本概念',
 				items: [
-					{ text: '注册表', link: '/docs/concepts/registries' },
-					{ text: '端', link: '/docs/concepts/sides' },
-					{ text: '事件', link: '/docs/concepts/events' },
+					{ text: '注册表（Registries）', link: '/docs/concepts/registries' },
+					{ text: '端（Sides）', link: '/docs/concepts/sides' },
+					{ text: '事件（Events）', link: '/docs/concepts/events' },
 				],
 			},
 		],

@@ -1,10 +1,4 @@
----
-sidebar_position: 3
----
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-# Event
+# Event（事件）
 
 NeoForge 的主要功能之一是 Event 系统。游戏中发生各种事情时都会触发 Event。例如，玩家右键点击、玩家或其他 Entity 跳跃、Block 渲染、游戏加载等情况都有对应的 Event。模组开发者可以为这些 Event 订阅 Event handler，然后在 handler 内执行所需行为。
 
@@ -63,7 +57,7 @@ public class YourMod {
 
 ```java
 public class EventHandler {
-	@SubscribeEvent
+ @SubscribeEvent
     public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
         LivingEntity entity = event.getEntity();
         if (!entity.level().isClientSide()) {
@@ -201,7 +195,7 @@ Mod event bus 会作为参数传入 mod constructor，之后你便可以向其�
 
 除生命周期 Event 外，还有少数杂项 Event 会在 mod event bus 上触发，这主要是出于历史原因。通常可在这些 Event 中注册、设置或初始化各种内容。与生命周期 Event 不同，这些 Event 大多不会并行运行。示例如下：
 
-- `RegisterColorHandlersEvent.BlockTintSources`、`.ItemTintSources`、`.ColorResolvers` 
+- `RegisterColorHandlersEvent.BlockTintSources`、`.ItemTintSources`、`.ColorResolvers`
 - `ModelEvent.BakingCompleted`
 - `TextureAtlasStitchedEvent`
 
