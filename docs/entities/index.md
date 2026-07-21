@@ -1,6 +1,3 @@
----
-sidebar_position: 1
----
 # Entity
 
 Entity 是可通过多种方式与世界交互的世界内对象。常见示例包括 Mob、Projectile、可骑乘对象，甚至玩家。每个 Entity 都由多个系统构成，乍看之下可能难以理解。本节将拆解与构造 Entity 并使其按模组开发者意图行动有关的一些关键组成部分。

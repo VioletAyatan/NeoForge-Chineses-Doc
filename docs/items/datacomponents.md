@@ -1,7 +1,3 @@
----
-sidebar_position: 2
----
-
 # Data Component
 
 Data component 是 map 中用于在 registry 对象的 `Holder` 上存储数据的键值对。烟花爆炸、工具等每一项数据都以实际对象形式存储在 Holder 上，因此无需动态转换通用编码实例（例如 `CompoundTag`、`JsonElement`），这些值也能直接可见并可操作。

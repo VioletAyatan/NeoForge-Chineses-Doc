@@ -1,6 +1,3 @@
----
-sidebar_position: 6
----
 # MobEffect 与 Potion
 
 状态效果有时称为药水效果，在代码中称为 `MobEffect`，它是每个 tick 都会影响 [`LivingEntity`][livingentity] 的效果。本文说明如何使用它们、Effect 与 Potion 有何区别，以及如何添加自己的效果。

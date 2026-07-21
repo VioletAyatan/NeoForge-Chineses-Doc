@@ -1,6 +1,3 @@
----
-sidebar_position: 3
----
 # LivingEntity、Mob 与玩家
 
 LivingEntity 是 [Entity][entities] 的一个大型子群体，它们都继承自共同的 `LivingEntity` superclass。其中包括 Mob（通过 `Mob` subclass）、玩家（通过 `Player` subclass）与盔甲架（通过 `ArmorStand` subclass）。

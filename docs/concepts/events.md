@@ -1,4 +1,4 @@
-# Event（事件）
+# 事件机制（Event）
 
 NeoForge 的主要功能之一是 Event 系统。游戏中发生各种事情时都会触发 Event。例如，玩家右键点击、玩家或其他 Entity 跳跃、Block 渲染、游戏加载等情况都有对应的 Event。模组开发者可以为这些 Event 订阅 Event handler，然后在 handler 内执行所需行为。
 
