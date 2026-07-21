@@ -1,7 +1,4 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-# 配方
+# 配方（Recipes）
 
 配方是在 Minecraft 世界中将一组对象转换成其他对象的方式。虽然 Minecraft 只将该系统用于 Item 转换，但系统本身允许转换任意类型的对象——Block、Entity 等。几乎所有配方都使用配方数据文件；除非另有明确说明，本文中的“配方”均指由数据驱动的配方。
 

@@ -1,7 +1,4 @@
----
-sidebar_position: 0
----
-# Container
+# 容器（Containers）
 
 [BlockEntity][blockentity] 的常见用途之一是存储某种 Item。Minecraft 中一些最重要的 [Block][block]，例如熔炉或箱子，都会为此使用 BlockEntity。要在某个对象上存储 Item，Minecraft 使用 `Container`。
 

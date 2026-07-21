@@ -1,6 +1,3 @@
----
-sidebar_position: 1
----
 # Capability
 
 Capability 允许以动态而灵活的方式暴露功能，而无需直接实现大量 interface。

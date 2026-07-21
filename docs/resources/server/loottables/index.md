@@ -1,4 +1,4 @@
-# 战利品表
+# 战利品表（Loot Tables）
 
 战利品表是用于定义随机战利品掉落的数据文件。抽取战利品表会返回一个可能为空的 ItemStack 列表，其输出取决于（伪）随机性。战利品表位于 `data/<mod_id>/loot_table/<name>.json`。例如，泥土 Block 使用的战利品表 `minecraft:blocks/dirt` 位于 `data/minecraft/loot_table/blocks/dirt.json`。
 

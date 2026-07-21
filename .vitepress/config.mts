@@ -7,10 +7,9 @@ export default defineConfig({
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
-			{ text: 'Home', link: '/' },
-			{ text: 'Examples', link: '/markdown-examples' },
+			{ text: '首页', link: '/' },
+			{ text: '文档', link: '/docs/gettingstarted/index' },
 		],
-
 		sidebar: [
 			{
 				text: '模组编程入门',
@@ -129,8 +128,34 @@ export default defineConfig({
 								collapsed: true,
 								items: [],
 							},
+							{
+								text: '战利品表（Loot Tables）',
+								link: '/docs/resources/server/loottables/index',
+								collapsed: true,
+								items: [],
+							},
+							{
+								text: '配方（Recipes）',
+								link: '/docs/resources/server/recipes/index',
+								collapsed: true,
+								items: [],
+							},
+							{
+								text: '标签（Tags）',
+								link: '/docs/resources/server/tags',
+							},
 						],
 					},
+				],
+			},
+			{
+				text: '资源存储与转移（Inventories & Transfers）',
+				collapsed: true,
+				items: [
+					{ text: '容器（Containers）', link: '/docs/inventories/container' },
+					{ text: 'Capabilities', link: '/docs/inventories/capabilities' },
+					{ text: '菜单（Menus）', link: '/docs/inventories/menus' },
+					{ text: '事务（Transactions）', link: '/docs/inventories/transactions' },
 				],
 			},
 		],
