@@ -113,7 +113,7 @@ export default defineConfig({
 								link: '/docs/resources/server/conditions',
 							},
 							{
-								text: '伤害类型、伤害来源（Damage Types & Damage Sources）',
+								text: '伤害类型与伤害来源（Damage Types & Damage Sources）',
 								link: '/docs/resources/server/damagetypes',
 							},
 							{
