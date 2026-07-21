@@ -1,7 +1,4 @@
----
-sidebar_position: 2
----
-# Stream Codec
+# 流编解码器（Stream Codecs）
 
 Stream Codec 是一种序列化工具，用于描述如何将对象存入流（例如缓冲区）以及如何从流中读取对象。Stream Codec 主要由原版的[网络系统][networking]用于同步数据。
 

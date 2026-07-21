@@ -158,7 +158,47 @@ export default defineConfig({
 					{ text: '事务（Transactions）', link: '/docs/inventories/transactions' },
 				],
 			},
+			{
+				text: '数据存储（Data Storage）',
+				collapsed: true,
+				items: [
+					{ text: '命名二进制标签（Named Binary Tag (NBT)）', link: '/docs/datastorage/nbt' },
+					{ text: '编解码器（Codecs）', link: '/docs/datastorage/codecs' },
+					{ text: 'Value I/O', link: '/docs/datastorage/valueio' },
+					{ text: '数据附件（Data Attachments）', link: '/docs/datastorage/attachments' },
+					{ text: '数据存档（Saved Data）', link: '/docs/datastorage/saveddata' },
+				],
+			},
+			{
+				text: '世界生成（Worldgen）',
+				collapsed: true,
+				items: [
+					{ text: '生物群系修饰符（Biome Modifiers）', link: '/docs/worldgen/biomemodifier' },
+				],
+			},
+			{
+				text: '网络通讯（Networking）',
+				collapsed: true,
+				link: '/docs/networking/index',
+				items: [
+					{ text: '注册Payload', link: '/docs/networking/payload' },
+					{ text: '流编解码器（Stream Codecs）', link: '/docs/networking/streamcodecs' },
+					{
+						text: '使用配置任务（Using Configuration Tasks）',
+						link: '/docs/networking/configuration-tasks',
+					},
+				],
+			},
+			{
+				text: '渲染（Rendering）',
+				collapsed: true,
+				items: [
+					{ text: 'Features', link: '/docs/rendering/feature' },
+					{ text: '客户端粒子（Client Particles）', link: '/docs/rendering/particles' },
+					{ text: '屏幕（Screens）', link: '/docs/rendering/screens' },
+				],
+			},
 		],
-		socialLinks: [{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }],
+		socialLinks: [{ icon: 'github', link: 'https://github.com/VioletAyatan/MC-doc' }],
 	},
 });

@@ -1,30 +1,24 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-# Biome Modifier
+# 生物群系修饰符（Biome Modifier）
 
 Biome Modifier 是一套由数据驱动的系统，可用于更改生物群系的多个方面，包括注入或移除 PlacedFeature、添加或移除生物生成、改变气候，以及调整植被与水体颜色。NeoForge 提供了若干默认 Biome Modifier，覆盖玩家与 mod 开发者的大多数用例。
 
 ### 推荐阅读章节
 
 - 玩家或数据包开发者：
-    - [应用 Biome Modifier](#applying-biome-modifiers)
-    - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
-
+  - [应用 Biome Modifier](#applying-biome-modifiers)
+  - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
 
 - 进行简单添加或移除型生物群系修改的 mod 开发者：
-    - [应用 Biome Modifier](#applying-biome-modifiers)
-    - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
-    - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
-    - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
-
+  - [应用 Biome Modifier](#applying-biome-modifiers)
+  - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
+  - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
+  - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
 
 - 希望进行自定义或复杂生物群系修改的 mod 开发者：
-    - [应用 Biome Modifier](#applying-biome-modifiers)
-    - [创建自定义 Biome Modifier](#creating-custom-biome-modifiers)
-    - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
-    - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
-
+  - [应用 Biome Modifier](#applying-biome-modifiers)
+  - [创建自定义 Biome Modifier](#creating-custom-biome-modifiers)
+  - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
+  - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
 
 ## 应用 Biome Modifier
 
@@ -130,7 +124,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 </TabItem>
 </Tabs>
 
-
 :::warning
 向生物群系添加原版 `PlacedFeature` 时务必谨慎，因为这可能引发所谓的 Feature 循环冲突（两个生物群系的 Feature 列表包含相同的两个 Feature，但二者在同一 `GenerationStep` 中的顺序不同），进而导致崩溃。出于类似原因，不应在多个 Biome Modifier 中使用同一个 `PlacedFeature`。
 
@@ -200,7 +193,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 </TabItem>
 </Tabs>
-
 
 ### 添加生成
 
@@ -276,7 +268,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 </TabItem>
 </Tabs>
 
-
 ### 移除生成
 
 此 Biome Modifier 类型从生物群系中移除 Entity 生成。该 Modifier 接收要移除 Entity 生成的生物群系 id 或标签，以及要移除的 Entity 的 `EntityType` id 或标签。
@@ -330,7 +321,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 </TabItem>
 </Tabs>
-
 
 ### 添加生成代价
 
@@ -402,7 +392,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 </TabItem>
 </Tabs>
 
-
 ### 移除生成代价
 
 允许从生物群系中移除生成代价。生成代价是一种较新的机制，可让生物分散生成以减少聚集。该 Modifier 接收要移除生成代价的生物群系 id 或标签，以及要移除生成代价的 Entity 的 `EntityType` id 或标签。
@@ -456,7 +445,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 </TabItem>
 </Tabs>
-
 
 ### 添加旧版 Carver
 
@@ -585,7 +573,6 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 |   `vegetal_decoration`   | 几乎所有植物（花、树、藤蔓等）都在此阶段添加。                                         |
 | `top_layer_modification` | 最后运行。用于在寒冷生物群系表面放置雪和冰。                                           |
 
-
 ## 创建自定义 Biome Modifier
 
 ### `BiomeModifier` 实现
@@ -636,7 +623,6 @@ public static final Supplier<MapCodec<ExampleBiomeModifier>> EXAMPLE_BIOME_MODIF
         ).apply(instance, ExampleBiomeModifier::new)
     ));
 ```
-
 
 ## 生成 Biome Modifier 数据
 

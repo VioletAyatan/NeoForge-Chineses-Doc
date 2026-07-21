@@ -1,6 +1,3 @@
----
-sidebar_position: 1
----
 # 注册 Payload
 
 Payload 用于在客户端与服务器之间发送任意数据。它们通过 `RegisterPayloadHandlersEvent` 事件提供的 `PayloadRegistrar` 进行注册。
