@@ -90,8 +90,8 @@ float modifiedValue = valueEffect.process(enchantLevel, server.random, baseValue
 
 #### 定义为 `DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>`
 
-与护甲有关：
-- `minecraft:armor_effectiveness`：决定护甲抵御此武器的有效程度，范围从 0（无保护）到 1（正常保护）。破甲使用此组件。
+与盔甲有关：
+- `minecraft:armor_effectiveness`：决定盔甲抵御此武器的有效程度，范围从 0（无保护）到 1（正常保护）。破甲使用此组件。
 - `minecraft:damage_protection`：每“点”伤害减免都会使持有此 Item 时受到的伤害降低 4%，最多降低 80%。爆炸保护、摔落缓冲、火焰保护、保护和弹射物保护使用此组件。
 
 与攻击有关：
@@ -321,7 +321,7 @@ DataComponentMap.builder().set(
 #### 定义为 `DataComponentType<Unit>`
 
 - `minecraft:prevent_equipment_drop`：阻止玩家死亡时掉落此 Item。消失诅咒使用此组件。
-- `minecraft:prevent_armor_change`：阻止从护甲槽位卸下此 Item。绑定诅咒使用此组件。
+- `minecraft:prevent_armor_change`：阻止从盔甲槽位卸下此 Item。绑定诅咒使用此组件。
 
 #### 定义为 `DataComponentType<List<CrossbowItem.ChargingSounds>>`
 

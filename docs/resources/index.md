@@ -51,7 +51,7 @@ Data Pack 可包含影响以下内容的文件夹：
 
 | 文件夹名称                                                                                                               | 内容                     |
 |---------------------------------------------------------------------------------------------------------------------------|------------------------------|
-| `advancement`                                                                                                             | [Advancement（进度）][advancements] |
+| `advancement`                                                                                                             | [Advancement（成就）][advancements] |
 | `banner_pattern`                                                                                                          | Banner Pattern（旗帜图案）  |
 | `cat_variant`, `chicken_variant`, `cow_variant`, `frog_variant`, `pig_variant`, `wolf_variant`, `zombie_nautilus_variant` | Entity Variant（Entity 变体） |
 | `cat_sound_variant`, `chicken_sound_variant`, `cow_sound_variant`, `pig_sound_variant`, `wolf_sound_variant`              | Entity Sound Variant（Entity 声音变体） |
@@ -68,7 +68,7 @@ Data Pack 可包含影响以下内容的文件夹：
 | `trade_set`, `villager_trade`                                                                                             | Villager Trade（村民交易）  |
 | `trial_spawner`                                                                                                           | 战斗挑战            |
 | `trim_material`, `trim_pattern`                                                                                           | Armor Trim（盔甲纹饰）      |
-| `neoforge/data_maps`                                                                                                      | [Data Map][datamap]         |
+| `neoforge/data_maps`                                                                                                      | [数据映射][datamap]         |
 | `neoforge/loot_modifiers`                                                                                                 | [Global Loot Modifier（全局战利品修改器）][glm] |
 | `dimension`, `dimension_type`, `structure`, `timeline`, `worldgen`, `neoforge/biome_modifier`                             | 世界生成文件               |
 
@@ -116,7 +116,7 @@ Provider 有两种推荐注册方式。第一种是全部注册到 `GatherDataEv
 | [`RecipeProvider`][recipeprovider]                   | `buildRecipes(RecipeOutput)`     | 配方                                                                 | Server | 需要额外的类才能正常工作，详见链接文章。                                                   |
 | [`RecipePrioritiesProvider`][recipepriorities]       | `start()`                        | 配方优先级顺序                                              | Server |                                                                                                                 |
 | [`TagsProvider` 的各种子类][tagsprovider] | `addTags(HolderLookup.Provider)` | Tag                                                                    | Server | 存在多个专用子类，详见链接文章。                                           |
-| [`DataMapProvider`][datamapprovider]                 | `gather()`                       | Data Map 条目                                                        | Server |                                                                                                                 |
+| [`DataMapProvider`][datamapprovider]                 | `gather()`                       |数据映射条目                                                        | Server |                                                                                                                 |
 | [`GlobalLootModifierProvider`][glmprovider]          | `start()`                        | Global Loot Modifier                                                   | Server |                                                                                                                 |
 | [`DatapackBuiltinEntriesProvider`][datapackprovider] | N/A                              | Data Pack 内置条目，例如世界生成和 [Damage Type][damagetypes] | Server | 不重写方法，而是在构造器中的 Lambda 内添加条目。详见链接文章。 |
 | `JsonCodecProvider`（abstract class）                 | `gather()`                       | 带 Codec 的对象                                                    | Both   | 可以扩展该类，用于任何具有 [Codec]、可将数据编码的对象。                              |

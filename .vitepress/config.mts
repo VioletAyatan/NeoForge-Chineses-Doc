@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-	title: 'NeoFroge 中文编程手册',
-	description: 'Minecraft NeoFroge 中文编程手册',
+	title: 'NeoForge 中文编程手册',
+	description: 'Minecraft NeoForge 中文编程手册',
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [

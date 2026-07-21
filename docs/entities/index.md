@@ -274,7 +274,7 @@ public boolean isPickable() {
 
 ### Entity Attachment
 
-_不要与 [Data Attachment][dataattachments] 混淆。_
+_不要与[数据附件][dataattachments]混淆。_
 
 Entity attachment 用于定义 Entity 的可视附着点。利用此系统，可以定义乘客或名牌等内容相对于 Entity 本身显示的位置。Entity 本身只控制 attachment 的默认位置，attachment 随后可定义相对于该默认位置的 offset。
 

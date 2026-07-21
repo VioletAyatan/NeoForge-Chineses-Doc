@@ -5,7 +5,7 @@ sidebar_position: 4
 
 数据附件系统允许模组把额外数据附加并存储到 BlockEntity、区块、Entity 和 Level 上。
 
-_若要存储额外的 Level 数据，也可以使用 [SavedData][saveddata]。_
+_若要存储额外的 Level 数据，也可以使用[数据存档][saveddata]。_
 
 :::note
 用于 ItemStack 的数据附件已由原版[数据组件][datacomponents]取代。

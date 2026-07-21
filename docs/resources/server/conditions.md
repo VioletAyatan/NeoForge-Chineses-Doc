@@ -223,7 +223,7 @@ public static final Supplier<MapCodec<XorCondition>> XOR =
 
 虽然任何数据包 JSON 文件都可以使用加载条件，但只有少数[数据提供器][datagen]经过修改，能够生成这些条件。其中包括：
 
-- [`RecipeProvider`][recipeprovider]（通过 `RecipeOutput#withConditions`），包括配方进度
+- [`RecipeProvider`][recipeprovider]（通过 `RecipeOutput#withConditions`），包括配方成就
 - `JsonCodecProvider` 及其子类 `SpriteSourceProvider`
 - [`DataMapProvider`][datamapprovider]
 - [`GlobalLootModifierProvider`][glmprovider]

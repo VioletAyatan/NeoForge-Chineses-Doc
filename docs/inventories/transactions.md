@@ -1,10 +1,10 @@
-# Transaction
+# 事务（Transaction）
 
-Transaction 是 NeoForge 添加的系统，用于管理不同物品栏之间传输内容时的通信。每次传输通过三个基本概念进行管理：被传输的 `Resource`、表示物品栏的 `ResourceHandler`，以及促成通信的 `Transaction`。
+事务是 NeoForge 添加的系统，用于管理不同物品栏之间传输内容时的通信。每次传输通过三个基本概念进行管理：被传输的 `Resource`、表示物品栏的 `ResourceHandler`，以及促成通信的 `Transaction`。
 
 ## Resource
 
-`Resource` 表示执行 transaction 的底层对象。每个 `Resource` 都应当是 immutable 的，只包含所使用的对象类型，而不包含传输对象的数量。例如，transaction “五个苹果换一个绿宝石”包含 `Resource`“苹果”与“绿宝石”，而不是“五个苹果”与“一个绿宝石”。
+`Resource` 表示执行事务的底层对象。每个 `Resource` 都应当是 immutable 的，只包含所使用的对象类型，而不包含传输对象的数量。例如，事务“五个苹果换一个绿宝石”包含 `Resource`“苹果”与“绿宝石”，而不是“五个苹果”与“一个绿宝石”。
 
 因此，每个 `Resource` 都具有以下三项 property：
 
@@ -130,9 +130,9 @@ public final class ExampleResource implements Resource {
 
 ## ResourceHandler
 
-`ResourceHandler<T>` 表示 transaction 中的底层物品栏，其中 `T` 是为对象提供底层支持的 `Resource` 类型。每个 handler 使用索引映射到关联内容（例如索引 `0` 映射到第一个槽位，索引 `1` 映射到第二个槽位，依此类推）。对于每个索引，可以检查该位置能否容纳某个 `Resource`（`isValid`），或已存储了什么 `Resource`（`getResource`）。还可以检查该位置最多可存储多少个 `Resource`（`getCapacityAsLong`／`getCapacityAsInt`），以及其中已存储多少个 `Resource`（`getAmountAsLong`／`getAmountAsInt`）。Handler 可访问的索引数量表示其 `size`。
+`ResourceHandler<T>` 表示事务中的底层物品栏，其中 `T` 是为对象提供底层支持的 `Resource` 类型。每个 handler 使用索引映射到关联内容（例如索引 `0` 映射到第一个槽位，索引 `1` 映射到第二个槽位，依此类推）。对于每个索引，可以检查该位置能否容纳某个 `Resource`（`isValid`），或已存储了什么 `Resource`（`getResource`）。还可以检查该位置最多可存储多少个 `Resource`（`getCapacityAsLong`／`getCapacityAsInt`），以及其中已存储多少个 `Resource`（`getAmountAsLong`／`getAmountAsInt`）。Handler 可访问的索引数量表示其 `size`。
 
-为了修改底层物品栏的内容，`ResourceHandler` 提供两个方法：`insert` 用于放入 `Resource`，`extract` 用于取出 `Resource`。`insert` 与 `extract` 接受三个参数：要操作的 `Resource`、要放入／取出的 `int` 数量，以及表示执行操作的 [transaction][transaction] 的 `TransactionContext`；返回实际放入／取出的数量。两个方法都会寻找第一个可用索引，以放入内容或从中取出内容。如果 handler 应当只在某个特定索引执行 transaction，`insert` 与 `extract` 还提供接受 `int` 索引的 overload，以在该索引放入／取出 `Resource`。
+为了修改底层物品栏的内容，`ResourceHandler` 提供两个方法：`insert` 用于放入 `Resource`，`extract` 用于取出 `Resource`。`insert` 与 `extract` 接受三个参数：要操作的 `Resource`、要放入／取出的 `int` 数量，以及表示执行操作的[事务][transaction]的 `TransactionContext`；返回实际放入／取出的数量。两个方法都会寻找第一个可用索引，以放入内容或从中取出内容。如果 handler 应当只在某个特定索引执行事务，`insert` 与 `extract` 还提供接受 `int` 索引的 overload，以在该索引放入／取出 `Resource`。
 
 ```java
 // For some ResourceHandler<ItemResource> handler
@@ -400,7 +400,7 @@ ResourceHandler<FluidResource> fluidContainer = access.getCapability(Capabilitie
 
 `Transaction` 促成 `Resource` 在 `ResourceHandler` 之间传输。Resource 会从其 `ResourceHandler` 中被 `insert` 与 `extract`。执行插入与提取后，一旦调用 `Transaction#commit`，传输即视为有效或完成。
 
-`Transaction` 是 `AutoCloseable`，因此启动 transaction 的标准方式是使用 `Transaction#openRoot` 的 try-with-resources block：
+`Transaction` 是 `AutoCloseable`，因此启动事务的标准方式是使用 `Transaction#openRoot` 的 try-with-resources block：
 
 ```java
 // Let's assume we have two `ResourceHandler<ItemResource>`s apples, emeralds.
@@ -429,7 +429,7 @@ try (Transaction tx = Transaction.openRoot()) {
 
 :::tip
 
-`ResourceHandlerUtil` 提供了多种有用方法，用于检查 `ResourceHandler` 当前状态，或在 handler 之间进行一般性 transaction。例如，上面的绿宝石换苹果交易可以简化为：
+`ResourceHandlerUtil` 提供了多种有用方法，用于检查 `ResourceHandler` 当前状态，或在 handler 之间进行一般性事务。例如，上面的绿宝石换苹果交易可以简化为：
 
 ```java
 // Let's assume we have two `ResourceHandler<ItemResource>`s apples, emeralds.
@@ -464,7 +464,7 @@ try (Transaction tx = Transaction.openRoot()) {
 
 :::
 
-如果同时发生多个 transaction，`Transaction` 还可以通过 `Transation#open` 在自身内部包含 `Transaction`。
+如果同时发生多个事务，`Transaction` 还可以通过 `Transation#open` 在自身内部包含 `Transaction`。
 
 ```java
 // Open the transaction.
@@ -498,7 +498,7 @@ try (Transaction tx = Transaction.openRoot()) {
 
 `Transaction#commit` 本身不会执行任何操作。因此，无论传输是否成功，所执行的插入与提取都是永久性的。我们希望的是：对于任意 `Transaction`，只有在 `commit` 后才发生传输，否则应回滚传输。
 
-这正是 `SnapshotJournal<T>` 发挥作用的地方。顾名思义，它可以在修改内容前为 handler 当前状态获取一个 `T` “snapshot”。随后，如果 transaction 成功，可以释放 snapshot；如果失败，则可把 handler 恢复到先前状态。每个 `SnapshotJournal` 至少必须实现两个方法：`createSnapshot` 用于实际创建保存状态，`revertToSnapshot` 用于把 handler 恢复到指定状态。如果由于 handler 中的变化而需要通知或更新某些底层对象，journal 还可以覆盖 `onRootCommit` 来处理这些变化。
+这正是 `SnapshotJournal<T>` 发挥作用的地方。顾名思义，它可以在修改内容前为 handler 当前状态获取一个 `T` “snapshot”。随后，如果事务成功，可以释放 snapshot；如果失败，则可把 handler 恢复到先前状态。每个 `SnapshotJournal` 至少必须实现两个方法：`createSnapshot` 用于实际创建保存状态，`revertToSnapshot` 用于把 handler 恢复到指定状态。如果由于 handler 中的变化而需要通知或更新某些底层对象，journal 还可以覆盖 `onRootCommit` 来处理这些变化。
 
 所有 NeoForge `ResourceHandler` 实现都以某种方式使用 `SnapshotJournal`，要么由 handler 本身直接使用，要么作为内部 field。只有创建新的 `ResourceHandler` 时，才需要实现 `SnapshotJournal`。
 
@@ -603,7 +603,7 @@ public class ExampleResourceHandler extends SnapshotJournal<ExampleObject> imple
 }
 ```
 
-至此，transaction 现在也能正确处理物品栏状态：
+至此，事务现在也能正确处理物品栏状态：
 
 ```java
 // Let's assume we have two `ResourceHandler<ExampleResource>`s exampleA, exampleB.

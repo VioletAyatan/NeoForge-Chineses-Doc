@@ -103,9 +103,9 @@ public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> p
 
 有关自定义网络 packet 的更多信息，请参阅[网络文章][networking]。
 
-## Data Attachment
+## 数据附件
 
-Entity 已经过 patch，会扩展 `AttachmentHolder`，因此支持通过 [data attachment][attachment] 存储数据。它的主要用途是在不属于你的 Entity（即 Minecraft 或其他模组添加的 Entity）上定义自定义数据。更多信息请参阅所链接的文章。
+Entity 已经过 patch，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的 Entity（即 Minecraft 或其他模组添加的 Entity）上定义自定义数据。更多信息请参阅所链接的文章。
 
 ## 自定义网络消息
 

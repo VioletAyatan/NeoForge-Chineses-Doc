@@ -3,12 +3,12 @@
 layout: home
 
 hero:
-  name: "Minecraft NeoFroge Chineses document"
-  text: "Minecraft NeoFroge Chineses document"
+  name: "Minecraft NeoForge Chineses document"
+  text: "Minecraft NeoForge Chineses document"
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: NeoFroge 编程入门
+      text: NeoForge 编程入门
       link: /docs/gettingstarted/index
     - theme: alt
       text: API Examples

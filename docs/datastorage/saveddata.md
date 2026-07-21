@@ -1,9 +1,9 @@
 ---
 sidebar_position: 5
 ---
-# Saved Data
+# 数据存档（Saved Data）
 
-Saved Data（SD）系统可用于在 Level 上保存额外数据。
+数据存档（SD）系统可用于在 Level 上保存额外数据。
 
 _如果数据只与某些 BlockEntity、区块或 Entity 有关，请考虑改用[数据附件](attachments)。_
 
@@ -25,7 +25,7 @@ public class ExampleSavedData extends SavedData {
 
 ## `SavedDataType`
 
-`SavedData` 本身只是一个对象，因此需要某种关联标识符；此外，还需要把数据写入磁盘并从磁盘读取。`SavedDataType` 正是为此而存在。它接收 Saved Data 的标识符、没有现存数据时使用的默认构造器，以及用于编码和解码数据的 [Codec][codec]。该标识符会被当作关联世界文件夹及各 Level 维度中的路径：
+`SavedData` 本身只是一个对象，因此需要某种关联标识符；此外，还需要把数据写入磁盘并从磁盘读取。`SavedDataType` 正是为此而存在。它接收数据存档的标识符、没有现存数据时使用的默认构造器，以及用于编码和解码数据的 [Codec][codec]。该标识符会被当作关联世界文件夹及各 Level 维度中的路径：
 
 - 服务器数据：`./<world_folder>/data/<identifier_namespace>/<identifier_path>.dat`
 - 各 Level 数据：`./<world_folder>/dimensions/<level_namespace>/<level_path>/data/<identifier_namespace>/<identifier_path>.dat`

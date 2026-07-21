@@ -7,20 +7,20 @@
 - 熟悉 Java 编程语言，尤其是面向对象、多态、泛型和函数式特性。
 - 已安装 Java 25 开发工具包（JDK）和 64 位 Java 虚拟机（JVM）。NeoForge 推荐并正式支持 [Microsoft 的 OpenJDK 发行版][jdk]，不过其他 JDK 通常也可以正常使用。
 
-:::caution
+:::warning
 请确保你使用的是 64 位 JVM。一种检查方法是在终端中运行 `java -version`。Minecraft 不支持 32 位 JVM。
 :::
 
 - 熟悉你所选择的集成开发环境（IDE）。
-    - NeoForge 正式支持 [IntelliJ IDEA][intellij] 和 [Eclipse][eclipse]，二者都集成了 Gradle 支持。不过，从 NetBeans、Visual Studio Code 到 Vim 或 Emacs，任何 IDE 都可以使用。
+  - NeoForge 正式支持 [IntelliJ IDEA][intellij] 和 [Eclipse][eclipse]，二者都集成了 Gradle 支持。不过，从 NetBeans、Visual Studio Code 到 Vim 或 Emacs，任何 IDE 都可以使用。
 - 熟悉 [Git][git] 和 [GitHub][github]。严格来说这不是必需条件，但它会让你的开发工作轻松许多。
 
 ## 搭建工作区
 
 - 前往 [Mod Generator][modgen] 网页，填写模组名称（以及可选的模组 ID）、包名、Minecraft 版本和 Gradle 插件（[ModDevGradle][mdg] 或 [NeoGradle][ng]），单击“Download Mod Project”，然后解压下载的 ZIP 文件。
 - 打开 IDE 并导入 Gradle 项目。Eclipse 和 IntelliJ IDEA 会自动完成这一步。如果你的 IDE 不会自动导入，也可以通过终端命令 `gradlew` 完成。
-    - 第一次执行时，Gradle 会下载 NeoForge 的全部依赖项（包括 Minecraft 本身）并对其进行反编译。这个过程可能需要相当长时间（取决于硬件和网络状况，最长可能达到一小时）。
-    - 每当你修改 Gradle 文件后，都需要重新加载 Gradle 变更；可以单击 IDE 中的“Reload Gradle”按钮，也可以再次运行终端命令 `gradlew`。
+  - 第一次执行时，Gradle 会下载 NeoForge 的全部依赖项（包括 Minecraft 本身）并对其进行反编译。这个过程可能需要相当长时间（取决于硬件和网络状况，最长可能达到一小时）。
+  - 每当你修改 Gradle 文件后，都需要重新加载 Gradle 变更；可以单击 IDE 中的“Reload Gradle”按钮，也可以再次运行终端命令 `gradlew`。
 
 ## 自定义模组信息
 
@@ -58,4 +58,3 @@
 [modgen]: https://neoforged.net/mod-generator/
 [ng]: https://github.com/neoforged/NeoGradle
 [properties]: modfiles.md#gradleproperties
-

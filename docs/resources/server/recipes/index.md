@@ -17,7 +17,7 @@
 - **`RecipeSerializer`**：本质上是对 [`MapCodec`][codec] 与 [`StreamCodec`][streamcodec] 的包装，两者均用于序列化。
 - **`RecipeType`**：与 `Recipe` 对应的已注册类型，主要用于按类型查询配方。通常，不同的合成容器应使用不同的 `RecipeType`。例如，`minecraft:crafting` 配方类型涵盖 `minecraft:crafting_shaped`、`minecraft:crafting_shapeless` 配方序列化器以及特殊合成序列化器。
 - **`RecipeBookCategory`**：在配方书中查看时代表一组配方的分组。
-- **配方[进度][advancement]**：负责在配方书中解锁配方的进度。它不是必需的，而且玩家通常会使用配方查看器 mod 而忽略它；不过[配方数据提供器][datagen]会自动生成，因此建议沿用。
+- **[配方成就][advancement]**：负责在配方书中解锁配方的成就。它不是必需的，而且玩家通常会使用配方查看器 mod 而忽略它；不过[配方数据提供器][datagen]会自动生成，因此建议沿用。
 - **`RecipePropertySet`**：定义菜单中指定输入槽位可以接受的 Ingredient 列表。
 - **`RecipeBuilder`**：在数据生成期间用于创建 JSON 配方。
 - **配方工厂**：用于根据 `RecipeBuilder` 创建 `Recipe` 的方法引用。它可以是构造器引用、静态 builder 方法，或专门为此目的创建的函数式接口（通常命名为 `Factory`）。
@@ -293,7 +293,7 @@ public class MyRecipeProvider extends RecipeProvider {
 }
 ```
 
-需要注意 `RecipeOutput` 参数。Minecraft 使用该对象自动生成配方进度。此外，NeoForge 为 `RecipeOutput` 注入了[条件][conditions]支持，可通过 `#withConditions` 调用。
+需要注意 `RecipeOutput` 参数。Minecraft 使用该对象自动生成配方成就。此外，NeoForge 为 `RecipeOutput` 注入了[条件][conditions]支持，可通过 `#withConditions` 调用。
 
 配方本身通常通过 `RecipeBuilder` 的子类添加。列出所有原版配方 builder 超出了本文范围（它们在[内置配方类型][builtin]一文中说明），不过[自定义配方页面][customdatagen]介绍了如何创建自己的 builder。
 

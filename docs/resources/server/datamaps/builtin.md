@@ -1,10 +1,10 @@
-# 内置 Data Map
+# 内置数据映射
 
-NeoForge 为常见用例提供了多种内置 [Data Map][datamap]，用于取代原版中硬编码的字段。原版值通过 NeoForge 的 Data Map 文件提供，因此对玩家而言没有功能差异。
+NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于取代原版中硬编码的字段。原版值通过 NeoForge 的数据映射文件提供，因此对玩家而言没有功能差异。
 
 ## `neoforge:acceptable_villager_distances`
 
-允许配置村民能够注意到某个 Entity 的最大方块距离，用于取代 `VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES`（该字段将在 26.2 中被忽略）。此 Data Map 位于 `neoforge/data_maps/entity_type/acceptable_villager_distances.json`，其对象具有以下结构：
+允许配置村民能够注意到某个 Entity 的最大方块距离，用于取代 `VillagerHostilesSensor.ACCEPTABLE_DISTANCE_FROM_HOSTILES`（该字段将在 26.2 中被忽略）。此数据映射位于 `neoforge/data_maps/entity_type/acceptable_villager_distances.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -28,7 +28,7 @@ NeoForge 为常见用例提供了多种内置 [Data Map][datamap]，用于取代
 
 ## `neoforge:compostables`
 
-允许配置堆肥桶数值，用于取代 `ComposterBlock.COMPOSTABLES`（该字段现在已被忽略）。此 Data Map 位于 `neoforge/data_maps/item/compostables.json`，其对象具有以下结构：
+允许配置堆肥桶数值，用于取代 `ComposterBlock.COMPOSTABLES`（该字段现在已被忽略）。此数据映射位于 `neoforge/data_maps/item/compostables.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -54,7 +54,7 @@ NeoForge 为常见用例提供了多种内置 [Data Map][datamap]，用于取代
 
 ## `neoforge:furnace_fuels`
 
-允许配置 Item 的燃烧时间。此 Data Map 位于 `neoforge/data_maps/item/furnace_fuels.json`，其对象具有以下结构：
+允许配置 Item 的燃烧时间。此数据映射位于 `neoforge/data_maps/item/furnace_fuels.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -77,7 +77,7 @@ NeoForge 为常见用例提供了多种内置 [Data Map][datamap]，用于取代
 ```
 
 :::info
-NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime` 方法，该方法的结果会覆盖此 Data Map。只有在 Data Map 无法满足需求的场景中才应使用 `#getBurnTime`，例如燃烧时间取决于[数据组件][datacomponent]时。
+NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime` 方法，该方法的结果会覆盖此数据映射。只有在数据映射无法满足需求的场景中才应使用 `#getBurnTime`，例如燃烧时间取决于[数据组件][datacomponent]时。
 :::
 
 :::warning
@@ -102,7 +102,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:monster_room_mobs`
 
-允许配置地牢刷怪笼中可能出现的生物，用于取代 `MonsterRoomFeature#MOBS`（该字段现在已被忽略）。此 Data Map 位于 `neoforge/data_maps/entity_type/monster_room_mobs.json`，其对象具有以下结构：
+允许配置地牢刷怪笼中可能出现的生物，用于取代 `MonsterRoomFeature#MOBS`（该字段现在已被忽略）。此数据映射位于 `neoforge/data_maps/entity_type/monster_room_mobs.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -126,7 +126,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:oxidizables`
 
-允许配置氧化阶段，用于取代 `WeatheringCopper#NEXT_BY_BLOCK`。此 Data Map 还用于构建反向的除锈映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/oxidizables.json`，其对象具有以下结构：
+允许配置氧化阶段，用于取代 `WeatheringCopper#NEXT_BY_BLOCK`。此数据映射还用于构建反向的除锈映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/oxidizables.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -154,7 +154,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:parrot_imitations`
 
-允许配置鹦鹉模仿生物时播放的声音，用于取代 `Parrot#MOB_SOUND_MAP`（该字段现在已被忽略）。此 Data Map 位于 `neoforge/data_maps/entity_type/parrot_imitations.json`，其对象具有以下结构：
+允许配置鹦鹉模仿生物时播放的声音，用于取代 `Parrot#MOB_SOUND_MAP`（该字段现在已被忽略）。此数据映射位于 `neoforge/data_maps/entity_type/parrot_imitations.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -178,7 +178,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:raid_hero_gifts`
 
-允许配置当你阻止袭击后，具有特定 `VillagerProfession` 的村民可能赠送给你的礼物，用于取代 `GiveGiftToHero#GIFTS`（该字段现在已被忽略）。此 Data Map 位于 `neoforge/data_maps/villager_profession/raid_hero_gifts.json`，其对象具有以下结构：
+允许配置当你阻止袭击后，具有特定 `VillagerProfession` 的村民可能赠送给你的礼物，用于取代 `GiveGiftToHero#GIFTS`（该字段现在已被忽略）。此数据映射位于 `neoforge/data_maps/villager_profession/raid_hero_gifts.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -202,7 +202,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:strippables`
 
-允许配置 Block 被去皮时（用斧或具有 Item 能力 `ItemAbilities#AXE_STRIP` 的 Item 右键点击）将变成的 Block，用于取代 `AxeItem#STRIPPABLES`（该字段将在 26.2 中被忽略）。此 Data Map 位于 `neoforge/data_maps/block/strippables.json`，其对象具有以下结构：
+允许配置 Block 被去皮时（用斧或具有 Item 能力 `ItemAbilities#AXE_STRIP` 的 Item 右键点击）将变成的 Block，用于取代 `AxeItem#STRIPPABLES`（该字段将在 26.2 中被忽略）。此数据映射位于 `neoforge/data_maps/block/strippables.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -226,7 +226,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:vibration_frequencies`
 
-允许配置游戏事件发出的幽匿振动频率，用于取代 `VibrationSystem#VIBRATION_FREQUENCY_FOR_EVENT`（该字段现在已被忽略）。此 Data Map 位于 `neoforge/data_maps/game_event/vibration_frequencies.json`，其对象具有以下结构：
+允许配置游戏事件发出的幽匿振动频率，用于取代 `VibrationSystem#VIBRATION_FREQUENCY_FOR_EVENT`（该字段现在已被忽略）。此数据映射位于 `neoforge/data_maps/game_event/vibration_frequencies.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -276,7 +276,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:waxables`
 
-允许配置 Block 上蜡时（用蜜脾右键点击）将变成的 Block，用于取代 `HoneycombItem#WAXABLES`。此 Data Map 还用于构建反向的除蜡映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/waxables.json`，其对象具有以下结构：
+允许配置 Block 上蜡时（用蜜脾右键点击）将变成的 Block，用于取代 `HoneycombItem#WAXABLES`。此数据映射还用于构建反向的除蜡映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/waxables.json`，其对象具有以下结构：
 
 ```json5
 {

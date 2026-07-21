@@ -7,7 +7,7 @@ Minecraft 在游戏中的许多位置使用战利品表，包括 [Block][block] 
 - 默认情况下，每个 Block 都会获得一个位于 `<block_namespace>:blocks/<block_name>` 的关联战利品表。可以在 Block 的 `Properties` 上调用 `#noLootTable` 将其禁用，这样不会创建战利品表，Block 也不会掉落任何内容；此做法主要用于空气类或技术型 Block。
 - 默认情况下，所有未调用 `EntityType.Builder#noLootTable` 的 Entity（通常是 `MobCategory#MISC` 中的 Entity）都会获得一个位于 `<entity_namespace>:entities/<entity_name>` 的关联战利品表。可以通过重写 `#getLootTable` 更改它。例如，绵羊会根据羊毛颜色抽取不同战利品表。
 - 结构中的箱子会在 BlockEntity 数据中指定战利品表。Minecraft 将所有箱子战利品表存放在 `minecraft:chests/<chest_name>`；建议 mod 遵循这一做法，但并非强制。
-- 袭击结束后村民可能投给玩家的礼物 Item，其战利品表定义在 [`neoforge:raid_hero_gifts` Data Map][raidherogifts] 中。
+- 袭击结束后村民可能投给玩家的礼物 Item，其战利品表定义在 [`neoforge:raid_hero_gifts`数据映射][raidherogifts] 中。
 - 其他战利品表（例如钓鱼战利品表）会在需要时从 `level.getServer().reloadableRegistries().getLootTable(lootTableKey)` 获取。所有原版战利品表位置的列表可在 `BuiltInLootTables` 中找到。
 
 :::warning
@@ -120,7 +120,7 @@ Minecraft 提供以下战利品参数：
 
 ### 战利品参数集
 
-战利品参数集也称为战利品表类型，在代码中称为 `ContextKeySet`，是必需与可选战利品参数的集合。尽管名称如此，它们并不是 `Set`（甚至不是 `Collection`），而是对两个 `Set<ContextKey<?>>` 的包装：一个保存必需参数（`#required`），另一个保存可选参数（`#allowed`）。它们用于验证战利品参数的使用者只使用预期可用的参数，并验证抽取战利品表时所有必需参数均已存在。此外，进度与附魔逻辑也会使用它们。
+战利品参数集也称为战利品表类型，在代码中称为 `ContextKeySet`，是必需与可选战利品参数的集合。尽管名称如此，它们并不是 `Set`（甚至不是 `Collection`），而是对两个 `Set<ContextKey<?>>` 的包装：一个保存必需参数（`#required`），另一个保存可选参数（`#allowed`）。它们用于验证战利品参数的使用者只使用预期可用的参数，并验证抽取战利品表时所有必需参数均已存在。此外，成就与附魔逻辑也会使用它们。
 
 原版提供以下战利品参数集（必需参数以**粗体**显示，可选参数以_斜体_显示；代码中的名称是 `LootContextParamSets` 内的常量）：
 
@@ -149,9 +149,9 @@ Minecraft 提供以下战利品参数：
 | `minecraft:enchanted_entity`     | `ENCHANTED_ENTITY`     | **`minecraft:origin`**, **`minecraft:enchantment_level`**, **`minecraft:this_entity`**                                                                                                                                                                                                                               | 多种附魔。                                                |
 | `minecraft:enchanted_damage`     | `ENCHANTED_DAMAGE`     | **`minecraft:origin`**, **`minecraft:enchantment_level`**, **`minecraft:this_entity`**, **`minecraft:damage_source`**, _`minecraft:attacking_entity`_, _`minecraft:direct_attacking_entity`_                                                                                                                         | 伤害与保护类附魔。                                        |
 | `minecraft:enchanted_location`   | `ENCHANTED_LOCATION`   | **`minecraft:origin`**, **`minecraft:enchantment_level`**, **`minecraft:enchantment_active`**, **`minecraft:this_entity`**                                                                                                                                                                                           | 冰霜行者与灵魂疾行附魔。                                  |
-| `minecraft:advancement_entity`   | `ADVANCEMENT_ENTITY`   | **`minecraft:origin`**, **`minecraft:this_entity`**                                                                                                                                                                                                                                                                  | 多种[进度条件][advancement]。                              |
-| `minecraft:advancement_location` | `ADVANCEMENT_LOCATION` | **`minecraft:origin`**, **`minecraft:tool`**, **`minecraft:block_state`**, **`minecraft:this_entity`**                                                                                                                                                                                                               | 多种[进度触发器][advancement]。                            |
-| `minecraft:advancement_reward`   | `ADVANCEMENT_REWARD`   | **`minecraft:origin`**, **`minecraft:this_entity`**                                                                                                                                                                                                                                                                  | [进度奖励][advancement]。                                  |
+| `minecraft:advancement_entity`   | `ADVANCEMENT_ENTITY`   | **`minecraft:origin`**, **`minecraft:this_entity`**                                                                                                                                                                                                                                                                  | 多种[成就条件][advancement]。                              |
+| `minecraft:advancement_location` | `ADVANCEMENT_LOCATION` | **`minecraft:origin`**, **`minecraft:tool`**, **`minecraft:block_state`**, **`minecraft:this_entity`**                                                                                                                                                                                                               | 多种[条件触发器][advancement]。                            |
+| `minecraft:advancement_reward`   | `ADVANCEMENT_REWARD`   | **`minecraft:origin`**, **`minecraft:this_entity`**                                                                                                                                                                                                                                                                  | [成就奖励][advancement]。                                  |
 
 ### 战利品上下文
 
