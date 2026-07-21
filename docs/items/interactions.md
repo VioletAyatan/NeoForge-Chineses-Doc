@@ -4,15 +4,15 @@
 
 ## `HitResult`
 
-为了判断玩家当前正在看什么，Minecraft 使用 `HitResult`。`HitResult` 大致相当于其他游戏引擎中的 ray cast 结果，其中最值得注意的是包含 `#getLocation` 方法。
+为了判断玩家当前正在看什么，Minecraft 使用 `HitResult`。`HitResult` 大致相当于其他游戏引擎中的光线投射结果，其中最值得注意的是包含 `#getLocation` 方法。
 
-命中结果可以是 `HitResult.Type` 枚举所表示的三种类型之一：`BLOCK`、`ENTITY` 或 `MISS`。`BLOCK` 类型的 `HitResult` 可 cast 为 `BlockHitResult`，`ENTITY` 类型的 `HitResult` 可 cast 为 `EntityHitResult`；两种类型都会提供有关命中的 [Block][block] 或 [Entity][entity] 的额外 context。如果类型为 `MISS`，表示既未命中 Block，也未命中 Entity，不应 cast 为任何一种子类。
+命中结果可以是 `HitResult.Type` 枚举所表示的三种类型之一：`BLOCK`、`ENTITY` 或 `MISS`。`BLOCK` 类型的 `HitResult` 可强制转换为 `BlockHitResult`，`ENTITY` 类型的 `HitResult` 可强制转换为 `EntityHitResult`；两种类型都会提供有关命中的 [Block][block] 或 [Entity][entity] 的额外上下文。如果类型为 `MISS`，表示既未命中 Block，也未命中 Entity，不应强制转换为任何一种子类。
 
 每一帧，[物理客户端][physicalside]上的 `Minecraft` 类都会更新当前注视的 `HitResult`，并将其存储在 `hitResult` 字段中。随后可通过 `Minecraft.getInstance().hitResult` 访问此字段。
 
 ## 左键点击 Item
 
-- 检查主手 [`ItemStack`][itemstack] 所需的全部 [feature flag][featureflag] 是否已启用。如果检查失败，流程结束。
+- 检查主手 [`ItemStack`][itemstack] 所需的全部[功能标志][featureflag]是否已启用。如果检查失败，流程结束。
 - 如果 `Player#cannotAttackWithItem`（检查攻击延迟与 `DataComponents#MINIMUM_ATTACK_CHARGE`）返回 false，流程结束。
 - 使用鼠标左键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [事件][event] 被[取消][cancel]，流程结束。
 - 根据你正在注视的对象（使用 `Minecraft` 中的 [`HitResult`][hitresult]），会发生不同情况：
@@ -67,16 +67,16 @@
 在右键点击流程中，会调用多个返回以下两种结果类型之一的方法（见下文）。如果返回明确成功或明确失败，大多数方法都会取消流程。为便于阅读，下文把这种“明确成功或明确失败”称为“确定结果”。
 
 - 使用鼠标右键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [事件][event] 被[取消][cancel]，流程结束。
-- 检查若干条件，例如你不能处于旁观者模式，或主手 [`ItemStack`][itemstack] 所需的全部 [feature flag][featureflag] 都已启用。如果任一检查失败，流程结束。
+- 检查若干条件，例如你不能处于旁观者模式，或主手 [`ItemStack`][itemstack] 所需的全部[功能标志][featureflag]都已启用。如果任一检查失败，流程结束。
 - 根据你正在注视的对象（使用 `Minecraft` 中的 [`HitResult`][hitresult]），会发生不同情况：
     - 如果正在注视触及范围内且未超出世界边界的 [Entity][entity]：
         - 触发 `PlayerInteractEvent.EntityInteractSpecific`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interactAt`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为原版 Entity 添加行为，请使用事件。
+            - 要为自己的 Entity 添加行为，请重写此方法。要为原版 Entity 添加行为，请使用事件。
         - 如果 Entity 打开界面（例如村民交易 GUI 或运输矿车 GUI），流程结束。
         - 触发 `PlayerInteractEvent.EntityInteract`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interact`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为原版 Entity 添加行为，请使用事件。
+            - 要为自己的 Entity 添加行为，请重写此方法。要为原版 Entity 添加行为，请使用事件。
             - 对于 [`Mob`][livingentity]，`Entity#interact` 的重写会处理拴绳等内容；当主手 `ItemStack` 是刷怪蛋时，还会处理生成幼体，随后将 Mob 特定处理委托给 `Mob#mobInteract`。`Entity#interact` 的结果规则在这里同样适用。
         - 如果正在注视的 Entity 是 `LivingEntity`，则对主手 `ItemStack` 调用 `Item#interactLivingEntity`。如果返回确定结果，流程结束。
     - 如果正在注视触及范围内且未超出世界边界的 [Block][block]：
@@ -97,7 +97,7 @@
 
 `InteractionResult` 是密封接口，表示 Item 或空手与某个对象（例如 Entity、Block 等）之间交互的结果。该接口分为四个 record，共有六种可能的默认状态。
 
-首先是 `InteractionResult.Success`，表示操作应视为成功，并结束流程。成功状态有两个参数：`SwingSource` 表示 Entity 是否应在相应[逻辑端][side]挥手；`InteractionResult.ItemContext` 保存交互是否由手持 Item 引起，以及手持 Item 使用后转变成什么。挥手来源由以下某个默认状态决定：`InteractionResult#SUCCESS` 表示客户端挥手，`InteractionResult#SUCCESS_SERVER` 表示服务端挥手，`InteractionResult#CONSUME` 表示不挥手。如果 `ItemStack` 发生变化，通过 `Success#heldItemTransformedTo` 设置 Item context；如果手持 Item 与对象之间没有交互，则通过 `withoutItem` 设置。默认表示发生了 Item 交互，但 Item 没有转变。
+首先是 `InteractionResult.Success`，表示操作应视为成功，并结束流程。成功状态有两个参数：`SwingSource` 表示 Entity 是否应在相应[逻辑端][side]挥手；`InteractionResult.ItemContext` 保存交互是否由手持 Item 引起，以及手持 Item 使用后转变成什么。挥手来源由以下某个默认状态决定：`InteractionResult#SUCCESS` 表示客户端挥手，`InteractionResult#SUCCESS_SERVER` 表示服务端挥手，`InteractionResult#CONSUME` 表示不挥手。如果 `ItemStack` 发生变化，通过 `Success#heldItemTransformedTo` 设置 Item 上下文；如果手持 Item 与对象之间没有交互，则通过 `withoutItem` 设置。默认表示发生了 Item 交互，但 Item 没有转变。
 
 ```java
 // In some method that returns an interaction result
@@ -142,7 +142,7 @@ return InteractionResult.CONSUME.withoutItem();
         - 如果 `Entity#isPickable` 返回 false，流程结束。
         - 如果 `Player#isWithinEntityInteractionRange` 返回 false，流程结束。
         - 调用 `Entity#getPickResult`。如果快捷栏中存在与结果 `ItemStack` 匹配的槽位，就激活该槽位。否则，如果玩家处于创造模式，则将结果 `ItemStack` 添加到玩家物品栏。
-            - 默认情况下，此方法会转发到 `Entity#getPickResult`，模组开发者可覆盖该方法。
+            - 默认情况下，此方法会转发到 `Entity#getPickResult`，模组开发者可重写该方法。
     - 如果正在注视触及范围内的 [Block][block]：
         - 如果 `Player#isWithinBlockInteractionRange` 返回 false，流程结束。
         - 调用 `IBlockExtension#getCloneItemStack`（默认委托给 `BlockBehaviour#getCloneItemStack`），其结果成为“选中的”`ItemStack`。
@@ -156,7 +156,7 @@ return InteractionResult.CONSUME.withoutItem();
 [attribute]: ../entities/attributes.md
 [attributemodifier]: ../entities/attributes.md#attribute-modifiers
 [block]: ../blocks/index.md
-[blockbreak]: ../blocks/index.md#breaking-a-block
+[blockbreak]: ../blocks/index.md#破坏方块
 [blockentity]: ../blockentities/index.md
 [cancel]: ../concepts/events.md#可取消事件
 [critical]: https://minecraft.wiki/w/Damage#Critical_hit

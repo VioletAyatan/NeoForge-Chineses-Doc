@@ -167,25 +167,25 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 );
 ```
 
-## Equipment Asset
+## Equipment Assets {#equipment-assets}
 
-现在游戏中已经有了盔甲，但如果尝试穿戴，什么都不会渲染，因为我们从未指定如何渲染装备。为此，需要在 `Equippable#assetId` 指定的位置创建 `EquipmentClientInfo` JSON；该位置相对于 [resource pack][respack]（`assets` 文件夹）的 `equipment` 文件夹。`EquipmentClientInfo` 指定每个待渲染 layer 使用的关联纹理。
+现在游戏中已经有了盔甲，但如果尝试穿戴，什么都不会渲染，因为我们从未指定如何渲染装备。为此，需要在 `Equippable#assetId` 指定的位置创建 `EquipmentClientInfo` JSON；该位置相对于[资源包][respack]（`assets` 文件夹）的 `equipment` 文件夹。`EquipmentClientInfo` 指定每个待渲染层使用的关联纹理。
 
-`EquipmentClientInfo` 在功能上是从 `EquipmentClientInfo.LayerType` 到待应用 `EquipmentClientInfo.Layer` 列表的 map。
+`EquipmentClientInfo` 在功能上是从 `EquipmentClientInfo.LayerType` 到待应用 `EquipmentClientInfo.Layer` 列表的映射。
 
 可以将 `LayerType` 理解为针对某个实例渲染的一组纹理。例如，`LayerType#HUMANOID` 由 `HumanoidArmorLayer` 用于渲染人形 Entity 的头部、胸部与脚部；`LayerType#WOLF_BODY` 由 `WolfArmorLayer` 用于渲染身体盔甲。如果属于同一类可装备物（例如铜制盔甲），这些内容可以合并到同一个装备信息 JSON 中。
 
 `LayerType` 映射到某个待应用的 `Layer` 列表，并按给定顺序渲染纹理。一个 `Layer` 实际上表示单个待渲染纹理。第一个参数表示纹理相对于 `textures/entity/equipment` 的位置。
 
-第二个参数是 optional，表示是否可以将[纹理着色][tinting]为 `EquipmentClientInfo.Dyeable`。`Dyeable` 对象持有一个整数；如果该整数存在，就表示纹理默认着色所用的 RGB 颜色。如果此 optional 不存在，则使用纯白色。
+第二个参数是 `Optional`，表示是否可以使用 `EquipmentClientInfo.Dyeable` [为纹理着色][tinting]。`Dyeable` 对象持有一个整数；如果该整数存在，就表示纹理默认着色所用的 RGB 颜色。如果此 `Optional` 为空，则使用纯白色。
 
 :::warning
-要向 Item 应用未染色颜色以外的 tint，该 Item 必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` 组件设置为某个 RGB 值。
+要向 Item 应用未染色颜色以外的着色值，该 Item 必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` 组件设置为某个 RGB 值。
 :::
 
-第三个参数是 boolean，表示是否应使用渲染期间提供的纹理来替代 `Layer` 中定义的纹理。玩家的自定义披风或鞘翅纹理就是一个示例。
+第三个参数是布尔值，表示是否应使用渲染期间提供的纹理来替代 `Layer` 中定义的纹理。玩家的自定义披风或鞘翅纹理就是一个示例。
 
-下面为铜制盔甲材料创建装备信息。还假设每个 layer 有两张纹理：一张是实际盔甲，另一张叠加在其上并进行着色。对于动物盔甲，假设存在某个可传入的动态纹理。
+下面为铜制盔甲材料创建装备信息。还假设每个层有两张纹理：一张是实际盔甲，另一张叠加在其上并进行着色。对于动物盔甲，假设存在某个可传入的动态纹理。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -263,7 +263,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 
 </TabItem>
 
-<TabItem value="datagen" label="Datagen">
+<TabItem value="datagen" label="数据生成">
 
 ```java
 public class MyEquipmentInfoProvider extends EquipmentAssetProvider {
@@ -366,9 +366,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ## 装备渲染
 
-装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染函数中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为 render context 的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
+装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染函数中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为渲染上下文的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
 
-默认情况下，以下 layer 会渲染关联的 `EquipmentClientInfo.LayerType`：
+默认情况下，以下层会渲染关联的 `EquipmentClientInfo.LayerType`：
 
 | `LayerType`             | `RenderLayer`          | 使用者                                                         |
 |:-----------------------:|:----------------------:|:---------------------------------------------------------------|
@@ -392,7 +392,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 | `NAUTILUS_SADDLE`       | `SimpleEquipmentLayer` | 鹦鹉螺                                                         |
 | `NAUTILUS_BODY`         | `SimpleEquipmentLayer` | 鹦鹉螺                                                         |
 
-`EquipmentLayerRenderer` 只有一个提交装备 layer 进行渲染的方法：`renderLayers`。
+`EquipmentLayerRenderer` 只有一个提交装备层进行渲染的方法：`renderLayers`。
 
 ```java
 // In some render method where EquipmentLayerRenderer equipmentLayerRenderer is available

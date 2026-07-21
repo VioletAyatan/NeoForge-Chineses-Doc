@@ -57,7 +57,7 @@ public static final DeferredItem<Item> CONSUMABLE = ITEMS.registerSimpleItem(
 
 原版效果列表可在 `ConsumeEffect` 中找到。
 
-每个 `ConsumeEffect` 都有两个方法：`getType` 指定 registry 对象 `ConsumeEffect.Type`；`apply` 在 Item 完全消耗后调用。`apply` 接受三个参数：执行消耗的 Entity 所在的 `Level`、调用消耗行为的 `ItemStack`，以及正在消耗该对象的 `LivingEntity`。效果成功应用时，方法返回 `true`；失败时返回 `false`。
+每个 `ConsumeEffect` 都有两个方法：`getType` 指定注册表对象 `ConsumeEffect.Type`；`apply` 在 Item 完全消耗后调用。`apply` 接受三个参数：执行消耗的 Entity 所在的 `Level`、调用消耗行为的 `ItemStack`，以及正在消耗该对象的 `LivingEntity`。效果成功应用时，方法返回 `true`；失败时返回 `false`。
 
 可通过实现该接口来创建 `ConsumeEffect`，并将带有关联 `MapCodec` 与 `StreamCodec` 的 `ConsumeEffect.Type` [注册][registering]到 `BuiltInRegistries#CONSUME_EFFECT_TYPE`：
 
@@ -111,7 +111,7 @@ Consumable.builder()
 
 ### `ItemUseAnimation`
 
-`ItemUseAnimation` 在功能上相当于一个除 id 与名称之外不定义任何内容的枚举。第一人称下，其用途硬编码在 `ItemHandRenderer#renderArmWithItem` 中；第三人称下则硬编码在 `AvatarRenderer#getArmPose` 中。因此，仅创建新的 `ItemUseAnimation` 只会产生类似 `ItemUseAnimation#NONE` 的效果。
+`ItemUseAnimation` 在功能上相当于一个除 ID 与名称之外不定义任何内容的枚举。第一人称下，其用途硬编码在 `ItemHandRenderer#renderArmWithItem` 中；第三人称下则硬编码在 `AvatarRenderer#getArmPose` 中。因此，仅创建新的 `ItemUseAnimation` 只会产生类似 `ItemUseAnimation#NONE` 的效果。
 
 要应用某种动画，需要为第一人称实现 `IClientItemExtensions#applyForgeHandTransform`，和／或为第三人称渲染实现 `IClientItemExtensions#getArmPose`。
 
@@ -143,7 +143,7 @@ Consumable.builder()
 public static final ItemUseAnimation EXAMPLE_ANIMATION = ItemUseAnimation.valueOf("EXAMPLEMOD_ITEM_USE_ANIMATION");
 ```
 
-接下来即可开始应用 transform。为此，必须创建新的 `IClientItemExtensions`、实现所需方法，并通过 [**模组事件总线**][modbus] 上的 `RegisterClientExtensionsEvent` 注册它：
+接下来即可开始应用变换。为此，必须创建新的 `IClientItemExtensions`、实现所需方法，并通过 [**模组事件总线**][modbus] 上的 `RegisterClientExtensionsEvent` 注册它：
 
 ```java
 public class ConsumableClientItemExtensions implements IClientItemExtensions {
@@ -164,7 +164,7 @@ public static void registerClientExtensions(RegisterClientExtensionsEvent event)
 
 #### 第一人称
 
-所有消耗品都具有的第一人称 transform 通过 `IClientItemExtensions#applyForgeHandTransform` 实现：
+所有消耗品都具有的第一人称变换通过 `IClientItemExtensions#applyForgeHandTransform` 实现：
 
 ```java
 public class ConsumableClientItemExtensions implements IClientItemExtensions {
@@ -197,7 +197,7 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
 
 #### 第三人称
 
-除 `EAT` 与 `DRINK` 外，所有消耗品都有特殊逻辑的第三人称 transform 通过 `IClientItemExtensions#getArmPose` 实现；`HumanoidModel.ArmPose` 也可扩展，以提供自定义 transform。
+除 `EAT` 与 `DRINK` 外，所有具有特殊逻辑的消耗品，其第三人称变换都通过 `IClientItemExtensions#getArmPose` 实现；`HumanoidModel.ArmPose` 也可扩展，以提供自定义变换。
 
 由于 `ArmPose` 的构造器中需要 Lambda 表达式，必须使用 `EnumProxy` 引用：
 
@@ -249,7 +249,7 @@ public class MyClientEnumParams {
 public static final HumanoidModel.ArmPose EXAMPLE_POSE = HumanoidModel.ArmPose.valueOf("EXAMPLEMOD_ARM_POSE");
 ```
 
-然后通过 `IClientItemExtensions#getArmPose` 设置 arm pose：
+然后通过 `IClientItemExtensions#getArmPose` 设置手臂姿势：
 
 ```java
 public class ConsumableClientItemExtensions implements IClientItemExtensions {
@@ -349,7 +349,7 @@ public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
 
 ### Potion 内容
 
-通过 `PotionContents` 表示的[药水][potions]内容是另一种 `ConsumableListener`，其效果会在消耗时应用。它包含要应用的可选 Potion、Potion 颜色的可选 tint、与 Potion 一同应用的自定义 [`MobEffectInstance`][mobeffectinstance] 列表，以及获取 ItemStack 名称时使用的可选 translation key。如果 Item 不是 `PotionItem` subtype，模组开发者需要覆盖 `Item#getName`。
+通过 `PotionContents` 表示的[药水][potions]内容是另一种 `ConsumableListener`，其效果会在消耗时应用。它包含要应用的可选 `Potion`、`Potion` 颜色的可选着色值、与 `Potion` 一同应用的自定义 [`MobEffectInstance`][mobeffectinstance] 列表，以及获取 ItemStack 名称时使用的可选翻译键。如果 Item 不是 `PotionItem` 子类型，模组开发者需要重写 `Item#getName`。
 
 [animation]: #itemuseanimation
 [consumeeffect]: #consumeeffect

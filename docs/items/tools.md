@@ -21,7 +21,7 @@
 - `#KINETIC_WEAPON`：基于动量、通过使用 Item 攻击多个 Entity
 - `#USE_EFFECTS`：使用 Item 时向 Entity 应用某些效果
 
-通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个 delegate（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过数据组件实现其通用挖掘逻辑；它们会直接扩展 `Item`，并覆盖相关方法来处理挖掘。交互行为（默认右键点击）同样没有数据组件，因此锹、斧与锄分别有自己的工具类：`ShovelItem`、`AxeItem` 和 `HoeItem`。
+通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个委托方法（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过数据组件实现其通用挖掘逻辑；它们会直接扩展 `Item`，并重写相关方法来处理挖掘。交互行为（默认右键点击）同样没有数据组件，因此锹、斧与锄分别有自己的工具类：`ShovelItem`、`AxeItem` 和 `HoeItem`。
 
 要创建一套标准工具，必须先定义 `ToolMaterial`。参考值可在 `ToolMaterial` 的常量中找到。此示例使用铜制工具，你可以使用自己的材料并按需要调整这些值。
 
@@ -47,7 +47,7 @@ public static final ToolMaterial COPPER_MATERIAL = new ToolMaterial(
 );
 ```
 
-有了 `ToolMaterial` 后，就可以用它[注册][registering]工具。所有 `tool` delegate 都有相同的三个参数：
+有了 `ToolMaterial` 后，就可以用它[注册][registering]工具。所有 `tool` 委托方法都有相同的三个参数：
 
 ```java
 // ITEMS is a DeferredRegister.Items
@@ -159,7 +159,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 
 可通过 `Item.Properties#component`，把 `Tool` [数据组件][datacomponents]（即 `DataComponents#TOOL`）添加到 Item 的默认组件列表中，以创建自定义工具。
 
-`Tool` 包含 `Tool.Rule` 列表、持有工具时的默认挖掘速度（默认为 `1`），以及挖掘 Block 时工具应承受的伤害值（默认为 `1`）。`Tool.Rule` 包含三项信息：要应用 rule 的 Block `HolderSet`、挖掘该集合中 Block 的可选速度，以及用于判断这些 Block 能否由此工具产生掉落物的可选 boolean。如果未设置可选项，就继续检查其他 rule。如果所有 rule 都失败，默认行为是使用默认挖掘速度，且 Block 无法产生掉落物。
+`Tool` 包含 `Tool.Rule` 列表、持有工具时的默认挖掘速度（默认为 `1`），以及挖掘 Block 时工具应承受的伤害值（默认为 `1`）。`Tool.Rule` 包含三项信息：要应用规则的 Block `HolderSet`、挖掘该集合中 Block 的可选速度，以及用于判断这些 Block 能否由此工具产生掉落物的可选布尔值。如果未设置可选项，就继续检查其他规则。如果所有规则都失败，默认行为是使用默认挖掘速度，且 Block 无法产生掉落物。
 
 :::info
 可以通过 `Registry#getOrThrow` 从 `TagKey` 创建 `HolderSet`。
@@ -167,13 +167,13 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 
 无需使用任何现有 `ToolMaterial` 引用，也能创建任意工具或多功能工具类 Item（即将两种或更多工具合为一体的 Item，例如斧镐合一）。可使用以下部分的组合实现：
 
-- 通过 `Item.Properties#component` 设置 `DataComponents#TOOL`，添加包含自定义 rule 的 `Tool`。
+- 通过 `Item.Properties#component` 设置 `DataComponents#TOOL`，添加包含自定义规则的 `Tool`。
 - 通过 `Item.Properties#attributes` 向 Item 添加 [attribute modifier][attributemodifier]（例如攻击伤害、攻击速度）。
 - 通过 `Item.Properties#durability` 添加 Item 耐久度。
 - 通过 `Item.Properties#repariable` 允许修复 Item。
 - 通过 `Item.Properties#enchantable` 允许为 Item 附魔。
 - 通过 `Item.Properties#component` 设置 `DataComponents#WEAPON`，允许 Item 用作武器，并有可能禁用 blocker。
-- 覆盖 `IItemExtension#canPerformAction`，判断 Item 可执行哪些 [`ItemAbility`][itemability]。
+- 重写 `IItemExtension#canPerformAction`，判断 Item 可执行哪些 [`ItemAbility`][itemability]。
 - 如果希望 Item 根据 `ItemAbility` 在右键点击时修改 BlockState，调用 `IBlockExtension#getToolModifiedState`。
 - 将工具添加到某些 `minecraft:enchantable/*` `ItemTags`，使其可应用特定附魔。
 - 将工具添加到某些 `minecraft:*_preferred_weapons` tag，使 Mob 更倾向于捡起并使用你的武器。
@@ -189,7 +189,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 - 剪刀能力：挖掘（破坏 Block）、采集（蜜脾）、移除盔甲（铠甲狼）、雕刻（南瓜）、解除（绊线）和修剪（阻止植物生长）。
 - 剑横扫、锄耕作、钓鱼竿抛线、三叉戟投掷、刷子刷扫、点火器点燃和望远镜观察等能力。
 
-要创建自己的 `ItemAbility`，使用 `ItemAbility#get`——必要时它会创建新的 `ItemAbility`。然后，在自定义工具类型中按需要覆盖 `IItemExtension#canPerformAction`。
+要创建自己的 `ItemAbility`，使用 `ItemAbility#get`——必要时它会创建新的 `ItemAbility`。然后，在自定义工具类型中按需要重写 `IItemExtension#canPerformAction`。
 
 要查询 `ItemStack` 能否执行某个 `ItemAbility`，调用 `IItemStackExtension#canPerformAction`。请注意，它适用于任意 `Item`，而不仅是工具。
 

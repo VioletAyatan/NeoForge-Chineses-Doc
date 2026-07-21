@@ -1,19 +1,19 @@
 # 数据组件（Data Components）
 
-数据组件是 map 中用于在 registry 对象的 `Holder` 上存储数据的键值对。烟花爆炸、工具等每一项数据都以实际对象形式存储在 Holder 上，因此无需动态转换通用编码实例（例如 `CompoundTag`、`JsonElement`），这些值也能直接可见并可操作。
+数据组件是映射中用于在注册表对象的 `Holder` 上存储数据的键值对。烟花爆炸、工具等每一项数据都以实际对象形式存储在 `Holder` 上，因此无需动态转换通用编码实例（例如 `CompoundTag`、`JsonElement`），这些值也能直接可见并可操作。
 
 ## `DataComponentType`
 
-每个数据组件都有关联的 `DataComponentType<T>`，其中 `T` 是组件值类型。`DataComponentType` 表示引用所存组件值的 key，并可按需要包含处理磁盘和网络读写的 Codec。
+每个数据组件都有关联的 `DataComponentType<T>`，其中 `T` 是组件值类型。`DataComponentType` 表示引用所存组件值的键，并可按需要包含处理磁盘和网络读写的 Codec。
 
 现有组件列表可在 `DataComponents` 中找到。
 
 ### 创建自定义数据组件
 
-与 `DataComponentType` 关联的组件值必须实现 `hashCode` 与 `equals`，存储后应视为 **immutable**。
+与 `DataComponentType` 关联的组件值必须实现 `hashCode` 与 `equals`，存储后应视为**不可变**。
 
 :::info
-使用 record 可以很容易地实现组件值。Record 字段是 immutable 的，并且会实现 `hashCode` 与 `equals`。
+使用 record 可以很容易地实现组件值。record 字段是不可变的，并且会实现 `hashCode` 与 `equals`。
 :::
 
 ```java
@@ -62,7 +62,7 @@ Builder 中必须提供 `persistent` 或 `networkSynchronized`，否则会抛出
 
 如果 Item 带有此组件，`ignoreSwapAnimation` 会取消切换动画。如果未设置它，动画仍可能根据客户端 Item property 被取消。
 
-`DataComponentType` 是 registry 对象，必须[注册][registered]。
+`DataComponentType` 是注册表对象，必须[注册][registered]。
 
 ```java
 // Using ExampleRecord(int, boolean)
@@ -117,9 +117,9 @@ public static final Supplier<DataComponentType<ExampleRecord>> NO_NETWORK_EXAMPL
 
 ## 组件映射
 
-所有数据组件都存储在 `DataComponentMap` 中，以 `DataComponentType` 为 key、对象为值。`DataComponentMap` 的作用类似只读 `Map`。因此，它提供了按给定 `DataComponentType` `#get` entry 的方法，也可在 entry 不存在时通过 `#getOrDefault` 提供默认值。
+所有数据组件都存储在 `DataComponentMap` 中，以 `DataComponentType` 为键、对象为值。`DataComponentMap` 的作用类似只读 `Map`。因此，它提供了按给定 `DataComponentType` `#get` 条目的方法，也可在条目不存在时通过 `#getOrDefault` 提供默认值。
 
-对于 registry 对象，可以通过 `Holder#components` 获取 `DataComponentMap`。
+对于注册表对象，可以通过 `Holder#components` 获取 `DataComponentMap`。
 
 ```java
 // For some Item item
@@ -134,7 +134,7 @@ DyeColor color = item.builtInRegistryHolder().components().get(DataComponents.BA
 
 默认 `DataComponentMap` 只提供读取操作的方法，写入操作则由子类 `PatchedDataComponentMap` 支持，包括 `#set` 组件值或通过 `#remove` 将其完全移除。
 
-`PatchedDataComponentMap` 使用 prototype 与 patch map 存储更改。Prototype 是 `DataComponentMap`，包含该 map 应具有的默认组件及其值。Patch map 是从 `DataComponentType` 到 `Optional` 值的 map，包含对默认组件所做的更改。
+`PatchedDataComponentMap` 使用原型与补丁映射存储更改。原型是 `DataComponentMap`，包含该映射应具有的默认组件及其值。补丁映射是从 `DataComponentType` 到 `Optional` 值的映射，包含对默认组件所做的更改。
 
 ```java
 // For some PatchedDataComponentMap map
@@ -149,16 +149,16 @@ map.remove(DataComponents.BASE_COLOR);
 ```
 
 :::danger
-Prototype 与 patch map 都是 `PatchedDataComponentMap` hash code 的一部分。因此，map 中的所有组件值都应视为 **immutable**。修改数据组件的值后，始终调用 `#set` 或下文所述引用它的方法之一。
+原型与补丁映射都是 `PatchedDataComponentMap` 哈希码的一部分。因此，映射中的所有组件值都应视为**不可变**。修改数据组件的值后，始终调用 `#set` 或下文所述引用它的方法之一。
 :::
 
-## 组件获取器
+## 组件 Getter
 
-所有能够提供数据组件的实例通常都实现 `DataComponentGetter`。`DataComponentGetter` 实际上会从底层 map 获取某个数据类型的组件值，或即时创建该值。
+所有能够提供数据组件的实例通常都实现 `DataComponentGetter`。`DataComponentGetter` 实际上会从底层映射获取某个数据类型的组件值，或即时创建该值。
 
 ## 组件持有者
 
-所有引用底层数据组件 map 的实例都实现 `DataComponentHolder`，后者扩展 `DataComponentGetter`。`DataComponentHolder` 实质上会委托给 `DataComponentMap` 中的只读方法。
+所有引用底层数据组件映射的实例都实现 `DataComponentHolder`，后者扩展 `DataComponentGetter`。`DataComponentHolder` 实质上会委托给 `DataComponentMap` 中的只读方法。
 
 ```java
 // For some DataComponentHolder holder
@@ -170,9 +170,9 @@ DyeColor color = holder.get(DataComponents.BASE_COLOR);
 
 ### `MutableDataComponentHolder`
 
-`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件 map 进行写入操作的方法。原版与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名 delegate 方法 `#set` 与 `#remove`。
+`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件映射进行写入操作的方法。原版与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名委托方法 `#set` 与 `#remove`。
 
-此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到 map。Operator 可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
+此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到映射。操作函数可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
 
 ```java
 // For some ItemStack stack
@@ -207,7 +207,7 @@ stack.update(
 
 ## 向 Item 添加默认数据组件
 
-尽管 mutable 数据组件存储在 `ItemStack` 上，但可以通过 `Item` 设置默认组件 map；该 map 会存储到 `Holder<Item>` 上，最后在构造 `ItemStack` 时作为 prototype 传给它。可通过 `Item.Properties#component` 向 `Item` 添加组件。对于依赖动态生成数据的组件（例如 [datapack registry 对象][datapackregistry]），应改用 `Item.Properties#delayedComponent`，根据 registry 的 `HolderLookup.Provider` 构造值。
+尽管可变数据组件存储在 `ItemStack` 上，但可以通过 `Item` 设置默认组件映射；该映射会存储到 `Holder<Item>` 上，最后在构造 `ItemStack` 时作为原型传给它。可通过 `Item.Properties#component` 向 `Item` 添加组件。对于依赖动态生成数据的组件（例如[数据包注册表对象][datapackregistry]），应改用 `Item.Properties#delayedComponent`，根据注册表的 `HolderLookup.Provider` 构造值。
 
 ```java
 // For some DeferredRegister.Items REGISTRAR
@@ -244,7 +244,7 @@ public static void modifyComponents(ModifyDefaultComponentsEvent event) {
 
 ## 使用自定义组件持有者
 
-要创建自定义数据组件 holder，holder 对象只需实现 `MutableDataComponentHolder`，并实现缺失的方法。Holder 对象必须包含表示 `PatchedDataComponentMap` 的字段，以便实现关联方法。
+要创建自定义数据组件持有者，持有者对象只需实现 `MutableDataComponentHolder`，并实现缺失的方法。持有者对象必须包含表示 `PatchedDataComponentMap` 的字段，以便实现关联方法。
 
 ```java
 public class ExampleHolder implements MutableDataComponentHolder {
@@ -291,9 +291,9 @@ public class ExampleHolder implements MutableDataComponentHolder {
 
 ### `DataComponentPatch` 与 Codec
 
-要将组件持久化到磁盘，或通过网络发送信息，holder 可以发送整个 `DataComponentMap`。但这通常会浪费信息，因为无论数据发送到哪里，默认值都已存在。因此改用 `DataComponentPatch` 发送关联数据。`DataComponentPatch` 只包含组件 map 的 patch 信息，不包含任何默认值。随后在接收端将 patch 应用到 prototype。
+要将组件持久化到磁盘，或通过网络发送信息，持有者可以发送整个 `DataComponentMap`。但这通常会浪费信息，因为无论数据发送到哪里，默认值都已存在。因此改用 `DataComponentPatch` 发送关联数据。`DataComponentPatch` 只包含组件映射的补丁信息，不包含任何默认值。随后在接收端将补丁应用到原型。
 
-可以通过 `#patch` 从 `PatchedDataComponentMap` 创建 `DataComponentPatch`。同样，给定 prototype `DataComponentMap` 与 `DataComponentPatch` 后，`PatchedDataComponentMap#fromPatch` 可构造 `PatchedDataComponentMap`。
+可以通过 `#patch` 从 `PatchedDataComponentMap` 创建 `DataComponentPatch`。同样，给定原型 `DataComponentMap` 与 `DataComponentPatch` 后，`PatchedDataComponentMap#fromPatch` 可构造 `PatchedDataComponentMap`。
 
 ```java
 public class ExampleHolder implements MutableDataComponentHolder {
@@ -327,7 +327,7 @@ public class ExampleHolder implements MutableDataComponentHolder {
 }
 ```
 
-[通过网络同步 holder 数据][network]以及从磁盘读写数据必须手动完成。
+[通过网络同步持有者数据][network]以及从磁盘读写数据必须手动完成。
 
 [datapackregistry]: ../concepts/registries.md#datapack-registries
 [registered]: ../concepts/registries.md
