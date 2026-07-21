@@ -1,4 +1,4 @@
-# Screen
+# 屏幕（Screen）
 
 Screen 通常是 Minecraft 中所有图形用户界面（GUI）的基础：接收用户输入、在服务器上验证输入，并将产生的操作同步回客户端。Screen 可以与 [Menu][menus] 组合，为类似物品栏的视图建立通信网络；也可以独立存在，由 mod 开发者通过自己的[网络][network]实现进行处理。
 

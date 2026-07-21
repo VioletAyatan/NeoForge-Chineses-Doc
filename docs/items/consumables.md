@@ -1,4 +1,4 @@
-# 消耗品
+# 消耗品（Consumables）
 
 消耗品是可在一段时间内使用、并在此过程中被“消耗”的 [Item][item]。Minecraft 中所有可食用或饮用的内容，都属于某种消耗品。
 
@@ -11,12 +11,12 @@
 - `consumeSeconds`——表示完全消耗 Item 所需秒数的 `float`。经过指定时间后调用 `Item#finishUsingItem`。默认为 1.6 秒，即 32 tick。
 - `animation`——设置使用 Item 时播放的 [`ItemUseAnimation`][animation]。默认为 `ItemUseAnimation#EAT`。
 - `sound`——设置消耗 Item 期间播放的 [`SoundEvent`][sound]。它必须是 `Holder` 实例。默认为 `SoundEvents#GENERIC_EAT`。
-    - 如果某个 Vanilla 实例不是 `Holder<SoundEvent>`，可以调用 `BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent)` 获取由 `Holder` 封装的版本。
+    - 如果某个原版实例不是 `Holder<SoundEvent>`，可以调用 `BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent)` 获取由 `Holder` 封装的版本。
 - `soundAfterConsume`——设置 Item 完成消耗后播放的 [`SoundEvent`][sound]。它会委托给 [`PlaySoundConsumeEffect`][consumeeffect]。
 - `hasConsumeParticles`——为 `true` 时，每四个 tick 以及 Item 完全消耗时生成 Item [粒子][particles]。默认为 `true`。
 - `onConsume`——添加一个 [`ConsumeEffect`][consumeeffect]，在 Item 通过 `Item#finishUsingItem` 完全消耗后应用。
 
-Vanilla 在 `Consumables` 类中提供了一些消耗品，例如用于[食物][food] Item 的 `#defaultFood`，以及用于[药水][potions]和奶桶的 `#defaultDrink`。
+原版在 `Consumables` 类中提供了一些消耗品，例如用于[食物][food] Item 的 `#defaultFood`，以及用于[药水][potions]和奶桶的 `#defaultDrink`。
 
 可以调用 `Item.Properties#component` 添加 `Consumable` 组件：
 
@@ -55,7 +55,7 @@ public static final DeferredItem<Item> CONSUMABLE = ITEMS.registerSimpleItem(
 
 消耗品使用完成后，你可能希望触发某种逻辑，例如添加药水效果。这由 `ConsumeEffect` 处理；通过调用 `Consumable.Builder#onConsume` 将其添加到 `Consumable`。
 
-Vanilla 效果列表可在 `ConsumeEffect` 中找到。
+原版效果列表可在 `ConsumeEffect` 中找到。
 
 每个 `ConsumeEffect` 都有两个方法：`getType` 指定 registry 对象 `ConsumeEffect.Type`；`apply` 在 Item 完全消耗后调用。`apply` 接受三个参数：执行消耗的 Entity 所在的 `Level`、调用消耗行为的 `ItemStack`，以及正在消耗该对象的 `LivingEntity`。效果成功应用时，方法返回 `true`；失败时返回 `false`。
 

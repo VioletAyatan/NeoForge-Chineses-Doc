@@ -1,4 +1,4 @@
-# 自定义配方
+# 自定义配方（Custom Recipes）
 
 添加自定义配方至少需要三项内容：`Recipe`、`RecipeType` 和 `RecipeSerializer`。根据所实现的功能，如果无法复用现有子类，可能还需要自定义 `RecipeInput`、`RecipeDisplay`、`SlotDisplay`、`RecipeBookCategory` 与 `RecipePropertySet`。
 

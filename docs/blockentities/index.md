@@ -1,4 +1,4 @@
-# BlockEntity
+# 方块实体（Block Entity）
 
 当 [BlockState][blockstate] 不适合时，BlockEntity 可在 [Block][block] 上存储数据。尤其是对于物品栏这种具有非有限数量选项的数据。BlockEntity 固定不动并绑定到 Block，但除此之外与 [Entity][entities] 有许多相似之处，名称也由此而来。
 
@@ -94,7 +94,7 @@ public static final DeferredBlock<MyEntityBlock> MY_BLOCK_2 =
 `BlockEntity` 的主要用途之一是存储数据。BlockEntity 上的数据存储可通过两种方式完成：读取和写入 [value I/O][valueio]，或使用[数据附件][dataattachments]。本节介绍 value I/O 的读写；数据附件请参阅所链接的文章。
 
 :::info
-顾名思义，数据附件的主要用途是将数据附加到现有 BlockEntity，例如 Vanilla 或其他模组提供的 BlockEntity。对于你自己模组中的 BlockEntity，建议直接向 value I/O 保存数据、并直接从中加载数据。
+顾名思义，数据附件的主要用途是将数据附加到现有 BlockEntity，例如原版或其他模组提供的 BlockEntity。对于你自己模组中的 BlockEntity，建议直接向 value I/O 保存数据、并直接从中加载数据。
 :::
 
 可以分别使用 `#loadAdditional` 和 `#saveAdditional` 方法从 [value I/O][valueio] 读取数据及向其写入数据。BlockEntity 同步到磁盘或通过网络同步时会调用这些方法。

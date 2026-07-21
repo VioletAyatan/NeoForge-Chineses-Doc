@@ -1,4 +1,4 @@
-# Block
+# 方块（Block）
 
 Block 是 Minecraft 世界不可或缺的组成部分。所有地形、structure 与机器都由 Block 构成。如果你有兴趣制作模组，很可能也会想添加一些 Block。本页将引导你创建 Block，并介绍可利用它们实现的部分功能。
 
@@ -218,7 +218,7 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 - [战利品表][loottable]
 - 一些 Block [tag][tags]，例如用于挖掘的 tag
 
-对于以上所有内容，还应参考类似 Vanilla Block 的文件与数据 generator。
+对于以上所有内容，还应参考类似原版 Block 的文件与数据 generator。
 
 ## 使用 Block
 
@@ -354,7 +354,7 @@ Tick 是一种每 1/20 秒（即 50 毫秒，也就是“一个 tick”）更新
 
 #### 服务端 Tick 与 Tick 调度
 
-`BlockBehaviour#tick` 通过 scheduled tick 调用。Scheduled tick 可通过 `Level#scheduleTick(BlockPos, Block, int)` 创建，其中 `int` 表示延迟。Vanilla 在许多地方使用它，例如大型垂滴叶的倾斜机制高度依赖此系统。各种红石组件也是典型使用者。
+`BlockBehaviour#tick` 通过 scheduled tick 调用。Scheduled tick 可通过 `Level#scheduleTick(BlockPos, Block, int)` 创建，其中 `int` 表示延迟。原版在许多地方使用它，例如大型垂滴叶的倾斜机制高度依赖此系统。各种红石组件也是典型使用者。
 
 #### 客户端 Tick
 

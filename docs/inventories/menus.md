@@ -1,4 +1,4 @@
-# 菜单
+# 菜单（Menus）
 
 菜单是图形用户界面（GUI）的一种后端；它处理与所表示的数据 holder 交互有关的逻辑。菜单本身不是数据 holder，而是允许用户间接修改内部数据 holder 状态的 view。因此，数据 holder 不应与任何菜单直接耦合，而应传入要调用和修改的数据引用。
 
@@ -352,7 +352,7 @@ serverPlayer.openMenu(new SimpleMenuProvider(
 
 Block 通常通过覆盖 `BlockBehaviour#useWithoutItem` 来实现菜单，并为该[交互][interaction]返回 `InteractionResult#SUCCESS`。
 
-应通过覆盖 `BlockBehaviour#getMenuProvider` 来实现 `MenuProvider`。Vanilla 方法使用它在旁观者模式查看菜单。
+应通过覆盖 `BlockBehaviour#getMenuProvider` 来实现 `MenuProvider`。原版方法使用它在旁观者模式查看菜单。
 
 ```java
 // In some Block subclass

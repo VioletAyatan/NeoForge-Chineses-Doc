@@ -1,14 +1,14 @@
-# MobEffect 与 Potion
+# 生物效果与药水（MobEffect & Potion）
 
 生物效果有时称为状态效果或药水效果，在代码中称为 `MobEffect`，它是每个 tick 都会影响 [`LivingEntity`][livingentity] 的效果。本文说明如何使用它们、Effect 与 Potion 有何区别，以及如何添加自己的效果。
 
 ## 术语
 
 - `MobEffect` 每个 tick 都会影响一个 Entity。与 [Block][block] 或 [Item][item] 一样，`MobEffect` 是 registry 对象，因此必须[注册][registration]，并且是单例。
-    - **即时 MobEffect**是一种设计为只应用一个 tick 的特殊 MobEffect。Vanilla 有两种即时效果：瞬间治疗与瞬间伤害。
+    - **即时 MobEffect**是一种设计为只应用一个 tick 的特殊 MobEffect。原版有两种即时效果：瞬间治疗与瞬间伤害。
 - `MobEffectInstance` 是 `MobEffect` 的实例，其中设置了持续时间、amplifier 及其他一些 property（见下文）。`MobEffectInstance` 与 `MobEffect` 的关系，就像 [`ItemStack`][itemstack] 与 `Item` 的关系。
-- `Potion` 是 `MobEffectInstance` 的集合。Vanilla 主要将 Potion 用于四种药水 Item（见下文），但也可以随意应用到任何 Item。之后该 Item 是否以及如何使用设置在其上的 Potion，由 Item 自身决定。
-- **Potion Item**是指设计为可设置 Potion 的 Item。这是非正式术语，Vanilla `PotionItem` 类与此概念无关（该类指“普通”药水 Item）。Minecraft 目前有四种 Potion Item：药水、喷溅药水、滞留药水与药箭；模组还可以添加更多。
+- `Potion` 是 `MobEffectInstance` 的集合。原版主要将 Potion 用于四种药水 Item（见下文），但也可以随意应用到任何 Item。之后该 Item 是否以及如何使用设置在其上的 Potion，由 Item 自身决定。
+- **Potion Item**是指设计为可设置 Potion 的 Item。这是非正式术语，原版 `PotionItem` 类与此概念无关（该类指“普通”药水 Item）。Minecraft 目前有四种 Potion Item：药水、喷溅药水、滞留药水与药箭；模组还可以添加更多。
 
 ## `MobEffect`
 
@@ -160,9 +160,9 @@ public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", reg
 ));
 ```
 
-Potion 的名称是第一个构造器参数。它用作 translation key 的后缀；例如，Vanilla 中的延长型与增强型药水变体使用它来获得与基础变体相同的名称。
+Potion 的名称是第一个构造器参数。它用作 translation key 的后缀；例如，原版中的延长型与增强型药水变体使用它来获得与基础变体相同的名称。
 
-`new Potion` 的 `MobEffectInstance` 参数是 vararg。这意味着可以向 Potion 添加任意数量的效果，也意味着可以创建空 Potion，即没有任何效果的 Potion。只需调用 `new Potion()` 即可！（顺便一提，Vanilla 正是这样添加 `awkward` Potion 的。）
+`new Potion` 的 `MobEffectInstance` 参数是 vararg。这意味着可以向 Potion 添加任意数量的效果，也意味着可以创建空 Potion，即没有任何效果的 Potion。只需调用 `new Potion()` 即可！（顺便一提，原版正是这样添加 `awkward` Potion 的。）
 
 `PotionContents` 类提供了多种与 Potion Item 相关的辅助方法。Potion Item 通过 `DataComponent#POTION_CONTENTS` 存储其 `PotionContents`。
 

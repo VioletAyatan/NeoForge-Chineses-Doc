@@ -1,4 +1,4 @@
-# 组织你的模组
+# 组织你的模组（Structuring Your Mod）
 
 结构清晰的模组更易于维护、接受贡献，也能让人更清楚地理解底层代码库。下面列出了 Java、Minecraft 和 NeoForge 方面的一些建议。
 

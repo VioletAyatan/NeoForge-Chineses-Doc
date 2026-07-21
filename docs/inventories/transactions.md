@@ -147,7 +147,7 @@ int indexCapacity = handler.getCapacityAsInt(0);
 boolean canAcceptApples = handler.isValid(0, ItemResource.of(Items.APPLE));
 ```
 
-根据底层物品栏的不同，有许多不同类型的 `ResourceHandler`。有些处理器会封装现有 Vanilla 物品栏（例如用于 [`Container`][container] 的 `VanillaContainerWrapper`、用于[玩家 `Inventory`][playerinv] 的 `PlayerInventoryWrapper`、用于 [LivingEntity][livingentity] 装备槽位的 `LivingEntityEquipmentWrapper`）。
+根据底层物品栏的不同，有许多不同类型的 `ResourceHandler`。有些处理器会封装现有原版物品栏（例如用于 [`Container`][container] 的 `VanillaContainerWrapper`、用于[玩家 `Inventory`][playerinv] 的 `PlayerInventoryWrapper`、用于 [LivingEntity][livingentity] 装备槽位的 `LivingEntityEquipmentWrapper`）。
 
 ```java
 // Wrapping around an existing container.

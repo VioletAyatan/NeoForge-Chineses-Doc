@@ -71,7 +71,7 @@ public static void decreaseArmor(LivingIncomingDamageEvent event) {
 
 #### `LivingShieldBlockEvent`
 
-此事件可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改 Vanilla 盾牌格挡检查、更改盾牌或攻击 Item 所受伤害、更改盾牌视角弧度、允许 Projectile 但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
+此事件可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改原版盾牌格挡检查、更改盾牌或攻击 Item 所受伤害、更改盾牌视角弧度、允许 Projectile 但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
 
 请注意，此事件并非为“类似盾牌”的 Item 范围以外的免疫或攻击取消而设计。
 

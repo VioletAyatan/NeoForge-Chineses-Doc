@@ -9,7 +9,7 @@
 :::warning
 NeoForge 提供 `ItemStacksResourceHandler` 类，用于在许多位置替代 `Container`。只要可能，就应优先使用它而不是 `Container`，因为它能以更简洁的方式与其他 `Container`／`ItemStacksResourceHandler` 交互。
 
-本文存在的主要原因是为 Vanilla 代码提供参考，或供你开发多 loader 模组时使用。在自己的代码中，只要可能，就始终使用 `ItemStacksResourceHandler`！相关文档仍在编写中。
+本文存在的主要原因是为原版代码提供参考，或供你开发多 loader 模组时使用。在自己的代码中，只要可能，就始终使用 `ItemStacksResourceHandler`！相关文档仍在编写中。
 :::
 
 ## 基础 Container 实现

@@ -1,5 +1,5 @@
 
-# 理解 Model 系统
+# 理解模型系统（Understanding the Model System）
 
 Minecraft 中的 Model 只是附带纹理的 Quad 列表。建模流程的每个部分都有独立实现，底层 Model JSON 会反序列化为 `UnbakedModel`。最后，各 Pipeline 都接收某个 `List<BakedQuad>` 以及自身所需属性。一些 [BlockEntity Renderer][ber] 也会使用这些 Model。Model 的复杂程度没有限制。
 

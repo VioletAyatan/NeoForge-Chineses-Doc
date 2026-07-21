@@ -118,7 +118,7 @@ Codec         | Java 类型
 
 \*\*\* `Unit` 是用于表示 `null` 对象的对象。
 
-### Vanilla 与 NeoForge
+### 原版与 NeoForge
 
 Minecraft 和 NeoForge 为经常需要编码与解码的对象定义了许多 codecs。例如：`Identifier` 使用 `Identifier#CODEC`，`DateTimeFormatter#ISO_INSTANT` 格式的 `Instant` 使用 `ExtraCodecs#INSTANT_ISO8601`，`CompoundTag` 使用 `CompoundTag#CODEC`。
 
@@ -126,7 +126,7 @@ Minecraft 和 NeoForge 为经常需要编码与解码的对象定义了许多 co
 `CompoundTag` 无法通过 `JsonOps` 解码 JSON 中的数字列表。`JsonOps` 在转换时会把数字设为能够容纳它的最窄类型，而 `ListTag` 会强制其数据使用某一种特定类型，因此类型不同的数字（例如 `64` 会是 `byte`，`384` 会是 `short`）将在转换时抛出错误。
 :::
 
-Vanilla 与 NeoForge registries 也为 registry 所包含的对象类型提供 codecs（例如 `BuiltInRegistries#BLOCK` 拥有一个 `Codec<Block>`）。`Registry#byNameCodec` 会把 registry 对象编码为其 registry 名称。Vanilla registries 还提供 `Registry#holderByNameCodec`，它编码为 registry 名称，并把该名称解码为包装在 `Holder` 中的 registry 对象。
+原版与 NeoForge registries 也为 registry 所包含的对象类型提供 codecs（例如 `BuiltInRegistries#BLOCK` 拥有一个 `Codec<Block>`）。`Registry#byNameCodec` 会把 registry 对象编码为其 registry 名称。原版 registries 还提供 `Registry#holderByNameCodec`，它编码为 registry 名称，并把该名称解码为包装在 `Holder` 中的 registry 对象。
 
 ## 创建 Codecs
 

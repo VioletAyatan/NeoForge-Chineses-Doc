@@ -1,6 +1,6 @@
 # 属性（Attribute）
 
-Attribute 是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。Vanilla 提供了大量默认 attribute，你也可以添加自己的 attribute。
+Attribute 是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。原版提供了大量默认 attribute，你也可以添加自己的 attribute。
 
 由于历史实现原因，并非所有 attribute 都适用于所有 Entity。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
 
@@ -112,7 +112,7 @@ public static void modifyDefaultAttributes(EntityAttributeModificationEvent even
 }
 ```
 
-请注意，与其他一些 registry 不同，自定义 attribute 的存在不会阻止 Vanilla 客户端连接 NeoForge 服务端。如果 Vanilla 客户端连接，它只会收到 `minecraft` namespace 中的 attribute。
+请注意，与其他一些 registry 不同，自定义 attribute 的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` namespace 中的 attribute。
 
 ## 查询 Attribute
 

@@ -170,7 +170,7 @@ DyeColor color = holder.get(DataComponents.BASE_COLOR);
 
 ### `MutableDataComponentHolder`
 
-`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件 map 进行写入操作的方法。Vanilla 与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名 delegate 方法 `#set` 与 `#remove`。
+`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件 map 进行写入操作的方法。原版与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名 delegate 方法 `#set` 与 `#remove`。
 
 此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到 map。Operator 可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
 
@@ -224,7 +224,7 @@ public static final Item COMPONENT_EXAMPLE = REGISTRAR.register("component",
 );
 ```
 
-如果应将数据组件添加到属于 Vanilla 或其他模组的现有 Item，就应在 [**模组事件总线**][modbus] 上监听 `ModifyDefaultComponentsEvent`。该事件提供 `modify` 与 `modifyMatching` 方法，允许修改关联 Item 的 `DataComponentPatch.Builder`。Builder 可以 `#set` 现有组件，也可以将其 `#set` 为 null，从而有效移除它们。
+如果应将数据组件添加到属于原版或其他模组的现有 Item，就应在 [**模组事件总线**][modbus] 上监听 `ModifyDefaultComponentsEvent`。该事件提供 `modify` 与 `modifyMatching` 方法，允许修改关联 Item 的 `DataComponentPatch.Builder`。Builder 可以 `#set` 现有组件，也可以将其 `#set` 为 null，从而有效移除它们。
 
 ```java
 @SubscribeEvent // on the mod event bus

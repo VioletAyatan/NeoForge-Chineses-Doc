@@ -1,4 +1,4 @@
-# 盔甲
+# 盔甲（Armor）
 
 盔甲是主要通过各种抗性与效果保护 [`LivingEntity`][livingentity] 免受伤害的 [Item][item]。许多模组会添加新的盔甲套装（例如铜制盔甲）。
 

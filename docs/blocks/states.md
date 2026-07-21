@@ -1,4 +1,4 @@
-# BlockState
+# 方块状态（BlockState）
 
 你经常会遇到需要一个 Block 具有不同状态的情况。例如，小麦作物有八个生长阶段，为每个阶段创建单独的 Block 显得不合理。又或者你有一个台阶或类似台阶的 Block——一个下半状态、一个上半状态，以及一个同时包含上下两半的状态。
 
@@ -19,7 +19,7 @@ minecraft:end_portal_frame[facing=south,eye=true]
 minecraft:end_portal_frame[facing=west,eye=true]
 ```
 
-`blockid[property1=value1,property2=value,...]` 是以文本形式表示 BlockState 的标准写法，Vanilla 中的一些位置（例如命令）会使用这种写法。
+`blockid[property1=value1,property2=value,...]` 是以文本形式表示 BlockState 的标准写法，原版中的一些位置（例如命令）会使用这种写法。
 
 即使你的 Block 没有定义任何 BlockState property，它仍然恰好有一种 BlockState——因为没有可指定的 property，所以就是不带任何 property 的状态。它可写作 `minecraft:oak_planks[]`，也可以直接写作 `minecraft:oak_planks`。
 
@@ -41,7 +41,7 @@ BlockState 与 BlockEntity 可以结合使用。例如，箱子使用 BlockState
 
 ## 实现 BlockState
 
-要实现 BlockState property，请在 Block 类中创建或引用 `public static final Property<?>` 常量。虽然你可以自由编写自己的 `Property<?>` 实现，但 Vanilla 代码提供了几种便利实现，足以覆盖大多数用例：
+要实现 BlockState property，请在 Block 类中创建或引用 `public static final Property<?>` 常量。虽然你可以自由编写自己的 `Property<?>` 实现，但原版代码提供了几种便利实现，足以覆盖大多数用例：
 
 - `IntegerProperty`
     - 实现 `Property<Integer>`。定义保存整数值的 property。请注意，不支持负值。
@@ -54,7 +54,7 @@ BlockState 与 BlockEntity 可以结合使用。例如，箱子使用 BlockState
     - 通过调用 `EnumProperty#create(String name, Class<E> enumClass)` 创建。
     - 也可以只使用枚举值的一个子集（例如 16 种 `DyeColor` 中的 4 种），请参阅 `EnumProperty#create` 的重载。
 
-`BlockStateProperties` 类包含 Vanilla 共用 property。只要可行，就应使用或引用这些 property，而不是自行创建。
+`BlockStateProperties` 类包含原版共用 property。只要可行，就应使用或引用这些 property，而不是自行创建。
 
 有了 property 常量后，在 Block 类中覆盖 `Block#createBlockStateDefinition(StateDefinition.Builder)`。在该方法中调用 `StateDefinition.Builder#add(YOUR_PROPERTY);`。`StateDefinition.Builder#add` 有 vararg 参数，因此如果有多个 property，可以一次全部添加。
 

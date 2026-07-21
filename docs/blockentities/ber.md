@@ -1,4 +1,4 @@
-# BlockEntityRenderer
+# 方块实体渲染器（BlockEntityRenderer）
 
 `BlockEntityRenderer` 通常缩写为 BER，用于以[静态 baked model][model]（JSON、OBJ 等）无法表示的方式“渲染”[Block][block]。例如，它可用于动态渲染类似箱子的 Block 中的容器内容。Block entity renderer 要求 Block 拥有 [`BlockEntity`][blockentity]，即使该 Block 除此之外不存储任何数据。
 

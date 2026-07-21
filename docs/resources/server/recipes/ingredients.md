@@ -1,4 +1,4 @@
-# Ingredient
+# 原料（Ingredient）
 
 `Ingredient` 在[配方][recipes]中用于检查给定 [`ItemStack`][itemstack] 是否为该配方的有效输入。为此，`Ingredient` 实现了 `Predicate<ItemStack>`，可以调用 `#test` 来确认给定 `ItemStack` 是否与该 Ingredient 匹配。
 

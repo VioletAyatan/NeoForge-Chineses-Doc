@@ -1,4 +1,4 @@
-# 调试分析器
+# 调试分析器（Debug Profiler）
 
 Minecraft 提供了调试分析器（Debug Profiler），它会收集系统数据、当前游戏设置、JVM 数据、Level 数据以及各端的 tick 信息，用于定位耗时的代码。对于需要查找卡顿来源的模组开发者和服务器所有者而言，这在分析 `TickEvent`、持续 tick 的 `BlockEntity` 等内容时非常有用。
 

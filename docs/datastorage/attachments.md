@@ -1,4 +1,4 @@
-# 数据附件
+# 数据附件（Data Attachments）
 
 数据附件系统允许模组把额外数据附加并存储到 BlockEntity、区块、Entity 和 Level 上。
 

@@ -1,4 +1,4 @@
-# GameTest
+# 游戏测试（GameTest）
 
 GameTest 是运行游戏内单元测试的一种方式。该系统的设计目标是可扩展、可并行，以便高效运行大量不同测试。测试对象交互与行为只是此框架众多用途中的一小部分。由于该系统既可完全用代码实现，也可通过 [datapack][datapacks] 实现，下面将同时展示两种方式。
 
@@ -153,7 +153,7 @@ GameTest 在 structure（即 template）所加载的场景中执行。所有 tem
 
 所有 GameTest 都在某个 `TestEnvironmentDefinition` 中运行，它决定如何设置当前 `ServerLevel`。测试完成后会拆除 environment，让下一个或下一批实例运行。所有 environment 都会分批处理，这意味着如果多个 test 实例具有相同 environment，它们会同时运行。所有测试 environment 都位于 `data/<namespace>/test_environment/<path>.json`。
 
-Vanilla 提供不会修改 `ServerLevel` 的 `minecraft:default`。不过，还支持其他可用于构造 environment 的 definition type。
+原版提供不会修改 `ServerLevel` 的 `minecraft:default`。不过，还支持其他可用于构造 environment 的 definition type。
 
 ### GameRule
 

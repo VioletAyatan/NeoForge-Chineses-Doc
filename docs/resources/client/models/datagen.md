@@ -1,4 +1,4 @@
-# Model Datagen
+# 模型数据生成（Model Datagen）
 
 与大多数 JSON 数据一样，Block 和 Item Model 及其必需的 Blockstate 文件和[客户端 Item][citems] 都可以通过 [Datagen][datagen] 生成。全部工作由原版 `ModelProvider` 处理，NeoForge 则通过 `ExtendedModelTemplateBuilder` 提供扩展。由于 Block Model 和 Item Model 的 Model JSON 本身相似，Datagen 代码也相对相似。
 

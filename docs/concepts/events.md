@@ -128,7 +128,7 @@ graph TD;
 
 ### TriState 与 Result
 
-有些事件有三种可能的返回状态，它们由 `TriState` 表示，或由事件类上直接定义的 `Result` 枚举表示。返回状态通常可以取消事件所处理的动作（`TriState#FALSE`）、强制运行动作（`TriState#TRUE`），或执行默认 Vanilla 行为（`TriState#DEFAULT`）。
+有些事件有三种可能的返回状态，它们由 `TriState` 表示，或由事件类上直接定义的 `Result` 枚举表示。返回状态通常可以取消事件所处理的动作（`TriState#FALSE`）、强制运行动作（`TriState#TRUE`），或执行默认原版行为（`TriState#DEFAULT`）。
 
 具有三种可能返回状态的事件会提供某个 `set*` 方法，用于设置期望结果。
 

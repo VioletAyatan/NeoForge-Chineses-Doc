@@ -1,4 +1,4 @@
-# 版本管理
+# 版本管理（Versioning）
 
 本文将说明 Minecraft 和 NeoForge 的版本规则，并给出一些模组版本管理建议。
 

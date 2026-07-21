@@ -1,4 +1,4 @@
-# Entity
+# 实体（Entity）
 
 Entity 是可通过多种方式与世界交互的世界内对象。常见示例包括 Mob、Projectile、可骑乘对象，甚至玩家。每个 Entity 都由多个系统构成，乍看之下可能难以理解。本节将拆解与构造 Entity 并使其按模组开发者意图行动有关的一些关键组成部分。
 
@@ -90,7 +90,7 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
 
 _另请参阅[自然生成][mobspawn]。_
 
-Entity 的 `MobCategory` 决定该 Entity 与[生成及消失][mobspawn]有关的一些 property。Vanilla 默认共添加八种 `MobCategory`：
+Entity 的 `MobCategory` 决定该 Entity 与[生成及消失][mobspawn]有关的一些 property。原版默认共添加八种 `MobCategory`：
 
 | 名称                         | 生成上限 | 示例                                                                                                                           |
 |------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------|
@@ -186,7 +186,7 @@ if (!level.isClientSide()) {
 
 也可以调用 `EntityType#spawn`，在生成 [LivingEntity][livingentity] 时尤其推荐，因为它会进行一些额外设置，例如触发生成 [事件][event]。
 
-几乎所有非 LivingEntity 都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；Vanilla [Projectile][projectile] 也在 `Projectile` 类中提供 static 生成辅助方法。
+几乎所有非 LivingEntity 都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；原版 [Projectile][projectile] 也在 `Projectile` 类中提供 static 生成辅助方法。
 
 ### 使 Entity 受伤
 
@@ -258,7 +258,7 @@ public ItemStack getPickResult() {
 }
 ```
 
-通常 Entity 应当可被选取，但少数特殊情况并不适合。Vanilla 中的例子是末影龙，它由多个部分构成。父 Entity 禁用选取，各部分则重新启用，以便更精细地调整 hitbox。
+通常 Entity 应当可被选取，但少数特殊情况并不适合。原版中的例子是末影龙，它由多个部分构成。父 Entity 禁用选取，各部分则重新启用，以便更精细地调整 hitbox。
 
 如果有类似的特殊用例，也可以完全禁用 Entity 的选取：
 
@@ -280,7 +280,7 @@ Entity attachment 用于定义 Entity 的可视附着点。利用此系统，可
 
 构建 `EntityType` 时，可以调用 `EntityType.Builder#attach` 设置任意数量的 attachment point。此方法接受一个 `EntityAttachment`（定义要考虑的 attachment），以及三个定义位置（x/y/z）的 float。位置应相对于该 attachment 默认值所在位置定义。
 
-Vanilla 定义了以下四种 `EntityAttachment`：
+原版定义了以下四种 `EntityAttachment`：
 
 | 名称           | 默认位置                                  | 用途                                                                    |
 |----------------|-------------------------------------------|-------------------------------------------------------------------------|
@@ -319,7 +319,7 @@ EntityType.Builder.of(...)
 
 由于 Entity 类型众多，`Entity` 有复杂的子类层次结构。创建自己的 Entity 时，选择要扩展的类需要了解这些内容，因为复用它们的代码可以省去大量工作。
 
-Vanilla Entity 层次结构如下（红色类为 `abstract`，蓝色类不是）：
+原版 Entity 层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;

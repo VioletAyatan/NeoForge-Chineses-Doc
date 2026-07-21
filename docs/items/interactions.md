@@ -1,4 +1,4 @@
-# 交互
+# 交互（Interactions）
 
 本页旨在让玩家左键、右键或中键点击各种对象这一相当复杂且容易令人困惑的过程更易理解，并说明应在何处使用哪种结果及其原因。
 
@@ -72,11 +72,11 @@
     - 如果正在注视触及范围内且未超出世界边界的 [Entity][entity]：
         - 触发 `PlayerInteractEvent.EntityInteractSpecific`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interactAt`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用事件。
+            - 要为自己的 Entity 添加行为，请覆盖此方法。要为原版 Entity 添加行为，请使用事件。
         - 如果 Entity 打开界面（例如村民交易 GUI 或运输矿车 GUI），流程结束。
         - 触发 `PlayerInteractEvent.EntityInteract`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interact`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用事件。
+            - 要为自己的 Entity 添加行为，请覆盖此方法。要为原版 Entity 添加行为，请使用事件。
             - 对于 [`Mob`][livingentity]，`Entity#interact` 的重写会处理拴绳等内容；当主手 `ItemStack` 是刷怪蛋时，还会处理生成幼体，随后将 Mob 特定处理委托给 `Mob#mobInteract`。`Entity#interact` 的结果规则在这里同样适用。
         - 如果正在注视的 Entity 是 `LivingEntity`，则对主手 `ItemStack` 调用 `Item#interactLivingEntity`。如果返回确定结果，流程结束。
     - 如果正在注视触及范围内且未超出世界边界的 [Block][block]：

@@ -1,4 +1,4 @@
-# Identifier
+# 标识符（Identifier）
 
 `Identifier` 是 Minecraft 中最重要的对象之一。它们可用作[注册表][registries]中的键、数据文件或资源文件的标识符、代码中对模型的引用，以及许多其他用途。一个 `Identifier` 由两部分组成：命名空间（namespace）和路径（path），二者通过 `:` 分隔。
 

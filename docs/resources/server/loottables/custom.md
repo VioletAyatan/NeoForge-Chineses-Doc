@@ -1,4 +1,4 @@
-# 自定义战利品对象
+# 自定义战利品对象（Custom Loot Objects）
 
 由于战利品表系统较为复杂，其中会使用多个 [Registry][registries]；mod 开发者可以利用它们中的任何一个来添加更多行为。
 

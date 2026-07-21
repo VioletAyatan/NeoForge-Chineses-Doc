@@ -1,4 +1,4 @@
-# 自定义 Model Loader
+# 自定义模型加载器（Custom Model Loader）
 
 Model 本质上只是一种形状，可以是 Cube、Cube 集合、Triangle 集合，或任何其他几何形状（或几何形状集合）。在多数上下文中，Model 如何定义并不重要，因为最终都会 Bake 为 `QuadCollection`。因此，NeoForge 允许注册自定义 Model Loader，把任意 Model 转换成游戏可使用的 Baked 格式。
 

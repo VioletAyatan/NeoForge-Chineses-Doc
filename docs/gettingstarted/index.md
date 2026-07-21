@@ -1,4 +1,4 @@
-# NeoForge 入门
+# NeoForge 入门（Getting Started）
 
 本节介绍如何搭建 NeoForge 工作区，以及如何运行和测试你的模组。
 

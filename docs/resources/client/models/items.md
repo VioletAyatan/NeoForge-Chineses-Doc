@@ -1,4 +1,4 @@
-# 客户端 Item
+# 客户端物品（Client Item）
 
 客户端 Item 是代码中表示 `ItemStack` 应如何提交给游戏进行渲染的对象，用于指定在给定 State 下使用哪些 Model。客户端 Item 位于 [`assets` 文件夹][assets]中的 `items` 子目录，其相对位置由 `DataComponents#ITEM_MODEL` 指定。默认情况下，它就是对象的 Registry Name（例如 `minecraft:apple` 默认位于 `assets/minecraft/items/apple.json`）。
 

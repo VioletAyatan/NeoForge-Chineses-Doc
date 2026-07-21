@@ -1,4 +1,4 @@
-# 配置
+# 配置（Configuration）
 
 配置用于定义可以应用于模组实例的设置和用户偏好。NeoForge 使用基于 [TOML][toml] 文件的配置系统，并通过 [NightConfig][nightconfig] 读取。
 

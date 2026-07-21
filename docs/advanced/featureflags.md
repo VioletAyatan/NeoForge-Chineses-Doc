@@ -1,4 +1,4 @@
-# Feature Flag
+# 功能标志（Feature Flags）
 
 Feature Flag 是一种系统，开发者可以让一组功能以某些必需 Flag 为启用条件；这些功能可以是注册元素、游戏机制、Data Pack 条目，或模组特有的其他系统。
 

@@ -1,4 +1,4 @@
-# Item
+# 物品（Item）
 
 Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周围的世界，而 Item 存在于物品栏中。
 
@@ -23,12 +23,12 @@ Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周
     - 每个 Item 都**必须**设置此项，否则会抛出 exception。
 - `overrideDescription`——设置 Item 的 translation key。创建的 `Component` 存储在 `DataComponents#ITEM_NAME` 中。
 - `useBlockDescriptionPrefix`——一个便利辅助方法，它使用 translation key `block.<modid>.<registry_name>` 调用 `overrideDescription`。所有 `BlockItem` 都应调用此方法。
-- `requiredFeatures`——设置此 Item 所需的 feature flag。它主要用于 Vanilla 在小版本中的 feature locking 系统。除非要集成 Vanilla 中受 feature flag 限制的系统，否则不建议使用。
+- `requiredFeatures`——设置此 Item 所需的 feature flag。它主要用于原版在小版本中的 feature locking 系统。除非要集成原版中受 feature flag 限制的系统，否则不建议使用。
 - `stacksTo`——设置此 Item 的最大堆叠数量（通过 `DataComponents#MAX_STACK_SIZE`）。默认为 64。例如末影珍珠或其他只能堆叠到 16 个的 Item 会使用它。
 - `durability`——设置 Item 的耐久度（通过 `DataComponents#MAX_DAMAGE`），并将初始损伤设为 0（通过 `DataComponents#DAMAGE`）。默认为 0，表示“没有耐久度”。例如铁制工具在这里使用 250。请注意，设置耐久度会自动将最大堆叠数量锁定为 1。
 - `fireResistant`——使使用此 Item 的 ItemEntity 免疫火与熔岩（通过 `DataComponents#FIRE_RESISTANT`）。多种下界合金 Item 使用它。
 - `rarity`——设置 Item 的稀有度（通过 `DataComponents#RARITY`）。目前它只会更改 Item 颜色。`Rarity` 是由四个值组成的枚举：`COMMON`（白色，默认）、`UNCOMMON`（黄色）、`RARE`（青色）和 `EPIC`（浅紫色）。请注意，模组可能添加更多稀有度类型。
-- `setNoCombineRepair`——禁用此 Item 的砂轮与合成网格修复。Vanilla 中未使用。
+- `setNoCombineRepair`——禁用此 Item 的砂轮与合成网格修复。原版中未使用。
 - `jukeboxPlayable`——设置插入唱片机时播放的 datapack `JukeboxSong` 的 resource key。
 - `food`——设置 Item 的 [`FoodProperties`][food]（通过 `DataComponents#FOOD`）。
 
@@ -38,7 +38,7 @@ Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周
 
 Item 可具有在使用时应用，或在固定时间内阻止 Item 再次使用的额外 property：
 
-- `craftRemainder`——设置 Item 的合成剩余物。Vanilla 将其用于装有内容的桶，使其在合成后留下空桶。
+- `craftRemainder`——设置 Item 的合成剩余物。原版将其用于装有内容的桶，使其在合成后留下空桶。
 - `usingConvertsTo`——设置 Item 通过 `Item#use`、`IItemExtension#finishUsingItem` 或 `Item#releaseUsing` 使用完毕后返回的 Item。该 `ItemStack` 存储在 `DataComponents#USE_REMAINDER` 上。
 - `useCooldown`——设置 Item 再次可用前需要等待的秒数（通过 `DataComponents#USE_COOLDOWN`）。
 
@@ -141,7 +141,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 - [配方][recipes]（可选）
 - 一些 Item [tag][tags]（可选）
 
-对于以上所有内容，还应参考类似 Vanilla Block 的文件与数据 generator。
+对于以上所有内容，还应参考类似原版 Block 的文件与数据 generator。
 
 ## `ItemStack`
 
@@ -161,7 +161,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ### `ItemStack` 的可变性
 
-`ItemStack` 是 mutable 对象。这意味着调用 `#setCount` 或任何数据组件 map 方法时，会修改 `ItemStack` 本身。Vanilla 广泛利用 `ItemStack` 的可变性，有几个方法依赖于此。例如，`#split` 会从调用它的 ItemStack 中分出给定数量，在此过程中既修改调用方，又返回新的 `ItemStack`。
+`ItemStack` 是 mutable 对象。这意味着调用 `#setCount` 或任何数据组件 map 方法时，会修改 `ItemStack` 本身。原版广泛利用 `ItemStack` 的可变性，有几个方法依赖于此。例如，`#split` 会从调用它的 ItemStack 中分出给定数量，在此过程中既修改调用方，又返回新的 `ItemStack`。
 
 不过，同时处理多个 `ItemStack` 时，这有时会引发问题。最常出现这种情况的是处理物品栏槽位，因为必须同时考虑光标当前选中的 `ItemStack`，以及尝试插入或提取的 `ItemStack`。
 
@@ -250,7 +250,7 @@ public static final Supplier<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.r
 
 ## `ItemLike`
 
-`ItemLike` 是 Vanilla 中由 `Item` 与 [`Block`][block] 实现的接口。它定义 `#asItem` 方法，返回对象实际内容的 Item 表示：`Item` 直接返回自身，`Block` 在可用时返回关联的 `BlockItem`，否则返回 `Blocks.AIR`。`ItemLike` 用在 Item 的“来源”并不重要的各种 context 中，例如许多[数据 generator][datagen]。
+`ItemLike` 是原版中由 `Item` 与 [`Block`][block] 实现的接口。它定义 `#asItem` 方法，返回对象实际内容的 Item 表示：`Item` 直接返回自身，`Block` 在可用时返回关联的 `BlockItem`，否则返回 `Blocks.AIR`。`ItemLike` 用在 Item 的“来源”并不重要的各种 context 中，例如许多[数据 generator][datagen]。
 
 也可以让自定义对象实现 `ItemLike`。只需覆盖 `#asItem` 即可。
 

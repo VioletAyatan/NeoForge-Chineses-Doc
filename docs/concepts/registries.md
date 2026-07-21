@@ -150,7 +150,7 @@ for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entryS
 ```
 
 :::info
-查询操作始终使用 Vanilla `Registry`，而不是 `DeferredRegister`。这是因为 `DeferredRegister` 只是注册工具。
+查询操作始终使用原版 `Registry`，而不是 `DeferredRegister`。这是因为 `DeferredRegister` 只是注册工具。
 :::
 
 :::danger
