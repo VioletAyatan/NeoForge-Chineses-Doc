@@ -167,7 +167,7 @@ int modifiedValue = atomicValue.get();
 
 首先，调用 `EnchantmentHelper#runIterationOnItem` 的某个重载。该函数接受 `EnchantmentHelper.EnchantmentVisitor`；这是一个接收附魔及其等级的函数式接口，会对给定 ItemStack 拥有的所有附魔调用（本质上是 `BiConsumer<Holder<Enchantment>, Integer>`）。
 
-要实际执行调整，请使用提供的 `Increment#add` 方法。由于它位于Lambda 表达式内，因此需要使用可进行原子更新的类型（例如 `AtomicInteger`）来修改该值。这也允许多个 `INCREMENT` 组件在同一个 Item 上运行并叠加效果，与原版行为相同。
+要实际执行调整，请使用提供的 `Increment#add` 方法。由于它位于 lambda 表达式内，因此需要使用可进行原子更新的类型（例如 `AtomicInteger`）来修改该值。这也允许多个 `INCREMENT` 组件在同一个 Item 上运行并叠加效果，与原版行为相同。
 
 ### `ConditionalEffect`
 使用 `ConditionalEffect<?>` 包装类型后，附魔效果组件可以根据给定 [LootContext] 选择性生效。
