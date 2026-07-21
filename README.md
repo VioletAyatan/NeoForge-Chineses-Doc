@@ -5,6 +5,8 @@
 
 ## 技术术语处理原则
 
+项目统一译名及易混概念见[项目术语表](GLOSSARY.md)。
+
 - fenced code block 及其中的代码和注释保持原文，不进行翻译或改写。
 - 行内代码、类名、方法名、字段名、包名、注册表键、资源路径、命令和配置键保持原文。
 - `Block`、`Blocks`、`BlockState`、`BlockEntity`、`Item`、`Items`、`ItemStack`、`Entity`、`Level`、`Registry`、`Codec`、`Holder`、`ResourceLocation` 等编程对象不汉化。
