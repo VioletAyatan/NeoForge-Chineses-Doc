@@ -7,7 +7,9 @@ export default defineConfig({
 	themeConfig: {
 		logo: {
 			src: '/logo.svg',
-			alt: 'NeoForge',
+		},
+		outline: {
+			label: '页面导航',
 		},
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [

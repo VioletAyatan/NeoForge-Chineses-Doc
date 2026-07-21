@@ -2,9 +2,9 @@
 
 消耗品是可在一段时间内使用、并在此过程中被“消耗”的 [Item][item]。Minecraft 中所有可食用或饮用的内容，都属于某种消耗品。
 
-## `Consumable` Data Component
+## `Consumable` 数据组件
 
-任何可消耗 Item 都具有 [`DataComponents#CONSUMABLE` component][datacomponent]。其底层 record `Consumable` 定义 Item 如何被消耗，以及消耗后应用哪些效果。
+任何可消耗 Item 都具有 [`DataComponents#CONSUMABLE` 组件][datacomponent]。其底层 record `Consumable` 定义 Item 如何被消耗，以及消耗后应用哪些效果。
 
 可以直接调用 record constructor 创建 `Consumable`，也可以通过 `Consumable#builder` 创建；后者会为每个 field 设置默认值，完成后再调用 `build`：
 
@@ -18,7 +18,7 @@
 
 Vanilla 在 `Consumables` class 中提供了一些消耗品，例如用于[食物][food] Item 的 `#defaultFood`，以及用于[药水][potions]和奶桶的 `#defaultDrink`。
 
-可以调用 `Item.Properties#component` 添加 `Consumable` component：
+可以调用 `Item.Properties#component` 添加 `Consumable` 组件：
 
 ```java
 // Assume there is some DeferredRegister.Items ITEMS
@@ -143,7 +143,7 @@ Consumable.builder()
 public static final ItemUseAnimation EXAMPLE_ANIMATION = ItemUseAnimation.valueOf("EXAMPLEMOD_ITEM_USE_ANIMATION");
 ```
 
-接下来即可开始应用 transform。为此，必须创建新的 `IClientItemExtensions`、实现所需方法，并通过 [**mod event bus**][modbus] 上的 `RegisterClientExtensionsEvent` 注册它：
+接下来即可开始应用 transform。为此，必须创建新的 `IClientItemExtensions`、实现所需方法，并通过 [**模组事件总线**][modbus] 上的 `RegisterClientExtensionsEvent` 注册它：
 
 ```java
 public class ConsumableClientItemExtensions implements IClientItemExtensions {
@@ -294,11 +294,11 @@ public class MyEntity extends LivingEntity implements Consumable.OverrideConsume
 
 ## `ConsumableListener`
 
-消耗品与消耗后应用的效果非常有用，但有时某种效果的 property 需要作为其他 [data component][datacomponents] 对外提供。例如，猫和狼也会食用[食物][food]并查询其营养值，带有 Potion 内容的 Item 则会查询其颜色以进行渲染。在这些情况下，data component 会实现 `ConsumableListener` 以提供消耗逻辑。
+消耗品与消耗后应用的效果非常有用，但有时某种效果的 property 需要作为其他 [数据组件][datacomponents] 对外提供。例如，猫和狼也会食用[食物][food]并查询其营养值，带有 Potion 内容的 Item 则会查询其颜色以进行渲染。在这些情况下，数据组件会实现 `ConsumableListener` 以提供消耗逻辑。
 
 `ConsumableListener` 只有一个方法：`#onConsume`，它接受当前 Level、正在消耗 Item 的 Entity、被消耗的 Item，以及 Item 上的 `Consumable` 实例。Item 完全消耗后，在 `Item#finishUsingItem` 期间调用 `onConsume`。
 
-添加自己的 `ConsumableListener` 只需[注册新的 data component][datacompreg] 并实现 `ConsumableListener`。
+添加自己的 `ConsumableListener` 只需[注册新的数据组件][datacompreg] 并实现 `ConsumableListener`。
 
 ```java
 public record MyConsumableListener() implements ConsumableListener {
@@ -354,7 +354,7 @@ public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
 [animation]: #itemuseanimation
 [consumeeffect]: #consumeeffect
 [datacomponent]: datacomponents.md
-[datacompreg]: datacomponents.md#creating-custom-data-components
+[datacompreg]: datacomponents.md#创建自定义数据组件
 [extensibleenum]: ../advanced/extensibleenums.md
 [food]: #food
 [hunger]: https://minecraft.wiki/w/Hunger#Mechanics

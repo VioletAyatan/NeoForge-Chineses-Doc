@@ -91,12 +91,12 @@ public ExampleMod(IEventBus modBus) {
 ```
 
 :::info
-针对 Block、Item、data component 和 Entity，`DeferredRegister` 分别提供了带有辅助方法的专用变体：[`DeferredRegister.Blocks`][defregblocks]、[`DeferredRegister.Items`][defregitems]、[`DeferredRegister.DataComponents`][defregcomp] 和 [`DeferredRegister.Entities`][defregentity]。
+针对 Block、Item、数据组件和 Entity，`DeferredRegister` 分别提供了带有辅助方法的专用变体：[`DeferredRegister.Blocks`][defregblocks]、[`DeferredRegister.Items`][defregitems]、[`DeferredRegister.DataComponents`][defregcomp] 和 [`DeferredRegister.Entities`][defregentity]。
 :::
 
 ### `RegisterEvent`
 
-`RegisterEvent` 是注册对象的第二种方式。该 [Event][event] 会针对每个 registry 触发，时间是在 mod constructor 之后（因为 `DeferredRegister` 会在其中注册内部 Event handler）、配置加载之前。`RegisterEvent` 在 mod event bus 上触发。
+`RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个 registry 触发，时间是在 mod constructor 之后（因为 `DeferredRegister` 会在其中注册内部事件处理器）、配置加载之前。`RegisterEvent` 在模组事件总线上触发。
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -305,7 +305,7 @@ new RegistrySetBuilder()
     });
 ```
 
-最后，在实际的数据 provider 中使用 `RegistrySetBuilder`，并将该数据 provider 注册到 Event：
+最后，在实际的数据 provider 中使用 `RegistrySetBuilder`，并将该数据 provider 注册到事件：
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -338,7 +338,7 @@ public static void onGatherData(GatherDataEvent.Client event) {
 [datagenindex]: ../resources/index.md#data-generation
 [datapack]: ../resources/index.md#data
 [defregblocks]: ../blocks/index.md#deferredregisterblocks-helpers
-[defregcomp]: ../items/datacomponents.md#creating-custom-data-components
+[defregcomp]: ../items/datacomponents.md#创建自定义数据组件
 [defregentity]: ../entities/index.md#entitytype
 [defregitems]: ../items/index.md#deferredregisteritems
 [event]: events.md

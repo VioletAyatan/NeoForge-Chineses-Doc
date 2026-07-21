@@ -1,6 +1,6 @@
 # MobEffect 与 Potion
 
-状态效果有时称为药水效果，在代码中称为 `MobEffect`，它是每个 tick 都会影响 [`LivingEntity`][livingentity] 的效果。本文说明如何使用它们、Effect 与 Potion 有何区别，以及如何添加自己的效果。
+生物效果有时称为状态效果或药水效果，在代码中称为 `MobEffect`，它是每个 tick 都会影响 [`LivingEntity`][livingentity] 的效果。本文说明如何使用它们、Effect 与 Potion 有何区别，以及如何添加自己的效果。
 
 ## 术语
 
@@ -89,12 +89,12 @@ public class MyMobEffect extends InstantenousMobEffect {
 
 然后像平常一样[注册][registration]效果。
 
-### Event
+### 事件
 
-许多效果会在其他位置应用其逻辑。例如，飘浮效果在 LivingEntity 移动 handler 中应用。对于模组提供的 `MobEffect`，通常适合在 [Event handler][events] 中应用它们。NeoForge 还提供了一些与效果相关的 Event：
+许多效果会在其他位置应用其逻辑。例如，飘浮效果在 LivingEntity 的移动处理逻辑中应用。对于模组提供的 `MobEffect`，通常适合在 [事件处理器][events] 中应用它们。NeoForge 还提供了一些与效果相关的事件：
 
-- 游戏检查是否可将 `MobEffectInstance` 应用到某个 Entity 时，触发 `MobEffectEvent.Applicable`。此 Event 可用于拒绝或强制向目标添加效果实例。
-- 向目标添加 `MobEffectInstance` 时，触发 `MobEffectEvent.Added`。此 Event 包含目标上先前可能存在的 `MobEffectInstance` 的信息。
+- 游戏检查是否可将 `MobEffectInstance` 应用到某个 Entity 时，触发 `MobEffectEvent.Applicable`。此事件可用于拒绝或强制向目标添加效果实例。
+- 向目标添加 `MobEffectInstance` 时，触发 `MobEffectEvent.Added`。此事件包含目标上先前可能存在的 `MobEffectInstance` 的信息。
 - `MobEffectInstance` 到期（即计时器归零）时，触发 `MobEffectEvent.Expired`。
 - 通过到期以外的方式（例如喝牛奶或使用命令）从 Entity 移除效果时，触发 `MobEffectEvent.Remove`。
 
@@ -170,7 +170,7 @@ Potion 的名称是第一个 constructor 参数。它用作 translation key 的�
 
 现在已经添加了 Potion，Potion Item 也可以使用你的 Potion。然而，在生存模式下还没有获得它的方法，下面来解决这个问题。
 
-传统上，Potion 在 Brewing Stand 中制作。遗憾的是，Mojang 没有为酿造配方提供 [datapack][datapack] 支持，因此必须稍微采用传统方式，通过 `RegisterBrewingRecipesEvent` Event 用代码添加配方。具体如下：
+传统上，Potion 在 Brewing Stand 中制作。遗憾的是，Mojang 没有为酿造配方提供 [datapack][datapack] 支持，因此必须稍微采用传统方式，通过 `RegisterBrewingRecipesEvent` 事件用代码添加配方。具体如下：
 
 ```java
 @SubscribeEvent // on the game event bus

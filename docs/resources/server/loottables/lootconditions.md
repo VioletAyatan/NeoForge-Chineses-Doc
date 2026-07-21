@@ -289,7 +289,7 @@
 
 ## `minecraft:damage_source_properties`
 
-此条件针对 Damage Source 战利品参数检查给定 `DamageSourcePredicate`。它需要 `minecraft:origin` 与 `minecraft:damage_source` 战利品参数；如果这些参数缺失，则始终失败。
+此条件针对伤害来源战利品参数检查给定 `DamageSourcePredicate`。它需要 `minecraft:origin` 与 `minecraft:damage_source` 战利品参数；如果这些参数缺失，则始终失败。
 
 ```json5
 {

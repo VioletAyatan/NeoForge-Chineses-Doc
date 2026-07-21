@@ -7,7 +7,7 @@ Minecraft 在游戏中的许多位置使用战利品表，包括 [Block][block] 
 - 默认情况下，每个 Block 都会获得一个位于 `<block_namespace>:blocks/<block_name>` 的关联战利品表。可以在 Block 的 `Properties` 上调用 `#noLootTable` 将其禁用，这样不会创建战利品表，Block 也不会掉落任何内容；此做法主要用于空气类或技术型 Block。
 - 默认情况下，所有未调用 `EntityType.Builder#noLootTable` 的 Entity（通常是 `MobCategory#MISC` 中的 Entity）都会获得一个位于 `<entity_namespace>:entities/<entity_name>` 的关联战利品表。可以通过重写 `#getLootTable` 更改它。例如，绵羊会根据羊毛颜色抽取不同战利品表。
 - 结构中的箱子会在 BlockEntity 数据中指定战利品表。Minecraft 将所有箱子战利品表存放在 `minecraft:chests/<chest_name>`；建议 mod 遵循这一做法，但并非强制。
-- 袭击结束后村民可能投给玩家的礼物 Item，其战利品表定义在 [`neoforge:raid_hero_gifts`数据映射][raidherogifts] 中。
+- 袭击结束后村民可能投给玩家的礼物 Item，其战利品表定义在 [`neoforge:raid_hero_gifts` 数据映射][raidherogifts] 中。
 - 其他战利品表（例如钓鱼战利品表）会在需要时从 `level.getServer().reloadableRegistries().getLootTable(lootTableKey)` 获取。所有原版战利品表位置的列表可在 `BuiltInLootTables` 中找到。
 
 :::warning
@@ -91,7 +91,7 @@ Minecraft 提供以下战利品参数：
 - `minecraft:interacting_entity`：与战利品表交互的 Entity，例如挖掘 Block 的玩家。通过 `LootContextParams.INTERACTING_ENTITY` 访问。
 - `minecraft:target_entity`：与战利品表关联的 Entity，通常是某种交互的目标。通过 `LootContextParams.TARGET_ENTITY` 访问。
 - `minecraft:last_damage_player`：与战利品表关联的玩家，通常是最后攻击被击杀 Entity 的玩家，即使该玩家是间接击杀（例如玩家轻击 Entity，之后它被尖刺杀死）。用于仅限玩家击杀时掉落等场景。通过 `LootContextParams.LAST_DAMAGE_PLAYER` 访问。
-- `minecraft:damage_source`：与战利品表关联的 [Damage Source][damagesource]，通常是击杀 Entity 的 Damage Source。通过 `LootContextParams.DAMAGE_SOURCE` 访问。
+- `minecraft:damage_source`：与战利品表关联的 [伤害来源][damagesource]，通常是击杀 Entity 的伤害来源。通过 `LootContextParams.DAMAGE_SOURCE` 访问。
 - `minecraft:attacking_entity`：与战利品表关联的攻击 Entity，通常是击杀该 Entity 的对象。通过 `LootContextParams.ATTACKING_ENTITY` 访问。
 - `minecraft:direct_attacking_entity`：与战利品表关联的直接攻击 Entity。例如，如果攻击 Entity 是骷髅，则直接攻击 Entity 是箭。通过 `LootContextParams.DIRECT_ATTACKING_ENTITY` 访问。
 - `minecraft:origin`：与战利品表关联的位置，例如战利品箱的位置。通过 `LootContextParams.ORIGIN` 访问。
@@ -439,7 +439,7 @@ new LootTableProvider(output, Set.of(), List.of(new SubProviderEntry(
 [customentry]: custom.md#custom-loot-entry-types
 [customlevelbased]: custom.md#custom-level-based-values
 [customnumber]: custom.md#custom-number-providers
-[damagesource]: ../damagetypes.md#creating-and-using-damage-sources
+[damagesource]: ../damagetypes.md#创建和使用伤害来源
 [datagen]: ../../index.md#data-generation
 [entity]: ../../../entities/index.md
 [entry]: #loot-entry

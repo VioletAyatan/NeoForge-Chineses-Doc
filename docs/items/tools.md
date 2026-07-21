@@ -4,7 +4,7 @@
 
 ## 自定义工具套装
 
-一套工具通常由六种 Item 组成：镐、斧、锹、锄、剑和矛（剑和矛按传统含义并非工具，但为保持一致也列在这里）。所有这些工具都使用以下十四种 [data component][datacomponents] 的组合实现：
+一套工具通常由六种 Item 组成：镐、斧、锹、锄、剑和矛（剑和矛按传统含义并非工具，但为保持一致也列在这里）。所有这些工具都使用以下十四种 [数据组件][datacomponents] 的组合实现：
 
 - `DataComponents#MAX_DAMAGE` 与 `#DAMAGE`：耐久度
 - `#MAX_STACK_SIZE`：将堆叠数量设置为 `1`
@@ -21,7 +21,7 @@
 - `#KINETIC_WEAPON`：基于动量、通过使用 Item 攻击多个 Entity
 - `#USE_EFFECTS`：使用 Item 时向 Entity 应用某些效果
 
-通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个 delegate（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过 data component 实现其通用挖掘逻辑；它们会直接扩展 `Item`，并覆盖相关方法来处理挖掘。交互行为（默认右键点击）同样没有 data component，因此锹、斧与锄分别有自己的工具 class：`ShovelItem`、`AxeItem` 和 `HoeItem`。
+通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个 delegate（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过数据组件实现其通用挖掘逻辑；它们会直接扩展 `Item`，并覆盖相关方法来处理挖掘。交互行为（默认右键点击）同样没有数据组件，因此锹、斧与锄分别有自己的工具 class：`ShovelItem`、`AxeItem` 和 `HoeItem`。
 
 要创建一套标准工具，必须先定义 `ToolMaterial`。参考值可在 `ToolMaterial` 的常量中找到。此示例使用铜制工具，你可以使用自己的材料并按需要调整这些值。
 
@@ -157,7 +157,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 
 ## 自定义工具
 
-可通过 `Item.Properties#component`，把 `Tool` [data component][datacomponents]（即 `DataComponents#TOOL`）添加到 Item 的默认 component 列表中，以创建自定义工具。
+可通过 `Item.Properties#component`，把 `Tool` [数据组件][datacomponents]（即 `DataComponents#TOOL`）添加到 Item 的默认组件列表中，以创建自定义工具。
 
 `Tool` 包含 `Tool.Rule` 列表、持有工具时的默认挖掘速度（默认为 `1`），以及挖掘 Block 时工具应承受的伤害值（默认为 `1`）。`Tool.Rule` 包含三项信息：要应用 rule 的 Block `HolderSet`、挖掘该集合中 Block 的可选速度，以及用于判断这些 Block 能否由此工具产生掉落物的可选 boolean。如果未设置可选项，就继续检查其他 rule。如果所有 rule 都失败，默认行为是使用默认挖掘速度，且 Block 无法产生掉落物。
 
@@ -178,7 +178,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 - 将工具添加到某些 `minecraft:enchantable/*` `ItemTags`，使其可应用特定附魔。
 - 将工具添加到某些 `minecraft:*_preferred_weapons` tag，使 Mob 更倾向于捡起并使用你的武器。
 
-对于盾牌，可以应用 [`DataComponents#EQUIPPABLE`][equippable] data component 将其设为副手装备，并使用 `DataComponents#BLOCKS_ATTACKS` 在激活时减少持有 Entity 所受伤害。
+对于盾牌，可以应用 [`DataComponents#EQUIPPABLE`][equippable] 数据组件将其设为副手装备，并使用 `DataComponents#BLOCKS_ATTACKS` 在激活时减少持有 Entity 所受伤害。
 
 ## `ItemAbility`
 

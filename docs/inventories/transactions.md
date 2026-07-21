@@ -12,7 +12,7 @@
 * **与数量无关**：`Resource` 不包含对象数量的任何信息。
 * **相等性**：无论 `Resource` 如何构造，只要它们表示同一个对象，就必须相等。
 
-NeoForge 通过表示对象及其唯一 [data component][datacomponent]，为 [Item][items]（通过 `ItemResource`）与 Fluid（通过 `FluidResource`）提供 Resource。
+NeoForge 通过表示对象及其唯一 [数据组件][datacomponent]，为 [Item][items]（通过 `ItemResource`）与 Fluid（通过 `FluidResource`）提供 Resource。
 
 ```java
 // Create the resource from its backing object

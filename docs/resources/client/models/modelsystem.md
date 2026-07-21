@@ -60,7 +60,7 @@ Minecraft 渲染引擎共识别 8 种 Item 渲染视角类型（若包含代码�
 | `THIRD_PERSON_LEFT_HAND`  | `"thirdperson_lefthand"`  | 第三人称左手（F5 视角或其他玩家）                                                         |
 | `FIRST_PERSON_RIGHT_HAND` | `"firstperson_righthand"` | 第一人称右手                                                                                       |
 | `FIRST_PERSON_LEFT_HAND`  | `"firstperson_lefthand"`  | 第一人称左手                                                                                        |
-| `HEAD`                    | `"head"`                  | 位于玩家头部 Armor Slot 时（通常只能通过命令实现）                                          |
+| `HEAD`                    | `"head"`                  | 位于玩家头部盔甲槽位时（通常只能通过命令实现）                                          |
 | `GUI`                     | `"gui"`                   | Inventory、玩家 Hotbar                                                                                       |
 | `GROUND`                  | `"ground"`                | 掉落 Item；其旋转由掉落 Item Renderer 而非 Model 处理 |
 | `FIXED`                   | `"fixed"`                 | Item Frame                                                                                                      |
@@ -102,7 +102,7 @@ public class MyDelegateItemModel implements ItemModel {
 }
 ```
 
-编写 Model Wrapper 类后，必须把 Wrapper 应用于应受影响的 Model。请在 [**模组 Event Bus**][modbus] 上为 `ModelEvent.ModifyBakingResult` 编写[客户端][sides][事件处理器][event]：
+编写 Model Wrapper 类后，必须把 Wrapper 应用于应受影响的 Model。请在 [**模组事件总线**][modbus] 上为 `ModelEvent.ModifyBakingResult` 编写[客户端][sides][事件处理器][event]：
 
 ```java
 @SubscribeEvent // on the mod event bus only on the physical client

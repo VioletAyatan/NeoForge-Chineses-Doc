@@ -207,7 +207,7 @@ public class ModTwo {
 
 参数类型     | 说明                                                                                              |
 ------------------|----------------------------------------------------------------------------------------------------------|
-`IEventBus`       | [模组专用 Event Bus][modbus]（注册、事件等需要使用）                             |
+`IEventBus`       | [模组专用事件总线][modbus]（注册、事件等需要使用）                             |
 `ModContainer`    | 保存此模组 Metadata 的抽象容器                                                       |
 `FMLModContainer` | `javafml` 定义的实际容器，用于保存此模组 Metadata；它是 `ModContainer` 的扩展 |
 `Dist`            | 此模组正在加载的[物理端][sides]                                                        |

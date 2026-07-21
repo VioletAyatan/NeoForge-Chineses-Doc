@@ -126,7 +126,7 @@ Particle Description 大致如下：
 
 ### 使用 Description
 
-要让 [Particle][particle] 使用其 Description，必须将 `ParticleType` 与 [`ParticleProvider`][provider] 关联。该 `ParticleProvider` 通过[客户端][side][模组总线][modbus][事件][event] `RegisterParticleProvidersEvent` 接收 `SpriteSet`：
+要让 [Particle][particle] 使用其 Description，必须将 `ParticleType` 与 [`ParticleProvider`][provider] 关联。该 `ParticleProvider` 通过[客户端][side][模组事件总线][modbus]上的 `RegisterParticleProvidersEvent` 接收 `SpriteSet`：
 
 ```java
 public class MyParticleProvider implements ParticleProvider<SimpleParticleType> {

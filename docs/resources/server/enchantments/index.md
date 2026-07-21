@@ -1,6 +1,6 @@
 # 附魔（Enchantments）
 
-附魔是可以应用于工具及其他 Item 的特殊效果。从 1.21 开始，附魔以[数据组件][Data Components]的形式存储在 Item 上，在 JSON 中定义，并由所谓的附魔效果组件构成。游戏运行期间，特定 Item 上的附魔存放在 `DataComponents.ENCHANTMENTS` 组件中的 `ItemEnchantments` 实例里。
+附魔是可以应用于工具及其他 Item 的特殊效果。从 1.21 开始，附魔以[数据组件][数据组件]的形式存储在 Item 上，在 JSON 中定义，并由所谓的附魔效果组件构成。游戏运行期间，特定 Item 上的附魔存放在 `DataComponents.ENCHANTMENTS` 组件中的 `ItemEnchantments` 实例里。
 
 在命名空间的数据包 `enchantment` 子文件夹中创建 JSON 文件即可添加新附魔。例如，要创建名为 `examplemod:example_enchant` 的附魔，应创建文件 `data/examplemod/enchantment/example_enchantment.json`。
 
@@ -106,7 +106,7 @@
 
 ## 附魔效果组件
 
-附魔效果组件是经过特殊注册的[数据组件][Data Components]，用于决定附魔如何生效。组件类型定义其效果，组件包含的数据则用于描述或修改该效果。例如，`minecraft:damage` 组件会按照其数据决定的数值修改武器造成的伤害。
+附魔效果组件是经过特殊注册的[数据组件][数据组件]，用于决定附魔如何生效。组件类型定义其效果，组件包含的数据则用于描述或修改该效果。例如，`minecraft:damage` 组件会按照其数据决定的数值修改武器造成的伤害。
 
 原版定义了多种[内置附魔效果组件][built-in enchantment effect components]，用于实现所有原版附魔。
 
@@ -316,7 +316,7 @@ BUILDER.add(
 </TabItem>
 </Tabs>
 
-[Data Components]: ../../../items/datacomponents.md
+[数据组件]: ../../../items/datacomponents.md
 [Codec]: ../../../datastorage/codecs.md
 [Enchantment definition Minecraft wiki page]: https://minecraft.wiki/w/Enchantment_definition
 [registered]: ../../../concepts/registries.md

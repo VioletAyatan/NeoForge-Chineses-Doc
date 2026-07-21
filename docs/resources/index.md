@@ -2,7 +2,7 @@
 
 资源是游戏使用的外部文件，但它们不是代码。最常见的资源是纹理，不过 Minecraft 生态中还存在许多其他类型的资源。当然，所有这些资源都需要代码端的使用方，因此使用它们的系统也归入本节。
 
-Minecraft 通常有两类资源：供[逻辑客户端][logicalsides]使用的资源称为 Asset，供[逻辑服务端][logicalsides]使用的资源称为 Data。Asset 主要是仅用于显示的信息，例如纹理、显示模型、翻译或声音；Data 则包括各种会影响玩法的内容，例如 Loot Table、配方或世界生成信息。它们分别从 Resource Pack 和 Data Pack 中加载。NeoForge 会为每个模组生成内置 Resource Pack 和 Data Pack。
+Minecraft 通常有两类资源：供[逻辑客户端][logicalsides]使用的资源称为 Asset，供[逻辑服务端][logicalsides]使用的资源称为 Data。Asset 主要是仅用于显示的信息，例如纹理、显示模型、翻译或声音；Data 则包括各种会影响玩法的内容，例如战利品表、配方或世界生成信息。它们分别从 Resource Pack 和 Data Pack 中加载。NeoForge 会为每个模组生成内置 Resource Pack 和 Data Pack。
 
 Resource Pack 和 Data Pack 通常都需要一个 [`pack.mcmeta` 文件][packmcmeta]；不过，现代 NeoForge 会在运行时替你生成它，因此不必担心。
 
@@ -51,23 +51,23 @@ Data Pack 可包含影响以下内容的文件夹：
 
 | 文件夹名称                                                                                                               | 内容                     |
 |---------------------------------------------------------------------------------------------------------------------------|------------------------------|
-| `advancement`                                                                                                             | [Advancement（成就）][advancements] |
+| `advancement`                                                                                                             | [成就（Advancement）][advancements] |
 | `banner_pattern`                                                                                                          | Banner Pattern（旗帜图案）  |
 | `cat_variant`, `chicken_variant`, `cow_variant`, `frog_variant`, `pig_variant`, `wolf_variant`, `zombie_nautilus_variant` | Entity Variant（Entity 变体） |
 | `cat_sound_variant`, `chicken_sound_variant`, `cow_sound_variant`, `pig_sound_variant`, `wolf_sound_variant`              | Entity Sound Variant（Entity 声音变体） |
-| `damage_type`                                                                                                             | [Damage Type（伤害类型）][damagetypes] |
+| `damage_type`                                                                                                             | [伤害类型（伤害类型）][damagetypes] |
 | `datapacks`                                                                                                               | 内置 Data Pack           |
 | `dialog`                                                                                                                  | Dialog Menu（对话菜单）     |
 | `enchantment`, `enchantment_provider`                                                                                     | [Enchantment（附魔）][enchantment] |
 | `instrument`, `jukebox_song`                                                                                              | 声音引用 Metadata     |
 | `painting_variant`                                                                                                        | Painting（画）              |
-| `loot_table`                                                                                                              | [Loot Table（战利品表）][loottables] |
+| `loot_table`                                                                                                              | [战利品表（战利品表）][loottables] |
 | `recipe`                                                                                                                  | [配方][recipes]           |
 | `tags`                                                                                                                    | [Tag][tags]                 |
 | `test_environment`, `test_instance`                                                                                       | [GameTest（游戏测试）][gmt] |
 | `trade_set`, `villager_trade`                                                                                             | Villager Trade（村民交易）  |
 | `trial_spawner`                                                                                                           | 战斗挑战            |
-| `trim_material`, `trim_pattern`                                                                                           | Armor Trim（盔甲纹饰）      |
+| `trim_material`, `trim_pattern`                                                                                           | 盔甲纹饰（Armor Trim）      |
 | `neoforge/data_maps`                                                                                                      | [数据映射][datamap]         |
 | `neoforge/loot_modifiers`                                                                                                 | [Global Loot Modifier（全局战利品修改器）][glm] |
 | `dimension`, `dimension_type`, `structure`, `timeline`, `worldgen`, `neoforge/biome_modifier`                             | 世界生成文件               |
@@ -107,18 +107,18 @@ Provider 有两种推荐注册方式。第一种是全部注册到 `GatherDataEv
 |------------------------------------------------------|----------------------------------|-------------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------|
 | [`ModelProvider`][modelprovider]                     | `registerModels()`               | 模型、Blockstate 文件、客户端 Item                                                             | Client |                                                                                                                 |
 | [`LanguageProvider`][langprovider]                   | `addTranslations()`              | 翻译                                                            | Client | 还需要在构造器中传入语言。                                                          |
-| [`EquipmentAssetProvider`][equipmentasset]           | `registerModels()`               | Armor Model 的 Asset                                                 | Client |                                                                                                                 |
+| [`EquipmentAssetProvider`][equipmentasset]           | `registerModels()`               | 盔甲模型的 Asset                                                 | Client |                                                                                                                 |
 | [`ParticleDescriptionProvider`][particleprovider]    | `addDescriptions()`              | Particle 定义                                                    | Client |                                                                                                                 |
 | [`SoundDefinitionsProvider`][soundprovider]          | `registerSounds()`               | 声音定义                                                       | Client |                                                                                                                 |
 | `SpriteSourceProvider`                               | `gather()`                       | Sprite Source / Atlas                                                | Client |                                                                                                                 |
-| [`AdvancementProvider`][advancementprovider]         | `generate()`                     | Advancement                                                            | Server | 需要额外的类才能正常工作，详见链接文章。                                                   |
-| [`LootTableProvider`][loottableprovider]             | `generate()`                     | Loot Table                                                             | Server | 需要额外的方法和类才能正常工作，详见链接文章。                            |
+| [`AdvancementProvider`][advancementprovider]         | `generate()`                     | 成就                                                                   | Server | 需要额外的类才能正常工作，详见链接文章。                                                   |
+| [`LootTableProvider`][loottableprovider]             | `generate()`                     | 战利品表                                                             | Server | 需要额外的方法和类才能正常工作，详见链接文章。                            |
 | [`RecipeProvider`][recipeprovider]                   | `buildRecipes(RecipeOutput)`     | 配方                                                                 | Server | 需要额外的类才能正常工作，详见链接文章。                                                   |
 | [`RecipePrioritiesProvider`][recipepriorities]       | `start()`                        | 配方优先级顺序                                              | Server |                                                                                                                 |
 | [`TagsProvider` 的各种子类][tagsprovider] | `addTags(HolderLookup.Provider)` | Tag                                                                    | Server | 存在多个专用子类，详见链接文章。                                           |
 | [`DataMapProvider`][datamapprovider]                 | `gather()`                       |数据映射条目                                                        | Server |                                                                                                                 |
 | [`GlobalLootModifierProvider`][glmprovider]          | `start()`                        | Global Loot Modifier                                                   | Server |                                                                                                                 |
-| [`DatapackBuiltinEntriesProvider`][datapackprovider] | N/A                              | Data Pack 内置条目，例如世界生成和 [Damage Type][damagetypes] | Server | 不重写方法，而是在构造器中的 Lambda 内添加条目。详见链接文章。 |
+| [`DatapackBuiltinEntriesProvider`][datapackprovider] | N/A                              | Data Pack 内置条目，例如世界生成和 [伤害类型][damagetypes] | Server | 不重写方法，而是在构造器中的 Lambda 内添加条目。详见链接文章。 |
 | `JsonCodecProvider`（abstract class）                 | `gather()`                       | 带 Codec 的对象                                                    | Both   | 可以扩展该类，用于任何具有 [Codec]、可将数据编码的对象。                              |
 | [`PackMetadataGenerator`][metagen]                   | `add(MetadataSectionType<T>, T)` | `pack.mcmeta`                                                           | Both |                                                                                                                 |
 
@@ -227,7 +227,7 @@ runs {
 }
 ```
 
-[advancementprovider]: server/advancements.md#data-generation
+[advancementprovider]: server/advancements.md#数据生成
 [advancements]: server/advancements.md
 [bsfile]: client/models/index.md#blockstate-files
 [chattype]: https://minecraft.wiki/w/Chat_type

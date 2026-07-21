@@ -1,38 +1,38 @@
 # 生物群系修饰符（Biome Modifier）
 
-Biome Modifier 是一套由数据驱动的系统，可用于更改生物群系的多个方面，包括注入或移除 PlacedFeature、添加或移除生物生成、改变气候，以及调整植被与水体颜色。NeoForge 提供了若干默认 Biome Modifier，覆盖玩家与 mod 开发者的大多数用例。
+生物群系修饰符是一套由数据驱动的系统，可用于更改生物群系的多个方面，包括注入或移除 PlacedFeature、添加或移除生物生成、改变气候，以及调整植被与水体颜色。NeoForge 提供了若干默认生物群系修饰符，覆盖玩家与 mod 开发者的大多数用例。
 
 ### 推荐阅读章节
 
 - 玩家或数据包开发者：
-  - [应用 Biome Modifier](#applying-biome-modifiers)
-  - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
+  - [应用生物群系修饰符](#应用生物群系修饰符)
+  - [内置 NeoForge 生物群系修饰符](#内置生物群系修饰符)
 
 - 进行简单添加或移除型生物群系修改的 mod 开发者：
-  - [应用 Biome Modifier](#applying-biome-modifiers)
-  - [内置 NeoForge Biome Modifier](#built-in-biome-modifiers)
-  - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
-  - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
+  - [应用生物群系修饰符](#应用生物群系修饰符)
+  - [内置 NeoForge 生物群系修饰符](#内置生物群系修饰符)
+  - [生成生物群系修饰符数据](#生成生物群系修饰符数据)
+  - [定位可能不存在的生物群系](#定位可能不存在的生物群系)
 
 - 希望进行自定义或复杂生物群系修改的 mod 开发者：
-  - [应用 Biome Modifier](#applying-biome-modifiers)
-  - [创建自定义 Biome Modifier](#creating-custom-biome-modifiers)
-  - [生成 Biome Modifier 数据](#datagenning-biome-modifiers)
-  - [定位可能不存在的生物群系](#targeting-biomes-that-may-not-exist)
+  - [应用生物群系修饰符](#应用生物群系修饰符)
+  - [创建自定义生物群系修饰符](#创建自定义生物群系修饰符)
+  - [生成生物群系修饰符数据](#生成生物群系修饰符数据)
+  - [定位可能不存在的生物群系](#定位可能不存在的生物群系)
 
-## 应用 Biome Modifier
+## 应用生物群系修饰符
 
-要让 NeoForge 将 Biome Modifier JSON 文件加载到游戏中，该文件必须位于 mod 资源中的 `data/<modid>/neoforge/biome_modifier/<path>.json`，或位于[数据包][datapacks]中。NeoForge 加载 Biome Modifier 后，会读取其指令，并在世界加载时对所有目标生物群系应用所述修改。数据包可以在完全相同的位置放置同名的新 JSON 文件，以覆盖 mod 中已有的 Biome Modifier。
+要让 NeoForge 将生物群系修饰符 JSON 文件加载到游戏中，该文件必须位于 mod 资源中的 `data/<modid>/neoforge/biome_modifier/<path>.json`，或位于[数据包][datapacks]中。NeoForge 加载生物群系修饰符后，会读取其指令，并在世界加载时对所有目标生物群系应用所述修改。数据包可以在完全相同的位置放置同名的新 JSON 文件，以覆盖 mod 中已有的生物群系修饰符。
 
-可以按照“[内置 NeoForge Biome Modifier](#built-in-biome-modifiers)”一节中的示例手动创建 JSON 文件，也可以按照“[生成 Biome Modifier 数据](#datagenning-biome-modifiers)”一节进行数据生成。
+可以按照“[内置 NeoForge 生物群系修饰符](#内置生物群系修饰符)”一节中的示例手动创建 JSON 文件，也可以按照“[生成生物群系修饰符数据](#生成生物群系修饰符数据)”一节进行数据生成。
 
-## 内置 Biome Modifier
+## 内置生物群系修饰符
 
-这些 Biome Modifier 由 NeoForge 注册，任何人都可使用。
+这些生物群系修饰符由 NeoForge 注册，任何人都可使用。
 
 ### 无操作
 
-此 Biome Modifier 不执行任何操作，也不会进行任何修改。数据包制作者与玩家可以在数据包中使用它，以如下 JSON 覆盖 mod 的 Biome Modifier JSON，从而将其禁用。
+此生物群系修饰符不执行任何操作，也不会进行任何修改。数据包制作者与玩家可以在数据包中使用它，以如下 JSON 覆盖 mod 的生物群系修饰符 JSON，从而将其禁用。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -66,7 +66,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ### 添加 Feature
 
-此 Biome Modifier 类型向生物群系添加 `PlacedFeature`（如树木或矿石），使其能够在世界生成期间出现。该 Modifier 接收要添加 Feature 的生物群系 id 或标签、要添加到所选生物群系的 `PlacedFeature` id 或标签，以及 Feature 所属的 [`GenerationStep.Decoration`](#available-values-for-decoration-steps)。
+此生物群系修饰符类型向生物群系添加 `PlacedFeature`（如树木或矿石），使其能够在世界生成期间出现。该修饰符接收要添加 Feature 的生物群系 id 或标签、要添加到所选生物群系的 `PlacedFeature` id 或标签，以及 Feature 所属的 [`GenerationStep.Decoration`](#decoration-step-的可用值)。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -125,14 +125,14 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 </Tabs>
 
 :::warning
-向生物群系添加原版 `PlacedFeature` 时务必谨慎，因为这可能引发所谓的 Feature 循环冲突（两个生物群系的 Feature 列表包含相同的两个 Feature，但二者在同一 `GenerationStep` 中的顺序不同），进而导致崩溃。出于类似原因，不应在多个 Biome Modifier 中使用同一个 `PlacedFeature`。
+向生物群系添加原版 `PlacedFeature` 时务必谨慎，因为这可能引发所谓的 Feature 循环冲突（两个生物群系的 Feature 列表包含相同的两个 Feature，但二者在同一 `GenerationStep` 中的顺序不同），进而导致崩溃。出于类似原因，不应在多个生物群系修饰符中使用同一个 `PlacedFeature`。
 
-原版 `PlacedFeature` 可以在生物群系 JSON 中引用，也可以通过 Biome Modifier 添加，但不应同时采用两种方式。如果仍需以此方式添加，最简单的规避办法是在自己的命名空间下复制一份原版 `PlacedFeature`。
+原版 `PlacedFeature` 可以在生物群系 JSON 中引用，也可以通过生物群系修饰符添加，但不应同时采用两种方式。如果仍需以此方式添加，最简单的规避办法是在自己的命名空间下复制一份原版 `PlacedFeature`。
 :::
 
 ### 移除 Feature
 
-此 Biome Modifier 类型从生物群系中移除 Feature（如树木或矿石），使其不再于世界生成期间出现。该 Modifier 接收要移除 Feature 的生物群系 id 或标签、要从所选生物群系移除的 `PlacedFeature` id 或标签，以及要从中移除 Feature 的 [`GenerationStep.Decoration`](#available-values-for-decoration-steps)。
+此生物群系修饰符类型从生物群系中移除 Feature（如树木或矿石），使其不再于世界生成期间出现。该修饰符接收要移除 Feature 的生物群系 id 或标签、要从所选生物群系移除的 `PlacedFeature` id 或标签，以及要从中移除 Feature 的 [`GenerationStep.Decoration`](#decoration-step-的可用值)。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -198,7 +198,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 _另请参阅 [LivingEntity/自然生成][spawning]。_
 
-此 Biome Modifier 类型向生物群系添加 Entity 生成。该 Modifier 接收要添加 Entity 生成的生物群系 id 或标签，以及要添加的 Entity 的 `SpawnerData`。每个 `SpawnerData` 包含 Entity id、生成权重，以及单次生成的 Entity 最小/最大数量。
+此生物群系修饰符类型向生物群系添加 Entity 生成。该修饰符接收要添加 Entity 生成的生物群系 id 或标签，以及要添加的 Entity 的 `SpawnerData`。每个 `SpawnerData` 包含 Entity id、生成权重，以及单次生成的 Entity 最小/最大数量。
 
 :::note
 如果要添加新 Entity，请确保通过 `RegisterSpawnPlacementsEvent` 为其注册生成限制。生成限制用于让 Entity 安全地生成在表面或水中。如果不注册生成限制，Entity 可能生成在半空，随后坠落死亡。
@@ -270,7 +270,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ### 移除生成
 
-此 Biome Modifier 类型从生物群系中移除 Entity 生成。该 Modifier 接收要移除 Entity 生成的生物群系 id 或标签，以及要移除的 Entity 的 `EntityType` id 或标签。
+此生物群系修饰符类型从生物群系中移除 Entity 生成。该修饰符接收要移除 Entity 生成的生物群系 id 或标签，以及要移除的 Entity 的 `EntityType` id 或标签。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -326,7 +326,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 允许向生物群系添加新的生成代价。生成代价是一种较新的机制，可让生物分散生成以减少聚集。Entity 会向周围发出 `charge`，并与其他 Entity 的 `charge` 累加。生成新 Entity 时，生成算法会寻找一个位置，使该位置的总 `charge` 场乘以待生成 Entity 的 `charge` 值后，小于该 Entity 的 `energy_budget`。这是一种高级生物生成方式，因此建议参考灵魂沙峡谷生物群系（该系统最典型的使用者）并借鉴现有值。
 
-该 Modifier 接收要添加生成代价的生物群系 id 或标签、要为其添加生成代价的 Entity Type 的 `EntityType` id 或标签，以及 Entity 的 `MobSpawnSettings.MobSpawnCost`。`MobSpawnCost` 包含能量预算，用于根据每个已生成 Entity 提供的电荷，指示某个位置可生成的最大 Entity 数量。
+该修饰符接收要添加生成代价的生物群系 id 或标签、要为其添加生成代价的 Entity Type 的 `EntityType` id 或标签，以及 Entity 的 `MobSpawnSettings.MobSpawnCost`。`MobSpawnCost` 包含能量预算，用于根据每个已生成 Entity 提供的电荷，指示某个位置可生成的最大 Entity 数量。
 
 :::note
 如果要添加新 Entity，请确保通过 `RegisterSpawnPlacementsEvent` 为其注册生成限制。
@@ -394,7 +394,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ### 移除生成代价
 
-允许从生物群系中移除生成代价。生成代价是一种较新的机制，可让生物分散生成以减少聚集。该 Modifier 接收要移除生成代价的生物群系 id 或标签，以及要移除生成代价的 Entity 的 `EntityType` id 或标签。
+允许从生物群系中移除生成代价。生成代价是一种较新的机制，可让生物分散生成以减少聚集。该修饰符接收要移除生成代价的生物群系 id 或标签，以及要移除生成代价的 Entity 的 `EntityType` id 或标签。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -448,7 +448,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ### 添加旧版 Carver
 
-此 Biome Modifier 类型允许向生物群系添加由 Carver 生成的洞穴与峡谷。这是“洞穴与山崖”更新前使用的洞穴生成方式。它**不能**向生物群系添加噪声洞穴，因为噪声洞穴属于特定的基于噪声的区块生成器系统，实际上并不与生物群系绑定。
+此生物群系修饰符类型允许向生物群系添加由 Carver 生成的洞穴与峡谷。这是“洞穴与山崖”更新前使用的洞穴生成方式。它**不能**向生物群系添加噪声洞穴，因为噪声洞穴属于特定的基于噪声的区块生成器系统，实际上并不与生物群系绑定。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -503,7 +503,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ### 移除旧版 Carver
 
-此 Biome Modifier 类型允许从生物群系中移除由 Carver 生成的洞穴与峡谷。这是“洞穴与山崖”更新前使用的洞穴生成方式。它**不能**从生物群系中移除噪声洞穴，因为噪声洞穴已内置于维度的噪声设置系统中，实际上并不与生物群系绑定。
+此生物群系修饰符类型允许从生物群系中移除由 Carver 生成的洞穴与峡谷。这是“洞穴与山崖”更新前使用的洞穴生成方式。它**不能**从生物群系中移除噪声洞穴，因为噪声洞穴已内置于维度的噪声设置系统中，实际上并不与生物群系绑定。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -573,14 +573,14 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 |   `vegetal_decoration`   | 几乎所有植物（花、树、藤蔓等）都在此阶段添加。                                         |
 | `top_layer_modification` | 最后运行。用于在寒冷生物群系表面放置雪和冰。                                           |
 
-## 创建自定义 Biome Modifier
+## 创建自定义生物群系修饰符
 
 ### `BiomeModifier` 实现
 
-在底层，Biome Modifier 由三部分组成：
+在底层，生物群系修饰符由三部分组成：
 
 - [通过数据包注册][datareg]、用于修改生物群系 builder 的 `BiomeModifier`。
-- [静态注册][staticreg]、用于编码和解码 Modifier 的 `MapCodec`。
+- [静态注册][staticreg]、用于编码和解码修饰符的 `MapCodec`。
 - 用于构造 `BiomeModifier` 的 JSON，其中使用 `MapCodec` 的已注册 id 作为可索引类型。
 
 `BiomeModifier` 包含两个方法：`#modify` 和 `#codec`。`modify` 接收当前 `Biome` 的 `Holder`、当前 `BiomeModifier.Phase` 以及待修改生物群系的 builder。每个 `BiomeModifier` 在每个 `Phase` 都会调用一次，以安排对生物群系的特定修改应在何时发生：
@@ -593,7 +593,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 | `MODIFY`            | 修改单个值（例如气候、颜色）。                                           |
 | `AFTER_EVERYTHING`  | 兜底阶段，用于所有需要在标准阶段之后运行的内容。                         |
 
-所有 `BiomeModifier` 都包含 `type` 键，它引用该 `BiomeModifier` 所用 `MapCodec` 的 id。`codec` 接收用于编码和解码 Modifier 的 `MapCodec`。此 `MapCodec` 会被[静态注册][staticreg]，其 id 用作 `BiomeModifier` 的 `type`。
+所有 `BiomeModifier` 都包含 `type` 键，它引用该 `BiomeModifier` 所用 `MapCodec` 的 id。`codec` 接收用于编码和解码修饰符的 `MapCodec`。此 `MapCodec` 会被[静态注册][staticreg]，其 id 用作 `BiomeModifier` 的 `type`。
 
 ```java
 public record ExampleBiomeModifier(HolderSet<Biome> biomes, int value) implements BiomeModifier {
@@ -624,7 +624,7 @@ public static final Supplier<MapCodec<ExampleBiomeModifier>> EXAMPLE_BIOME_MODIF
     ));
 ```
 
-## 生成 Biome Modifier 数据
+## 生成生物群系修饰符数据
 
 可以通过[数据生成][datagen]创建 `BiomeModifier` JSON：将 `RegistrySetBuilder` 传给 `DatapackBuiltinEntriesProvider`。生成的 JSON 位于 `data/<modid>/neoforge/biome_modifier/<path>.json`。
 
@@ -669,7 +669,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 
 ## 定位可能不存在的生物群系
 
-有时，Biome Modifier 需要定位并非始终存在于游戏中的生物群系。如果 Biome Modifier 直接定位未注册的生物群系，世界加载时就会崩溃。解决方法是创建生物群系标签，并将目标生物群系作为可选标签条目添加，将该条目的 required 设置为 false。示例如下：
+有时，生物群系修饰符需要定位并非始终存在于游戏中的生物群系。如果生物群系修饰符直接定位未注册的生物群系，世界加载时就会崩溃。解决方法是创建生物群系标签，并将目标生物群系作为可选标签条目添加，将该条目的 required 设置为 false。示例如下：
 
 ```json5
 {
@@ -683,7 +683,7 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 }
 ```
 
-Biome Modifier 使用该生物群系标签后，即使生物群系未注册也不会崩溃。苍白之园生物群系就是一个用例：在 1.21.3 中，只有启用 Winter Drop 数据包时才会创建它；否则，该生物群系根本不存在于生物群系 Registry 中。另一个用例是定位 mod 添加的生物群系，同时确保在添加这些生物群系的 mod 不存在时仍能正常运行。
+生物群系修饰符使用该生物群系标签后，即使生物群系未注册也不会崩溃。苍白之园生物群系就是一个用例：在 1.21.3 中，只有启用 Winter Drop 数据包时才会创建它；否则，该生物群系根本不存在于生物群系 Registry 中。另一个用例是定位 mod 添加的生物群系，同时确保在添加这些生物群系的 mod 不存在时仍能正常运行。
 
 要通过数据生成创建生物群系标签的可选条目，代码大致如下：
 

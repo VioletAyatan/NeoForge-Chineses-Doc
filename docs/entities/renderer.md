@@ -151,7 +151,7 @@ graph LR;
 
 更复杂的 Entity Renderer（尤其是 `LivingEntityRenderer`）使用 Layer 系统，每一层都表示为一个 `RenderLayer`。一个 Renderer 可以使用多个 `RenderLayer`，并决定何时提交哪些 Layer。例如，Elytra 使用独立 Layer，不依赖穿戴它的 `LivingEntity` 单独处理。玩家 Cape 也同样是独立 Layer。
 
-`RenderLayer` 定义一个 `#submit` 方法，它会提交渲染该 Layer 所需的[功能][features]。与多数其他 submit 方法一样，这里基本可以提交任何内容。不过，一种非常常见的用途是在此提交独立 Model，例如 Armor 或类似 Equipment。
+`RenderLayer` 定义一个 `#submit` 方法，它会提交渲染该 Layer 所需的[功能][features]。与多数其他 submit 方法一样，这里基本可以提交任何内容。不过，一种非常常见的用途是在此提交独立 Model，例如盔甲或类似装备。
 
 为此，首先需要可供提交的 Model。我们使用 `Model` 类。`Model` 本质上是供 Renderer 使用的 Cube 及关联纹理列表。通常会在首次创建 Entity Renderer 的构造器时，以静态方式创建它。
 

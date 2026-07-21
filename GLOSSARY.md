@@ -31,6 +31,13 @@
 | Event | 事件 | Event（普通说明文字中） | 泛指事件机制中的事件。Java 类型名 `Event`、以 `Event` 结尾的类名及其他代码标识符保持原文。 |
 | event handler | 事件处理器 | Event handler | 监听事件并执行相应行为的方法；`EventHandler` 等类名保持原文。 |
 | event bus | 事件总线 | event bus、Event bus | 发布和订阅事件的总线。`IEventBus`、`NeoForge.EVENT_BUS` 等代码标识符保持原文；可派生为“游戏事件总线”“模组事件总线”。 |
+| Data Component | 数据组件 | Data Component（普通说明文字中） | 泛指 Item 等对象携带的数据组件。`DataComponentType`、`DataComponents` 等类名和代码标识符保持原文。 |
+| Damage Type | 伤害类型 | Damage Type（普通说明文字中） | 表示伤害类别的数据驱动定义。Java 类型名 `DamageType`、标签和资源路径保持原文。 |
+| Damage Source | 伤害来源 | Damage Source（普通说明文字中） | 表示一次具体伤害及其上下文。Java 类型名 `DamageSource` 保持原文。 |
+| Biome Modifier | 生物群系修饰符 | Biome Modifier（普通说明文字中） | 指 NeoForge 的数据驱动生物群系修改机制。接口名 `BiomeModifier`、registry 和资源路径保持原文。 |
+| Stream Codec | 流编解码器 | Stream Codec（普通说明文字中） | 指用于网络流编码与解码的编解码器。类名 `StreamCodec` 及相关字段名保持原文。 |
+| Loot Table | 战利品表 | Loot Table（普通说明文字中） | 指用于生成战利品的数据文件与机制。类名 `LootTable`、JSON 键和资源路径保持原文。 |
+| Armor | 盔甲 | Armor（普通说明文字中） | 泛指角色穿戴的盔甲及其模型、槽位等概念。`ArmorItem`、`ArmorMaterial` 等类名和代码标识符保持原文。 |
 
 ## 易混概念
 

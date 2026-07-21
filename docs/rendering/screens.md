@@ -429,7 +429,7 @@ public class ExampleRenderer extends PictureInPictureRenderer<ExampleRenderState
 }
 ```
 
-要使用 PiP，必须在 [mod 事件总线][modbus]上将 Renderer 注册到 `RegisterPictureInPictureRenderersEvent`。
+要使用 PiP，必须在[模组事件总线][modbus]上将 Renderer 注册到 `RegisterPictureInPictureRenderersEvent`。
 
 ```java
 @SubscribeEvent // on the mod event bus
@@ -726,7 +726,7 @@ protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mous
 
 ## 注册 AbstractContainerScreen
 
-要将 `AbstractContainerScreen` 与 Menu 配合使用，必须进行注册。可以在 [**mod 事件总线**][modbus]的 `RegisterMenuScreensEvent` 中调用 `register` 完成注册。
+要将 `AbstractContainerScreen` 与 Menu 配合使用，必须在[**模组事件总线**][modbus]的 `RegisterMenuScreensEvent` 中调用 `register` 完成注册。
 
 ```java
 @SubscribeEvent // on the mod event bus only on the physical client

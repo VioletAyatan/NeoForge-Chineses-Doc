@@ -184,7 +184,7 @@ if (!level.isClientSide()) {
 }
 ```
 
-也可以调用 `EntityType#spawn`，在生成 [LivingEntity][livingentity] 时尤其推荐，因为它会进行一些额外设置，例如触发生成 [Event][event]。
+也可以调用 `EntityType#spawn`，在生成 [LivingEntity][livingentity] 时尤其推荐，因为它会进行一些额外设置，例如触发生成 [事件][event]。
 
 几乎所有非 LivingEntity 都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；Vanilla [Projectile][projectile] 也在 `Projectile` class 中提供 static 生成辅助方法。
 
@@ -215,7 +215,7 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 
 这种服务端／客户端分离也是 `Entity#hurt` 与 `Entity#hurtOrSimulate` 的区别：`Entity#hurt` 只在服务端运行（并调用 `Entity#hurtServer`），`Entity#hurtOrSimulate` 则在两个端运行，根据所在端调用 `Entity#hurtServer` 或 `Entity#hurtClient`。
 
-还可以通过 Event 修改不属于你的 Entity（即 Minecraft 或其他模组添加的 Entity）所受伤害。这些 Event 包含大量 `LivingEntity` 特定代码，因此其文档位于 [LivingEntity 文章][livingentity]中的[伤害 Event 一节][damageevents]。
+还可以通过事件修改不属于你的 Entity（即 Minecraft 或其他模组添加的 Entity）所受伤害。这些事件包含大量 `LivingEntity` 特定代码，因此其文档位于 [LivingEntity 文章][livingentity]中的[伤害事件一节][damageevents]。
 
 ### Entity Tick
 
@@ -433,8 +433,8 @@ graph LR;
 - `#onDeflection`，由 `#deflect` 调用，用于任何弹开后的行为。
 
 [block]: ../blocks/index.md
-[damageevents]: livingentity.md#damage-events
-[damagesource]: ../resources/server/damagetypes.md#creating-and-using-damage-sources
+[damageevents]: livingentity.md#伤害事件
+[damagesource]: ../resources/server/damagetypes.md#创建和使用伤害来源
 [damaging]: #damaging-entities
 [data]: data.md
 [dataattachments]: ../datastorage/attachments.md

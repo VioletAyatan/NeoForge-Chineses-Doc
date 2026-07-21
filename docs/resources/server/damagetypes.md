@@ -1,12 +1,12 @@
 # 伤害类型、伤害来源（Damage Types & Damage Sources）
 
-Damage Type 表示正在对[实体][entity]施加何种伤害——例如物理伤害、火焰伤害、溺水伤害、魔法伤害、虚空伤害等。对 Damage Type 的区分可用于各种免疫机制（例如烈焰人不会受到火焰伤害）、附魔（例如爆炸保护只抵御爆炸伤害），以及许多其他场景。
+伤害类型表示正在对[实体][entity]施加何种伤害——例如物理伤害、火焰伤害、溺水伤害、魔法伤害、虚空伤害等。对伤害类型的区分可用于各种免疫机制（例如烈焰人不会受到火焰伤害）、附魔（例如爆炸保护只抵御爆炸伤害），以及许多其他场景。
 
-可以说，Damage Type 是 Damage Source 的模板。换句话说，可以把 Damage Source 看作 Damage Type 的实例。Damage Type 在代码中以 [`ResourceKey`][rk] 的形式存在，但其全部属性都在数据包中定义。另一方面，Damage Source 会由游戏根据数据包文件中的值按需创建，并且可以携带额外的上下文，例如发起攻击的 Entity。
+可以说，伤害类型是伤害来源的模板。换句话说，可以把伤害来源看作伤害类型的实例。伤害类型在代码中以 [`ResourceKey`][rk] 的形式存在，但其全部属性都在数据包中定义。另一方面，伤害来源会由游戏根据数据包文件中的值按需创建，并且可以携带额外的上下文，例如发起攻击的 Entity。
 
-## 创建 Damage Type
+## 创建伤害类型
 
-首先，需要创建自己的 `DamageType`。`DamageType` 属于[数据包 Registry][dr]，因此新的 `DamageType` 不在代码中注册，而会在添加相应文件时自动注册。不过，我们仍需要为代码提供一个获取 Damage Source 的入口。为此，需要指定一个[资源键][rk]：
+首先，需要创建自己的 `DamageType`。`DamageType` 属于[数据包 Registry][dr]，因此新的 `DamageType` 不在代码中注册，而会在添加相应文件时自动注册。不过，我们仍需要为代码提供一个获取伤害来源的入口。为此，需要指定一个[资源键][rk]：
 
 ```java
 public static final ResourceKey<DamageType> EXAMPLE_DAMAGE =
@@ -41,11 +41,11 @@ public static final ResourceKey<DamageType> EXAMPLE_DAMAGE =
 `scaling`、`effects` 和 `death_message_type` 字段在内部依次由 `DamageScaling`、`DamageEffects` 和 `DeathMessageType` 枚举控制。如有需要，可以[扩展][extenum]这些枚举以添加自定义值。
 :::
 
-原版 Damage Type 也使用相同格式，数据包开发者可以按需更改这些值。
+原版伤害类型也使用相同格式，数据包开发者可以按需更改这些值。
  
-## 创建和使用 Damage Source
+## 创建和使用伤害来源
 
-`DamageSource` 通常会在调用 [`Entity#hurt`][entityhurt] 时即时创建。请注意，由于 Damage Type 属于[数据包 Registry][dr]，因此需要通过 `RegistryAccess` 查询它们；`RegistryAccess` 可通过 `Level#registryAccess` 获取。要创建 `DamageSource`，请调用 `DamageSource` 构造器，它最多接受四个参数：
+`DamageSource` 通常会在调用 [`Entity#hurt`][entityhurt] 时即时创建。请注意，由于伤害类型属于[数据包 Registry][dr]，因此需要通过 `RegistryAccess` 查询它们；`RegistryAccess` 可通过 `Level#registryAccess` 获取。要创建 `DamageSource`，请调用 `DamageSource` 构造器，它最多接受四个参数：
 
 ```java
 DamageSource damageSource = new DamageSource(
@@ -82,20 +82,20 @@ public static DamageSource exampleDamage(Entity causer) {
 原版的 `DamageSource` 工厂位于 `DamageSources` 中，原版的 `DamageType` 资源键位于 `DamageTypes` 中。Entity 还提供了 `Entity#damageSources` 方法，用于便捷地获取 `DamageSources` 实例。
 :::
 
-Damage Source 最主要的用途是 `Entity#hurt`。每当 Entity 受到伤害时都会调用该方法。要使用自定义 Damage Type 伤害某个 Entity，只需自行调用 `Entity#hurt`：
+伤害来源最主要的用途是 `Entity#hurt`。每当 Entity 受到伤害时都会调用该方法。要使用自定义伤害类型伤害某个 Entity，只需自行调用 `Entity#hurt`：
 
 ```java
 // The second parameter is the amount of damage, in half hearts.
 entity.hurt(exampleDamage(player), 10);
 ```
 
-其他特定于 Damage Type 的行为（例如无敌检查）通常通过 Damage Type [标签][tags]实现。这些标签由 Minecraft 与 NeoForge 添加，分别可在 `DamageTypeTags` 和 `Tags.DamageTypes` 中找到。
+其他特定于伤害类型的行为（例如无敌检查）通常通过伤害类型 [标签][tags]实现。这些标签由 Minecraft 与 NeoForge 添加，分别可在 `DamageTypeTags` 和 `Tags.DamageTypes` 中找到。
 
 ## 数据生成
 
 _更多信息请参阅[数据包 Registry 的数据生成][drdatagen]。_
 
-Damage Type JSON 文件可以通过[数据生成][datagen]创建。由于 Damage Type 属于数据包 Registry，因此我们通过 `GatherDataEvent#createDatapackRegistryObjects` 添加 `DatapackBuiltinEntriesProvider`，并将自己的 Damage Type 放入 `RegistrySetBuilder`：
+伤害类型 JSON 文件可以通过[数据生成][datagen]创建。由于伤害类型属于数据包 Registry，因此我们通过 `GatherDataEvent#createDatapackRegistryObjects` 添加 `DatapackBuiltinEntriesProvider`，并将自己的伤害类型放入 `RegistrySetBuilder`：
 
 ```java
 // In your datagen class

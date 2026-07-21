@@ -2,14 +2,14 @@
 
 简单来说，标签是由同一类型的已注册对象组成的列表。标签从数据文件加载，可用于检查成员关系。例如，合成木棍时接受任意组合的木板（带有 `minecraft:planks` 标签的 Item）。标签通常通过 `#` 前缀与“普通”对象区分开（例如 `#minecraft:planks`，而普通对象为 `minecraft:oak_planks`）。
 
-任何 [Registry][registry] 都可以拥有标签文件——虽然 Block 和 Item 是最常见的用例，但流体、Entity Type 或 Damage Type 等其他 Registry 也经常使用标签。如有需要，也可以创建自己的标签。
+任何 [Registry][registry] 都可以拥有标签文件——虽然 Block 和 Item 是最常见的用例，但流体、Entity Type 或伤害类型等其他 Registry 也经常使用标签。如有需要，也可以创建自己的标签。
 
 对于 Minecraft Registry，标签位于 `data/<tag_namespace>/tags/<registry_path>/<tag_path>.json`；对于非 Minecraft Registry，标签位于 `data/<tag_namespace>/tags/<registry_namespace>/<registry_path>/<tag_path>.json`。例如，要修改 `minecraft:planks` Item 标签，应将标签文件放在 `data/minecraft/tags/item/planks.json`。
 
 :::info
 与大多数其他 NeoForge 数据文件不同，NeoForge 添加的标签通常不使用 `neoforge` 命名空间，而是使用 `c` 命名空间（例如 `c:ingots/gold`）。这是应许多同时面向多个加载器开发的 mod 开发者要求，在 NeoForge 与 Fabric mod 加载器之间统一标签的结果。
 
-少数与 NeoForge 系统紧密关联的标签不遵循此规则，例如许多 [Damage Type][damagetype] 标签。
+少数与 NeoForge 系统紧密关联的标签不遵循此规则，例如许多 [伤害类型][damagetype] 标签。
 :::
 
 覆盖标签文件通常是追加而非替换。也就是说，如果两个数据包指定了相同 id 的标签文件，两者内容会被合并（除非另有指定）。这使标签不同于大多数其他数据文件；后者会替换所有现有值。

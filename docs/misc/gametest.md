@@ -978,7 +978,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### 不使用 Datapack
 
-如果不想使用 datapack 构造 GameTest，可以改为在 [mod event bus][event] 上监听 `RegisterGameTestsEvent`，并分别通过 `registerEnvironment` 与 `registerTest` 注册 environment 和 test instance。
+如果不想使用 datapack 构造 GameTest，可以改为在 [模组事件总线][event] 上监听 `RegisterGameTestsEvent`，并分别通过 `registerEnvironment` 与 `registerTest` 注册 environment 和 test instance。
 
 ```java
 @SubscribeEvent // on the mod event bus

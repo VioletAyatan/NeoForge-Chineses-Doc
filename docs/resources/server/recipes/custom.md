@@ -223,7 +223,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 从技术上讲，所有 `RecipeBookCategory` 都是 `ExtendedRecipeBookCategory`。另有一种名为 `SearchRecipeBookCategory` 的 `ExtendedRecipeBookCategory`，用于在配方书中查看所有配方时聚合多个 `RecipeBookCategory`。
 
-NeoForge 允许用户在 mod 事件总线上通过 `RegisterRecipeBookSearchCategoriesEvent#register`，将自己的 `ExtendedRecipeBookCategory` 指定为搜索分类。`register` 接收代表搜索分类的 `ExtendedRecipeBookCategory`，以及组成该搜索分类的各个 `RecipeBookCategory`。作为搜索分类的 `ExtendedRecipeBookCategory` 无需注册到任何原版静态 Registry。
+NeoForge 允许用户在模组事件总线上通过 `RegisterRecipeBookSearchCategoriesEvent#register`，将自己的 `ExtendedRecipeBookCategory` 指定为搜索分类。`register` 接收代表搜索分类的 `ExtendedRecipeBookCategory`，以及组成该搜索分类的各个 `RecipeBookCategory`。作为搜索分类的 `ExtendedRecipeBookCategory` 无需注册到任何原版静态 Registry。
 
 ```java
 // In some location

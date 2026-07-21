@@ -167,7 +167,7 @@ public class ComplexParticleGroup extends ParticleGroup<ComplexParticle> {
 }
 ```
 
-`Particle` 本身不知道自己属于哪个 `ParticleGroup`，`ParticleEngine` 也不知道这个 group 的存在。三者通过 `ParticleRenderType` 关联起来；它是 group 的唯一标识符。`ParticleRenderType` 通过[客户端][side][模组总线][modbus][事件] `RegisterParticleGroupsEvent` 与 `ParticleGroup` 关联。随后，`Particle` 可以通过让 `Particle#getGroup` 返回所创建的类型来使用该 group。
+`Particle` 本身不知道自己属于哪个 `ParticleGroup`，`ParticleEngine` 也不知道这个 group 的存在。三者通过 `ParticleRenderType` 关联起来；它是 group 的唯一标识符。`ParticleRenderType` 通过[客户端][side][模组事件总线][modbus]上的 `RegisterParticleGroupsEvent` 与 `ParticleGroup` 关联。随后，`Particle` 可以通过让 `Particle#getGroup` 返回所创建的类型来使用该 group。
 
 ```java
 // Create the render type
@@ -221,7 +221,7 @@ public class MyQuadParticleProvider implements ParticleProvider<SimpleParticleTy
 }
 ```
 
-随后，必须在[客户端][side][模组总线][modbus][事件] `RegisterParticleProvidersEvent` 中，把 particle provider 与粒子类型关联起来：
+随后，必须在[客户端][side][模组事件总线][modbus]上的 `RegisterParticleProvidersEvent` 中，把 particle provider 与粒子类型关联起来：
 
 ```java
 @SubscribeEvent // on the mod event bus only on the physical client

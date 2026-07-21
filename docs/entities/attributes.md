@@ -29,7 +29,7 @@ Attribute 是 [LivingEntity][livingentity] 的特殊 field，决定最大生命�
 | `gravity`                        | `GRAVITY`                        | `[1,1]`        | 0.08   | 影响 Entity 的重力，以每 tick 的 Block 数平方表示。                                                                                                                    |
 | `jump_strength`                  | `JUMP_STRENGTH`                  | `[0,32]`       | 0.42   | Entity 的跳跃力度。值越高，跳得越高。                                                                                                                                  |
 | `knockback_resistance`           | `KNOCKBACK_RESISTANCE`           | `[0,1]`        | 0      | Entity 的击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                        |
-| `luck`                           | `LUCK`                           | `[-1024,1024]` | 0      | Entity 的幸运值。对 [loot table][loottables] 进行随机判定时使用，用于提供额外抽取，或以其他方式修改结果 Item 的品质。                                                   |
+| `luck`                           | `LUCK`                           | `[-1024,1024]` | 0      | Entity 的幸运值。对 [战利品表][loottables] 进行随机判定时使用，用于提供额外抽取，或以其他方式修改结果 Item 的品质。                                                   |
 | `max_absorption`                 | `MAX_ABSORPTION`                 | `[0,2048]`     | 0      | Entity 的最大伤害吸收值（黄心）。值 1 表示半颗心。                                                                                                                     |
 | `max_health`                     | `MAX_HEALTH`                     | `[1,1024]`     | 20     | Entity 的最大生命值。值 1 表示半颗心。                                                                                                                                 |
 | `mining_efficiency`              | `MINING_EFFICIENCY`              | `[0,1024]`     | 0      | Entity 挖掘 Block 的速度，作为加法 modifier，仅在所用工具正确时生效。更多信息参见[挖掘速度][miningspeed]。                                                             |
@@ -235,7 +235,7 @@ public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_att
 ));
 ```
 
-就是这样！只需别忘了把 `DeferredRegister` 注册到 mod bus，之后即可使用。
+就是这样！只需别忘了把 `DeferredRegister` 注册到模组事件总线，之后即可使用。
 
 :::info
 这里使用 `Holder<Attribute>`，而不是像许多其他已注册对象一样使用 `Supplier<RangedAttribute>`，因为这样处理 Entity 容易得多（大多数 Entity 方法都需要 `Holder<Attribute>`）。

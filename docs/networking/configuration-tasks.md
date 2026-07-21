@@ -15,7 +15,7 @@ public static void register(final RegisterConfigurationTasksEvent event) {
 }
 ```
 
-`RegisterConfigurationTasksEvent` 事件会在模组总线上触发，并公开服务器当前用于配置相应客户端的 listener。模组开发者可以通过这个 listener 判断客户端是否正在运行该模组；如果是，则注册配置任务。
+`RegisterConfigurationTasksEvent` 事件会在模组事件总线上触发，并公开服务器当前用于配置相应客户端的 listener。模组开发者可以通过这个 listener 判断客户端是否正在运行该模组；如果是，则注册配置任务。
 
 ## 实现配置任务
 

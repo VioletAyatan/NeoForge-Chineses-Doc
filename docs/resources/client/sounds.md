@@ -43,7 +43,7 @@ public class MySoundsClass {
 }
 ```
 
-当然，不要忘记在[模组构造器][modctor]中把 Registry 添加到[模组 Event Bus][modbus]：
+当然，不要忘记在[模组构造器][modctor]中把 Registry 添加到[模组事件总线][modbus]：
 
 ```java
 public ExampleMod(IEventBus modBus) {

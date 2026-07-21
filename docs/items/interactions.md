@@ -14,7 +14,7 @@
 
 - 检查主手 [`ItemStack`][itemstack] 所需的全部 [feature flag][featureflag] 是否已启用。如果检查失败，流程结束。
 - 如果 `Player#cannotAttackWithItem`（检查攻击延迟与 `DataComponents#MINIMUM_ATTACK_CHARGE`）返回 false，流程结束。
-- 使用鼠标左键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [Event][event] 被[取消][cancel]，流程结束。
+- 使用鼠标左键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [事件][event] 被[取消][cancel]，流程结束。
 - 根据你正在注视的对象（使用 `Minecraft` 中的 [`HitResult`][hitresult]），会发生不同情况：
     - 如果持有带有某个 `DataComponents#PIERCING_WEAPON` 的 Item：
         - 仅服务端：调用 `PiercingWeapon#attack`。
@@ -38,7 +38,7 @@
         - 仅服务端：调用 `PiercingWeapon#makeSound`。
         - 调用 `LivingEntity#swing`。
     - 如果正在注视触及范围内的 [Entity][entity]：
-        - 触发 `AttackEntityEvent`。如果 Event 被取消，流程结束。
+        - 触发 `AttackEntityEvent`。如果事件被取消，流程结束。
         - 调用 `IItemExtension#onLeftClickEntity`。如果返回 true，流程结束。
         - 对目标调用 `Entity#isAttackable`。如果返回 false，流程结束。
         - 对目标调用 `Entity#skipAttackInteraction`。如果返回 true，流程结束。
@@ -46,12 +46,12 @@
         - 将 Entity 基础伤害（`minecraft:attack_damage` [attribute][attribute] 的值）与附魔加成伤害分别计算为两个 float。如果两者都为 0，流程结束。
             - 请注意，这不包括主手 Item 的 [attribute modifier][attributemodifier]；它们会在检查后添加。
         - 将主手 Item 的 `minecraft:attack_damage` attribute modifier 添加到基础伤害。
-        - 触发 `CriticalHitEvent`。如果 Event 的 `#isCriticalHit` 方法返回 true，则基础伤害乘以 Event `#getDamageMultiplier` 方法返回的值；当[多项条件][critical]通过时，该值默认为 1.5，否则默认为 1.0，但可由 Event 修改。
+        - 触发 `CriticalHitEvent`。如果事件的 `#isCriticalHit` 方法返回 true，则基础伤害乘以事件 `#getDamageMultiplier` 方法返回的值；当[多项条件][critical]通过时，该值默认为 1.5，否则默认为 1.0，但可由事件修改。
         - 将附魔加成伤害添加到基础伤害，得到最终伤害值。
-        - 触发 `SweepAttackEvent`。如果 Event 的 `isSweeping` 方法返回 true，玩家会执行横扫攻击。默认情况下，它会检查攻击冷却是否 > 90%、攻击是否并非暴击、玩家是否在地面上，以及移动速度是否未超过其 `minecraft:movement_speed` attribute 值。
+        - 触发 `SweepAttackEvent`。如果事件的 `isSweeping` 方法返回 true，玩家会执行横扫攻击。默认情况下，它会检查攻击冷却是否 > 90%、攻击是否并非暴击、玩家是否在地面上，以及移动速度是否未超过其 `minecraft:movement_speed` attribute 值。
         - 调用 [`Entity#hurtOrSimulate`][hurt]。如果返回 false，流程结束。
         - 如果目标是 `LivingEntity` 实例、攻击强度大于 90%、玩家正在疾跑，并且经过附魔修改的 `minecraft:attack_knockback` attribute 值大于 0，则调用 `LivingEntity#knockback`。
-            - 在该方法中触发 `LivingKnockBackEvent`。如果 Event 被取消，则不应用击退。
+            - 在该方法中触发 `LivingKnockBackEvent`。如果事件被取消，则不应用击退。
         - 玩家根据 `SweepAttackEvent#isSweeping` 对附近的 `LivingEntity` 执行横扫攻击。
             - 在该方法中，如果 Entity 位于玩家触及范围内且 `Entity#hurtServer` 返回 true，则再次调用 `LivingEntity#knockback`，进而再次触发 `LivingKnockBackEvent`。
         - 调用 `Item#hurtEnemy`。它可用于攻击后效果。例如，如果适用，重锤会在这里将玩家重新弹到空中。
@@ -66,28 +66,28 @@
 
 在右键点击流程中，会调用多个返回以下两种结果类型之一的方法（见下文）。如果返回明确成功或明确失败，大多数方法都会取消流程。为便于阅读，下文把这种“明确成功或明确失败”称为“确定结果”。
 
-- 使用鼠标右键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [Event][event] 被[取消][cancel]，流程结束。
+- 使用鼠标右键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [事件][event] 被[取消][cancel]，流程结束。
 - 检查若干条件，例如你不能处于旁观者模式，或主手 [`ItemStack`][itemstack] 所需的全部 [feature flag][featureflag] 都已启用。如果任一检查失败，流程结束。
 - 根据你正在注视的对象（使用 `Minecraft` 中的 [`HitResult`][hitresult]），会发生不同情况：
     - 如果正在注视触及范围内且未超出世界边界的 [Entity][entity]：
-        - 触发 `PlayerInteractEvent.EntityInteractSpecific`。如果 Event 被取消，流程结束。
+        - 触发 `PlayerInteractEvent.EntityInteractSpecific`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interactAt`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用 Event。
+            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用事件。
         - 如果 Entity 打开界面（例如村民交易 GUI 或运输矿车 GUI），流程结束。
-        - 触发 `PlayerInteractEvent.EntityInteract`。如果 Event 被取消，流程结束。
+        - 触发 `PlayerInteractEvent.EntityInteract`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interact`。如果返回确定结果，流程结束。
-            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用 Event。
+            - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用事件。
             - 对于 [`Mob`][livingentity]，`Entity#interact` 的 override 会处理拴绳等内容；当主手 `ItemStack` 是刷怪蛋时，还会处理生成幼体，随后将 Mob 特定处理委托给 `Mob#mobInteract`。`Entity#interact` 的结果规则在这里同样适用。
         - 如果正在注视的 Entity 是 `LivingEntity`，则对主手 `ItemStack` 调用 `Item#interactLivingEntity`。如果返回确定结果，流程结束。
     - 如果正在注视触及范围内且未超出世界边界的 [Block][block]：
-        - 触发 `PlayerInteractEvent.RightClickBlock`。如果 Event 被取消，流程结束。也可以在此 Event 中只明确拒绝使用 Block 或 Item。
+        - 触发 `PlayerInteractEvent.RightClickBlock`。如果事件被取消，流程结束。也可以在此事件中只明确拒绝使用 Block 或 Item。
         - 调用 `IItemExtension#onItemUseFirst`。如果返回确定结果，流程结束。
-        - 如果 `IItemExtension#doesSneakBypassUse` 返回 false，且 Event 未拒绝使用 Block，则触发 `UseItemOnBlockEvent`。如果 Event 被取消，使用取消结果；否则调用 `BlockBehaviour#useItemOn`。如果返回确定结果，流程结束。
+        - 如果 `IItemExtension#doesSneakBypassUse` 返回 false，且事件未拒绝使用 Block，则触发 `UseItemOnBlockEvent`。如果事件被取消，使用取消结果；否则调用 `BlockBehaviour#useItemOn`。如果返回确定结果，流程结束。
         - 如果 `InteractionResult` 是 `TryEmptyHandInteraction` 的实例（例如 `TRY_WITH_EMPTY_HAND`），且执行操作的是主手，则调用 `BlockBehaviour#useWithoutItem`。如果返回确定结果，流程结束。
-        - 如果 Event 未拒绝使用 Item，则调用 `Item#useOn`。如果返回确定结果，流程结束。
+        - 如果事件未拒绝使用 Item，则调用 `Item#useOn`。如果返回确定结果，流程结束。
      - 否则：
         - 触发 `PlayerInteractEvent.RightClickEmpty`。
-- 触发 `PlayerInteractEvent.RightClickItem`。如果 Event 被取消，流程结束。
+- 触发 `PlayerInteractEvent.RightClickItem`。如果事件被取消，流程结束。
 - 调用 `Item#use`。
     - 如果 `InteractionResult` 是 `Success` 的实例（例如 `SUCCESS`），则将 `ItemStack` 更改为 `Success#heldItemTransformedTo`。
 - 如果当前 ItemStack 与原 ItemStack 不匹配且新 ItemStack 为空，则触发 `PlayerDestroyItemEvent`。
@@ -129,14 +129,14 @@ return InteractionResult.CONSUME.withoutItem();
 
 这是唯一会使用 `Success` 变体（`SUCCESS`、`SUCCESS_SERVER`、`CONSUME`）中转变后 `ItemStack` 的位置。如果由 `Success#heldItemTransformedTo` 设置的结果 `ItemStack` 发生了变化，它会替换发起使用操作的 `ItemStack`。
 
-`Item#use` 的默认实现在 Item 可食用（具有 `DataComponents#CONSUMABLE`）且玩家能够食用（因为饥饿，或 Item 始终可食用）时返回 `InteractionResult#CONSUME`；在 Item 可食用（具有 `DataComponents#CONSUMABLE`）但玩家不能食用时返回 `InteractionResult#FAIL`。如果 Item 可装备（具有 `DataComponents#EQUIPPABLE`），那么换装成功时返回 `InteractionResult#SUCCESS`，并用换下的 Item 替换手持 Item（通过 `heldItemTransformedTo`）；如果盔甲上的附魔具有 `EnchantmentEffectComponents#PREVENT_ARMOR_CHANGE` component，则返回 `InteractionResult#FAIL`。如果 Item 可格挡攻击（具有 `DataComponents#BLOCKS_ATTACKS`），则在返回 `InteractionResult#CONSUME` 前调用 `Item#startUsingItem`。否则返回 `InteractionResult#PASS`。
+`Item#use` 的默认实现在 Item 可食用（具有 `DataComponents#CONSUMABLE`）且玩家能够食用（因为饥饿，或 Item 始终可食用）时返回 `InteractionResult#CONSUME`；在 Item 可食用（具有 `DataComponents#CONSUMABLE`）但玩家不能食用时返回 `InteractionResult#FAIL`。如果 Item 可装备（具有 `DataComponents#EQUIPPABLE`），那么换装成功时返回 `InteractionResult#SUCCESS`，并用换下的 Item 替换手持 Item（通过 `heldItemTransformedTo`）；如果盔甲上的附魔具有 `EnchantmentEffectComponents#PREVENT_ARMOR_CHANGE` 组件，则返回 `InteractionResult#FAIL`。如果 Item 可格挡攻击（具有 `DataComponents#BLOCKS_ATTACKS`），则在返回 `InteractionResult#CONSUME` 前调用 `Item#startUsingItem`。否则返回 `InteractionResult#PASS`。
 
 在这里考虑主手时返回 `InteractionResult#FAIL`，会阻止副手行为运行。如果希望副手行为运行（通常确实如此），请改为返回 `InteractionResult#PASS`。
 
 ## 中键点击
 
 - 如果 `Minecraft.getInstance().hitResult` 中的 [`HitResult`][hitresult] 为 null 或类型为 `MISS`，流程结束。
-- 使用鼠标左键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [Event][event] 被[取消][cancel]，流程结束。
+- 使用鼠标左键与主手触发 `InputEvent.InteractionKeyMappingTriggered`。如果 [事件][event] 被[取消][cancel]，流程结束。
 - 根据你正在注视的对象（使用 `Minecraft.getInstance().hitResult` 中的 `HitResult`），会发生不同情况：
     - 如果正在注视触及范围内的 [Entity][entity]：
         - 如果 `Entity#isPickable` 返回 false，流程结束。

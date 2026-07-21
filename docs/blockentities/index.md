@@ -45,7 +45,7 @@ public static final Supplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY = B
 ```
 
 :::note
-请记住，必须把 `DeferredRegister` 注册到 [mod event bus][modbus]！
+请记住，必须把 `DeferredRegister` 注册到 [模组事件总线][modbus]！
 :::
 
 现在有了 BlockEntity type，就可以用它替换之前保留的 `type` 变量：

@@ -313,7 +313,7 @@ DataComponentMap.builder().set(
 
 #### 定义为 `DataComponentType<List<ConditionalEffect<DamageImmunity>>>`
 
-- `minecraft:damage_immunity`：免疫指定 Damage Type。冰霜行者使用此组件。
+- `minecraft:damage_immunity`：免疫指定伤害类型。冰霜行者使用此组件。
 
 #### 定义为 `DataComponentType<Unit>`
 

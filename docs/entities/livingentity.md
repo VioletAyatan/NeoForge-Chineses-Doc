@@ -30,21 +30,21 @@ attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 
 [受到伤害][damage]时，LivingEntity 会应用一些额外计算，例如考虑 `minecraft:armor` attribute（对于位于 `minecraft:bypasses_armor` [tag][tags] 中的[伤害类型][damagetypes]除外），以及 `minecraft:absorption` attribute。LivingEntity 还可覆盖 `#onDamageTaken` 来执行攻击后行为；只有最终伤害值大于零时才会调用该方法。
 
-### 伤害 Event
+### 伤害事件
 
-由于伤害流程十分复杂，因此提供了多个可供挂接的 Event，它们按下列顺序触发。这通常用于修改并不属于你（或不一定属于你）的 Entity 所受伤害：例如修改 Minecraft 或其他模组中 Entity 所受的伤害，或修改任意 Entity 所受伤害，而该 Entity 可能属于你，也可能不属于你。
+由于伤害流程十分复杂，因此提供了多个可供挂接的事件，它们按下列顺序触发。这通常用于修改并不属于你（或不一定属于你）的 Entity 所受伤害：例如修改 Minecraft 或其他模组中 Entity 所受的伤害，或修改任意 Entity 所受伤害，而该 Entity 可能属于你，也可能不属于你。
 
-所有这些 Event 都会使用 `DamageContainer`。每次攻击开始时实例化新的 `DamageContainer`，攻击结束后将其丢弃。它包含原始 [`DamageSource`][damagesources]、原始伤害值，以及所有单独修改项的列表——盔甲、伤害吸收、[附魔][enchantments]、[MobEffect][mobeffects]等。`DamageContainer` 会传给下列所有 Event，你可以检查已经进行的修改，再按需要自行更改。
+所有这些事件都会使用 `DamageContainer`。每次攻击开始时实例化新的 `DamageContainer`，攻击结束后将其丢弃。它包含原始 [`DamageSource`][damagesources]、原始伤害值，以及所有单独修改项的列表——盔甲、伤害吸收、[附魔][enchantments]、[MobEffect][mobeffects]等。`DamageContainer` 会传给下列所有事件，你可以检查已经进行的修改，再按需要自行更改。
 
 #### `EntityInvulnerabilityCheckEvent`
 
-此 Event 允许模组绕过或添加 Entity 的无敌状态。它也会为非 LivingEntity 触发。可以使用此 Event 使 Entity 免疫某次攻击，或移除其可能已有的免疫。
+此事件允许模组绕过或添加 Entity 的无敌状态。它也会为非 LivingEntity 触发。可以使用此事件使 Entity 免疫某次攻击，或移除其可能已有的免疫。
 
-出于技术原因，挂接此 Event 的 hook 应当是确定性的，并且只依赖伤害类型。这意味着随机概率的无敌，或只在伤害量不超过某值时生效的无敌，应改在 `LivingIncomingDamageEvent` 中添加（见下文）。
+出于技术原因，挂接此事件的 hook 应当是确定性的，并且只依赖伤害类型。这意味着随机概率的无敌，或只在伤害量不超过某值时生效的无敌，应改在 `LivingIncomingDamageEvent` 中添加（见下文）。
 
 #### `LivingIncomingDamageEvent`
 
-此 Event 只在服务端调用，主要有两个用例：动态取消攻击，以及添加伤害减免 modifier callback。
+此事件只在服务端调用，主要有两个用例：动态取消攻击，以及添加伤害减免 modifier callback。
 
 动态取消攻击基本等同于添加非确定性无敌，例如按随机概率取消伤害、取决于时间或所受伤害量的无敌等。稳定的无敌效果应通过 `EntityInvulnerabilityCheckEvent` 实现（见上文）。
 
@@ -67,27 +67,27 @@ public static void decreaseArmor(LivingIncomingDamageEvent event) {
 }
 ```
 
-Callback 按添加顺序应用。这意味着由更高[优先级][priority] Event handler 添加的 callback 会先运行。
+Callback 按添加顺序应用。这意味着由更高[优先级][priority] 事件处理器添加的 callback 会先运行。
 
 #### `LivingShieldBlockEvent`
 
-此 Event 可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改 Vanilla 盾牌格挡检查、更改盾牌或攻击 Item 所受伤害、更改盾牌视角弧度、允许 Projectile 但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
+此事件可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改 Vanilla 盾牌格挡检查、更改盾牌或攻击 Item 所受伤害、更改盾牌视角弧度、允许 Projectile 但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
 
-请注意，此 Event 并非为“类似盾牌”的 Item 范围以外的免疫或攻击取消而设计。
+请注意，此事件并非为“类似盾牌”的 Item 范围以外的免疫或攻击取消而设计。
 
 #### `ArmorHurtEvent`
 
-此 Event 应当相当直观。计算攻击对盔甲造成的伤害时触发，可用于修改各盔甲部件承受多少耐久损伤（如果有）。
+此事件应当相当直观。计算攻击对盔甲造成的伤害时触发，可用于修改各盔甲部件承受多少耐久损伤（如果有）。
 
 #### `LivingDamageEvent.Pre`
 
-此 Event 在实际造成伤害前立即调用。此时 `DamageContainer` 已完全填充，可以获取最终伤害值；Event 不能再取消，因为到此时攻击已视为成功。
+此事件在实际造成伤害前立即调用。此时 `DamageContainer` 已完全填充，可以获取最终伤害值；事件不能再取消，因为到此时攻击已视为成功。
 
 此时可以使用各种 modifier，以精细修改伤害值。请注意，盔甲耐久损伤等内容在此时已经发生。
 
 #### `LivingDamageEvent.Post`
 
-此 Event 在造成伤害、减少伤害吸收值、更新战斗 tracker，并处理统计与 game event 后调用。由于攻击已经发生，因此不可取消。此 Event 通常用于攻击后效果。请注意，即使伤害值为零也会触发 Event，因此如有需要，请相应检查该值。
+此事件在造成伤害、减少伤害吸收值、更新战斗 tracker，并处理统计与 game event 后调用。由于攻击已经发生，因此不可取消。此事件通常用于攻击后效果。请注意，即使伤害值为零也会触发事件，因此如有需要，请相应检查该值。
 
 如果要在自己的 Entity 上调用此逻辑，应考虑改为覆盖 `ILivingEntityExtension#onDamageTaken()`。与 `LivingDamageEvent.Post` 不同，它只在伤害大于零时调用。
 
@@ -203,7 +203,7 @@ graph LR;
 
 ### 刷怪蛋
 
-为 Mob [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` class 与 `DataComponents#ENTITY_DATA` [data component][datacomponent] 完成：
+为 Mob [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` class 与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
 
 ```java
 // Assume we have a DeferredRegister.Items called ITEMS
@@ -251,14 +251,14 @@ _另请参阅 [Entity/`MobCategory`][mobcategory]、[世界生成／生物群系
 
 如果所有检查都通过，就按 weight 从上述列表中选择生成 entry。假设选中了猪。随后游戏会检查 chunk 中的随机位置是否适合生成该 Entity。如果位置合适，就按生成数据中指定的最小与最大数量生成 Entity（本例恰好为 4 只猪）。如果位置不合适，游戏会用不同位置再试两次。如果仍找不到位置，则取消生成。
 
-[addspawncosts]: ../worldgen/biomemodifier.md#add-spawn-costs
-[addspawns]: ../worldgen/biomemodifier.md#add-spawns
+[addspawncosts]: ../worldgen/biomemodifier.md#添加生成代价
+[addspawns]: ../worldgen/biomemodifier.md#添加生成
 [attributes]: attributes.md
 [clientitem]: ../resources/client/models/items.md
 [containers]: ../inventories/container.md
 [creative]: ../items/index.md#creative-tabs
 [damage]: index.md#damaging-entities
-[damagesources]: ../resources/server/damagetypes.md#creating-and-using-damage-sources
+[damagesources]: ../resources/server/damagetypes.md#创建和使用伤害来源
 [damagetypes]: ../resources/server/damagetypes.md
 [datacomponent]: ../items/datacomponents.md
 [enchantments]: ../resources/server/enchantments/index.md

@@ -1,14 +1,14 @@
 # 流编解码器（Stream Codecs）
 
-Stream Codec 是一种序列化工具，用于描述如何将对象存入流（例如缓冲区）以及如何从流中读取对象。Stream Codec 主要由原版的[网络系统][networking]用于同步数据。
+流编解码器是一种序列化工具，用于描述如何将对象存入流（例如缓冲区）以及如何从流中读取对象。流编解码器主要由原版的[网络系统][networking]用于同步数据。
 
 :::info
-由于 Stream Codec 与 [Codec][codecs] 大致相似，本页采用了相同的编排方式，以展示二者的相似之处。
+由于流编解码器与 [Codec][codecs] 大致相似，本页采用了相同的编排方式，以展示二者的相似之处。
 :::
 
-## 使用 Stream Codec
+## 使用流编解码器
 
-Stream Codec 分别使用 `StreamCodec#encode` 与 `StreamCodec#decode`，将对象编码到某个流中或从中解码。`encode` 接收流与要编码进流的对象；`decode` 接收流并返回解码后的对象。通常，该流是 `ByteBuf`、`FriendlyByteBuf` 或 `RegistryFriendlyByteBuf`。
+流编解码器分别使用 `StreamCodec#encode` 与 `StreamCodec#decode`，将对象编码到某个流中或从中解码。`encode` 接收流与要编码进流的对象；`decode` 接收流并返回解码后的对象。通常，该流是 `ByteBuf`、`FriendlyByteBuf` 或 `RegistryFriendlyByteBuf`。
 
 ```java
 // Let exampleStreamCodec represent a StreamCodec<ExampleJavaObject>
@@ -26,13 +26,13 @@ ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 除非手动处理缓冲区对象，否则通常不会直接调用 `encode` 和 `decode`。
 :::
 
-## 现有 Stream Codec
+## 现有流编解码器
 
 ### `ByteBufCodecs`
 
 `ByteBufCodecs` 包含针对特定基本类型与对象的 Codec 静态实例。
 
-| Stream Codec   | Java 类型     |
+| 流编解码器   | Java 类型     |
 |----------------|---------------|
 | `BOOL`         | `Boolean`     |
 | `BYTE`         | `Byte`        |
@@ -62,7 +62,7 @@ ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 
 #### 可变大小数值
 
-`VAR_INT` 与 `VAR_LONG` 是尽可能以最小大小编码数值的 Stream Codec。其做法是每次编码七位，并用最高位标记该数值是否还有更多数据。对于 int，0 到 2^28-1 之间的数值所需字节数小于或等于普通 int；对于 long，0 到 2^56-1 之间的数值所需字节数小于或等于普通 long。如果数值通常位于这些范围内，且大多接近范围下端，就应使用这些可变 Stream Codec。
+`VAR_INT` 与 `VAR_LONG` 是尽可能以最小大小编码数值的流编解码器。其做法是每次编码七位，并用最高位标记该数值是否还有更多数据。对于 int，0 到 2^28-1 之间的数值所需字节数小于或等于普通 int；对于 long，0 到 2^56-1 之间的数值所需字节数小于或等于普通 long。如果数值通常位于这些范围内，且大多接近范围下端，就应使用这些可变流编解码器。
 
 :::note
 `VAR_INT` 与 `VAR_LONG` 分别是 `INT` 与 `LONG` 的替代方案。
@@ -70,7 +70,7 @@ ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 
 #### 可信 Tag
 
-`TRUSTED_TAG` 与 `TRUSTED_COMPOUND_TAG` 分别是 `TAG` 与 `COMPOUND_TAG` 的变体；与 `TAG` 和 `COMPOUND_TAG` 的 2 MiB 限制不同，它们在解码 Tag 时不限制堆大小。可信 Tag Stream Codec 最好只用于发往客户端的数据包，例如原版对 [BlockEntity 数据包][blockentity]与 [Entity 数据序列化器][entity]的使用方式。
+`TRUSTED_TAG` 与 `TRUSTED_COMPOUND_TAG` 分别是 `TAG` 与 `COMPOUND_TAG` 的变体；与 `TAG` 和 `COMPOUND_TAG` 的 2 MiB 限制不同，它们在解码 Tag 时不限制堆大小。可信 Tag 流编解码器最好只用于发往客户端的数据包，例如原版对 [BlockEntity 数据包][blockentity]与 [Entity 数据序列化器][entity]的使用方式。
 
 如果需要使用其他限制，可以通过 `ByteBufCodecs#tagCodec` 或 `#compoundTagCodec` 提供具有给定大小的 `NbtAccounter`。也可以使用 `#optionalTagCodec` 获得由 Optional 包装的 `Tag`。
 
@@ -80,19 +80,19 @@ ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 
 ### 原版与 NeoForge
 
-Minecraft 与 NeoForge 为经常编码和解码的对象定义了许多 Stream Codec。例如，用于 `Identifier` 的 `Identifier#STREAM_CODEC`，以及用于 `ChunkPos` 的 `NeoForgeStreamCodecs#CHUNK_POS`。
+Minecraft 与 NeoForge 为经常编码和解码的对象定义了许多流编解码器。例如，用于 `Identifier` 的 `Identifier#STREAM_CODEC`，以及用于 `ChunkPos` 的 `NeoForgeStreamCodecs#CHUNK_POS`。
 
-大多数 Stream Codec 可在对象类自身，或 `StreamCodec`、`ByteBufCodecs`、`NeoForgeStreamCodecs` 中找到。
+大多数流编解码器可在对象类自身，或 `StreamCodec`、`ByteBufCodecs`、`NeoForgeStreamCodecs` 中找到。
 
-## 创建 Stream Codec
+## 创建流编解码器
 
-可以创建 Stream Codec，用于从流读取任意对象或将其写入流。由于流的主要用途是缓冲区，本文将重点介绍这种情况。
+可以创建流编解码器，用于从流读取任意对象或将其写入流。由于流的主要用途是缓冲区，本文将重点介绍这种情况。
 
-Stream Codec 有两个泛型：`B` 表示缓冲区，`V` 表示对象值。`B` 通常是三种类型之一：`ByteBuf`、`FriendlyByteBuf`、`RegistryFriendlyByteBuf`，它们依次相互扩展。`FriendlyByteBuf` 添加 Minecraft 特有的读写方法，而 `RegistryFriendlyByteBuf` 提供对 Registry 列表及其对象的访问。
+流编解码器有两个泛型：`B` 表示缓冲区，`V` 表示对象值。`B` 通常是三种类型之一：`ByteBuf`、`FriendlyByteBuf`、`RegistryFriendlyByteBuf`，它们依次相互扩展。`FriendlyByteBuf` 添加 Minecraft 特有的读写方法，而 `RegistryFriendlyByteBuf` 提供对 Registry 列表及其对象的访问。
 
-构造 Stream Codec 时，`B` 应使用最不具体的缓冲区类型。例如，`Identifier` 以字符串形式发送；普通 `ByteBuf` 支持字符串，因此其类型应为 `StreamCodec<ByteBuf, Identifier>`。`FriendlyByteBuf` 包含写入 `ChunkPos` 的方法，因此其类型应为 `StreamCodec<FriendlyByteBuf, ChunkPos>`。`Item` 需要访问 Registry，因此其类型应为 `StreamCodec<RegistryFriendlyByteBuf, Item>`。
+构造流编解码器时，`B` 应使用最不具体的缓冲区类型。例如，`Identifier` 以字符串形式发送；普通 `ByteBuf` 支持字符串，因此其类型应为 `StreamCodec<ByteBuf, Identifier>`。`FriendlyByteBuf` 包含写入 `ChunkPos` 的方法，因此其类型应为 `StreamCodec<FriendlyByteBuf, ChunkPos>`。`Item` 需要访问 Registry，因此其类型应为 `StreamCodec<RegistryFriendlyByteBuf, Item>`。
 
-大多数接收 Stream Codec 的方法会将缓冲区类型声明为 `? super B`，这意味着当缓冲区类型为 `RegistryFriendlyByteBuf` 时，上述三个示例都可以使用。
+大多数接收流编解码器的方法会将缓冲区类型声明为 `? super B`，这意味着当缓冲区类型为 `RegistryFriendlyByteBuf` 时，上述三个示例都可以使用。
 
 ### 成员编码器
 
@@ -119,9 +119,9 @@ public static StreamCodec<ByteBuf, ExampleObject> STREAM_CODEC =
 
 ### 组合
 
-Stream Codec 可以通过 `StreamCodec#composite` 读写对象。每个组合 Stream Codec 定义一组 Stream Codec 与 getter，并按提供顺序进行读写。`composite` 最多具有十二个参数的重载。
+流编解码器可以通过 `StreamCodec#composite` 读写对象。每个组合流编解码器定义一组流编解码器与 getter，并按提供顺序进行读写。`composite` 最多具有十二个参数的重载。
 
-`composite` 中每两个参数分别表示用于读写字段的 Stream Codec，以及从对象获取待编码字段的 getter。最后一个参数是在解码时创建对象新实例的函数。
+`composite` 中每两个参数分别表示用于读写字段的流编解码器，以及从对象获取待编码字段的 getter。最后一个参数是在解码时创建对象新实例的函数。
 
 ```java
 // Objects to create a stream codec for
@@ -150,7 +150,7 @@ public static final StreamCodec<RegistryFriendlyByteBuf, RegistryExample> REGIST
 
 ### 转换器
 
-可以使用映射方法，将 Stream Codec 转换为等价或部分等价的表示形式。其中两个映射方法作用于值，一个映射方法作用于缓冲区。
+可以使用映射方法，将流编解码器转换为等价或部分等价的表示形式。其中两个映射方法作用于值，一个映射方法作用于缓冲区。
 
 `map` 方法使用两个函数转换值：一个将当前类型转换为新类型，另一个将新类型转换回当前类型。这与 [Codec 转换器][transformers]类似。
 
@@ -164,14 +164,14 @@ public static final StreamCodec<ByteBuf, Identifier> STREAM_CODEC =
     );
 ```
 
-`apply` 方法使用 `StreamCodec.CodecOperation` 转换值。`StreamCodec.CodecOperation` 接收当前类型的 Stream Codec，并返回新类型的 Stream Codec。它们通常包装 `map` 或接收辅助方法。
+`apply` 方法使用 `StreamCodec.CodecOperation` 转换值。`StreamCodec.CodecOperation` 接收当前类型的流编解码器，并返回新类型的流编解码器。它们通常包装 `map` 或接收辅助方法。
 
 ```java
 public static final StreamCodec<ByteBuf, List<Identifier>> STREAM_CODEC =
     Identifier.STREAM_CODEC.apply(ByteBufCodecs.list());
 ```
 
-`mapStream` 方法使用一个接收新缓冲区类型并返回当前缓冲区类型的函数来转换缓冲区。该方法应很少使用，因为大多数使用 Stream Codec 的方法都不需要更改缓冲区类型。
+`mapStream` 方法使用一个接收新缓冲区类型并返回当前缓冲区类型的函数来转换缓冲区。该方法应很少使用，因为大多数使用流编解码器的方法都不需要更改缓冲区类型。
 
 ```java
 public static final StreamCodec<RegistryFriendlyByteBuf, Integer> STREAM_CODEC =
@@ -180,10 +180,10 @@ public static final StreamCodec<RegistryFriendlyByteBuf, Integer> STREAM_CODEC =
 
 ### Unit
 
-对于提供代码内值但编码为空的 Stream Codec，可以使用 `StreamCodec#unit` 表示。如果不应通过网络同步任何信息，这会很有用。
+对于提供代码内值但编码为空的流编解码器，可以使用 `StreamCodec#unit` 表示。如果不应通过网络同步任何信息，这会很有用。
 
 :::warning
-Unit Stream Codec 要求所有编码对象都必须与指定 unit 匹配，否则会抛出错误。因此，所有对象都必须具有某种对 unit 对象返回 true 的 `equals` 实现，或者编码时始终提供传给 Stream Codec 的那个实例。
+Unit 流编解码器要求所有编码对象都必须与指定 unit 匹配，否则会抛出错误。因此，所有对象都必须具有某种对 unit 对象返回 true 的 `equals` 实现，或者编码时始终提供传给流编解码器的那个实例。
 :::
 
 ```java
@@ -192,7 +192,7 @@ public static final StreamCodec<ByteBuf, Item> UNIT_STREAM_CODEC =
 ```
 ### 延迟初始化
 
-有时，Stream Codec 可能依赖构造时尚不存在的数据。在这种情况下，可以使用 `NeoForgeStreamCodecs#lazy`，让 Stream Codec 在首次读写时构造自身。该方法接收一个提供 Stream Codec 的 Supplier。
+有时，流编解码器可能依赖构造时尚不存在的数据。在这种情况下，可以使用 `NeoForgeStreamCodecs#lazy`，让流编解码器在首次读写时构造自身。该方法接收一个提供流编解码器的 Supplier。
 
 ```java
 public static final StreamCodec<ByteBuf, Item> LAZY_STREAM_CODEC = 
@@ -203,7 +203,7 @@ public static final StreamCodec<ByteBuf, Item> LAZY_STREAM_CODEC =
 
 ### Collection
 
-可以通过 `collection`，根据对象的 Stream Codec 生成 Collection 的 Stream Codec。`collection` 接收用于构造空 Collection 的 `IntFunction`、对象的 Stream Codec，以及可选最大大小。
+可以通过 `collection`，根据对象的流编解码器生成 Collection 的流编解码器。`collection` 接收用于构造空 Collection 的 `IntFunction`、对象的流编解码器，以及可选最大大小。
 
 ```java
 public static final StreamCodec<ByteBuf, Set<BlockPos>> COLLECTION_STREAM_CODEC =
@@ -235,7 +235,7 @@ public static final StreamCodec<ByteBuf, List<BlockPos>> LIST_STREAM_CODEC =
 
 ### Map
 
-可以通过 `ByteBufCodecs#map`，使用两个 Stream Codec 为键值对象 Map 生成 Stream Codec。该函数还接收用于构造空 Map 的 `IntFunction` 与可选最大大小。
+可以通过 `ByteBufCodecs#map`，使用两个流编解码器为键值对象 Map 生成流编解码器。该函数还接收用于构造空 Map 的 `IntFunction` 与可选最大大小。
 
 ```java
 public static final StreamCodec<ByteBuf, Map<String, BlockPos>> MAP_STREAM_CODEC =
@@ -249,7 +249,7 @@ public static final StreamCodec<ByteBuf, Map<String, BlockPos>> MAP_STREAM_CODEC
 
 ### Either
 
-可以通过 `ByteBufCodecs#either`，根据两个 Stream Codec 生成以两种不同方式读写某种对象数据的 Stream Codec。该方法首先读写一个布尔值，指示随后分别使用第一个还是第二个 Stream Codec 进行读写。
+可以通过 `ByteBufCodecs#either`，根据两个流编解码器生成以两种不同方式读写某种对象数据的流编解码器。该方法首先读写一个布尔值，指示随后分别使用第一个还是第二个流编解码器进行读写。
 
 ```java
 public static final StreamCodec<ByteBuf, Either<Integer, String>> EITHER_STREAM_CODEC = 
@@ -288,7 +288,7 @@ public static final StreamCodec<ByteBuf, ExampleIdObject> ID_STREAM_CODEC =
 
 ### Optional
 
-向 `ByteBufCodecs#optional` 提供 Stream Codec，即可生成用于发送由 `Optional` 包装值的 Stream Codec。该方法首先读写一个布尔值，指示是否要读写对象。
+向 `ByteBufCodecs#optional` 提供流编解码器，即可生成用于发送由 `Optional` 包装值的流编解码器。该方法首先读写一个布尔值，指示是否要读写对象。
 
 ```java
 public static final StreamCodec<RegistryFriendlyByteBuf, Optional<DataComponentType<?>>> OPTIONAL_STREAM_CODEC =
@@ -315,7 +315,7 @@ public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Item>> HOLDER_ST
     ByteBufCodecs.holderRegistry(Registries.ITEM);
 ```
 
-`holder` 返回由 Holder 包装的 Registry 对象。该方法会发送表示 Registry 对象的 id；如果提供的 `Holder` 是直接引用，则发送 Registry 对象本身。为此，`holder` 还会接收 Registry 对象的 Stream Codec。
+`holder` 返回由 Holder 包装的 Registry 对象。该方法会发送表示 Registry 对象的 id；如果提供的 `Holder` 是直接引用，则发送 Registry 对象本身。为此，`holder` 还会接收 Registry 对象的流编解码器。
 
 ```java
 public static final StreamCodec<RegistryFriendlyByteBuf, Holder<SoundEvent>> STREAM_CODEC =
@@ -339,7 +339,7 @@ public static final StreamCodec<RegistryFriendlyByteBuf, HolderSet<Item>> HOLDER
 
 ### 递归
 
-有时，对象的某个字段可能引用同类型对象。例如，如果存在隐藏效果，`MobEffectInstance` 会接收一个可选 `MobEffectInstance`。这种情况下，可以使用 `StreamCodec#recursive`，将 Stream Codec 作为函数的一部分提供，以创建 Stream Codec。
+有时，对象的某个字段可能引用同类型对象。例如，如果存在隐藏效果，`MobEffectInstance` 会接收一个可选 `MobEffectInstance`。这种情况下，可以使用 `StreamCodec#recursive`，将流编解码器作为函数的一部分提供，以创建流编解码器。
 
 ```java
 // Define our recursive object
@@ -356,9 +356,9 @@ public static final StreamCodec<ByteBuf, RecursiveObject> RECURSIVE_CODEC = Stre
 
 ### 分派
 
-Stream Codec 可以通过 `StreamCodec#dispatch` 拥有子 Stream Codec，根据某种指定类型解码特定对象。这通常与表示类型的 Registry 对象配合使用，例如 `ParticleOptions` 使用的 `ParticleType`，或 `Stat` 使用的 `StatType`。
+流编解码器可以通过 `StreamCodec#dispatch` 拥有子流编解码器，根据某种指定类型解码特定对象。这通常与表示类型的 Registry 对象配合使用，例如 `ParticleOptions` 使用的 `ParticleType`，或 `Stat` 使用的 `StatType`。
 
-分派 Stream Codec 首先尝试读写类型对象。随后使用方法提供的某个函数读写当前对象。第一个 `Function` 接收当前对象，并获取写入该值所需的类型；第二个 `Function` 接收类型对象，并获取用于读取当前对象值的 `StreamCodec`。
+分派流编解码器首先尝试读写类型对象。随后使用方法提供的某个函数读写当前对象。第一个 `Function` 接收当前对象，并获取写入该值所需的类型；第二个 `Function` 接收类型对象，并获取用于读取当前对象值的 `StreamCodec`。
 
 ```java
 // Define our object(s)

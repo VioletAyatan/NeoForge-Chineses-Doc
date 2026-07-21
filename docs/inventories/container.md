@@ -234,7 +234,7 @@ container.removeItem(2, 16);
 
 ## `ItemStack` 上的 `Container`
 
-到目前为止，主要讨论的是 `BlockEntity` 上的 `Container`。不过，也可以使用 `minecraft:container` [data component][datacomponent] 将其应用到 [`ItemStack`][itemstack]：
+到目前为止，主要讨论的是 `BlockEntity` 上的 `Container`。不过，也可以使用 `minecraft:container` [数据组件][datacomponent] 将其应用到 [`ItemStack`][itemstack]：
 
 ```java
 // We use SimpleContainer as the superclass here so we don't have to reimplement the item handling logic ourselves.
@@ -269,7 +269,7 @@ public class MyBackpackContainer extends SimpleContainer {
 这样就创建了由 Item 提供底层支持的 Container！调用 `new MyBackpackContainer(stack)` 即可为菜单或其他用例创建 Container。
 
 :::warning
-请注意，直接与 `Container` 交互的菜单在修改 `ItemStack` 时必须对其调用 `#copy()`，否则会破坏 data component 的 immutable 约定。NeoForge 为此提供了 `StackCopySlot` class。
+请注意，直接与 `Container` 交互的菜单在修改 `ItemStack` 时必须对其调用 `#copy()`，否则会破坏数据组件的 immutable 约定。NeoForge 为此提供了 `StackCopySlot` class。
 :::
 
 ## `Entity` 上的 `Container`

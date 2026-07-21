@@ -215,7 +215,7 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 - [BlockState 文件][bsfile]
 - [Block model][model]
 - [翻译][i18n]
-- [Loot table][loottable]
+- [战利品表][loottable]
 - 一些 Block [tag][tags]，例如用于挖掘的 tag
 
 对于以上所有内容，还应参考类似 Vanilla Block 的文件与数据 generator。
@@ -265,16 +265,16 @@ while (leftClickIsBeingHeld()) {
 #### “开始”阶段
 
 - 检查若干前置条件，例如你不能处于旁观者模式、主手 `ItemStack` 所需的全部 feature flag 都已启用、相关 Block 未超出世界边界。如果任一检查失败，流程结束。
-- 触发 `PlayerInteractEvent.LeftClickBlock`。如果 Event 被取消，流程结束。
-    - 请注意，在客户端取消 Event 时，不会向服务端发送 packet，因此服务端不会运行逻辑。
-    - 但是，在服务端取消此 Event 仍会导致客户端代码运行，可能造成不同步！
+- 触发 `PlayerInteractEvent.LeftClickBlock`。如果事件被取消，流程结束。
+    - 请注意，在客户端取消事件时，不会向服务端发送 packet，因此服务端不会运行逻辑。
+    - 但是，在服务端取消此事件仍会导致客户端代码运行，可能造成不同步！
 - 调用 `BlockBehaviour#attack`。
 
 #### “挖掘”阶段
 
-- 触发 `PlayerInteractEvent.LeftClickBlock`。如果 Event 被取消，流程进入“结束”阶段。
-    - 请注意，在客户端取消 Event 时，不会向服务端发送 packet，因此服务端不会运行逻辑。
-    - 但是，在服务端取消此 Event 仍会导致客户端代码运行，可能造成不同步！
+- 触发 `PlayerInteractEvent.LeftClickBlock`。如果事件被取消，流程进入“结束”阶段。
+    - 请注意，在客户端取消事件时，不会向服务端发送 packet，因此服务端不会运行逻辑。
+    - 但是，在服务端取消此事件仍会导致客户端代码运行，可能造成不同步！
 - 调用 `BlockBehaviour#getDestroyProgress`，并将结果加到内部破坏进度计数器中。
     - `BlockBehaviour#getDestroyProgress` 返回 0 到 1 之间的 float 值，表示每个 tick 应将破坏进度计数器增加多少。
 - 相应更新进度叠加层（裂纹纹理）。
@@ -296,7 +296,7 @@ while (leftClickIsBeingHeld()) {
     - 如果 `IBlockExtension#onDestroyedByPlayer` 返回 `true`，调用 `Block#destroy`。
 - 仅服务端：如果之前调用的 `IBlockExtension#canHarvestBlock` 与 `IBlockExtension#onDestroyedByPlayer` 都返回 `true`，则调用 `Block#playerDestroy`。
     - 仅服务端：调用 `Block#dropResources`。它决定挖掘 Block 时的掉落内容，包括经验。
-        - 仅服务端：触发 `BlockDropsEvent`。如果 Event 被取消，Block 被破坏时不会掉落任何物品。否则，将 `BlockDropsEvent#getDrops` 中的每个 `ItemEntity` 添加到当前 Level。此外，如果 `getDroppedExperience` 大于 0，还会调用 `Block#popExperience`。
+        - 仅服务端：触发 `BlockDropsEvent`。如果事件被取消，Block 被破坏时不会掉落任何物品。否则，将 `BlockDropsEvent#getDrops` 中的每个 `ItemEntity` 添加到当前 Level。此外，如果 `getDroppedExperience` 大于 0，还会调用 `Block#popExperience`。
             - 仅服务端：调用 `IBlockExtension#getExpDrop`，并由 `EnchantmentHelper#processBlockExperience` 进行增强。这是 `BlockDropsEvent#getDroppedExperience` 在之后可能被修改之前所设置的初始值。
 - 仅服务端：如果用于挖掘 Block 的 Item 在上述流程中的任意时刻损坏，就会触发 `PlayerDestroyItemEvent`。
 

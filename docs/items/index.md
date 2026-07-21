@@ -7,10 +7,10 @@ Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周
 在进一步创建 Item 前，务必理解 Item 实际是什么，以及它与 [Block][block] 等对象有何区别。以下用一个示例说明：
 
 - 在世界中，你遇到一个泥土 Block 并想挖掘它。它是 **Block**，因为它被放置在世界中。（实际上，它不是 Block，而是 BlockState。更详细的信息请参阅 [BlockState 文章][blockstates]。）
-    - 并非所有 Block 被破坏时都会掉落自身（例如树叶），更多信息请参阅 [loot table][loottables] 文章。
+    - 并非所有 Block 被破坏时都会掉落自身（例如树叶），更多信息请参阅 [战利品表][loottables] 文章。
 - [挖掘 Block][breaking] 后，它会被移除（即替换为空气 Block），并掉落泥土。掉落的泥土是 Item **[Entity][entity]**。这意味着它与其他 Entity（猪、僵尸、箭等）一样，本身可被水流推动，也会被火与熔岩烧毁。
 - 捡起泥土 ItemEntity 后，它会成为物品栏中的 **ItemStack**。简单来说，ItemStack 是 Item 的实例，同时带有堆叠数量等额外信息。
-- ItemStack 由其对应的 **Item**（也就是我们要创建的对象）提供底层支持。Item 持有 [data component][datacomponents]，其中包含所有 ItemStack 初始化时使用的默认信息（例如每把铁剑的最大耐久度都是 250）；ItemStack 可以修改这些 data component，因此同一 Item 的两个不同 ItemStack 可拥有不同信息（例如一把铁剑剩余 100 次使用次数，另一把剩余 200 次）。有关哪些内容由 Item 处理、哪些由 ItemStack 处理，参见下文。
+- ItemStack 由其对应的 **Item**（也就是我们要创建的对象）提供底层支持。Item 持有 [数据组件][datacomponents]，其中包含所有 ItemStack 初始化时使用的默认信息（例如每把铁剑的最大耐久度都是 250）；ItemStack 可以修改这些数据组件，因此同一 Item 的两个不同 ItemStack 可拥有不同信息（例如一把铁剑剩余 100 次使用次数，另一把剩余 200 次）。有关哪些内容由 Item 处理、哪些由 ItemStack 处理，参见下文。
     - Item 与 ItemStack 的关系，大致类似 [Block][block] 与 [BlockState][blockstates] 的关系，因为 BlockState 始终由 Block 提供底层支持。这并不是十分准确的类比（例如 ItemStack 不是单例），但有助于建立对此概念的基本认识。
 
 ## 创建 Item
@@ -47,7 +47,7 @@ Item 可具有在使用时应用，或在固定时间内阻止 Item 再次使用
 有些 Item 作为[工具][tools]与[盔甲][armor]使用。它们通过一系列 Item property 构造，只有部分用途会委托给关联 class：
 
 - `enchantable`——设置 ItemStack 的最大[附魔][enchantment]值，使 Item 可被附魔（通过 `DataComponents#ENCHANTABLE`）。
-- `repairable`——设置可用于修复此 Item 耐久度的 Item 或 tag（通过 `DataComponents#REPAIRABLE`）。必须具有耐久度 component，且不能有 `DataComponents#UNBREAKABLE`。
+- `repairable`——设置可用于修复此 Item 耐久度的 Item 或 tag（通过 `DataComponents#REPAIRABLE`）。必须具有耐久度组件，且不能有 `DataComponents#UNBREAKABLE`。
 - `equippable`——设置 Item 可装备到的槽位（通过 `DataComponents#EQUIPPABLE`）。
 - `equippableUnswappable`——与 `equippable` 相同，但禁用通过使用 Item 按键（默认右键）快速换装。
 
@@ -151,9 +151,9 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 - 它所表示的 `Item`，可通过 `ItemStack#getItem` 获取；如需 `Holder<Item>`，则通过 `getItemHolder` 获取。
 - 堆叠数量，通常在 1 到 64 之间，可通过 `getCount` 获取，并通过 `setCount` 或 `shrink` 更改。
-- [Data component][datacomponents] map，用于存储 ItemStack 特定数据，可通过 `getComponents` 获取。Component 值通常通过 `has`、`get`、`set`、`update` 与 `remove` 访问和修改。
+- [数据组件][datacomponents] map，用于存储 ItemStack 特定数据，可通过 `getComponents` 获取。组件值通常通过 `has`、`get`、`set`、`update` 与 `remove` 访问和修改。
 
-要创建新的 `ItemStack`，调用 `new ItemStack(Item)` 并传入底层 Item。默认使用数量 1 且无 NBT 数据；如有需要，也有接受数量与 NBT 数据的 constructor overload。请注意，在 component 绑定／Level 存在之前，`ItemStack` 无法存在。在此之前，应使用下文详述的 `ItemStackTemplate`。
+要创建新的 `ItemStack`，调用 `new ItemStack(Item)` 并传入底层 Item。默认使用数量 1 且无 NBT 数据；如有需要，也有接受数量与 NBT 数据的 constructor overload。请注意，在组件绑定／Level 存在之前，`ItemStack` 无法存在。在此之前，应使用下文详述的 `ItemStackTemplate`。
 
 `ItemStack` 是 mutable 对象（见下文），但有时必须将其视为 immutable。如果需要修改应被视为 immutable 的 `ItemStack`，可以使用 `#copy` 克隆 ItemStack；如果要使用特定堆叠数量，则使用 `#copyWithCount`。
 
@@ -161,7 +161,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ### `ItemStack` 的可变性
 
-`ItemStack` 是 mutable 对象。这意味着调用 `#setCount` 或任何 data component map 方法时，会修改 `ItemStack` 本身。Vanilla 广泛利用 `ItemStack` 的可变性，有几个方法依赖于此。例如，`#split` 会从调用它的 ItemStack 中分出给定数量，在此过程中既修改调用方，又返回新的 `ItemStack`。
+`ItemStack` 是 mutable 对象。这意味着调用 `#setCount` 或任何数据组件 map 方法时，会修改 `ItemStack` 本身。Vanilla 广泛利用 `ItemStack` 的可变性，有几个方法依赖于此。例如，`#split` 会从调用它的 ItemStack 中分出给定数量，在此过程中既修改调用方，又返回新的 `ItemStack`。
 
 不过，同时处理多个 `ItemStack` 时，这有时会引发问题。最常出现这种情况的是处理物品栏槽位，因为必须同时考虑光标当前选中的 `ItemStack`，以及尝试插入或提取的 `ItemStack`。
 
@@ -171,7 +171,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ## `ItemStackTemplate`
 
-`ItemStackTemplate` 是 `ItemStack` 的 immutable 形式，通常表示 immutable context（例如配方）中的 ItemStack。Template 包含组成 `ItemStack` 的基本元素：所持 `Holder<Item>`、堆叠数量，以及 `Item` 拥有并以 patch 形式存储的 [data component][datacomponents]。
+`ItemStackTemplate` 是 `ItemStack` 的 immutable 形式，通常表示 immutable context（例如配方）中的 ItemStack。Template 包含组成 `ItemStack` 的基本元素：所持 `Holder<Item>`、堆叠数量，以及 `Item` 拥有并以 patch 形式存储的 [数据组件][datacomponents]。
 
 要创建新的 `ItemStackTemplate`，调用某个 `new ItemStackTemplate(...)` 方法，并传入 `Item` 以及其他所需元素。之后需要 `ItemStack` 时，可以通过 `ItemStackTemplate#create` 创建。
 
@@ -196,7 +196,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 `ItemInstance` 是 `ItemStack` 与 `ItemStackTemplate` 实现的 superinterface。通常，`ItemStack` 与 `ItemStackTemplate` 在彼此隔离的 context 中使用。不过，当 ItemStack 与 template 可以互换使用时（例如获取 ItemStack／template 中的 Item 数量），会提供 `ItemInstance` superinterface，而不是特定类型。
 
-`ItemInstance` 提供检查 `Item`（`#is`）、堆叠数量（`count`）以及通过 `DataComponentGetter` 读取 data component 的通用方法。
+`ItemInstance` 提供检查 `Item`（`#is`）、堆叠数量（`count`）以及通过 `DataComponentGetter` 读取数据组件的通用方法。
 
 ## 创造模式标签页
 
@@ -210,7 +210,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 此方法用于把 Item 添加到 Minecraft 或其他模组的标签页。要把 Item 添加到自己的标签页，请参见下文。
 :::
 
-可以通过 `BuildCreativeModeTabContentsEvent` 将 Item 添加到现有 `CreativeModeTab`；该 Event 仅在[逻辑客户端][sides]上的 [mod event bus][modbus] 触发。通过调用 `event#accept` 添加 Item。
+可以通过 `BuildCreativeModeTabContentsEvent` 将 Item 添加到现有 `CreativeModeTab`；该事件仅在[逻辑客户端][sides]上的 [模组事件总线][modbus] 触发。通过调用 `event#accept` 添加 Item。
 
 ```java
 //MyItemsClass.MY_ITEM is a Supplier<? extends Item>, MyBlocksClass.MY_BLOCK is a Supplier<? extends Block>
@@ -225,7 +225,7 @@ public static void buildContents(BuildCreativeModeTabContentsEvent event) {
 }
 ```
 
-该 Event 还提供一些额外信息，例如通过 `getFlags` 获取已启用 feature flag 列表，或通过 `hasPermissions` 检查玩家是否有权查看管理员物品标签页。
+该事件还提供一些额外信息，例如通过 `getFlags` 获取已启用 feature flag 列表，或通过 `hasPermissions` 检查玩家是否有权查看管理员物品标签页。
 
 ### 自定义创造模式标签页
 

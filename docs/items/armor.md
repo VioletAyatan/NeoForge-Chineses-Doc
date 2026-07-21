@@ -4,7 +4,7 @@
 
 ## 自定义盔甲套装
 
-人形 Entity 的一套盔甲通常由四种 Item 组成：头部的头盔、胸部的胸甲、腿部的护腿与脚部的靴子。此外，狼、马和羊驼也有装备到专为动物设置的“身体”盔甲槽位的盔甲。所有这些 Item 通常通过七种 [data component][datacomponents] 实现：
+人形 Entity 的一套盔甲通常由四种 Item 组成：头部的头盔、胸部的胸甲、腿部的护腿与脚部的靴子。此外，狼、马和羊驼也有装备到专为动物设置的“身体”盔甲槽位的盔甲。所有这些 Item 通常通过七种 [数据组件][datacomponents] 实现：
 
 - `DataComponents#MAX_DAMAGE` 与 `#DAMAGE`：耐久度
 - `#MAX_STACK_SIZE`：将堆叠数量设置为 `1`
@@ -13,7 +13,7 @@
 - `#ATTRIBUTE_MODIFIERS`：盔甲值、盔甲韧性与击退抗性
 - `#EQUIPPABLE`：Entity 如何装备 Item
 
-通常，人形 Entity 的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都使用 `ArmorMaterial`，人形盔甲还会结合 `ArmorType` 来设置 component。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
+通常，人形 Entity 的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都使用 `ArmorMaterial`，人形盔甲还会结合 `ArmorType` 来设置组件。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
 
 ```java
 // The resource key of the equipment asset used to link
@@ -111,7 +111,7 @@ public static final DeferredItem<Item> COPPER_NAUTILUS_ARMOR =
 
 ### `Equippable`
 
-`Equippable` 是一种 data component，包含 Entity 如何装备该 Item，以及游戏中由什么来处理其渲染。只要有此 component，任何 Item 都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此 component 的 Item 只能装备到单个 `EquipmentSlot`。
+`Equippable` 是一种数据组件，包含 Entity 如何装备该 Item，以及游戏中由什么来处理其渲染。只要有此组件，任何 Item 都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的 Item 只能装备到单个 `EquipmentSlot`。
 
 可以直接调用 record constructor 创建 `Equippable`，也可以通过 `Equippable#builder` 创建；后者会为每个 field 设置默认值，完成后再调用 `build`：
 
@@ -180,7 +180,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 第二个参数是 optional，表示是否可以将[纹理着色][tinting]为 `EquipmentClientInfo.Dyeable`。`Dyeable` 对象持有一个整数；如果该整数存在，就表示纹理默认着色所用的 RGB 颜色。如果此 optional 不存在，则使用纯白色。
 
 :::warning
-要向 Item 应用未染色颜色以外的 tint，该 Item 必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` component 设置为某个 RGB 值。
+要向 Item 应用未染色颜色以外的 tint，该 Item 必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` 组件设置为某个 RGB 值。
 :::
 
 第三个参数是 boolean，表示是否应使用渲染期间提供的纹理来替代 `Layer` 中定义的纹理。玩家的自定义披风或鞘翅纹理就是一个示例。

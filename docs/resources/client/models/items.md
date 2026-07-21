@@ -284,7 +284,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `ItemTintSource` 与其他基于 Codec 的 Registry Object 类似。创建一个实现 `ItemTintSource` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组 Event Bus][modbus] 上的 `RegisterColorHandlersEvent.ItemTintSources` 将 Codec 注册到其 Registry。`ItemTintSource` 只包含一个 `calculate` 方法，它接收当前 `ItemStack`、Stack 所在 Level 和持有 Stack 的 Entity，返回 ARGB 格式的不透明颜色，其中最高 8 Bit 为 0xFF。
+创建自己的 `ItemTintSource` 与其他基于 Codec 的 Registry Object 类似。创建一个实现 `ItemTintSource` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterColorHandlersEvent.ItemTintSources` 将 Codec 注册到其 Registry。`ItemTintSource` 只包含一个 `calculate` 方法，它接收当前 `ItemStack`、Stack 所在 Level 和持有 Stack 的 Entity，返回 ARGB 格式的不透明颜色，其中最高 8 Bit 为 0xFF。
 
 ```java
 public record DamageBar(int defaultColor) implements ItemTintSource {
@@ -567,7 +567,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `RangeSelectItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `RangeSelectItemModelProperty` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组 Event Bus][modbus] 上的 `RegisterRangeSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，它接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity 以及某个带 Seed 的值，返回由 Range Dispatch Model 解释的任意 Float。
+创建自己的 `RangeSelectItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `RangeSelectItemModelProperty` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterRangeSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，它接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity 以及某个带 Seed 的值，返回由 Range Dispatch Model 解释的任意 Float。
 
 ```java
 public record AppliedEnchantments() implements RangeSelectItemModelProperty {
@@ -818,7 +818,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `SelectItemModelProperty` 与基于 Codec 的 Registry Object 类似。创建实现 `SelectItemModelProperty<T>` 的类、用于序列化和反序列化 Property 值的 `Codec`、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组 Event Bus][modbus] 上的 `RegisterSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`SelectItemModelProperty` 的泛型 `T` 表示进行切换的值。它只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Select Model 解释的任意 `T`。
+创建自己的 `SelectItemModelProperty` 与基于 Codec 的 Registry Object 类似。创建实现 `SelectItemModelProperty<T>` 的类、用于序列化和反序列化 Property 值的 `Codec`、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`SelectItemModelProperty` 的泛型 `T` 表示进行切换的值。它只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Select Model 解释的任意 `T`。
 
 ```java
 // The select property class
@@ -1033,7 +1033,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `ConditionalItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `ConditionalItemModelProperty` 的类、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组 Event Bus][modbus] 上的 `RegisterConditionalItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Conditional Model（`on_true` 或 `on_false`）解释的任意 Boolean。
+创建自己的 `ConditionalItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `ConditionalItemModelProperty` 的类、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterConditionalItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Conditional Model（`on_true` 或 `on_false`）解释的任意 Boolean。
 
 ```java
 public record BarVisible() implements ConditionalItemModelProperty {
@@ -1258,7 +1258,7 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
 }
 ```
 
-最后，把对象注册到所需位置。对于客户端 Item，通过[模组 Event Bus][modbus] 上的 `RegisterSpecialModelRendererEvent` 完成。如果 Special Renderer 还应作为 `BlockEntityRenderer` 的一部分使用，例如在类似 Item 的上下文中渲染（如 Enderman 手持 Block），则应通过[模组 Event Bus][modbus] 上的 `RegisterBlockModelsEvent` 注册 Block 的 `Unbaked` 版本。
+最后，把对象注册到所需位置。对于客户端 Item，通过[模组事件总线][modbus] 上的 `RegisterSpecialModelRendererEvent` 完成。如果 Special Renderer 还应作为 `BlockEntityRenderer` 的一部分使用，例如在类似 Item 的上下文中渲染（如 Enderman 手持 Block），则应通过[模组事件总线][modbus] 上的 `RegisterBlockModelsEvent` 注册 Block 的 `Unbaked` 版本。
 
 ```java
 // In some event handler class
@@ -1576,7 +1576,7 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
 }
 ```
 
-随后，通过[模组 Event Bus][modbus] 上的 `RegisterItemModelsEvent` 注册 Map Codec。
+随后，通过[模组事件总线][modbus] 上的 `RegisterItemModelsEvent` 注册 Map Codec。
 
 ```java
 // In some event handler class

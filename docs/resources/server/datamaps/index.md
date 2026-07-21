@@ -144,7 +144,7 @@ public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.bu
 ).build();
 ```
 
-最后，在 [mod 事件总线][modbus]的 [`RegisterDataMapTypesEvent`][events] 中注册数据映射：
+最后，在[模组事件总线][modbus]的 [`RegisterDataMapTypesEvent`][events] 中注册数据映射：
 
 ```java
 @SubscribeEvent // on the mod event bus
