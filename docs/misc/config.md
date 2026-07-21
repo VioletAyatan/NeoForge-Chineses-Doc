@@ -102,12 +102,12 @@ private ExampleConfig(ModConfigSpec.Builder builder) {
         - 确保 list 中反序列化元素有效的 validator。
         - 可选的 validator，用于确保 list 中的条目数量不会过少或过多。
 
-- **Enum 值**
-    - 说明：所提供 collection 中的一个 enum 值。
+- **枚举值**
+    - 说明：所提供 collection 中的一个枚举值。
     - 类类型：`Enum<T>`
     - 方法名称：`#defineEnum`
     - 附加内容：
-        - 把字符串或 integer 转换为 enum 的 getter。
+        - 把字符串或 integer 转换为枚举的 getter。
         - 配置允许使用的值组成的 collection。
 
 - **Boolean 值**

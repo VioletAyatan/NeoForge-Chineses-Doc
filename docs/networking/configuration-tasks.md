@@ -15,7 +15,7 @@ public static void register(final RegisterConfigurationTasksEvent event) {
 }
 ```
 
-`RegisterConfigurationTasksEvent` 事件会在模组事件总线上触发，并公开服务器当前用于配置相应客户端的 listener。模组开发者可以通过这个 listener 判断客户端是否正在运行该模组；如果是，则注册配置任务。
+`RegisterConfigurationTasksEvent` 事件会在模组事件总线上触发，并公开服务器当前用于配置相应客户端的监听器。模组开发者可以通过这个监听器判断客户端是否正在运行该模组；如果是，则注册配置任务。
 
 ## 实现配置任务
 
@@ -44,9 +44,9 @@ public record MyConfigurationTask implements ICustomConfigurationTask {
 
 主要有两种实现方式：
 
-### 捕获 listener
+### 捕获监听器
 
-当客户端不需要确认配置任务时，可以捕获 listener，并直接在服务器端确认配置任务。
+当客户端不需要确认配置任务时，可以捕获监听器，并直接在服务器端确认配置任务。
 
 ```java
 public record MyConfigurationTask(ServerConfigurationPacketListener listener) implements ICustomConfigurationTask {
@@ -66,7 +66,7 @@ public record MyConfigurationTask(ServerConfigurationPacketListener listener) im
 }
 ```
 
-若要使用这样的配置任务，需要在 `RegisterConfigurationTasksEvent` 事件中捕获 listener。
+若要使用这样的配置任务，需要在 `RegisterConfigurationTasksEvent` 事件中捕获监听器。
 
 ```java
 @SubscribeEvent // on the mod event bus

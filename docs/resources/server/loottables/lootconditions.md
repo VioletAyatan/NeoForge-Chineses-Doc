@@ -186,7 +186,7 @@
 
 ## `minecraft:block_state_property`
 
-此条件检查被破坏的 BlockState 中，指定 BlockState 属性是否具有指定值。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则始终失败。
+此条件检查被破坏的 BlockState 中，指定 BlockState property 是否具有指定值。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
@@ -202,7 +202,7 @@
 }
 ```
 
-数据生成期间，以 Block 调用 `LootItemBlockStatePropertyCondition#hasBlockStateProperties`，为此条件构造 builder。随后可使用 `#setProperties` 在 builder 上设置所需的 BlockState 属性值。
+数据生成期间，以 Block 调用 `LootItemBlockStatePropertyCondition#hasBlockStateProperties`，为此条件构造 builder。随后可使用 `#setProperties` 在 builder 上设置所需的 BlockState property 值。
 
 ## `minecraft:survives_explosion`
 

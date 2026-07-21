@@ -12,13 +12,13 @@
 
 Registry 通常注册[单例][singleton]。这意味着每个 registry entry 只存在一个实例。例如，你在整个游戏中看到的所有石头 Block，实际上都是同一个石头 Block 被显示了许多次。需要石头 Block 时，可以引用已注册的 Block 实例来获取它。
 
-Minecraft 在 `Blocks` class 中注册所有 Block。通过 `register` 方法调用 `Registry#register()`，其第一个参数是位于 `BuiltInRegistries.BLOCK` 的 Block registry。注册完所有 Block 后，Minecraft 会基于 Block 列表执行各种检查，例如验证所有 Block 是否都加载了 model 的自检。
+Minecraft 在 `Blocks` 类中注册所有 Block。通过 `register` 方法调用 `Registry#register()`，其第一个参数是位于 `BuiltInRegistries.BLOCK` 的 Block registry。注册完所有 Block 后，Minecraft 会基于 Block 列表执行各种检查，例如验证所有 Block 是否都加载了 model 的自检。
 
-这一切能够正常工作的主要原因，是 Minecraft 足够早地加载了 `Blocks` class。Minecraft 不会自动加载模组的 class，因此需要变通方案。
+这一切能够正常工作的主要原因，是 Minecraft 足够早地加载了 `Blocks` 类。Minecraft 不会自动加载模组的类，因此需要变通方案。
 
 ## 注册方法
 
-NeoForge 提供两种对象注册方式：`DeferredRegister` class 与 `RegisterEvent`。前者是对后者的封装，推荐使用前者以避免错误。
+NeoForge 提供两种对象注册方式：`DeferredRegister` 类与 `RegisterEvent`。前者是对后者的封装，推荐使用前者以避免错误。
 
 ### `DeferredRegister`
 
@@ -35,7 +35,7 @@ public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
 );
 ```
 
-然后可以使用以下方法之一，将 registry entry 添加为 static final field（有关 `new Block()` 应添加哪些参数，请参阅 [Block 一文][block]）：
+然后可以使用以下方法之一，将 registry entry 添加为 `static final` 字段（有关 `new Block()` 应添加哪些参数，请参阅 [Block 一文][block]）：
 
 ```java
 public static final DeferredHolder<Block, Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
@@ -54,9 +54,9 @@ public static final DeferredHolder<Block, SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.re
 );
 ```
 
-`DeferredHolder<R, T extends R>` class 持有我们的对象。类型参数 `R` 是正在注册到的 registry 的类型（本例为 `Block`）。类型参数 `T` 是 supplier 的类型。由于第一个示例直接注册 `Block`，因此提供 `Block` 作为第二个参数。如果注册的是 `Block` 的 subclass 对象，例如 `SlabBlock`（如第二个示例所示），则应在此提供 `SlabBlock`。
+`DeferredHolder<R, T extends R>` 类持有我们的对象。类型参数 `R` 是正在注册到的 registry 的类型（本例为 `Block`）。类型参数 `T` 是 supplier 的类型。由于第一个示例直接注册 `Block`，因此提供 `Block` 作为第二个参数。如果注册的是 `Block` 的子类对象，例如 `SlabBlock`（如第二个示例所示），则应在此提供 `SlabBlock`。
 
-`DeferredHolder<R, T extends R>` 是 `Supplier<T>` 的 subclass。需要已注册对象时，可以调用 `DeferredHolder#get()`。因为 `DeferredHolder` 扩展了 `Supplier`，还可以将 `Supplier` 用作 field 的类型。这样，上面的代码就变成：
+`DeferredHolder<R, T extends R>` 是 `Supplier<T>` 的子类。需要已注册对象时，可以调用 `DeferredHolder#get()`。因为 `DeferredHolder` 扩展了 `Supplier`，还可以将 `Supplier` 用作字段的类型。这样，上面的代码就变成：
 
 ```java
 public static final Supplier<Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
@@ -96,7 +96,7 @@ public ExampleMod(IEventBus modBus) {
 
 ### `RegisterEvent`
 
-`RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个 registry 触发，时间是在 mod constructor 之后（因为 `DeferredRegister` 会在其中注册内部事件处理器）、配置加载之前。`RegisterEvent` 在模组事件总线上触发。
+`RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个 registry 触发，时间是在 mod 构造器之后（因为 `DeferredRegister` 会在其中注册内部事件处理器）、配置加载之前。`RegisterEvent` 在模组事件总线上触发。
 
 ```java
 @SubscribeEvent // on the mod event bus

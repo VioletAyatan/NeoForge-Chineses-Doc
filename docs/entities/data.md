@@ -2,21 +2,21 @@
 
 没有数据的 Entity 用处不大，因此在 Entity 上存储数据至关重要。所有 Entity 都存储一些默认数据，例如其类型与位置。本文将说明如何添加自己的数据，以及如何同步这些数据。
 
-添加数据最简单的方式，是在 `Entity` class 中添加 field。之后可以按任意方式与这些数据交互。然而，一旦必须同步数据，这种方式很快就会变得麻烦。原因在于，大多数 Entity 逻辑只在服务端运行，而更新只会偶尔（取决于 [`EntityType`][entitytype] 的 `clientUpdateInterval` 值）发送到客户端；当服务端 tick 速度过慢时，容易观察到 Entity “卡顿”，这也是原因所在。
+添加数据最简单的方式，是在 `Entity` 类中添加字段。之后可以按任意方式与这些数据交互。然而，一旦必须同步数据，这种方式很快就会变得麻烦。原因在于，大多数 Entity 逻辑只在服务端运行，而更新只会偶尔（取决于 [`EntityType`][entitytype] 的 `clientUpdateInterval` 值）发送到客户端；当服务端 tick 速度过慢时，容易观察到 Entity “卡顿”，这也是原因所在。
 
 因此，Vanilla 引入了几个辅助系统，每个系统都有特定用途。必要时，也始终可以选择[发送自定义数据][custom]。
 
 ## `SynchedEntityData`
 
-`SynchedEntityData` 是用于在运行时存储值并通过网络同步这些值的系统。它分为三个 class：
+`SynchedEntityData` 是用于在运行时存储值并通过网络同步这些值的系统。它分为三个类：
 
 - `EntityDataSerializer` 基本上是对 [`StreamCodec`][streamcodec] 的封装。
   - Minecraft 使用硬编码的 serializer map。NeoForge 将这个 map 转换为 registry，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
-  - Minecraft 在 `EntityDataSerializers` class 中定义了多种默认 `EntityDataSerializer`。
+  - Minecraft 在 `EntityDataSerializers` 类中定义了多种默认 `EntityDataSerializer`。
 - `EntityDataAccessor` 由 Entity 持有，用于获取与设置数据值。
 - `SynchedEntityData` 本身持有某个 Entity 的所有 `EntityDataAccessor`，并根据需要自动调用 `EntityDataSerializer` 来同步值。
 
-首先在 Entity class 中创建 `EntityDataAccessor`：
+首先在 Entity 类中创建 `EntityDataAccessor`：
 
 ```java
 public class MyEntity extends Entity {
@@ -32,7 +32,7 @@ public class MyEntity extends Entity {
 ```
 
 :::danger
-尽管 compiler 允许你在 `SynchedEntityData#defineId()` 的第一个参数中使用所属 class 以外的 class，但这样做可能而且必然会引发难以调试的问题，因此必须不惜一切代价避免。（这也包括通过 mixin 或类似方法添加 field。）
+尽管编译器允许你在 `SynchedEntityData#defineId()` 的第一个参数中使用所属类以外的类，但这样做可能而且必然会引发难以调试的问题，因此必须不惜一切代价避免。（这也包括通过 mixin 或类似方法添加字段。）
 :::
 
 随后必须在 `defineSynchedData` 方法中定义默认值，如下所示：
@@ -75,7 +75,7 @@ protected void addAdditionalSaveData(ValueOutput output) {
 
 ## 自定义生成数据
 
-有时，Entity 在客户端生成时需要一些自定义数据，但这些数据之后不会随时间变化。遇到这种情况，可以让 Entity 实现 `IEntityWithComplexSpawn` interface，并使用其 `#writeSpawnData` 与 `#readSpawnData` 两个方法向网络 buffer 写入数据及从中读取数据：
+有时，Entity 在客户端生成时需要一些自定义数据，但这些数据之后不会随时间变化。遇到这种情况，可以让 Entity 实现 `IEntityWithComplexSpawn` 接口，并使用其 `#writeSpawnData` 与 `#readSpawnData` 两个方法向网络 buffer 写入数据及从中读取数据：
 
 ```java
 @Override

@@ -6,9 +6,9 @@
 
 为了判断玩家当前正在看什么，Minecraft 使用 `HitResult`。`HitResult` 大致相当于其他游戏引擎中的 ray cast 结果，其中最值得注意的是包含 `#getLocation` 方法。
 
-命中结果可以是 `HitResult.Type` enum 所表示的三种类型之一：`BLOCK`、`ENTITY` 或 `MISS`。`BLOCK` 类型的 `HitResult` 可 cast 为 `BlockHitResult`，`ENTITY` 类型的 `HitResult` 可 cast 为 `EntityHitResult`；两种类型都会提供有关命中的 [Block][block] 或 [Entity][entity] 的额外 context。如果类型为 `MISS`，表示既未命中 Block，也未命中 Entity，不应 cast 为任何一种 subclass。
+命中结果可以是 `HitResult.Type` 枚举所表示的三种类型之一：`BLOCK`、`ENTITY` 或 `MISS`。`BLOCK` 类型的 `HitResult` 可 cast 为 `BlockHitResult`，`ENTITY` 类型的 `HitResult` 可 cast 为 `EntityHitResult`；两种类型都会提供有关命中的 [Block][block] 或 [Entity][entity] 的额外 context。如果类型为 `MISS`，表示既未命中 Block，也未命中 Entity，不应 cast 为任何一种子类。
 
-每一帧，[物理客户端][physicalside]上的 `Minecraft` class 都会更新当前注视的 `HitResult`，并将其存储在 `hitResult` field 中。随后可通过 `Minecraft.getInstance().hitResult` 访问此 field。
+每一帧，[物理客户端][physicalside]上的 `Minecraft` 类都会更新当前注视的 `HitResult`，并将其存储在 `hitResult` 字段中。随后可通过 `Minecraft.getInstance().hitResult` 访问此字段。
 
 ## 左键点击 Item
 
@@ -77,7 +77,7 @@
         - 触发 `PlayerInteractEvent.EntityInteract`。如果事件被取消，流程结束。
         - **对你正在注视的 Entity** 调用 `Entity#interact`。如果返回确定结果，流程结束。
             - 要为自己的 Entity 添加行为，请覆盖此方法。要为 Vanilla Entity 添加行为，请使用事件。
-            - 对于 [`Mob`][livingentity]，`Entity#interact` 的 override 会处理拴绳等内容；当主手 `ItemStack` 是刷怪蛋时，还会处理生成幼体，随后将 Mob 特定处理委托给 `Mob#mobInteract`。`Entity#interact` 的结果规则在这里同样适用。
+            - 对于 [`Mob`][livingentity]，`Entity#interact` 的重写会处理拴绳等内容；当主手 `ItemStack` 是刷怪蛋时，还会处理生成幼体，随后将 Mob 特定处理委托给 `Mob#mobInteract`。`Entity#interact` 的结果规则在这里同样适用。
         - 如果正在注视的 Entity 是 `LivingEntity`，则对主手 `ItemStack` 调用 `Item#interactLivingEntity`。如果返回确定结果，流程结束。
     - 如果正在注视触及范围内且未超出世界边界的 [Block][block]：
         - 触发 `PlayerInteractEvent.RightClickBlock`。如果事件被取消，流程结束。也可以在此事件中只明确拒绝使用 Block 或 Item。
@@ -95,7 +95,7 @@
 
 ### `InteractionResult`
 
-`InteractionResult` 是 sealed interface，表示 Item 或空手与某个对象（例如 Entity、Block 等）之间交互的结果。该 interface 分为四个 record，共有六种可能的默认状态。
+`InteractionResult` 是密封接口，表示 Item 或空手与某个对象（例如 Entity、Block 等）之间交互的结果。该接口分为四个 record，共有六种可能的默认状态。
 
 首先是 `InteractionResult.Success`，表示操作应视为成功，并结束流程。成功状态有两个参数：`SwingSource` 表示 Entity 是否应在相应[逻辑端][side]挥手；`InteractionResult.ItemContext` 保存交互是否由手持 Item 引起，以及手持 Item 使用后转变成什么。挥手来源由以下某个默认状态决定：`InteractionResult#SUCCESS` 表示客户端挥手，`InteractionResult#SUCCESS_SERVER` 表示服务端挥手，`InteractionResult#CONSUME` 表示不挥手。如果 `ItemStack` 发生变化，通过 `Success#heldItemTransformedTo` 设置 Item context；如果手持 Item 与对象之间没有交互，则通过 `withoutItem` 设置。默认表示发生了 Item 交互，但 Item 没有转变。
 

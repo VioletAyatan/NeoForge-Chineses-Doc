@@ -7,7 +7,7 @@
 Minecraft 声音引擎使用多种术语表示不同事物：
 
 - **Sound Event**：Sound Event 是代码中的触发器，用于通知声音引擎播放特定声音。`SoundEvent` 也是注册到游戏中的对象。
-- **Sound Category** 或 **Sound Source**：Sound Category 是可单独开关的声音粗略分组。声音选项 GUI 中的滑块就代表这些类别，例如 `master`、`block`、`player` 等。代码中可在 `SoundSource` enum 里找到它们。
+- **Sound Category** 或 **Sound Source**：Sound Category 是可单独开关的声音粗略分组。声音选项 GUI 中的滑块就代表这些类别，例如 `master`、`block`、`player` 等。代码中可在 `SoundSource` 枚举里找到它们。
 - **Sound Definition**：Sound Event 到一个或多个 Sound Object 的映射，以及一些可选 Metadata。Sound Definition 位于某个命名空间的 [`sounds.json` 文件][soundsjson]中。
 - **Sound Object**：由声音文件位置和一些可选 Metadata 组成的 JSON 对象。
 - **Sound File**：磁盘上的声音文件。Minecraft 只支持 `.ogg` 声音文件。

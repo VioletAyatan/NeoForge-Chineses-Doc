@@ -77,7 +77,7 @@ Data Pack 可包含影响以下内容的文件夹：
 | 文件夹名称     | 内容                       |
 |-----------------|--------------------------------|
 | `chat_type`     | [Chat Type（聊天类型）][chattype] |
-| `function`      | [Function（函数）][function]  |
+| `function`      | [函数（Function）][function]  |
 | `item_modifier` | [Item Modifier（Item 修改器）][itemmodifier] |
 | `predicate`     | [Predicate（谓词）][predicate] |
 
@@ -101,7 +101,7 @@ Provider 有两种推荐注册方式。第一种是全部注册到 `GatherDataEv
 由于 MDK 通过设置默认 `clientData` 配置采用第一种方案，下面所有示例也会使用第一种方案，将所有 Provider 注册到 `GatherDataEvent.Client`。
 :::
 
-所有 Data Provider 都扩展 `DataProvider` 接口，并且通常需要重写一个方法。下面列出了 Minecraft 和 NeoForge 提供的一些重要 Data Generator（链接文章中还包含 Helper Method 等更多信息）：
+所有 Data Provider 都扩展 `DataProvider` 接口，并且通常需要重写一个方法。下面列出了 Minecraft 和 NeoForge 提供的一些重要 Data Generator（链接文章中还包含 Helper 方法等更多信息）：
 
 | 类                                                | 方法                           | 生成内容                                                               | 端   | 说明                                                                                                           |
 |------------------------------------------------------|----------------------------------|-------------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------|
@@ -118,8 +118,8 @@ Provider 有两种推荐注册方式。第一种是全部注册到 `GatherDataEv
 | [`TagsProvider` 的各种子类][tagsprovider] | `addTags(HolderLookup.Provider)` | Tag                                                                    | Server | 存在多个专用子类，详见链接文章。                                           |
 | [`DataMapProvider`][datamapprovider]                 | `gather()`                       |数据映射条目                                                        | Server |                                                                                                                 |
 | [`GlobalLootModifierProvider`][glmprovider]          | `start()`                        | Global Loot Modifier                                                   | Server |                                                                                                                 |
-| [`DatapackBuiltinEntriesProvider`][datapackprovider] | N/A                              | Data Pack 内置条目，例如世界生成和 [伤害类型][damagetypes] | Server | 不重写方法，而是在构造器中的 Lambda 内添加条目。详见链接文章。 |
-| `JsonCodecProvider`（abstract class）                 | `gather()`                       | 带 Codec 的对象                                                    | Both   | 可以扩展该类，用于任何具有 [Codec]、可将数据编码的对象。                              |
+| [`DatapackBuiltinEntriesProvider`][datapackprovider] | N/A                              | Data Pack 内置条目，例如世界生成和 [伤害类型][damagetypes] | Server | 不重写方法，而是在构造器中的 Lambda 表达式内添加条目。详见链接文章。 |
+| `JsonCodecProvider`（抽象类）                 | `gather()`                       | 带 Codec 的对象                                                    | Both   | 可以扩展该类，用于任何具有 [Codec]、可将数据编码的对象。                              |
 | [`PackMetadataGenerator`][metagen]                   | `add(MetadataSectionType<T>, T)` | `pack.mcmeta`                                                           | Both |                                                                                                                 |
 
 所有这些 Provider 都遵循同一种模式。首先创建子类并添加要生成的自定义资源，然后在[事件处理器][eventhandler]中把 Provider 添加到事件。以下是使用 `RecipeProvider` 的示例：
@@ -180,7 +180,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 该事件提供了一些可供使用的 Helper 和上下文：
 
 - `event.createDatapackRegistryObjects(...)` 使用给定的 `RegistrySetBuilder` 创建并注册 `DatapackBuiltinEntriesProvider`。它还会强制以后使用的任何 Lookup Provider 都包含由你生成的数据条目。
-- `event.createProvider(...)` 通过 Lambda 提供 `PackOutput` 以及可选的 `CompletableFuture<HolderLookup.Provider>`，从而注册 Provider。
+- `event.createProvider(...)` 通过 Lambda 表达式提供 `PackOutput` 以及可选的 `CompletableFuture<HolderLookup.Provider>`，从而注册 Provider。
 - `event.createBlockAndItemTags(...)` 注册一个 `TagsProvider<Block>` 和一个 `TagsProvider<Item>`，其中 `TagsProvider<Item>` 使用 `TagsProvider<Block>` 构造。
 - `event.getGenerator()` 返回要向其中注册 Provider 的 `DataGenerator`。
 - `event.getPackOutput()` 返回某些 Provider 用于确定文件输出位置的 `PackOutput`。

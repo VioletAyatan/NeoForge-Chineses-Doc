@@ -712,7 +712,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 ### Select Model
 
-Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProperty` 定义的某个值切换，就像针对 Enum 的 Switch 语句。所选 Model 是与 Switch Case 中的值完全匹配的 Property。可用的 `SelectItemModelProperty` 位于 `SelectItemModelProperties`。
+Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProperty` 定义的某个值切换，就像针对枚举的 Switch 语句。所选 Model 是与 Switch Case 中的值完全匹配的 Property。可用的 `SelectItemModelProperty` 位于 `SelectItemModelProperties`。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>

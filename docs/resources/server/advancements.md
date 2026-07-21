@@ -171,7 +171,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 }
 ```
 
-下一步是在列表中填入生成器。为此，可以将生成器实现为类或 lambda，再把每个生成器的实例添加到构造器参数中目前为空的列表。
+下一步是在列表中填入生成器。为此，可以将生成器实现为类或 Lambda 表达式，再把每个生成器的实例添加到构造器参数中目前为空的列表。
 
 ```java
 // Class example

@@ -8,11 +8,11 @@
     - **即时 MobEffect**是一种设计为只应用一个 tick 的特殊 MobEffect。Vanilla 有两种即时效果：瞬间治疗与瞬间伤害。
 - `MobEffectInstance` 是 `MobEffect` 的实例，其中设置了持续时间、amplifier 及其他一些 property（见下文）。`MobEffectInstance` 与 `MobEffect` 的关系，就像 [`ItemStack`][itemstack] 与 `Item` 的关系。
 - `Potion` 是 `MobEffectInstance` 的集合。Vanilla 主要将 Potion 用于四种药水 Item（见下文），但也可以随意应用到任何 Item。之后该 Item 是否以及如何使用设置在其上的 Potion，由 Item 自身决定。
-- **Potion Item**是指设计为可设置 Potion 的 Item。这是非正式术语，Vanilla `PotionItem` class 与此概念无关（该 class 指“普通”药水 Item）。Minecraft 目前有四种 Potion Item：药水、喷溅药水、滞留药水与药箭；模组还可以添加更多。
+- **Potion Item**是指设计为可设置 Potion 的 Item。这是非正式术语，Vanilla `PotionItem` 类与此概念无关（该类指“普通”药水 Item）。Minecraft 目前有四种 Potion Item：药水、喷溅药水、滞留药水与药箭；模组还可以添加更多。
 
 ## `MobEffect`
 
-要创建自己的 `MobEffect`，扩展 `MobEffect` class：
+要创建自己的 `MobEffect`，扩展 `MobEffect` 类：
 
 ```java
 public class MyMobEffect extends MobEffect {
@@ -62,7 +62,7 @@ public static final Holder<MobEffect> MY_MOB_EFFECT = MOB_EFFECTS.register("my_m
 ));
 ```
 
-`MobEffect` class 还提供了默认功能，用于向受影响 Entity 添加 [attribute modifier][attributemodifier]，并在效果到期或通过其他方式移除时删除这些 modifier。例如，速度效果会为移动速度添加 attribute modifier。Effect attribute modifier 可按如下方式添加：
+`MobEffect` 类还提供了默认功能，用于向受影响 Entity 添加 [attribute modifier][attributemodifier]，并在效果到期或通过其他方式移除时删除这些 modifier。例如，速度效果会为移动速度添加 attribute modifier。Effect attribute modifier 可按如下方式添加：
 
 ```java
 public static final Holder<MobEffect> MY_MOB_EFFECT = MOB_EFFECTS.register("my_mob_effect", () -> new MyMobEffect(...)
@@ -72,7 +72,7 @@ public static final Holder<MobEffect> MY_MOB_EFFECT = MOB_EFFECTS.register("my_m
 
 ### `InstantenousMobEffect`
 
-如果想创建即时效果，可以使用辅助 class `InstantenousMobEffect`，而不是常规 `MobEffect` class：
+如果想创建即时效果，可以使用辅助类 `InstantenousMobEffect`，而不是常规 `MobEffect` 类：
 
 ```java
 public class MyMobEffect extends InstantenousMobEffect {
@@ -100,7 +100,7 @@ public class MyMobEffect extends InstantenousMobEffect {
 
 ## `MobEffectInstance`
 
-简单来说，`MobEffectInstance` 是应用到 Entity 的效果。通过调用 constructor 创建 `MobEffectInstance`：
+简单来说，`MobEffectInstance` 是应用到 Entity 的效果。通过调用构造器创建 `MobEffectInstance`：
 
 ```java
 MobEffectInstance instance = new MobEffectInstance(
@@ -121,7 +121,7 @@ MobEffectInstance instance = new MobEffectInstance(
 );
 ```
 
-有多个 constructor overload 可用，分别省略最后 1–5 个参数。
+有多个构造器重载可用，分别省略最后 1–5 个参数。
 
 :::info
 `MobEffectInstance` 是 mutable 的。如果需要副本，请调用 `new MobEffectInstance(oldInstance)`。
@@ -143,12 +143,12 @@ livingEntity.removeEffect(MobEffects.REGENERATION);
 ```
 
 :::info
-`MobEffect` 只能应用于 `LivingEntity` 或其 subclass，即玩家与 Mob。Item 或投掷出的雪球等对象不受 `MobEffect` 影响。
+`MobEffect` 只能应用于 `LivingEntity` 或其子类，即玩家与 Mob。Item 或投掷出的雪球等对象不受 `MobEffect` 影响。
 :::
 
 ## `Potion`
 
-创建 `Potion` 时，调用 `Potion` 的 constructor 并传入希望 Potion 拥有的 `MobEffectInstance`。例如：
+创建 `Potion` 时，调用 `Potion` 的构造器并传入希望 Potion 拥有的 `MobEffectInstance`。例如：
 
 ```java
 //POTIONS is a DeferredRegister<Potion>
@@ -160,11 +160,11 @@ public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", reg
 ));
 ```
 
-Potion 的名称是第一个 constructor 参数。它用作 translation key 的后缀；例如，Vanilla 中的延长型与增强型药水变体使用它来获得与基础变体相同的名称。
+Potion 的名称是第一个构造器参数。它用作 translation key 的后缀；例如，Vanilla 中的延长型与增强型药水变体使用它来获得与基础变体相同的名称。
 
 `new Potion` 的 `MobEffectInstance` 参数是 vararg。这意味着可以向 Potion 添加任意数量的效果，也意味着可以创建空 Potion，即没有任何效果的 Potion。只需调用 `new Potion()` 即可！（顺便一提，Vanilla 正是这样添加 `awkward` Potion 的。）
 
-`PotionContents` class 提供了多种与 Potion Item 相关的辅助方法。Potion Item 通过 `DataComponent#POTION_CONTENTS` 存储其 `PotionContents`。
+`PotionContents` 类提供了多种与 Potion Item 相关的辅助方法。Potion Item 通过 `DataComponent#POTION_CONTENTS` 存储其 `PotionContents`。
 
 ### 酿造
 

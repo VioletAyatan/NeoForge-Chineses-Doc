@@ -52,9 +52,9 @@ Item 渲染相关信息参见[手动渲染 Item][itemmodels] 一节。
 
 ### 视角
 
-Minecraft 渲染引擎共识别 8 种 Item 渲染视角类型（若包含代码中的 Fallback 则为 9 种）。它们用于 Model JSON 的 `display` 块，在代码中由 `ItemDisplayContext` enum 表示。通常从 `UnbakedModel` 传入 `ItemModel` 的 `ModelRenderProperties`，再通过 `ModelRenderProperties#applyToLayer` 应用于 `ItemStackRenderState`。
+Minecraft 渲染引擎共识别 8 种 Item 渲染视角类型（若包含代码中的 Fallback 则为 9 种）。它们用于 Model JSON 的 `display` 块，在代码中由 `ItemDisplayContext` 枚举表示。通常从 `UnbakedModel` 传入 `ItemModel` 的 `ModelRenderProperties`，再通过 `ModelRenderProperties#applyToLayer` 应用于 `ItemStackRenderState`。
 
-| Enum 值                | JSON 键                  | 用途                                                                                                            |
+| 枚举值                | JSON 键                  | 用途                                                                                                            |
 |---------------------------|---------------------------|------------------------------------------------------------------------------------------------------------------|
 | `THIRD_PERSON_RIGHT_HAND` | `"thirdperson_righthand"` | 第三人称右手（F5 视角或其他玩家）                                                        |
 | `THIRD_PERSON_LEFT_HAND`  | `"thirdperson_lefthand"`  | 第三人称左手（F5 视角或其他玩家）                                                         |
@@ -136,7 +136,7 @@ public static void modifyBakingResult(ModelEvent.ModifyBakingResult event) {
 [bsd]: #block-state-definitions
 [clientitem]: items.md
 [event]: ../../../concepts/events.md
-[extended]: ../../../advanced/extensibleenums.md#creating-an-enum-entry
+[extended]: ../../../advanced/extensibleenums.md#创建枚举条目
 [itemmodels]: items.md#manually-rendering-an-item
 [itemmodelsection]: #item-models
 [livingentity]: ../../../entities/livingentity.md

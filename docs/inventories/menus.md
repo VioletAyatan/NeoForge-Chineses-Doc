@@ -10,7 +10,7 @@
 
 ### `MenuSupplier`
 
-将 `MenuSupplier` 与 `FeatureFlagSet` 传入 `MenuType` constructor，即可创建 `MenuType`。`MenuSupplier` 表示一个 function：接受 Container id 与查看菜单的玩家物品栏，返回新创建的 [`AbstractContainerMenu`][acm]。
+将 `MenuSupplier` 与 `FeatureFlagSet` 传入 `MenuType` 构造器，即可创建 `MenuType`。`MenuSupplier` 表示一个函数：接受 Container id 与查看菜单的玩家物品栏，返回新创建的 [`AbstractContainerMenu`][acm]。
 
 ```java
 // For some DeferredRegister<MenuType<?>> REGISTER
@@ -31,7 +31,7 @@ Container identifier 对单个玩家而言是唯一的。这意味着两个不�
 
 ### `IContainerFactory`
 
-如果客户端需要额外信息（例如数据 holder 在世界中的位置），可以改用 subclass `IContainerFactory`。除 Container id 与玩家物品栏外，它还提供 `RegistryFriendlyByteBuf`，可存储服务端发送的额外信息。可以通过 `IMenuTypeExtension#create` 使用 `IContainerFactory` 创建 `MenuType`。
+如果客户端需要额外信息（例如数据 holder 在世界中的位置），可以改用子类 `IContainerFactory`。除 Container id 与玩家物品栏外，它还提供 `RegistryFriendlyByteBuf`，可存储服务端发送的额外信息。可以通过 `IMenuTypeExtension#create` 使用 `IContainerFactory` 创建 `MenuType`。
 
 ```java
 // For some DeferredRegister<MenuType<?>> REGISTER
@@ -53,7 +53,7 @@ public MyMenuExtra(int containerId, Inventory playerInv, FriendlyByteBuf extraDa
 菜单 identifier 在 0–99 之间循环，每当玩家打开菜单时递增。
 :::
 
-每个菜单应包含两个 constructor：一个用于在服务端初始化菜单，另一个用于在客户端初始化菜单。用于在客户端初始化菜单的 constructor 就是提供给 `MenuType` 的 constructor。服务端菜单 constructor 包含的任何 field，都应在客户端菜单 constructor 中有某个默认值。
+每个菜单应包含两个构造器：一个用于在服务端初始化菜单，另一个用于在客户端初始化菜单。用于在客户端初始化菜单的构造器就是提供给 `MenuType` 的构造器。服务端菜单构造器包含的任何字段，都应在客户端菜单构造器中有某个默认值。
 
 ```java
 // Client menu constructor
@@ -68,7 +68,7 @@ public MyMenu(int containerId, Inventory playerInventory, /* Any additional para
 ```
 
 :::note
-如果菜单中不需要显示额外数据，只需一个 constructor。
+如果菜单中不需要显示额外数据，只需一个构造器。
 :::
 
 每个菜单实现都必须实现两个方法：`#stillValid` 与 [`#quickMoveStack`][qms]。
@@ -77,7 +77,7 @@ public MyMenu(int containerId, Inventory playerInventory, /* Any additional para
 
 `#stillValid` 判断给定玩家是否应继续打开菜单。它通常会转发到 static `#stillValid`，后者接受 `ContainerLevelAccess`、玩家，以及此菜单附加到的 `Block`。客户端菜单必须始终为此方法返回 `true`，static `#stillValid` 默认就是如此。此实现会检查玩家是否位于数据存储对象所在位置的八个 Block 范围内。
 
-`ContainerLevelAccess` 在封闭 scope 内提供当前 Level 与 Block 位置。在服务端构造菜单时，可调用 `ContainerLevelAccess#create` 创建新的 access。客户端菜单 constructor 可以传入不会执行任何操作的 `ContainerLevelAccess#NULL`。
+`ContainerLevelAccess` 在封闭 scope 内提供当前 Level 与 Block 位置。在服务端构造菜单时，可调用 `ContainerLevelAccess#create` 创建新的 access。客户端菜单构造器可以传入不会执行任何操作的 `ContainerLevelAccess#NULL`。
 
 ```java
 // Client menu constructor
@@ -101,11 +101,11 @@ public boolean stillValid(Player player) {
 
 有些数据需要同时存在于服务端和客户端，才能向玩家显示。为此，菜单实现了基础数据同步层：只要当前数据与上次同步到客户端的数据不匹配，就进行同步。对于玩家，每个 tick 都会检查。
 
-Minecraft 默认支持两种数据同步形式：通过 `Slot` 同步 [`ItemStack`][itemstack]，以及通过 `DataSlot` 同步整数。`Slot` 与 `DataSlot` 是持有数据存储引用的 view；只要操作有效，玩家就可以在 screen 中修改这些数据。每种数据同步方法都会向服务端菜单 constructor 添加一个参数，而客户端则会创建一个虚拟实例，用于写入服务端发送的数据。
+Minecraft 默认支持两种数据同步形式：通过 `Slot` 同步 [`ItemStack`][itemstack]，以及通过 `DataSlot` 同步整数。`Slot` 与 `DataSlot` 是持有数据存储引用的 view；只要操作有效，玩家就可以在 screen 中修改这些数据。每种数据同步方法都会向服务端菜单构造器添加一个参数，而客户端则会创建一个虚拟实例，用于写入服务端发送的数据。
 
 #### `DataSlot`
 
-`DataSlot` 是 abstract class，应实现 getter 与 setter 以引用数据存储对象中保存的数据。客户端菜单 constructor 应始终通过 `DataSlot#standalone` 提供新实例。随后可使用 `#addDataSlot` 将 DataSlot 添加到菜单。
+`DataSlot` 是抽象类，应实现 getter 与 setter 以引用数据存储对象中保存的数据。客户端菜单构造器应始终通过 `DataSlot#standalone` 提供新实例。随后可使用 `#addDataSlot` 将 DataSlot 添加到菜单。
 
 与 Slot 一样，每次初始化新菜单时都应重新创建它们。
 
@@ -138,7 +138,7 @@ public MyMenuAccess(int containerId, Inventory playerInventory, DataSlot dataSin
 
 #### `ContainerData`
 
-如果需要向客户端同步多个整数，可以改用 `ContainerData` 引用这些整数。此 interface 的作用类似索引查找，每个索引表示不同的整数。如果通过 `#addDataSlots` 将 `ContainerData` 添加到菜单，也可以在数据对象本身中构造 `ContainerData`。该方法会按 interface 指定的数据数量创建新的 `DataSlot`。客户端菜单 constructor 应始终通过 `SimpleContainerData` 提供新实例。
+如果需要向客户端同步多个整数，可以改用 `ContainerData` 引用这些整数。此接口的作用类似索引查找，每个索引表示不同的整数。如果通过 `#addDataSlots` 将 `ContainerData` 添加到菜单，也可以在数据对象本身中构造 `ContainerData`。该方法会按接口指定的数据数量创建新的 `DataSlot`。客户端菜单构造器应始终通过 `SimpleContainerData` 提供新实例。
 
 ```java
 // Assume we have a ContainerData of size 3
@@ -164,7 +164,7 @@ public MyMenuAccess(int containerId, Inventory playerInventory, ContainerData da
 
 `Slot` 表示对物品栏中某个 [`ItemStack`][itemstack] 的引用。每个 `Slot` 至少有四个参数：ItemStack 所在的物品栏、此 Slot 具体表示的 ItemStack 索引，以及 Slot 左上角在 screen 上相对于 `AbstractContainerScreen#leftPos` 与 `#topPos` 的渲染 x、y 位置。任何额外参数通常都会为 Slot 处理独特行为提供 context，例如只接受视为燃料的 Item，或阻止取出 Item。
 
-服务端菜单 constructor 应接受物品栏实例或 view。客户端菜单 constructor 则应始终提供同样大小的空物品栏实例，以便写入服务端数据。随后可以使用 `#addSlot` 将所需 Slot 或其某个 subtype 添加到菜单。
+服务端菜单构造器应接受物品栏实例或 view。客户端菜单构造器则应始终提供同样大小的空物品栏实例，以便写入服务端数据。随后可以使用 `#addSlot` 将所需 Slot 或其某个 subtype 添加到菜单。
 
 对于 [`Container`][container]，客户端菜单通常传入 `SimpleContainer`，并使用常规 `Slot` 添加。对于 [`ResourceHandler<ItemResource>` capability][cap]，客户端菜单通常传入 `ItemStacksResourceHandler`，并使用 `ResourceHandlerSlot` 添加。
 
@@ -331,7 +331,7 @@ public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
 
 #### `MenuProvider`
 
-`MenuProvider` 是包含两个方法的 interface：`#createMenu` 创建菜单的服务端实例；`#getDisplayName` 返回包含菜单标题的 component，以传给 [screen][screen]。`#createMenu` 方法包含三个参数：菜单的 Container id、打开菜单的玩家物品栏，以及打开菜单的玩家。
+`MenuProvider` 是包含两个方法的接口：`#createMenu` 创建菜单的服务端实例；`#getDisplayName` 返回包含菜单标题的 component，以传给 [screen][screen]。`#createMenu` 方法包含三个参数：菜单的 Container id、打开菜单的玩家物品栏，以及打开菜单的玩家。
 
 可以使用 `SimpleMenuProvider` 轻松创建 `MenuProvider`；它接受用于创建服务端菜单的方法引用与菜单标题。
 

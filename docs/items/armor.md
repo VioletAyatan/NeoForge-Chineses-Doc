@@ -113,7 +113,7 @@ public static final DeferredItem<Item> COPPER_NAUTILUS_ARMOR =
 
 `Equippable` 是一种数据组件，包含 Entity 如何装备该 Item，以及游戏中由什么来处理其渲染。只要有此组件，任何 Item 都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的 Item 只能装备到单个 `EquipmentSlot`。
 
-可以直接调用 record constructor 创建 `Equippable`，也可以通过 `Equippable#builder` 创建；后者会为每个 field 设置默认值，完成后再调用 `build`：
+可以直接调用 record 构造器创建 `Equippable`，也可以通过 `Equippable#builder` 创建；后者会为每个字段设置默认值，完成后再调用 `build`：
 
 ```java
 // The resource key of the equipment asset used to link
@@ -366,7 +366,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ## 装备渲染
 
-装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染 function 中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为 render context 的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
+装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染函数中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为 render context 的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
 
 默认情况下，以下 layer 会渲染关联的 `EquipmentClientInfo.LayerType`：
 

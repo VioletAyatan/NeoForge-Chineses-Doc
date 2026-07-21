@@ -69,7 +69,7 @@ public class MyEntityRenderState extends EntityRenderState {
 
 除了可以定义新的 Entity Render State，NeoForge 还引入了修改现有 Render State 的系统。
 
-为此，可以创建 `ContextKey<T>`（其中 `T` 是要更改的数据类型）并存入 static 字段。随后，可在 `RegisterRenderStateModifiersEvent` 的事件处理器中使用它：
+为此，可以创建 `ContextKey<T>`（其中 `T` 是要更改的数据类型）并存入静态字段。随后，可在 `RegisterRenderStateModifiersEvent` 的事件处理器中使用它：
 
 ```java
 public static final ContextKey<String> EXAMPLE_CONTEXT = new ContextKey<>(
@@ -114,7 +114,7 @@ state.setRenderData(EXAMPLE_CONTEXT, null);
 
 :::
 
-需要时，可以通过 `EntityRenderState#getRenderData` 取回该数据。还可以使用 Helper Method `#getRenderDataOrThrow` 和 `#getRenderDataOrDefault`。
+需要时，可以通过 `EntityRenderState#getRenderData` 取回该数据。还可以使用 Helper 方法 `#getRenderDataOrThrow` 和 `#getRenderDataOrDefault`。
 
 ## 层次结构
 

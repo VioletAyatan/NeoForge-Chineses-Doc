@@ -13,7 +13,7 @@
 与 `DataComponentType` 关联的组件值必须实现 `hashCode` 与 `equals`，存储后应视为 **immutable**。
 
 :::note
-使用 record 可以很容易地实现组件值。Record field 是 immutable 的，并且会实现 `hashCode` 与 `equals`。
+使用 record 可以很容易地实现组件值。Record 字段是 immutable 的，并且会实现 `hashCode` 与 `equals`。
 :::
 
 ```java
@@ -132,7 +132,7 @@ DyeColor color = item.builtInRegistryHolder().components().get(DataComponents.BA
 
 ### `PatchedDataComponentMap`
 
-默认 `DataComponentMap` 只提供读取操作的方法，写入操作则由 subclass `PatchedDataComponentMap` 支持，包括 `#set` 组件值或通过 `#remove` 将其完全移除。
+默认 `DataComponentMap` 只提供读取操作的方法，写入操作则由子类 `PatchedDataComponentMap` 支持，包括 `#set` 组件值或通过 `#remove` 将其完全移除。
 
 `PatchedDataComponentMap` 使用 prototype 与 patch map 存储更改。Prototype 是 `DataComponentMap`，包含该 map 应具有的默认组件及其值。Patch map 是从 `DataComponentType` 到 `Optional` 值的 map，包含对默认组件所做的更改。
 
@@ -170,7 +170,7 @@ DyeColor color = holder.get(DataComponents.BASE_COLOR);
 
 ### `MutableDataComponentHolder`
 
-`MutableDataComponentHolder` 是 NeoForge 提供的 interface，用于支持对组件 map 进行写入操作的方法。Vanilla 与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名 delegate 方法 `#set` 与 `#remove`。
+`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件 map 进行写入操作的方法。Vanilla 与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名 delegate 方法 `#set` 与 `#remove`。
 
 此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到 map。Operator 可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
 
@@ -244,7 +244,7 @@ public static void modifyComponents(ModifyDefaultComponentsEvent event) {
 
 ## 使用自定义组件持有者
 
-要创建自定义数据组件 holder，holder 对象只需实现 `MutableDataComponentHolder`，并实现缺失的方法。Holder 对象必须包含表示 `PatchedDataComponentMap` 的 field，以便实现关联方法。
+要创建自定义数据组件 holder，holder 对象只需实现 `MutableDataComponentHolder`，并实现缺失的方法。Holder 对象必须包含表示 `PatchedDataComponentMap` 的字段，以便实现关联方法。
 
 ```java
 public class ExampleHolder implements MutableDataComponentHolder {

@@ -56,7 +56,7 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 
 :::note
 
-如果 BER 中不需要 provider context，也可以移除 constructor：
+如果 BER 中不需要 provider context，也可以移除构造器：
 
 ```java
 public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity, MyBlockEntityRenderState> {
@@ -86,7 +86,7 @@ public class MyBlockEntityRenderState extends BlockEntityRenderState {
 }
 ```
 
-随后应在 `BlockEntityRenderer#extractRenderState` 中使用 `BlockEntity` subclass 填充这些值。
+随后应在 `BlockEntityRenderer#extractRenderState` 中使用 `BlockEntity` 子类填充这些值。
 
 ## Item Block 渲染
 

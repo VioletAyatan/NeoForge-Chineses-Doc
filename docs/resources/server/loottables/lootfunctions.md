@@ -161,7 +161,7 @@
 
 ## `minecraft:copy_state`
 
-将 BlockState 属性复制到 ItemStack 的 `block_state` [数据组件][datacomponent]中，供尝试放置 Block 时使用。必须明确指定要复制的 BlockState 属性。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则不执行修改。
+将 BlockState property 复制到 ItemStack 的 `block_state` [数据组件][datacomponent]中，供尝试放置 Block 时使用。必须明确指定要复制的 BlockState property。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -175,7 +175,7 @@
 }
 ```
 
-数据生成期间，以 Block 调用 `CopyBlockState#copyState`，为此函数构造 builder。随后可使用 `#copy` 在 builder 上设置所需 BlockState 属性值。
+数据生成期间，以 Block 调用 `CopyBlockState#copyState`，为此函数构造 builder。随后可使用 `#copy` 在 builder 上设置所需 BlockState property 值。
 
 ## `minecraft:set_contents`
 

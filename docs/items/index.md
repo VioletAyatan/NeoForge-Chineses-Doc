@@ -17,7 +17,7 @@ Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周
 
 理解 Item 是什么后，下面来创建一个。
 
-与基础 Block 一样，对于不需要特殊功能的基础 Item（例如木棍、糖等），可以直接使用 `Item` class。为此，在注册期间使用 `Item.Properties` 参数实例化 `Item`。该 `Item.Properties` 参数可通过 `Item.Properties#of` 创建，并可通过调用其方法自定义：
+与基础 Block 一样，对于不需要特殊功能的基础 Item（例如木棍、糖等），可以直接使用 `Item` 类。为此，在注册期间使用 `Item.Properties` 参数实例化 `Item`。该 `Item.Properties` 参数可通过 `Item.Properties#of` 创建，并可通过调用其方法自定义：
 
 - `setId`——设置 Item 的 resource key。
     - 每个 Item 都**必须**设置此项，否则会抛出 exception。
@@ -27,12 +27,12 @@ Item 与 Block 一样，是 Minecraft 的核心组成部分。Block 构成你周
 - `stacksTo`——设置此 Item 的最大堆叠数量（通过 `DataComponents#MAX_STACK_SIZE`）。默认为 64。例如末影珍珠或其他只能堆叠到 16 个的 Item 会使用它。
 - `durability`——设置 Item 的耐久度（通过 `DataComponents#MAX_DAMAGE`），并将初始损伤设为 0（通过 `DataComponents#DAMAGE`）。默认为 0，表示“没有耐久度”。例如铁制工具在这里使用 250。请注意，设置耐久度会自动将最大堆叠数量锁定为 1。
 - `fireResistant`——使使用此 Item 的 ItemEntity 免疫火与熔岩（通过 `DataComponents#FIRE_RESISTANT`）。多种下界合金 Item 使用它。
-- `rarity`——设置 Item 的稀有度（通过 `DataComponents#RARITY`）。目前它只会更改 Item 颜色。`Rarity` 是由四个值组成的 enum：`COMMON`（白色，默认）、`UNCOMMON`（黄色）、`RARE`（青色）和 `EPIC`（浅紫色）。请注意，模组可能添加更多稀有度类型。
+- `rarity`——设置 Item 的稀有度（通过 `DataComponents#RARITY`）。目前它只会更改 Item 颜色。`Rarity` 是由四个值组成的枚举：`COMMON`（白色，默认）、`UNCOMMON`（黄色）、`RARE`（青色）和 `EPIC`（浅紫色）。请注意，模组可能添加更多稀有度类型。
 - `setNoCombineRepair`——禁用此 Item 的砂轮与合成网格修复。Vanilla 中未使用。
 - `jukeboxPlayable`——设置插入唱片机时播放的 datapack `JukeboxSong` 的 resource key。
 - `food`——设置 Item 的 [`FoodProperties`][food]（通过 `DataComponents#FOOD`）。
 
-如需示例或查看 Minecraft 使用的不同值，请查看 `Items` class。
+如需示例或查看 Minecraft 使用的不同值，请查看 `Items` 类。
 
 ### 剩余物与冷却
 
@@ -44,7 +44,7 @@ Item 可具有在使用时应用，或在固定时间内阻止 Item 再次使用
 
 ### 工具与盔甲
 
-有些 Item 作为[工具][tools]与[盔甲][armor]使用。它们通过一系列 Item property 构造，只有部分用途会委托给关联 class：
+有些 Item 作为[工具][tools]与[盔甲][armor]使用。它们通过一系列 Item property 构造，只有部分用途会委托给关联类：
 
 - `enchantable`——设置 ItemStack 的最大[附魔][enchantment]值，使 Item 可被附魔（通过 `DataComponents#ENCHANTABLE`）。
 - `repairable`——设置可用于修复此 Item 耐久度的 Item 或 tag（通过 `DataComponents#REPAIRABLE`）。必须具有耐久度组件，且不能有 `DataComponents#UNBREAKABLE`。
@@ -55,13 +55,13 @@ Item 可具有在使用时应用，或在固定时间内阻止 Item 再次使用
 
 ### 更多功能
 
-直接使用 `Item` 只能实现非常基础的 Item。如果想添加右键交互等功能，就需要扩展 `Item` 的自定义 class。`Item` class 有许多可覆盖的方法，可用于实现不同功能；更多信息请参阅 `Item` 与 `IItemExtension` class。
+直接使用 `Item` 只能实现非常基础的 Item。如果想添加右键交互等功能，就需要扩展 `Item` 的自定义类。`Item` 类有许多可覆盖的方法，可用于实现不同功能；更多信息请参阅 `Item` 与 `IItemExtension` 类。
 
 Item 最常见的两个用例是左键点击与右键点击。由于流程复杂且会涉及其他系统，它们在单独的[交互文章][interactions]中说明。
 
 ### `DeferredRegister.Items`
 
-所有 registry 都使用 `DeferredRegister` 注册内容，Item 也不例外。不过，由于添加新 Item 是绝大多数模组都需要的核心功能，NeoForge 提供了辅助 class `DeferredRegister.Items`；它扩展 `DeferredRegister<Item>`，并提供若干 Item 特定的辅助方法：
+所有 registry 都使用 `DeferredRegister` 注册内容，Item 也不例外。不过，由于添加新 Item 是绝大多数模组都需要的核心功能，NeoForge 提供了辅助类 `DeferredRegister.Items`；它扩展 `DeferredRegister<Item>`，并提供若干 Item 特定的辅助方法：
 
 ```java
 public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ExampleMod.MOD_ID);
@@ -73,7 +73,7 @@ public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem(
 );
 ```
 
-在内部，它会把 properties 参数应用到所提供的 Item factory（通常是 constructor），从而直接调用 `ITEMS.register("example_item", registryName -> new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))))`。Id 会设置到 properties 上。
+在内部，它会把 properties 参数应用到所提供的 Item factory（通常是构造器），从而直接调用 `ITEMS.register("example_item", registryName -> new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, registryName))))`。Id 会设置到 properties 上。
 
 如果想使用 `Item::new`，可以完全省略 factory，改用 `simple` 方法变体：
 
@@ -84,9 +84,9 @@ public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem(
 );
 ```
 
-它与前一个示例的作用完全相同，只是略短。当然，如果想使用 `Item` 的 subclass 而不是 `Item` 本身，就必须改用前一种方法。
+它与前一个示例的作用完全相同，只是略短。当然，如果想使用 `Item` 的子类而不是 `Item` 本身，就必须改用前一种方法。
 
-这两个方法还有省略 `new Item.Properties()` 参数的 overload：
+这两个方法还有省略 `new Item.Properties()` 参数的重载：
 
 ```java
 public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem("example_item", Item::new);
@@ -127,7 +127,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 ```
 
 :::note
-如果把已注册 Block 保存在独立 class 中，应先加载 Block class，再加载 Item class。
+如果把已注册 Block 保存在独立类中，应先加载 Block 类，再加载 Item 类。
 :::
 
 ### 资源
@@ -153,7 +153,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 - 堆叠数量，通常在 1 到 64 之间，可通过 `getCount` 获取，并通过 `setCount` 或 `shrink` 更改。
 - [数据组件][datacomponents] map，用于存储 ItemStack 特定数据，可通过 `getComponents` 获取。组件值通常通过 `has`、`get`、`set`、`update` 与 `remove` 访问和修改。
 
-要创建新的 `ItemStack`，调用 `new ItemStack(Item)` 并传入底层 Item。默认使用数量 1 且无 NBT 数据；如有需要，也有接受数量与 NBT 数据的 constructor overload。请注意，在组件绑定／Level 存在之前，`ItemStack` 无法存在。在此之前，应使用下文详述的 `ItemStackTemplate`。
+要创建新的 `ItemStack`，调用 `new ItemStack(Item)` 并传入底层 Item。默认使用数量 1 且无 NBT 数据；如有需要，也有接受数量与 NBT 数据的构造器重载。请注意，在组件绑定／Level 存在之前，`ItemStack` 无法存在。在此之前，应使用下文详述的 `ItemStackTemplate`。
 
 `ItemStack` 是 mutable 对象（见下文），但有时必须将其视为 immutable。如果需要修改应被视为 immutable 的 `ItemStack`，可以使用 `#copy` 克隆 ItemStack；如果要使用特定堆叠数量，则使用 `#copyWithCount`。
 
@@ -250,7 +250,7 @@ public static final Supplier<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.r
 
 ## `ItemLike`
 
-`ItemLike` 是 Vanilla 中由 `Item` 与 [`Block`][block] 实现的 interface。它定义 `#asItem` 方法，返回对象实际内容的 Item 表示：`Item` 直接返回自身，`Block` 在可用时返回关联的 `BlockItem`，否则返回 `Blocks.AIR`。`ItemLike` 用在 Item 的“来源”并不重要的各种 context 中，例如许多[数据 generator][datagen]。
+`ItemLike` 是 Vanilla 中由 `Item` 与 [`Block`][block] 实现的接口。它定义 `#asItem` 方法，返回对象实际内容的 Item 表示：`Item` 直接返回自身，`Block` 在可用时返回关联的 `BlockItem`，否则返回 `Blocks.AIR`。`ItemLike` 用在 Item 的“来源”并不重要的各种 context 中，例如许多[数据 generator][datagen]。
 
 也可以让自定义对象实现 `ItemLike`。只需覆盖 `#asItem` 即可。
 

@@ -1,8 +1,8 @@
 # Capability
 
-Capability 允许以动态而灵活的方式暴露功能，而无需直接实现大量 interface。
+Capability 允许以动态而灵活的方式暴露功能，而无需直接实现大量接口。
 
-一般来说，每个 capability 都以 interface 形式提供一项功能。
+一般来说，每个 capability 都以接口形式提供一项功能。
 
 NeoForge 为 Block、Entity 与 ItemStack 添加 capability 支持。以下各节将进行更详细的说明。
 
@@ -29,20 +29,20 @@ Capability 旨在将 Block、Entity 或 ItemStack **能做什么**与它**如何
 
 NeoForge 为以下三种 [ResourceHandler][resourcehandler] 提供 capability：`ResourceHandler<ItemResource>`、`ResourceHandler<FluidResource>` 与 `EnergyHandler`。
 
-`ResourceHandler<ItemResource>` 暴露管理物品栏槽位的 interface。`ResourceHandler<ItemResource>` 类型的 capability 包括：
+`ResourceHandler<ItemResource>` 暴露管理物品栏槽位的接口。`ResourceHandler<ItemResource>` 类型的 capability 包括：
 
 - `Capabilities.Item.BLOCK`：自动化系统可访问的 Block 物品栏（用于箱子、机器等）。
 - `Capabilities.Item.ENTITY`：Entity 的物品栏内容（额外玩家槽位、Mob／Creature 物品栏／背包）。
 - `Capabilities.Item.ENTITY_AUTOMATION`：自动化系统可访问的 Entity 物品栏（船、矿车等）。
 - `Capabilities.Item.ITEM`：ItemStack 的内容（便携背包等）。
 
-`ResourceHandler<FluidResource>` 暴露管理 Fluid 物品栏的 interface。`ResourceHandler<FluidResource>` 类型的 capability 包括：
+`ResourceHandler<FluidResource>` 暴露管理 Fluid 物品栏的接口。`ResourceHandler<FluidResource>` 类型的 capability 包括：
 
 - `Capabilities.Fluid.BLOCK`：自动化系统可访问的 Block Fluid 物品栏。
 - `Capabilities.Fluid.ENTITY`：Entity 的 Fluid 物品栏。
 - `Capabilities.Fluid.ITEM`：ItemStack 的 Fluid 物品栏。
 
-`EnergyHandler` 暴露处理能量 Container 的 interface。它基于 TeamCoFH 的 RedstoneFlux API。[`EnergyHandler`][energyhandler] 类型的 capability 包括：
+`EnergyHandler` 暴露处理能量 Container 的接口。它基于 TeamCoFH 的 RedstoneFlux API。[`EnergyHandler`][energyhandler] 类型的 capability 包括：
 
 - `Capabilities.Energy.BLOCK`：Block 内包含的能量。
 - `Capabilities.Energy.ENTITY`：Entity 内包含的能量。
@@ -62,10 +62,10 @@ Capability 允许使用某种分派逻辑查找某些 API 的实现。NeoForge �
     - Capability 通常为持有 Item Resource 指定 [`ItemAccess`][itemaccess] context。
 
 :::tip
-为了与其他模组兼容，建议尽可能使用 NeoForge 在 `Capabilities` class 中提供的 capability。否则，可以按本节所述创建自己的 capability。
+为了与其他模组兼容，建议尽可能使用 NeoForge 在 `Capabilities` 类中提供的 capability。否则，可以按本节所述创建自己的 capability。
 :::
 
-只需调用一个 function 即可创建 capability，结果对象应存储在 `static final` field 中。必须提供以下参数：
+只需调用一个函数即可创建 capability，结果对象应存储在 `static final` 字段中。必须提供以下参数：
 
 - Capability 名称。
     - 多次创建同名 capability 始终返回同一对象。
@@ -115,7 +115,7 @@ public static final BlockCapability<ResourceHandler<ItemResource>, Void> ITEM_HA
 
 ## 查询 Capability
 
-将 `BlockCapability`、`EntityCapability` 或 `ItemCapability` 对象存储在 static field 后，即可查询 capability。
+将 `BlockCapability`、`EntityCapability` 或 `ItemCapability` 对象存储在静态字段后，即可查询 capability。
 
 对于 Entity 与 ItemStack，可以使用 `getCapability` 尝试查找 capability 实现。如果结果为 `null`，表示没有可用实现。
 
@@ -174,7 +174,7 @@ if (handler != null) {
 该实现相当高效，但对于每个 game tick 等频繁执行的查询，这些步骤可能占用大量服务端时间。对于频繁查询给定位置 capability 的场景，`BlockCapabilityCache` 系统可以显著提速。
 
 :::tip
-通常只创建一次 `BlockCapabilityCache`，然后将其存储在执行频繁 capability 查询的对象 field 中。具体何时以及在哪里存储 cache 由你决定。
+通常只创建一次 `BlockCapabilityCache`，然后将其存储在执行频繁 capability 查询的对象字段中。具体何时以及在哪里存储 cache 由你决定。
 :::
 
 要创建 cache，调用 `BlockCapabilityCache.create`，传入要查询的 capability、Level、位置与查询 context。
@@ -208,8 +208,8 @@ Capability 对象发生变化时，还可以接收通知！这包括 capability 
 此时创建 cache 需要两个额外参数：
 
 - Validity check，用于判断 cache 是否仍然有效。
-    - 在最简单的 BlockEntity field 用法中，`() -> !this.isRemoved()` 即可。
-- Invalidation listener，在 capability 变化时调用。
+    - 在最简单的 BlockEntity 字段用法中，`() -> !this.isRemoved()` 即可。
+- Invalidation 监听器，在 capability 变化时调用。
     - 可以在这里对 capability 的变化、移除或出现作出反应。
 
 ```java
@@ -250,7 +250,7 @@ NeoForge 已处理 chunk 加载／卸载与 BlockEntity 创建／移除等常见
 
 ## 注册 Capability
 
-Capability *provider* 是最终提供 capability 的对象。Capability provider 是一个 function，可以返回 capability 实例；如果无法提供 capability，则返回 `null`。Provider 特定于：
+Capability *provider* 是最终提供 capability 的对象。Capability provider 是一个函数，可以返回 capability 实例；如果无法提供 capability，则返回 `null`。Provider 特定于：
 
 - 它们所提供的给定 capability；以及
 - 它们所服务的 Block 实例、BlockEntity type、Entity type 或 Item 实例。
@@ -312,7 +312,7 @@ event.registerItem(
 
 如果出于某种原因，需要为所有 Block、Entity 或 Item 注册 provider，就需要迭代相应 registry，并为每个对象注册 provider。
 
-例如，NeoForge 使用此系统为所有 `BucketItem`（不包括 subclass）注册 Fluid resource handler capability：
+例如，NeoForge 使用此系统为所有 `BucketItem`（不包括子类）注册 Fluid resource 处理器 capability：
 
 ```java
 // For reference, you can find this code in the `CapabilityHooks` class.
@@ -323,7 +323,7 @@ for (Item item : BuiltInRegistries.ITEM) {
 }
 ```
 
-Provider 按注册顺序被询问是否提供 capability。如果希望在 NeoForge 已为你的某个对象注册的 provider 之前运行，请以更高优先级注册 `RegisterCapabilitiesEvent` handler。
+Provider 按注册顺序被询问是否提供 capability。如果希望在 NeoForge 已为你的某个对象注册的 provider 之前运行，请以更高优先级注册 `RegisterCapabilitiesEvent` 处理器。
 
 例如：
 

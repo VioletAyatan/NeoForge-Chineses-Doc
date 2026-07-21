@@ -8,9 +8,9 @@
 
 ## 创建并注册 BlockEntity
 
-与 Entity 相同、但与 Block 不同，`BlockEntity` class 表示 BlockEntity 实例，而不是[已注册][registration]的单例对象。单例改由 `BlockEntityType<?>` class 表示。创建新的 BlockEntity 时，两者都需要。
+与 Entity 相同、但与 Block 不同，`BlockEntity` 类表示 BlockEntity 实例，而不是[已注册][registration]的单例对象。单例改由 `BlockEntityType<?>` 类表示。创建新的 BlockEntity 时，两者都需要。
 
-先创建 BlockEntity class：
+先创建 BlockEntity 类：
 
 ```java
 public class MyBlockEntity extends BlockEntity {
@@ -20,9 +20,9 @@ public class MyBlockEntity extends BlockEntity {
 }
 ```
 
-你可能已经注意到，我们向 super constructor 传入了未定义变量 `type`。暂时保留这个未定义变量，先进行注册。
+你可能已经注意到，我们向超类构造器传入了未定义变量 `type`。暂时保留这个未定义变量，先进行注册。
 
-[注册][registration]方式与 Entity 类似。创建关联单例 class `BlockEntityType<?>` 的实例，并将其注册到 BlockEntity type registry，如下所示：
+[注册][registration]方式与 Entity 类似。创建关联单例类 `BlockEntityType<?>` 的实例，并将其注册到 BlockEntity type registry，如下所示：
 
 ```java
 public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
@@ -59,10 +59,10 @@ public class MyBlockEntity extends BlockEntity {
 ```
 
 :::info
-之所以采用这种看似令人困惑的设置流程，是因为 `BlockEntityType` 需要 `BlockEntityType.BlockEntitySupplier<T extends BlockEntity>`，它基本等同于 `BiFunction<BlockPos, BlockState, T extends BlockEntity>`。因此，拥有一个可通过 `::new` 直接引用的 constructor 非常有利。然而，我们还需要将构造出的 BlockEntity type 提供给 `BlockEntity` 唯一的默认 constructor，所以必须在几处传递引用。
+之所以采用这种看似令人困惑的设置流程，是因为 `BlockEntityType` 需要 `BlockEntityType.BlockEntitySupplier<T extends BlockEntity>`，它基本等同于 `BiFunction<BlockPos, BlockState, T extends BlockEntity>`。因此，拥有一个可通过 `::new` 直接引用的构造器非常有利。然而，我们还需要将构造出的 BlockEntity type 提供给 `BlockEntity` 唯一的默认构造器，所以必须在几处传递引用。
 :::
 
-最后，需要修改与 BlockEntity 关联的 Block class。这意味着不能把 BlockEntity 附加到普通 `Block` 实例，而需要一个 subclass：
+最后，需要修改与 BlockEntity 关联的 Block 类。这意味着不能把 BlockEntity 附加到普通 `Block` 实例，而需要一个子类：
 
 ```java
 // The important part is implementing the EntityBlock interface and overriding the #newBlockEntity method.
@@ -80,7 +80,7 @@ public class MyEntityBlock extends Block implements EntityBlock {
 }
 ```
 
-然后当然需要在 [Block 注册][blockreg]时使用此 class 作为类型：
+然后当然需要在 [Block 注册][blockreg]时使用该类作为类型：
 
 ```java
 public static final DeferredBlock<MyEntityBlock> MY_BLOCK_1 =
@@ -128,7 +128,7 @@ public class MyBlockEntity extends BlockEntity {
 
 在这两个方法中，调用 super 十分重要，因为它会添加位置等基本信息。Tag 名称 `id`、`x`、`y`、`z`、`NeoForgeData` 和 `neoforge:attachments` 由 super 方法保留，因此不应自行使用。
 
-当然，你会希望设置其他值，而不是只使用默认值。可以像处理其他 field 一样自由设置。不过，如果希望游戏保存这些更改，之后必须调用 `#setChanged()`，该方法会将 BlockEntity 所在 chunk 标记为 dirty（即需要保存）。如果不调用此方法，保存时可能会跳过该 BlockEntity，因为 Minecraft 的保存系统只保存标记为 dirty 的 chunk。
+当然，你会希望设置其他值，而不是只使用默认值。可以像处理其他字段一样自由设置。不过，如果希望游戏保存这些更改，之后必须调用 `#setChanged()`，该方法会将 BlockEntity 所在 chunk 标记为 dirty（即需要保存）。如果不调用此方法，保存时可能会跳过该 BlockEntity，因为 Minecraft 的保存系统只保存标记为 dirty 的 chunk。
 
 ### 移除 BlockEntity
 
@@ -265,7 +265,7 @@ public class MyBlockEntity extends BlockEntity {
 
 ### 使用自定义 Packet
 
-使用专用更新 packet 后，可以在任何需要的时候自行发送 packet。这是用途最广泛、但也最复杂的变体，因为它需要设置网络 handler。可以使用 `PacketDistrubtor#sendToPlayersTrackingChunk` 向所有正在追踪该 BlockEntity 的玩家发送 packet。更多信息请参阅[网络][networking]章节。
+使用专用更新 packet 后，可以在任何需要的时候自行发送 packet。这是用途最广泛、但也最复杂的变体，因为它需要设置网络处理器。可以使用 `PacketDistrubtor#sendToPlayersTrackingChunk` 向所有正在追踪该 BlockEntity 的玩家发送 packet。更多信息请参阅[网络][networking]章节。
 
 :::caution
 执行安全检查十分重要，因为消息到达玩家时，`BlockEntity` 可能已被销毁或替换。还应通过 `Level#hasChunkAt` 检查 chunk 是否已加载。

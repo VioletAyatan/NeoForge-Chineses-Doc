@@ -1,6 +1,6 @@
 # 属性（Attribute）
 
-Attribute 是 [LivingEntity][livingentity] 的特殊 field，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。Vanilla 提供了大量默认 attribute，你也可以添加自己的 attribute。
+Attribute 是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。Vanilla 提供了大量默认 attribute，你也可以添加自己的 attribute。
 
 由于历史实现原因，并非所有 attribute 都适用于所有 Entity。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
 
@@ -8,7 +8,7 @@ Attribute 是 [LivingEntity][livingentity] 的特殊 field，决定最大生命�
 
 ### Minecraft
 
-以下 attribute 位于 `minecraft` namespace，其代码内的值可在 `Attributes` class 中找到。
+以下 attribute 位于 `minecraft` namespace，其代码内的值可在 `Attributes` 类中找到。
 
 | 名称                             | 代码中                           | 范围           | 默认值 | 用途                                                                                                                                                                  |
 |----------------------------------|----------------------------------|----------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -54,7 +54,7 @@ Mojang 相当随意地设置了某些 attribute 上限，其中尤其明显的�
 
 ### NeoForge
 
-以下 attribute 位于 `neoforge` namespace，其代码内的值可在 `NeoForgeMod` class 中找到。
+以下 attribute 位于 `neoforge` namespace，其代码内的值可在 `NeoForgeMod` 类中找到。
 
 | 名称               | 代码中             | 范围       | 默认值 | 用途                                                                                                                                                           |
 |--------------------|--------------------|------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -87,7 +87,7 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
 ```
 
 :::tip
-某些 class 有 `LivingEntity#createLivingAttributes` 的专用版本。例如，`Monster` class 提供了可改用的 `Monster#createMonsterAttributes` 方法。
+某些类有 `LivingEntity#createLivingAttributes` 的专用版本。例如，`Monster` 类提供了可改用的 `Monster#createMonsterAttributes` 方法。
 :::
 
 某些情况下，例如创建[自己的 attribute][custom] 时，需要向现有 Entity 的 `AttributeSupplier` 添加 attribute。这通过 `EntityAttributeModificationEvent` 完成：
@@ -116,7 +116,7 @@ public static void modifyDefaultAttributes(EntityAttributeModificationEvent even
 
 ## 查询 Attribute
 
-Attribute 值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。Attribute instance 与 ItemStack 之于 Item 基本类似：attribute 是已注册的单例，而 attribute instance 是绑定到具体 Entity 的具体 attribute 对象。
+Attribute 值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。Attribute 实例与 ItemStack 之于 Item 基本类似：attribute 是已注册的单例，而 attribute 实例是绑定到具体 Entity 的具体 attribute 对象。
 
 可以调用 `LivingEntity#getAttributes` 获取 Entity 的 `AttributeMap`，随后按如下方式查询 map：
 
@@ -215,9 +215,9 @@ public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.cr
     BuiltInRegistries.ATTRIBUTE, "yourmodid");
 ```
 
-Attribute 本身可以从三个 class 中选择：
+Attribute 本身可以从三个类中选择：
 
-- `RangedAttribute`：大多数 attribute 使用的 class，定义 attribute 的下限、上限与默认值。
+- `RangedAttribute`：大多数 attribute 使用的类，定义 attribute 的下限、上限与默认值。
 - `PercentageAttribute`：与 `RangedAttribute` 类似，但以百分比而不是 float 值显示。由 NeoForge 添加。
 - `BooleanAttribute`：只具有语义上的 true（\> 0）与 false（\<\= 0）的 attribute，内部仍使用 double。由 NeoForge 添加。
 
@@ -240,9 +240,9 @@ public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_att
 :::info
 这里使用 `Holder<Attribute>`，而不是像许多其他已注册对象一样使用 `Supplier<RangedAttribute>`，因为这样处理 Entity 容易得多（大多数 Entity 方法都需要 `Holder<Attribute>`）。
 
-如果出于某种原因需要 `Supplier<RangedAttribute>`（或任何其他 `Attribute` subclass 的 supplier），应使用 `DeferredHolder<Attribute, RangedAttribute>` 作为类型。
+如果出于某种原因需要 `Supplier<RangedAttribute>`（或任何其他 `Attribute` 子类的 supplier），应使用 `DeferredHolder<Attribute, RangedAttribute>` 作为类型。
 
-同样规则也适用于任何其他 `Attribute` subclass，即通常使用 `Holder<Attribute>`，而不是 `Supplier<PercentageAttribute>` 或 `Supplier<BooleanAttribute>`。
+同样规则也适用于任何其他 `Attribute` 子类，即通常使用 `Holder<Attribute>`，而不是 `Supplier<PercentageAttribute>` 或 `Supplier<BooleanAttribute>`。
 :::
 
 [custom]: #custom-attributes

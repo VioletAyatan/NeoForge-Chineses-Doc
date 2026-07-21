@@ -8,12 +8,12 @@ GameTest 是运行游戏内单元测试的一种方式。该系统的设计目�
 
 1. 加载一个包含场景的 structure（即 template），在其中测试交互或行为。
 1. 提供测试运行所用的 environment。
-1. 提供用于运行逻辑的已注册 function。如果达到成功状态，测试成功；否则测试失败，并将结果存储在场景旁的讲台中。
-1. 提供一个 test instance，把其他三个对象连接在一起。
+1. 提供用于运行逻辑的已注册函数。如果达到成功状态，测试成功；否则测试失败，并将结果存储在场景旁的讲台中。
+1. 提供一个 test 实例，把其他三个对象连接在一起。
 
 ## 测试数据
 
-所有 test instance 都持有某个 `TestData`，它定义 GameTest 的运行方式，从初始配置到所用 environment 与 structure template。由于 `TestData` 序列化为 `MapCodec`，数据与其他所有 instance 特定参数一起存储在文件根级别。
+所有 test 实例都持有某个 `TestData`，它定义 GameTest 的运行方式，从初始配置到所用 environment 与 structure template。由于 `TestData` 序列化为 `MapCodec`，数据与其他所有实例特定参数一起存储在文件根级别。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -151,7 +151,7 @@ GameTest 在 structure（即 template）所加载的场景中执行。所有 tem
 
 ## 测试 Environment
 
-所有 GameTest 都在某个 `TestEnvironmentDefinition` 中运行，它决定如何设置当前 `ServerLevel`。测试完成后会拆除 environment，让下一个或下一批 instance 运行。所有 environment 都会分批处理，这意味着如果多个 test instance 具有相同 environment，它们会同时运行。所有测试 environment 都位于 `data/<namespace>/test_environment/<path>.json`。
+所有 GameTest 都在某个 `TestEnvironmentDefinition` 中运行，它决定如何设置当前 `ServerLevel`。测试完成后会拆除 environment，让下一个或下一批实例运行。所有 environment 都会分批处理，这意味着如果多个 test 实例具有相同 environment，它们会同时运行。所有测试 environment 都位于 `data/<namespace>/test_environment/<path>.json`。
 
 Vanilla 提供不会修改 `ServerLevel` 的 `minecraft:default`。不过，还支持其他可用于构造 environment 的 definition type。
 
@@ -383,7 +383,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 </TabItem>
 </Tabs>
 
-### Minecraft Function
+### Minecraft 函数
 
 此 environment type 分别向两个 `mcfunction` 提供 Identifier，用于设置与拆除 Level。
 
@@ -517,7 +517,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### 自定义 Definition Type
 
-自定义 `TestEnvironmentDefinition<SavedDataType>` type 提供三个方法：`setup` 用于修改 `ServerLevel` 并返回先前的 `SavedDataType` generic 状态；`teardown` 使用 `SavedDataType` 重置所做的修改；`codec` 提供用于编解码该类型的 `MapCodec`：
+自定义 `TestEnvironmentDefinition<SavedDataType>` type 提供三个方法：`setup` 用于修改 `ServerLevel` 并返回先前的 `SavedDataType` 泛型状态；`teardown` 使用 `SavedDataType` 重置所做的修改；`codec` 提供用于编解码该类型的 `MapCodec`：
 
 ```java
 public record ExampleEnvironmentType(int value1, boolean value2) implements TestEnvironmentDefinition<Pair<Integer, Boolean>> {
@@ -610,9 +610,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 </TabItem>
 </Tabs>
 
-## 测试 Function
+## 测试函数
 
-GameTest 的基本概念围绕运行某个接受 `GameTestHelper` 且不返回任何内容的方法构建。调用 `GameTestHelper` 中的方法决定测试成功还是失败。每个测试 function 都会[注册][registered]，以便在 test instance 中引用：
+GameTest 的基本概念围绕运行某个接受 `GameTestHelper` 且不返回任何内容的方法构建。调用 `GameTestHelper` 中的方法决定测试成功还是失败。每个测试函数都会[注册][registered]，以便在 test 实例中引用：
 
 ```java
 public class ExampleFunctions {
@@ -637,12 +637,12 @@ public static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHe
 
 ### 相对位置
 
-所有测试 function 都会使用 structure block 的当前位置，把 structure template 场景内的相对坐标转换为绝对坐标。为了便于在相对位置与绝对位置间转换，可以分别使用 `GameTestHelper#absolutePos` 与 `GameTestHelper#relativePos`。
+所有测试函数都会使用 structure block 的当前位置，把 structure template 场景内的相对坐标转换为绝对坐标。为了便于在相对位置与绝对位置间转换，可以分别使用 `GameTestHelper#absolutePos` 与 `GameTestHelper#relativePos`。
 
-要在游戏中获取 structure template 的相对位置，可以通过[测试命令][test]加载 structure，把玩家置于所需位置，最后运行 `/test pos` 命令。它会获取玩家相对于 200 个 Block 范围内最近 structure 的坐标。该命令会在聊天中把相对位置导出为可复制的文本 component，以用作 final local variable。
+要在游戏中获取 structure template 的相对位置，可以通过[测试命令][test]加载 structure，把玩家置于所需位置，最后运行 `/test pos` 命令。它会获取玩家相对于 200 个 Block 范围内最近 structure 的坐标。该命令会在聊天中把相对位置导出为可复制的文本 component，以用作 final 局部变量。
 
 :::tip
-`/test pos` 生成的 local variable 可以通过在命令末尾追加名称来指定其引用名称：
+`/test pos` 生成的局部变量可以通过在命令末尾追加名称来指定其引用名称：
 
 ```bash
 /test pos <var> # Exports 'final BlockPos <var> = new BlockPos(...);'
@@ -651,7 +651,7 @@ public static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHe
 
 ### 成功完成
 
-测试 function 只负责一件事：有效完成时将测试标记为成功。如果在达到超时前（由 `TestData#maxTicks` 定义）没有实现成功状态，测试会自动失败。
+测试函数只负责一件事：有效完成时将测试标记为成功。如果在达到超时前（由 `TestData#maxTicks` 定义）没有实现成功状态，测试会自动失败。
 
 `GameTestHelper` 中有许多可用于定义成功状态的抽象方法，但有四个方法尤其重要。
 
@@ -680,13 +680,13 @@ GameTest 会在每个 tick 执行，直到测试标记为成功。因此，在�
 
 GameTest 期间的任何时候都可以进行 assertion，检查给定条件是否为 true。`GameTestHelper` 中有大量 assertion 方法；简而言之，只要未满足适当状态，就会抛出 `GameTestAssertException`。
 
-## 注册 Test Instance
+## 注册 Test 实例
 
-有了 `TestData`、`TestEnvironmentDefinition` 与测试 function 后，现在可以通过 `GameTestInstance` 将所有内容连接起来。每个 test instance 表示一项要运行的 GameTest。所有 test instance 都位于 `data/<namespace>/test_instance/<path>.json`。
+有了 `TestData`、`TestEnvironmentDefinition` 与测试函数后，现在可以通过 `GameTestInstance` 将所有内容连接起来。每个 test 实例表示一项要运行的 GameTest。所有 test 实例都位于 `data/<namespace>/test_instance/<path>.json`。
 
-### 基于 Function 的测试
+### 基于函数的测试
 
-`FunctionGameTestInstance` 将 `TestData` 连接到某个已注册测试 function。调用 test instance 时会运行该测试 function。
+`FunctionGameTestInstance` 将 `TestData` 连接到某个已注册测试函数。调用 test 实例时会运行该测试函数。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -769,7 +769,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### 基于 Block 的测试
 
-`BlockBasedTestInstance` 是一种特殊 test instance，依赖 `Blocks#TEST_BLOCK` 发送和接收的红石信号。为使测试正常工作，structure template 必须包含至少两个测试 Block：一个且只能有一个设置为 `TestBlockMode#START`，另一个设置为 `TestBlockMode#ACCEPT`。测试开始时，会触发起始测试 Block，发送持续一个 tick、强度为 15 的信号脉冲。预期该信号最终会触发处于 `LOG`、`FAIL` 或 `ACCEPT` 状态的其他测试 Block。`LOG` 测试 Block 激活时也会发送强度为 15 的信号脉冲。`ACCEPT` 与 `FAIL` 测试 Block 分别使 test instance 成功或失败。在给定 tick 上，`ACCEPT` 始终优先于 `FAIL`。
+`BlockBasedTestInstance` 是一种特殊 test 实例，依赖 `Blocks#TEST_BLOCK` 发送和接收的红石信号。为使测试正常工作，structure template 必须包含至少两个测试 Block：一个且只能有一个设置为 `TestBlockMode#START`，另一个设置为 `TestBlockMode#ACCEPT`。测试开始时，会触发起始测试 Block，发送持续一个 tick、强度为 15 的信号脉冲。预期该信号最终会触发处于 `LOG`、`FAIL` 或 `ACCEPT` 状态的其他测试 Block。`LOG` 测试 Block 激活时也会发送强度为 15 的信号脉冲。`ACCEPT` 与 `FAIL` 测试 Block 分别使 test 实例成功或失败。在给定 tick 上，`ACCEPT` 始终优先于 `FAIL`。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -845,9 +845,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 </TabItem>
 </Tabs>
 
-### 自定义 Test Instance
+### 自定义 Test 实例
 
-如果出于任何原因需要实现自己的测试逻辑，可以扩展 `GameTestInstance`。必须实现两个方法：表示测试 function 的 `run`，以及提供 test instance 说明的 `typeDescription`。如果 test instance 应用于 datagen，则必须有 `MapCodec` 供[注册][registered]。
+如果出于任何原因需要实现自己的测试逻辑，可以扩展 `GameTestInstance`。必须实现两个方法：表示测试函数的 `run`，以及提供 test 实例说明的 `typeDescription`。如果 test 实例应用于 datagen，则必须有 `MapCodec` 供[注册][registered]。
 
 ```java
 public class ExampleTestInstance extends GameTestInstance {
@@ -895,7 +895,7 @@ public static final Supplier<MapCodec<? extends GameTestInstance>> EXAMPLE_INSTA
 );
 ```
 
-随后即可在 datapack 中使用该 test instance：
+随后即可在 datapack 中使用该 test 实例：
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -978,7 +978,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### 不使用 Datapack
 
-如果不想使用 datapack 构造 GameTest，可以改为在 [模组事件总线][event] 上监听 `RegisterGameTestsEvent`，并分别通过 `registerEnvironment` 与 `registerTest` 注册 environment 和 test instance。
+如果不想使用 datapack 构造 GameTest，可以改为在 [模组事件总线][event] 上监听 `RegisterGameTestsEvent`，并分别通过 `registerEnvironment` 与 `registerTest` 注册 environment 和 test 实例。
 
 ```java
 @SubscribeEvent // on the mod event bus

@@ -11,7 +11,7 @@ Block 是 Minecraft 世界不可或缺的组成部分。所有地形、structure
 与大多数其他 registry 不同，Block 可以使用 `DeferredRegister` 的专用版本 `DeferredRegister.Blocks`。`DeferredRegister.Blocks` 的作用基本类似 `DeferredRegister<Block>`，但有少许区别：
 
 - 通过 `DeferredRegister.createBlocks("yourmodid")` 创建，而不是常规的 `DeferredRegister.create(...)` 方法。
-- `#register` 返回 `DeferredBlock<T extends Block>`，后者扩展 `DeferredHolder<Block, T>`。`T` 是正在注册的 Block class 类型。
+- `#register` 返回 `DeferredBlock<T extends Block>`，后者扩展 `DeferredHolder<Block, T>`。`T` 是正在注册的 Block 类类型。
 - 提供了若干注册 Block 的辅助方法。详情参见[下文][below]。
 
 现在来注册 Block：
@@ -49,7 +49,7 @@ public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBloc
 
 ### 基础 Block
 
-对于不需要特殊功能的简单 Block（例如圆石、木板等），可以直接使用 `Block` class。为此，在注册期间使用 `BlockBehaviour.Properties` 参数实例化 `Block`。该 `BlockBehaviour.Properties` 参数可通过 `BlockBehaviour.Properties#of` 创建，并可通过调用其方法自定义。最重要的方法包括：
+对于不需要特殊功能的简单 Block（例如圆石、木板等），可以直接使用 `Block` 类。为此，在注册期间使用 `BlockBehaviour.Properties` 参数实例化 `Block`。该 `BlockBehaviour.Properties` 参数可通过 `BlockBehaviour.Properties#of` 创建，并可通过调用其方法自定义。最重要的方法包括：
 
 - `setId`——设置 Block 的 resource key。
     - 每个 Block 都**必须**设置此项，否则会抛出 exception。
@@ -59,7 +59,7 @@ public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBloc
     - 石头的爆炸抗性为 6.0，泥土为 0.5，黑曜石为 1,200，基岩为 3,600,000。
 - `sound`——设置敲击、破坏或放置 Block 时发出的声音。
     - 默认值为 `SoundType.STONE`。详情参见[声音页面][sounds]。
-- `lightLevel`——设置 Block 的发光等级。接受以 `BlockState` 为参数、返回 0 到 15 之间值的 function。
+- `lightLevel`——设置 Block 的发光等级。接受以 `BlockState` 为参数、返回 0 到 15 之间值的函数。
     - 例如，萤石使用 `state -> 15`，火把使用 `state -> 14`。
 - `friction`——设置 Block 的摩擦力（光滑程度）。
     - 默认值为 0.6。冰使用 0.98。
@@ -81,7 +81,7 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
     ));
 ```
 
-更多文档请参阅 `BlockBehaviour.Properties` 源码。如需更多示例或查看 Minecraft 使用的值，请查看 `Blocks` class。
+更多文档请参阅 `BlockBehaviour.Properties` 源码。如需更多示例或查看 Minecraft 使用的值，请查看 `Blocks` 类。
 
 :::note
 务必理解：世界中的 Block 与物品栏中的内容并不是同一种东西。物品栏中看似 Block 的对象实际上是 `BlockItem`，它是一种特殊 [Item][item]，使用时会放置 Block。这也意味着创造模式物品栏标签页、最大堆叠数量等内容由相应 `BlockItem` 处理。
@@ -91,15 +91,15 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
 
 ### 更多功能
 
-直接使用 `Block` 只能实现非常基础的 Block。如果想添加玩家交互或不同 hitbox 等功能，就需要一个扩展 `Block` 的自定义 class。`Block` class 有许多可覆盖的方法，用于实现不同功能；更多信息请参阅 `Block`、`BlockBehaviour` 与 `IBlockExtension` class。另请参阅下方[使用 Block][usingblocks] 一节，了解 Block 最常见的部分用例。
+直接使用 `Block` 只能实现非常基础的 Block。如果想添加玩家交互或不同 hitbox 等功能，就需要一个扩展 `Block` 的自定义类。`Block` 类有许多可覆盖的方法，用于实现不同功能；更多信息请参阅 `Block`、`BlockBehaviour` 与 `IBlockExtension` 类。另请参阅下方[使用 Block][usingblocks] 一节，了解 Block 最常见的部分用例。
 
 如果想创建具有不同变体的 Block（例如有下半、上半和双层变体的台阶），应使用 [BlockState][blockstates]。最后，如果想创建存储额外数据的 Block（例如存储物品栏的箱子），应使用 [BlockEntity][blockentities]。经验法则是：状态数量有限且相对较少（最多几百种）时使用 BlockState；状态数量无限或近乎无限时使用 BlockEntity。
 
 #### Block Type
 
-Block type 是用于序列化和反序列化 Block 对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 设置，并[注册][registration]到 Block type registry。目前它只在生成 Block list report 时使用。`Block` 的每个 subclass 都应创建一次 Block type。例如，`FlowerBlock#CODEC` 表示大多数花的 Block type，而它的 subclass `WitherRoseBlock` 则有单独的 Block type。
+Block type 是用于序列化和反序列化 Block 对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 设置，并[注册][registration]到 Block type registry。目前它只在生成 Block list report 时使用。`Block` 的每个子类都应创建一次 Block type。例如，`FlowerBlock#CODEC` 表示大多数花的 Block type，而它的子类 `WitherRoseBlock` 则有单独的 Block type。
 
-如果 Block subclass 只接受 `BlockBehaviour.Properties`，可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
+如果 Block 子类只接受 `BlockBehaviour.Properties`，可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
 
 ```java
 // For some block subclass
@@ -123,7 +123,7 @@ public static final Supplier<MapCodec<SimpleBlock>> SIMPLE_CODEC = REGISTRAR.reg
 );
 ```
 
-如果 Block subclass 还包含更多参数，则应使用 [`RecordCodecBuilder#mapCodec`][codec] 创建 `MapCodec`，并为 `BlockBehaviour.Properties` 参数传入 `BlockBehaviour#propertiesCodec`。
+如果 Block 子类还包含更多参数，则应使用 [`RecordCodecBuilder#mapCodec`][codec] 创建 `MapCodec`，并为 `BlockBehaviour.Properties` 参数传入 `BlockBehaviour#propertiesCodec`。
 
 ```java
 // For some block subclass
@@ -206,7 +206,7 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 );
 ```
 
-它与前一个示例的作用完全相同，只是略短。当然，如果想使用 `Block` 的 subclass 而不是 `Block` 本身，就必须改用前一种方法。
+它与前一个示例的作用完全相同，只是略短。当然，如果想使用 `Block` 的子类而不是 `Block` 本身，就必须改用前一种方法。
 
 ### 资源
 
@@ -228,7 +228,7 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 
 ### 放置 Block
 
-Block 放置逻辑从 `BlockItem#useOn`（或某个 subclass 对该方法的实现，例如睡莲使用的 `PlaceOnWaterBlockItem`）中调用。有关游戏如何执行到这里，参见[右键点击 Item][rightclick]。实际而言，只要右键点击 `BlockItem`（例如圆石 Item），就会调用此行为。
+Block 放置逻辑从 `BlockItem#useOn`（或某个子类对该方法的实现，例如睡莲使用的 `PlaceOnWaterBlockItem`）中调用。有关游戏如何执行到这里，参见[右键点击 Item][rightclick]。实际而言，只要右键点击 `BlockItem`（例如圆石 Item），就会调用此行为。
 
 - 检查若干前置条件，例如你不能处于旁观者模式、Block 所需的全部 feature flag 都已启用、目标位置没有超出世界边界。如果任一检查失败，流程结束。
 - 对当前位于尝试放置位置的 Block 调用 `BlockBehaviour#canBeReplaced`。如果返回 `false`，流程结束。在这里返回 `true` 的典型对象包括高草或雪层。

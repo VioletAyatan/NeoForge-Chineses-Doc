@@ -188,7 +188,7 @@ DataComponentMap.builder().set(
 - `minecraft:replace_block`：替换给定偏移位置的 Block。
 - `minecraft:replace_disk`：替换圆盘形区域内的 Block。
 - `minecraft:run_function`：运行指定的[数据包函数][datapack function]。
-- `minecraft:set_block_properies`：修改指定 Block 的 BlockState 属性。
+- `minecraft:set_block_properies`：修改指定 Block 的 BlockState property。
 - `minecraft:spawn_particles`：生成粒子。
 - `minecraft:summon_entity`：生成 Entity。
 

@@ -23,7 +23,7 @@ Model 是一种 JSON 文件，其根 Tag 中可包含以下可选属性：
     - `BlockItem` 通常（但并非总是）将其对应的 Block Model 用作 [Item Model][itemmodels]。例如，Cobblestone 客户端 Item 使用 `minecraft:block/cobblestone` Model。
 - `ambientocclusion`：是否启用 [Ambient Occlusion][ao]。只对 Block Model 生效，默认为 `true`。如果自定义 Block Model 出现异常阴影，请尝试设为 `false`。
 - `gui_light`：可以是 `"front"` 或 `"side"`。`"front"` 表示光线来自正面，适合平面 2D Model；`"side"` 表示光线来自侧面，适合 3D Model（尤其是 Block Model）。默认为 `"side"`，只对 Item Model 生效。
-- `textures`：将名称（称为 Material Variable）映射到 `Material` 的子对象。随后可在 [Element][elements] 中使用 Material Variable。也可以在 Element 中声明但不赋值，以便由 Child Model 指定。
+- `textures`：将名称（称为 Material 变量）映射到 `Material` 的子对象。随后可在 [Element][elements] 中使用 Material 变量。也可以在 Element 中声明但不赋值，以便由 Child Model 指定。
     - `sprite`：[纹理位置][textures]。
     - `force_translucent`：为 `true` 时，强制应用该纹理的 Face 在 `translucent` Layer 中渲染。为 `false` 时：
         - 如果纹理仅有不透明 Pixel（Alpha `255`），Face 在 `solid` Layer 中渲染
@@ -62,10 +62,10 @@ Minecraft 将 `from` 和 `to` 的值限制在 `[-16, 32]` 范围内。不过，�
 - `neoforge_data`：参见[额外 Face 数据][extrafacedata]。
 - `faces`：包含最多 6 个 Face 数据的对象，分别名为 `north`、`south`、`east`、`west`、`up` 和 `down`。每个 Face 包含以下数据：
     - `uv`：Face 的 UV，指定为 `[u1, v1, u2, v2]`，其中 `u1, v1` 是左上 UV 坐标，`u2, v2` 是右下 UV 坐标。
-    - `texture`：Face 使用的纹理。必须是以 `#` 为前缀的 Texture Variable。例如，如果 Model 有名为 `wood` 的纹理，应使用 `#wood` 引用。技术上可选，缺失时使用 Missing Texture。
+    - `texture`：Face 使用的纹理。必须是以 `#` 为前缀的 Texture 变量。例如，如果 Model 有名为 `wood` 的纹理，应使用 `#wood` 引用。技术上可选，缺失时使用 Missing Texture。
     - `rotation`：可选。将纹理顺时针旋转 90、180 或 270 度。
     - `cullface`：可选。指定方向存在与它接触的完整 Block 时，指示渲染引擎跳过该 Face。方向可为 `north`、`south`、`east`、`west`、`up` 或 `down`。
-    - `tintindex`：可选。指定可由 Color Handler 使用的 Tint Index；更多信息参见[着色][tinting]。默认为 -1，表示不着色。
+    - `tintindex`：可选。指定可由 Color 处理器使用的 Tint Index；更多信息参见[着色][tinting]。默认为 -1，表示不着色。
     - `neoforge_data`：参见[额外 Face 数据][extrafacedata]。
 
 此外，还可以指定以下可选属性：
@@ -144,7 +144,7 @@ _另请参阅：[Minecraft Wiki][mcwiki] 上的 [Blockstate 文件][mcwikiblocks
 
 ## 着色
 
-Grass 或 Leaves 等 Block 会根据位置和/或 Property 改变纹理颜色。[Model Element][elements] 可以在 Face 上指定 Tint Index，让 Color Handler 处理相应 Face。代码端通过三个事件工作：Block Tint Source、基于 Biome 的 Block Tint（与 Block Tint Source 配合使用）和 Item Tint Source。先看 Block Tint Source：
+Grass 或 Leaves 等 Block 会根据位置和/或 Property 改变纹理颜色。[Model Element][elements] 可以在 Face 上指定 Tint Index，让 Color 处理器处理相应 Face。代码端通过三个事件工作：Block Tint Source、基于 Biome 的 Block Tint（与 Block Tint Source 配合使用）和 Item Tint Source。先看 Block Tint Source：
 
 ```java
 @SubscribeEvent // on the mod event bus only on the physical client

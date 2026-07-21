@@ -4,7 +4,7 @@ Value I/O 系统是一种标准化序列化方式，用于操作某个底层对�
 
 ## Input 与 Output
 
-Value I/O 系统由两部分组成：序列化期间向对象写入数据的 `ValueOutput`，以及反序列化期间从对象读取数据的 `ValueInput`。实现方法通常只接收 `ValueOutput` 或 `ValueInput` 作为参数，并且没有返回值。Value I/O 要求底层对象是由 string 键映射到 object 值的字典；随后通过系统提供的方法，从底层对象读取信息或向其中写入信息。
+Value I/O 系统由两部分组成：序列化期间向对象写入数据的 `ValueOutput`，以及反序列化期间从对象读取数据的 `ValueInput`。实现方法通常只接收 `ValueOutput` 或 `ValueInput` 作为参数，并且没有返回值。Value I/O 要求底层对象是由 string 键映射到对象值的字典；随后通过系统提供的方法，从底层对象读取信息或向其中写入信息。
 
 ```java
 // For some BlockEntity subclass
@@ -148,7 +148,7 @@ protected void loadAdditional(ValueInput input) {
 
 可以通过两种方式创建和读取 list：使用子 Value I/O，或使用 [`Codec`][codec]。
 
-调用 `ValueOutput#childrenList` 并传入键可以创建 list。它返回 `ValueOutput.ValueOutputList`，后者相当于只写的 value object list。调用 `ValueOutputList#addChild` 可以向 list 添加新的 value object，并返回一个 `ValueOutput`，用于写入该 value object 的数据。随后可以通过 `ValueInput#childrenList` 读取 list；如果希望在 list 不存在时默认为空 list，则使用 `childrenListOrEmpty`。这些方法返回 `ValueInput.ValueInputList`，它相当于只读的 iterable，也可以通过 `stream` 作为 stream 使用。
+调用 `ValueOutput#childrenList` 并传入键可以创建 list。它返回 `ValueOutput.ValueOutputList`，后者相当于只写的 value 对象 list。调用 `ValueOutputList#addChild` 可以向 list 添加新的 value 对象，并返回一个 `ValueOutput`，用于写入该 value 对象的数据。随后可以通过 `ValueInput#childrenList` 读取 list；如果希望在 list 不存在时默认为空 list，则使用 `childrenListOrEmpty`。这些方法返回 `ValueInput.ValueInputList`，它相当于只读的 iterable，也可以通过 `stream` 作为 stream 使用。
 
 ```java
 // For some BlockEntity subclass
@@ -237,9 +237,9 @@ protected void saveAdditional(ValueOutput output) {
 ```
 :::
 
-### Object
+### 对象
 
-可以通过 child 创建和读取 object。`ValueOutput#child` 接收一个键并创建新的 `ValueObject`。随后可以使用 `ValueInput#child` 读取该 object；如果希望默认得到一个底层值为空的 `ValueInput`，则使用 `childOrEmpty`。
+可以通过 child 创建和读取对象。`ValueOutput#child` 接收一个键并创建新的 `ValueObject`。随后可以使用 `ValueInput#child` 读取该对象；如果希望默认得到一个底层值为空的 `ValueInput`，则使用 `childOrEmpty`。
 
 ```java
 // For some BlockEntity subclass

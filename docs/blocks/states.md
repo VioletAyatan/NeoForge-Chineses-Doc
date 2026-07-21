@@ -23,7 +23,7 @@ minecraft:end_portal_frame[facing=west,eye=true]
 
 即使你的 Block 没有定义任何 BlockState property，它仍然恰好有一种 BlockState——因为没有可指定的 property，所以就是不带任何 property 的状态。它可写作 `minecraft:oak_planks[]`，也可以直接写作 `minecraft:oak_planks`。
 
-与 Block 一样，每个 `BlockState` 在内存中只存在一次。这意味着可以且应当使用 `==` 比较 `BlockState`。`BlockState` 还是 final class，因此无法扩展。**任何功能都应放在对应的 [Block][block] class 中！**
+与 Block 一样，每个 `BlockState` 在内存中只存在一次。这意味着可以且应当使用 `==` 比较 `BlockState`。`BlockState` 还是 `final` 类，因此无法扩展。**任何功能都应放在对应的 [Block][block] 类中！**
 
 ## 何时使用 BlockState
 
@@ -41,7 +41,7 @@ BlockState 与 BlockEntity 可以结合使用。例如，箱子使用 BlockState
 
 ## 实现 BlockState
 
-要实现 BlockState property，请在 Block class 中创建或引用 `public static final Property<?>` 常量。虽然你可以自由编写自己的 `Property<?>` 实现，但 Vanilla 代码提供了几种便利实现，足以覆盖大多数用例：
+要实现 BlockState property，请在 Block 类中创建或引用 `public static final Property<?>` 常量。虽然你可以自由编写自己的 `Property<?>` 实现，但 Vanilla 代码提供了几种便利实现，足以覆盖大多数用例：
 
 - `IntegerProperty`
     - 实现 `Property<Integer>`。定义保存整数值的 property。请注意，不支持负值。
@@ -50,19 +50,19 @@ BlockState 与 BlockEntity 可以结合使用。例如，箱子使用 BlockState
     - 实现 `Property<Boolean>`。定义保存 `true` 或 `false` 值的 property。
     - 通过调用 `BooleanProperty#create(String name)` 创建。
 - `EnumProperty<E extends Enum<E>>`
-    - 实现 `Property<E>`。定义可以采用某个 Enum class 的值的 property。
+    - 实现 `Property<E>`。定义可以采用某个枚举类的值的 property。
     - 通过调用 `EnumProperty#create(String name, Class<E> enumClass)` 创建。
-    - 也可以只使用 Enum 值的一个子集（例如 16 种 `DyeColor` 中的 4 种），请参阅 `EnumProperty#create` 的 overload。
+    - 也可以只使用枚举值的一个子集（例如 16 种 `DyeColor` 中的 4 种），请参阅 `EnumProperty#create` 的重载。
 
-`BlockStateProperties` class 包含 Vanilla 共用 property。只要可行，就应使用或引用这些 property，而不是自行创建。
+`BlockStateProperties` 类包含 Vanilla 共用 property。只要可行，就应使用或引用这些 property，而不是自行创建。
 
-有了 property 常量后，在 Block class 中覆盖 `Block#createBlockStateDefinition(StateDefinition.Builder)`。在该方法中调用 `StateDefinition.Builder#add(YOUR_PROPERTY);`。`StateDefinition.Builder#add` 有 vararg 参数，因此如果有多个 property，可以一次全部添加。
+有了 property 常量后，在 Block 类中覆盖 `Block#createBlockStateDefinition(StateDefinition.Builder)`。在该方法中调用 `StateDefinition.Builder#add(YOUR_PROPERTY);`。`StateDefinition.Builder#add` 有 vararg 参数，因此如果有多个 property，可以一次全部添加。
 
-每个 Block 也都有默认状态。如果没有另行指定，默认状态会使用每个 property 的默认值。可以从 constructor 调用 `Block#registerDefaultState(BlockState)` 方法来更改默认状态。
+每个 Block 也都有默认状态。如果没有另行指定，默认状态会使用每个 property 的默认值。可以从构造器调用 `Block#registerDefaultState(BlockState)` 方法来更改默认状态。
 
 如果希望更改放置 Block 时使用的 `BlockState`，请覆盖 `Block#getStateForPlacement(BlockPlaceContext)`。例如，可以根据玩家放置时所站位置或注视方向来设置 Block 的方向。
 
-为了进一步说明，下面是 `EndPortalFrameBlock` class 的相关部分：
+为了进一步说明，下面是 `EndPortalFrameBlock` 类的相关部分：
 
 ```java
 public class EndPortalFrameBlock extends Block {

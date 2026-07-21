@@ -6,7 +6,7 @@ Entity 是可通过多种方式与世界交互的世界内对象。常见示例�
 
 一个简单 Entity 由三部分构成：
 
-- [`Entity`][entity] subclass，保存 Entity 的大部分逻辑
+- [`Entity`][entity] 子类，保存 Entity 的大部分逻辑
 - [`EntityType`][type]，它会被[注册][registration]并保存一些通用 property
 - [`EntityRenderer`][renderer]，负责在游戏中显示 Entity
 
@@ -14,9 +14,9 @@ Entity 是可通过多种方式与世界交互的世界内对象。常见示例�
 
 ## `EntityType`
 
-`EntityType` 与 `Entity` 的关系类似 [`Item`][item] 与 [`ItemStack`][itemstack]。与 `Item` 一样，`EntityType` 是注册到相应 registry（Entity type registry）的单例，并保存该类型所有 Entity 共用的一些值；而 `Entity` 与 `ItemStack` 一样，是该单例类型的“实例”，保存特定 Entity 实例的数据。不过这里的关键区别是，大多数行为并非定义在单例 `EntityType` 中，而是定义在实例化的 `Entity` class 本身。
+`EntityType` 与 `Entity` 的关系类似 [`Item`][item] 与 [`ItemStack`][itemstack]。与 `Item` 一样，`EntityType` 是注册到相应 registry（Entity type registry）的单例，并保存该类型所有 Entity 共用的一些值；而 `Entity` 与 `ItemStack` 一样，是该单例类型的“实例”，保存特定 Entity 实例的数据。不过这里的关键区别是，大多数行为并非定义在单例 `EntityType` 中，而是定义在实例化的 `Entity` 类本身。
 
-下面创建 `EntityType` registry，并为其注册 `EntityType`；假设已有扩展 `Entity` 的 `MyEntity` class（更多信息见[下文][entity]）。除最后的 `#build` 调用外，`EntityType.Builder` 上的所有方法均为可选。
+下面创建 `EntityType` registry，并为其注册 `EntityType`；假设已有扩展 `Entity` 的 `MyEntity` 类（更多信息见[下文][entity]）。除最后的 `#build` 调用外，`EntityType.Builder` 上的所有方法均为可选。
 
 ```java
 public static final DeferredRegister.Entities ENTITY_TYPES =
@@ -110,12 +110,12 @@ Entity 的 `MobCategory` 决定该 Entity 与[生成及消失][mobspawn]有关�
 - `despawnDistance`：`WATER_AMBIENT` 设为 64，其余均为 128。
 
 :::info
-`MobCategory` 是[可扩展 enum][extenum]，因此可以向其添加自定义 entry。如果这样做，还必须为该自定义 `MobCategory` 的 Entity 添加某种生成机制。
+`MobCategory` 是[可扩展枚举][extenum]，因此可以向其添加自定义 entry。如果这样做，还必须为该自定义 `MobCategory` 的 Entity 添加某种生成机制。
 :::
 
-## Entity Class
+## Entity 类
 
-首先创建 `Entity` subclass。除 constructor 外，`Entity`（abstract class）还定义了四个必须实现的方法。为避免本文更加臃肿，前三个将在[数据与网络文章][data]中说明；`#hurtServer` 则在 [Entity 受伤一节][damaging]中说明。
+首先创建 `Entity` 子类。除构造器外，`Entity`（抽象类）还定义了四个必须实现的方法。为避免本文更加臃肿，前三个将在[数据与网络文章][data]中说明；`#hurtServer` 则在 [Entity 受伤一节][damaging]中说明。
 
 ```java
 public class MyEntity extends Entity {
@@ -143,10 +143,10 @@ public class MyEntity extends Entity {
 ```
 
 :::info
-尽管可以直接扩展 `Entity`，但使用它的众多 subclass 之一作为基础通常更合理。更多信息参见 [Entity class 层次结构][hierarchy]。
+尽管可以直接扩展 `Entity`，但使用它的众多子类之一作为基础通常更合理。更多信息参见 [Entity 类层次结构][hierarchy]。
 :::
 
-如有需要（例如通过代码生成 Entity），还可以添加自定义 constructor。它们通常会把 Entity type 硬编码为对已注册对象的引用：
+如有需要（例如通过代码生成 Entity），还可以添加自定义构造器。它们通常会把 Entity type 硬编码为对已注册对象的引用：
 
 ```java
 public MyEntity(EntityType<? extends MyEntity> type, Level level, double x, double y, double z) {
@@ -157,7 +157,7 @@ public MyEntity(EntityType<? extends MyEntity> type, Level level, double x, doub
 ```
 
 :::warning
-自定义 constructor 绝不能恰好有两个参数，否则会与上面的 `(EntityType, Level)` constructor 混淆。
+自定义构造器绝不能恰好有两个参数，否则会与上面的 `(EntityType, Level)` 构造器混淆。
 :::
 
 现在，基本上可以随意为 Entity 添加功能。以下小节将展示各种常见 Entity 用例。
@@ -186,7 +186,7 @@ if (!level.isClientSide()) {
 
 也可以调用 `EntityType#spawn`，在生成 [LivingEntity][livingentity] 时尤其推荐，因为它会进行一些额外设置，例如触发生成 [事件][event]。
 
-几乎所有非 LivingEntity 都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；Vanilla [Projectile][projectile] 也在 `Projectile` class 中提供 static 生成辅助方法。
+几乎所有非 LivingEntity 都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；Vanilla [Projectile][projectile] 也在 `Projectile` 类中提供 static 生成辅助方法。
 
 ### 使 Entity 受伤
 
@@ -196,7 +196,7 @@ _另请参阅[左键点击 Item][leftclick]。_
 
 可以调用 `Entity#hurt` 或 `Entity#hurtOrSimulate` 使 Entity 受伤，两者之间的区别见下文。两个方法都接受两个参数：[`DamageSource`][damagesource]，以及以半颗心为单位的 float 伤害值。例如，调用 `entity.hurt(entity.damageSources().wither(), 4.25)` 会造成略高于两颗心的凋零伤害。
 
-反过来，Entity 也可以修改此行为。这并非通过覆盖 `#hurt` 完成，因为它是 final 方法。实际上，有 `#hurtServer` 与 `#hurtClient` 两个方法，分别处理相应端的伤害逻辑。`#hurtClient` 通常用于告诉客户端攻击已成功，即使情况并不总是如此；主要目的是无论如何都播放攻击声音与其他效果。要更改伤害行为，我们主要关注 `#hurtServer`，可按如下方式覆盖：
+反过来，Entity 也可以修改此行为。这并非通过覆盖 `#hurt` 完成，因为它是 `final` 方法。实际上，有 `#hurtServer` 与 `#hurtClient` 两个方法，分别处理相应端的伤害逻辑。`#hurtClient` 通常用于告诉客户端攻击已成功，即使情况并不总是如此；主要目的是无论如何都播放攻击声音与其他效果。要更改伤害行为，我们主要关注 `#hurtServer`，可按如下方式覆盖：
 
 ```java
 @Override
@@ -222,13 +222,13 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 你经常会希望 Entity 每个 tick 都执行某些操作（例如移动）。此逻辑分布在多个方法中：
 
 - `#tick`：核心 tick 方法，99% 的情况下都应覆盖它。
-    - 默认转发到 `#baseTick`，但几乎每个 subclass 都会覆盖它。
+    - 默认转发到 `#baseTick`，但几乎每个子类都会覆盖它。
 - `#baseTick`：处理所有 Entity 共用的一些值的更新，包括“着火”状态、细雪冻结、游泳状态，以及穿过传送门。`LivingEntity` 还会在这里处理溺水、Block 内伤害与伤害 tracker 更新。想更改或补充这些逻辑时，请覆盖此方法。
     - 默认情况下，`Entity#tick` 会转发到此方法。
 - `#rideTick`：为其他 Entity 的乘客调用，例如骑马的玩家，或因使用 `/ride` 命令而骑乘其他 Entity 的任意 Entity。
     - 默认进行一些检查，然后调用 `#tick`。骷髅与玩家会覆盖此方法，以特殊处理骑乘 Entity。
 
-此外，Entity 有一个名为 `tickCount` 的 field，表示 Entity 在 Level 中已经存在的 tick 数；还有一个含义应当显而易见的 boolean field `firstTick`。例如，如果想每 5 tick [生成粒子][particle]，可以使用以下代码：
+此外，Entity 有一个名为 `tickCount` 的字段，表示 Entity 在 Level 中已经存在的 tick 数；还有一个含义应当显而易见的 boolean 字段 `firstTick`。例如，如果想每 5 tick [生成粒子][particle]，可以使用以下代码：
 
 ```java
 @Override
@@ -246,7 +246,7 @@ public void tick() {
 
 _另请参阅[中键点击][middleclick]。_
 
-选取是选择玩家当前正在注视的对象，并随后选取关联 Item 的过程。你的 Entity 可以修改中键点击的结果，也就是“选取结果”（请注意，`Mob` class 会代你选择正确的刷怪蛋）：
+选取是选择玩家当前正在注视的对象，并随后选取关联 Item 的过程。你的 Entity 可以修改中键点击的结果，也就是“选取结果”（请注意，`Mob` 类会代你选择正确的刷怪蛋）：
 
 ```java
 @Override
@@ -315,11 +315,11 @@ EntityType.Builder.of(...)
     .build();
 ```
 
-## Entity Class 层次结构
+## Entity 类层次结构
 
-由于 Entity 类型众多，`Entity` 有复杂的 subclass 层次结构。创建自己的 Entity 时，选择要扩展的 class 需要了解这些内容，因为复用它们的代码可以省去大量工作。
+由于 Entity 类型众多，`Entity` 有复杂的子类层次结构。创建自己的 Entity 时，选择要扩展的类需要了解这些内容，因为复用它们的代码可以省去大量工作。
 
-Vanilla Entity 层次结构如下（红色 class 为 `abstract`，蓝色 class 不是）：
+Vanilla Entity 层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;
@@ -356,13 +356,13 @@ graph LR;
 
 下面分别说明：
 
-- `Projectile`：各种 Projectile 的基础 class，包括箭、火球、雪球、烟花及类似 Entity。更多信息参见[下文][projectile]。
-- `LivingEntity`：任何“活着”的对象所使用的基础 class，即具有生命值、装备、[MobEffect][mobeffect]及其他一些 property 的对象。包括怪物、动物、村民与玩家等。更多信息参见 [LivingEntity 文章][livingentity]。
-- `BlockAttachedEntity`：无法移动且附着于 Block 的 Entity 所使用的基础 class，包括拴绳结、物品展示框与画。其 subclass 主要用于复用通用代码。
-- `PartEntity`：NeoForge 添加的复合 Entity 基础 class，即由多个较小 Entity 组成的 Entity。`EnderDragonPart` 经过 patch，会扩展 `PartEntity` 而不是 `Entity`。
-- `VehicleEntity`：船与矿车的基础 class。虽然这些 Entity 与 `LivingEntity` 大致共用生命值概念，但不共用许多其他 property，因此彼此分离。其 subclass 主要用于复用通用代码。
+- `Projectile`：各种 Projectile 的基础类，包括箭、火球、雪球、烟花及类似 Entity。更多信息参见[下文][projectile]。
+- `LivingEntity`：任何“活着”的对象所使用的基础类，即具有生命值、装备、[MobEffect][mobeffect]及其他一些 property 的对象。包括怪物、动物、村民与玩家等。更多信息参见 [LivingEntity 文章][livingentity]。
+- `BlockAttachedEntity`：无法移动且附着于 Block 的 Entity 所使用的基础类，包括拴绳结、物品展示框与画。其子类主要用于复用通用代码。
+- `PartEntity`：NeoForge 添加的复合 Entity 基础类，即由多个较小 Entity 组成的 Entity。`EnderDragonPart` 经过 patch，会扩展 `PartEntity` 而不是 `Entity`。
+- `VehicleEntity`：船与矿车的基础类。虽然这些 Entity 与 `LivingEntity` 大致共用生命值概念，但不共用许多其他 property，因此彼此分离。其子类主要用于复用通用代码。
 
-还有多个 Entity 是 `Entity` 的直接 subclass，仅仅因为没有其他合适的 superclass。其中大多数应当不言自明：
+还有多个 Entity 是 `Entity` 的直接子类，仅仅因为没有其他合适的超类。其中大多数应当不言自明：
 
 - `AreaEffectCloud`（滞留药水云）
 - `EndCrystal`
@@ -381,7 +381,7 @@ graph LR;
 
 Projectile 是 Entity 的一个子群体。其共同点是沿一个方向飞行直到命中某物，并且会为其指定 owner（例如玩家或骷髅是箭的 owner，恶魂是火球的 owner）。
 
-Projectile 的 class 层次结构如下（红色 class 为 `abstract`，蓝色 class 不是）：
+Projectile 的类层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;
@@ -416,20 +416,20 @@ graph LR;
     class Arrow,SpectralArrow,ThrownTrident,BreezeWindCharge,WindCharge,DragonFireball,LargeFireball,SmallFireball,WitherSkull,FireworkRocketEntity,FishingHook,LlamaSpit,ShulkerBullet,Snowball,ThrownEgg,ThrownEnderpearl,ThrownExperienceBottle,ThrownLingeringPotion,ThrownSplashPotion blue;
 ```
 
-值得注意的是 `Projectile` 的三个直接 abstract subclass：
+值得注意的是 `Projectile` 的三个直接抽象子类：
 
 - `AbstractArrow`：涵盖不同种类的箭，以及三叉戟。一个重要的共同 property 是它们不会直线飞行，而会受到重力影响。
 - `AbstractHurtingProjectile`：涵盖风弹、各种火球与凋零之首。它们是不受重力影响、会造成伤害的 Projectile。
 - `ThrowableProjectile`：涵盖鸡蛋、雪球与末影珍珠等对象。与箭一样，它们受重力影响；但与箭不同，它们命中目标时不会造成伤害。它们也全都通过使用相应 [Item][item] 生成。
 
-可通过扩展 `Projectile` 或合适的 subclass 创建新 Projectile，然后覆盖添加功能所需的方法。常见的覆盖方法包括：
+可通过扩展 `Projectile` 或合适的子类创建新 Projectile，然后覆盖添加功能所需的方法。常见的覆盖方法包括：
 
 - `#shoot`：计算并设置 Projectile 的正确速度。
 - `#onHit`：命中某物时调用。
     - `#onHitEntity`：命中的是 [Entity][entity] 时调用。
     - `#onHitBlock`：命中的是 [Block][block] 时调用。
 - `#getOwner` 与 `#setOwner`，分别用于获取与设置 owner Entity。
-- `#deflect`，根据传入的 `ProjectileDeflection` enum 值弹开 Projectile。
+- `#deflect`，根据传入的 `ProjectileDeflection` 枚举值弹开 Projectile。
 - `#onDeflection`，由 `#deflect` 调用，用于任何弹开后的行为。
 
 [block]: ../blocks/index.md
@@ -441,7 +441,7 @@ graph LR;
 [entity]: #the-entity-class
 [event]: ../concepts/events.md
 [extenum]: ../advanced/extensibleenums.md
-[hierarchy]: #entity-class-hierarchy
+[hierarchy]: #entity-类层次结构
 [hitresult]: ../items/interactions.md#hitresults
 [item]: ../items/index.md
 [itemstack]: ../items/index.md#itemstacks

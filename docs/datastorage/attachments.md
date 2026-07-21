@@ -94,7 +94,7 @@ chunk.setUnsaved(true); // must be done manually because we did not use setData
 
 若要把 BlockEntity、区块、Level 或 Entity 的附件同步到客户端，可以在 builder 中实现 `sync`。当附件通过 `AttachmentHolder#getData` 默认创建、通过 `AttachmentHolder#setData` 更新，或通过 `AttachmentHolder#removeData` 移除时，都会发送给客户端。如果还要在其他时机发送数据，可以调用 `AttachmentHolder#syncData` 并传入 `AttachmentType` 进行同步。
 
-`AttachmentType.Builder#sync` 有三个重载，但它们最终都会创建一个 `AttachmentSyncHandler<T>`，其中 `T` 是数据附件的类型。handler 包含三个方法：两个方法负责从网络 `read` 和向网络 `write`；另一个方法 `sendToPlayer` 判断指定玩家是否可以看到 holder 广播的数据。移除数据附件时会忽略 sync handler。
+`AttachmentType.Builder#sync` 有三个重载，但它们最终都会创建一个 `AttachmentSyncHandler<T>`，其中 `T` 是数据附件的类型。处理器包含三个方法：两个方法负责从网络 `read` 和向网络 `write`；另一个方法 `sendToPlayer` 判断指定玩家是否可以看到 holder 广播的数据。移除数据附件时会忽略 sync 处理器。
 
 ```java
 public class ExampleSyncHandler implements AttachmentSyncHandler<ExampleData> {

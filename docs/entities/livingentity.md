@@ -44,11 +44,11 @@ attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 
 #### `LivingIncomingDamageEvent`
 
-此事件只在服务端调用，主要有两个用例：动态取消攻击，以及添加伤害减免 modifier callback。
+此事件只在服务端调用，主要有两个用例：动态取消攻击，以及添加伤害减免 modifier 回调。
 
 动态取消攻击基本等同于添加非确定性无敌，例如按随机概率取消伤害、取决于时间或所受伤害量的无敌等。稳定的无敌效果应通过 `EntityInvulnerabilityCheckEvent` 实现（见上文）。
 
-减免 modifier callback 允许修改已执行伤害减免的某一部分。例如，它可以让盔甲的伤害减免效果降低 50%。随后，这种变化也会正确传递到 MobEffect，使其基于不同的伤害值继续计算，依此类推。可按如下方式添加减免 modifier callback：
+减免 modifier 回调允许修改已执行伤害减免的某一部分。例如，它可以让盔甲的伤害减免效果降低 50%。随后，这种变化也会正确传递到 MobEffect，使其基于不同的伤害值继续计算，依此类推。可按如下方式添加减免 modifier 回调：
 
 ```java
 @SubscribeEvent // on the game event bus
@@ -67,7 +67,7 @@ public static void decreaseArmor(LivingIncomingDamageEvent event) {
 }
 ```
 
-Callback 按添加顺序应用。这意味着由更高[优先级][priority] 事件处理器添加的 callback 会先运行。
+回调按添加顺序应用。这意味着由更高[优先级][priority] 事件处理器添加的回调会先运行。
 
 #### `LivingShieldBlockEvent`
 
@@ -101,7 +101,7 @@ _参见 [Entity 上的容器][containers]。_
 
 ## 层次结构
 
-LivingEntity 有复杂的 class 层次结构。如前所述，它有三个直接 subclass（红色 class 为 `abstract`，蓝色 class 不是）：
+LivingEntity 有复杂的类层次结构。如前所述，它有三个直接子类（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;
@@ -113,11 +113,11 @@ graph LR;
     class ArmorStand blue;
 ```
 
-其中，`ArmorStand` 没有 subclass（也是唯一的非 abstract class），因此下面重点介绍 `Mob` 与 `Avatar` 的 class 层次结构。
+其中，`ArmorStand` 没有子类（也是唯一的非抽象类），因此下面重点介绍 `Mob` 与 `Avatar` 的类层次结构。
 
 ### `Mob` 的层次结构
 
-`Mob` 的 class 层次结构如下（红色 class 为 `abstract`，蓝色 class 不是）：
+`Mob` 的类层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;
@@ -158,21 +158,21 @@ graph LR;
     class Bat,CopperGolem,EnderDragon,Ghast,Phantom,IronGolem,Shulker,SnowGolem,Villager,WanderingTrader,Dolphin,Squid,GlowSquid,Allay,Cod,Salmon,TropicalFish,Pufferfish,Tadpole,Slime,MagmaCube blue;
 ```
 
-图中缺少的所有其他 LivingEntity 都是 `Animal` 或 `Monster` 的 subclass。
+图中缺少的所有其他 LivingEntity 都是 `Animal` 或 `Monster` 的子类。
 
-你可能已经注意到，这十分混乱。例如，为什么蜜蜂、鹦鹉等不也是飞行 Mob？查看 `Animal` 与 `Monster` 的 subclass 层次结构时，问题还会更加严重；本文不会详细讨论这些内容（如有兴趣，可使用 IDE 的 Show Hierarchy 功能查看）。最好了解这一点，但不必纠结。
+你可能已经注意到，这十分混乱。例如，为什么蜜蜂、鹦鹉等不也是飞行 Mob？查看 `Animal` 与 `Monster` 的子类层次结构时，问题还会更加严重；本文不会详细讨论这些内容（如有兴趣，可使用 IDE 的 Show Hierarchy 功能查看）。最好了解这一点，但不必纠结。
 
-下面介绍最重要的 class：
+下面介绍最重要的类：
 
 - `PathfinderMob`：包含（不出所料！）寻路逻辑。
-- `AgeableMob`：包含年龄增长与幼年 Entity 的逻辑。僵尸及其他具有幼年变体的怪物不会扩展此 class，而是 `Monster` 的后代。
-- `Animal`：大多数动物扩展的 class。它还有 `AbstractHorse`、`TamableAnimal` 等更多 abstract subclass。
-- `Monster`：游戏认为是怪物的大多数 Entity 使用的 abstract class。与 `Animal` 类似，它还有 `AbstractPiglin`、`AbstractSkeleton`、`Raider` 和 `Zombie` 等更多 abstract subclass。
-- `WaterAnimal`：鱼、鱿鱼与海豚等水生动物使用的 abstract class。由于寻路方式显著不同，它们与其他动物分开。
+- `AgeableMob`：包含年龄增长与幼年 Entity 的逻辑。僵尸及其他具有幼年变体的怪物不会扩展此类，而是 `Monster` 的后代。
+- `Animal`：大多数动物扩展的类。它还有 `AbstractHorse`、`TamableAnimal` 等更多抽象子类。
+- `Monster`：游戏认为是怪物的大多数 Entity 使用的抽象类。与 `Animal` 类似，它还有 `AbstractPiglin`、`AbstractSkeleton`、`Raider` 和 `Zombie` 等更多抽象子类。
+- `WaterAnimal`：鱼、鱿鱼与海豚等水生动物使用的抽象类。由于寻路方式显著不同，它们与其他动物分开。
 
 ### `Avatar` 的层次结构
 
-Avatar 不仅定义玩家，还定义类似玩家的人偶。根据 Avatar 所在的端，会使用不同 class。除了 `FakePlayer` 与 `Mannequin` 外，你绝不需要自行构造 Avatar。
+Avatar 不仅定义玩家，还定义类似玩家的人偶。根据 Avatar 所在的端，会使用不同类。除了 `FakePlayer` 与 `Mannequin` 外，你绝不需要自行构造 Avatar。
 
 ```mermaid
 graph LR;
@@ -189,11 +189,11 @@ graph LR;
     class ClientMannequin,LocalPlayer,RemotePlayer,ServerPlayer,FakePlayer blue;
 ```
 
-- `AbstractClientPlayer`：用作两个客户端玩家 class 的基础；两者都用于表示[逻辑客户端][logicalsides]上的玩家。
+- `AbstractClientPlayer`：用作两个客户端玩家类的基础；两者都用于表示[逻辑客户端][logicalsides]上的玩家。
 - `LocalPlayer`：用于表示当前正在运行游戏的玩家。
 - `RemotePlayer`：用于表示多人游戏中 `LocalPlayer` 可能遇到的其他玩家。因此，单人游戏 context 中不存在 `RemotePlayer`。
 - `ServerPlayer`：用于表示[逻辑服务端][logicalsides]上的玩家。
-- `FakePlayer`：`ServerPlayer` 的特殊 subclass，设计为玩家的模拟对象，供需要玩家 context 的非玩家机制使用。
+- `FakePlayer`：`ServerPlayer` 的特殊子类，设计为玩家的模拟对象，供需要玩家 context 的非玩家机制使用。
 - `Mannequin`：设计为可摆姿势的玩家，通常没有任何 AI。
 - `ClientMannequin`：用于表示[逻辑客户端][logicalsides]上的人偶。
 
@@ -203,7 +203,7 @@ graph LR;
 
 ### 刷怪蛋
 
-为 Mob [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` class 与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
+为 Mob [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` 类与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
 
 ```java
 // Assume we have a DeferredRegister.Items called ITEMS

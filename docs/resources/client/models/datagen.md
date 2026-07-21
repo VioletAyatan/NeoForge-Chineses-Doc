@@ -95,7 +95,7 @@ EXAMPLE_TEMPLATE_PROVIDER.create(
 
 ## `ModelProvider`
 
-Block 和 Item Model Datagen 分别使用 `registerModels` 提供的 Generator：`BlockModelGenerators` 和 `ItemModelGenerators`。每个 Generator 都会生成 Model JSON 以及其他所有必需文件（Blockstate、客户端 Item）。每个 Generator 都包含多种 Helper Method，可将全部文件的构造批量合并到单个易用方法中。例如，使用 `ItemModelGenerators#generateFlatItem` 和 `ModelTemplates#FLAT_ITEM` 创建基础 `item/generated` Model，或使用 `BlockModelGenerators#createTrivialCube` 创建基础 `block/cube_all` Model。
+Block 和 Item Model Datagen 分别使用 `registerModels` 提供的 Generator：`BlockModelGenerators` 和 `ItemModelGenerators`。每个 Generator 都会生成 Model JSON 以及其他所有必需文件（Blockstate、客户端 Item）。每个 Generator 都包含多种 Helper 方法，可将全部文件的构造批量合并到单个易用方法中。例如，使用 `ItemModelGenerators#generateFlatItem` 和 `ModelTemplates#FLAT_ITEM` 创建基础 `item/generated` Model，或使用 `BlockModelGenerators#createTrivialCube` 创建基础 `block/cube_all` Model。
 
 ```java
 public class ExampleModelProvider extends ModelProvider {
@@ -266,7 +266,7 @@ public class ExampleModelProvider extends ModelProvider {
 
 ## Item Model Datagen
 
-生成 Item Model 要简单得多，这主要得益于 `ItemModelGenerators` 中的大量 Helper Method，以及用于 Property 信息的 `ItemModelUtils`。与上文类似，可以在 `ModelProvider#registerModels` 中调用 `ItemModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给非简单客户端 Item 的 `itemModelOutput` 和 Model JSON 的 `modelOutput`。
+生成 Item Model 要简单得多，这主要得益于 `ItemModelGenerators` 中的大量 Helper 方法，以及用于 Property 信息的 `ItemModelUtils`。与上文类似，可以在 `ModelProvider#registerModels` 中调用 `ItemModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给非简单客户端 Item 的 `itemModelOutput` 和 Model JSON 的 `modelOutput`。
 
 ```java
 public class ExampleModelProvider extends ModelProvider {

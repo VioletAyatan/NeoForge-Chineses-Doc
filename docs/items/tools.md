@@ -21,7 +21,7 @@
 - `#KINETIC_WEAPON`：基于动量、通过使用 Item 攻击多个 Entity
 - `#USE_EFFECTS`：使用 Item 时向 Entity 应用某些效果
 
-通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个 delegate（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过数据组件实现其通用挖掘逻辑；它们会直接扩展 `Item`，并覆盖相关方法来处理挖掘。交互行为（默认右键点击）同样没有数据组件，因此锹、斧与锄分别有自己的工具 class：`ShovelItem`、`AxeItem` 和 `HoeItem`。
+通常，每种工具使用 `Item.Properties#tool`、`#sword`、`#spear` 或工具的某个 delegate（`pickaxe`、`axe`、`hoe`、`shovel`）进行设置。这通常通过传入工具 record `ToolMaterial` 处理。请注意，通常视为工具的其他 Item（例如剪刀）并未通过数据组件实现其通用挖掘逻辑；它们会直接扩展 `Item`，并覆盖相关方法来处理挖掘。交互行为（默认右键点击）同样没有数据组件，因此锹、斧与锄分别有自己的工具类：`ShovelItem`、`AxeItem` 和 `HoeItem`。
 
 要创建一套标准工具，必须先定义 `ToolMaterial`。参考值可在 `ToolMaterial` 的常量中找到。此示例使用铜制工具，你可以使用自己的材料并按需要调整这些值。
 
@@ -182,7 +182,7 @@ public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(Buil
 
 ## `ItemAbility`
 
-`ItemAbility` 是对 Item 能做与不能做哪些事情的抽象，包括左键与右键行为。NeoForge 在 `ItemAbilities` class 中提供了默认 `ItemAbility`：
+`ItemAbility` 是对 Item 能做与不能做哪些事情的抽象，包括左键与右键行为。NeoForge 在 `ItemAbilities` 类中提供了默认 `ItemAbility`：
 
 - 斧右键能力：去皮（原木）、除锈（氧化的铜）和除蜡（涂蜡的铜）。
 - 锹右键能力：压平（泥土小径）和扑灭（营火）。
