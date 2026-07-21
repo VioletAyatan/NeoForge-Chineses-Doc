@@ -360,7 +360,7 @@ public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
 [hunger]: https://minecraft.wiki/w/Hunger#Mechanics
 [item]: index.md
 [livingentity]: ../entities/livingentity.md
-[modbus]: ../concepts/events.md#event-buses
+[modbus]: ../concepts/events.md#事件总线
 [mobeffectinstance]: mobeffects.md#mobeffectinstances
 [particles]: ../resources/client/particles.md
 [potions]: mobeffects.md#potions

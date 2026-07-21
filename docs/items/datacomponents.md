@@ -332,6 +332,6 @@ public class ExampleHolder implements MutableDataComponentHolder {
 [datapackregistry]: ../concepts/registries.md#datapack-registries
 [registered]: ../concepts/registries.md
 [codec]: ../datastorage/codecs.md
-[modbus]: ../concepts/events.md#event-buses
+[modbus]: ../concepts/events.md#事件总线
 [network]: ../networking/payload.md
 [streamcodec]: ../networking/streamcodecs.md

@@ -242,7 +242,7 @@ runs {
 [equipment]: ../items/armor.md#equipment-models
 [equipmentasset]: ../items/armor.md#equipment-assets
 [event]: ../concepts/events.md
-[eventhandler]: ../concepts/events.md#registering-an-event-handler
+[eventhandler]: ../concepts/events.md#注册事件处理器
 [function]: https://minecraft.wiki/w/Function_(Java_Edition)
 [glm]: server/loottables/glm.md
 [glmprovider]: server/loottables/glm.md#datagen

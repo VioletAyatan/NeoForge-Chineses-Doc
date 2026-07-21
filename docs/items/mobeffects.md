@@ -192,7 +192,7 @@ public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
 
 [attributemodifier]: ../entities/attributes.md#attribute-modifiers
 [block]: ../blocks/index.md
-[commonsetup]: ../concepts/events.md#event-buses
+[commonsetup]: ../concepts/events.md#事件总线
 [datapack]: ../resources/index.md#data
 [events]: ../concepts/events.md
 [item]: index.md

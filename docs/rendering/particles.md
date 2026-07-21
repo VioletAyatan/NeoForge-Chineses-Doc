@@ -242,7 +242,7 @@ public static void registerParticleProviders(RegisterParticleProvidersEvent even
 [description]: ../resources/client/particles.md
 [event]: ../concepts/events.md
 [features]: feature.md
-[modbus]: ../concepts/events.md#event-buses
+[modbus]: ../concepts/events.md#事件总线
 [particletype]: ../resources/client/particles.md
 [registry]: ../concepts/registries.md#methods-for-registering
 [side]: ../concepts/sides.md

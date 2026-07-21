@@ -741,4 +741,4 @@ public static void registerScreens(RegisterMenuScreensEvent event) {
 [argb]: https://en.wikipedia.org/wiki/RGBA_color_model#ARGB32
 [component]: ../resources/client/i18n.md#components
 [keymapping]: ../misc/keymappings.md#inside-a-gui
-[modbus]: ../concepts/events.md#event-buses
+[modbus]: ../concepts/events.md#事件总线

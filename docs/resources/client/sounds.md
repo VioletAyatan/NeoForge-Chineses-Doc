@@ -304,7 +304,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 [datagen]: ../index.md#data-generation
 [mcwiki]: https://minecraft.wiki
 [mcwikisounds]: https://minecraft.wiki/w/Sounds.json
-[modbus]: ../../concepts/events.md#event-buses
+[modbus]: ../../concepts/events.md#事件总线
 [modctor]: ../../gettingstarted/modfiles.md#javafml-and-mod
 [registration]: ../../concepts/registries.md
 [sides]: ../../concepts/sides.md#the-logical-side

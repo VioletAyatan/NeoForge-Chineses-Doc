@@ -313,7 +313,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 [advancement]: ../advancements.md
 [brewing]: ../../../items/mobeffects.md#brewing
 [builtin]: builtin.md
-[cancel]: ../../../concepts/events.md#cancellable-events
+[cancel]: ../../../concepts/events.md#可取消事件
 [codec]: ../../../datastorage/codecs.md
 [conditions]: ../conditions.md
 [customdatagen]: custom.md#data-generation

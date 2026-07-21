@@ -161,7 +161,7 @@ public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 如果需要检查**鼠标**的 `Screen` 不属于你，可以改为监听[游戏事件总线][eventbus]上的 `ScreenEvent.MouseButtonPressed` 的 `Pre` 或 `Post` 事件。
 :::
 
-[eventbus]: ../concepts/events.md#registering-an-event-handler
+[eventbus]: ../concepts/events.md#注册事件处理器
 [controls]: https://minecraft.wiki/w/Options#Controls
 [tk]: ../resources/client/i18n.md#components
 [keyinput]: https://www.glfw.org/docs/3.3/input_guide.html#input_key

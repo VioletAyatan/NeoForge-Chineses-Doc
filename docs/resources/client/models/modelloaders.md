@@ -733,7 +733,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 [composite]: #composite-model
 [customdefinition]: #block-state-definition-loaders
 [datagen]: ../../index.md#data-generation
-[event]: ../../../concepts/events.md#registering-an-event-handler
+[event]: ../../../concepts/events.md#注册事件处理器
 [itemcomposite]: items.md#composite-models
 [modeldatagen]: datagen.md
 [obj]: #obj-model

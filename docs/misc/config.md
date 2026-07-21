@@ -213,5 +213,5 @@ ConfigValue<T> value = builder.comment("This value is called 'config_value_name'
 [nightconfig]: https://github.com/TheElectronWill/night-config
 [configtype]: #configuration-types
 [type]: https://github.com/neoforged/FancyModLoader/blob/aafe4660ae6eff2702ec786dba8e83c69c0d9e91/loader/src/main/java/net/neoforged/fml/config/ModConfig.java#L88-L121
-[events]: ../concepts/events.md#registering-an-event-handler
+[events]: ../concepts/events.md#注册事件处理器
 [client]: ../concepts/sides.md#mod

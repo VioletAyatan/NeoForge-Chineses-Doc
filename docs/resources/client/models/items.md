@@ -1642,7 +1642,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 [composite]: modelloaders.md#composite-model
 [features]: ../../../rendering/feature.md
 [itemmodel]: #manually-rendering-an-item
-[modbus]: ../../../concepts/events.md#event-buses
+[modbus]: ../../../concepts/events.md#事件总线
 [models]: modelsystem.md
 [rl]: ../../../misc/identifier.md
 [screens]: ../../../rendering/screens.md#items

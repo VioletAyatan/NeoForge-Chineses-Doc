@@ -259,7 +259,7 @@ public static void registerAdditional(ModelEvent.RegisterStandalone event) {
 [mcwikiblockstate]: https://minecraft.wiki/w/Tutorials/Models#Block_states
 [mcwikimodel]: https://minecraft.wiki/w/Model
 [mipmapping]: https://en.wikipedia.org/wiki/Mipmap
-[modbus]: ../../../concepts/events.md#event-buses
+[modbus]: ../../../concepts/events.md#事件总线
 [perspectives]: modelsystem.md#perspectives
 [rendertype]: #render-types
 [roottransforms]: #root-transforms

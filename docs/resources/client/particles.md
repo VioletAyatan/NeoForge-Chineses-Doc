@@ -210,7 +210,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 [clientparticle]: ../../rendering/particles.md
 [datagen]: ../index.md#data-generation
 [event]: ../../concepts/events.md
-[modbus]: ../../concepts/events.md#event-buses
+[modbus]: ../../concepts/events.md#事件总线
 [options]: #custom-particletypes
 [particle]: ../../rendering/particles.md
 [particletype]: #registering-particletypes

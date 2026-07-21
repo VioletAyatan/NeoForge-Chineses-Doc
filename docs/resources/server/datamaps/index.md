@@ -379,6 +379,6 @@ public static void gatherData(GatherDataEvent.Client event) {
 [events]: ../../../concepts/events.md
 [add]: #adding-values
 [mergers]: #mergers
-[modbus]: ../../../concepts/events.md#event-buses
+[modbus]: ../../../concepts/events.md#事件总线
 [removers]: #removers
 [tags]: ../tags.md

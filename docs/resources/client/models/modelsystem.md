@@ -140,7 +140,7 @@ public static void modifyBakingResult(ModelEvent.ModifyBakingResult event) {
 [itemmodels]: items.md#manually-rendering-an-item
 [itemmodelsection]: #item-models
 [livingentity]: ../../../entities/livingentity.md
-[modbus]: ../../../concepts/events.md#event-buses
+[modbus]: ../../../concepts/events.md#事件总线
 [modelloader]: modelloaders.md
 [rl]: ../../../misc/identifier.md
 [perspective]: #perspectives

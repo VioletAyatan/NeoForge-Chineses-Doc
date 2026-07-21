@@ -1051,4 +1051,4 @@ property 'neoforge.enableGameTest', 'true'
 [datapacks]: ../resources/index.md#data
 [registered]: ../concepts/registries.md#methods-for-registering
 [test]: #running-game-tests
-[event]: ../concepts/events.md#registering-an-event-handler
+[event]: ../concepts/events.md#注册事件处理器

@@ -158,7 +158,7 @@ return InteractionResult.CONSUME.withoutItem();
 [block]: ../blocks/index.md
 [blockbreak]: ../blocks/index.md#breaking-a-block
 [blockentity]: ../blockentities/index.md
-[cancel]: ../concepts/events.md#cancellable-events
+[cancel]: ../concepts/events.md#可取消事件
 [critical]: https://minecraft.wiki/w/Damage#Critical_hit
 [effect]: mobeffects.md
 [entity]: ../entities/index.md

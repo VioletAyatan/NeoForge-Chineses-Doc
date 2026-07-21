@@ -24,6 +24,14 @@
 | advancement reward | 成就奖励 | 进度奖励 | 成就完成后发放的经验、配方、战利品或执行的函数。 |
 | `task` / `goal` / `challenge` | 任务型 / 目标型 / 挑战型 | 任务 / 目标 / 挑战（作为独立系统名称时） | 三者是 `frame` 的成就显示类型，不是三套不同的成就系统；JSON 值保持英文。 |
 
+## NeoForge 技术术语
+
+| 英文原词 | 推荐译名 | 避免使用 | 说明 |
+| --- | --- | --- | --- |
+| Event | 事件 | Event（普通说明文字中） | 泛指事件机制中的事件。Java 类型名 `Event`、以 `Event` 结尾的类名及其他代码标识符保持原文。 |
+| event handler | 事件处理器 | Event handler | 监听事件并执行相应行为的方法；`EventHandler` 等类名保持原文。 |
+| event bus | 事件总线 | event bus、Event bus | 发布和订阅事件的总线。`IEventBus`、`NeoForge.EVENT_BUS` 等代码标识符保持原文；可派生为“游戏事件总线”“模组事件总线”。 |
+
 ## 易混概念
 
 - **成就条件与加载条件不同**：`criteria` 用于判定成就是否完成；`neoforge:conditions` 用于决定数据加载时是否加载该成就。
