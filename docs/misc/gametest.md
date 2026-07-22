@@ -19,52 +19,52 @@ GameTest 是运行游戏内单元测试的一种方式。该系统的设计目�
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some game test examplemod:example_test
-// In 'data/examplemod/test_instance/example_test.json'
+// 对于一些游戏测试 examplemod:example_test
+// 在 'data/examplemod/test_instance/example_test.json' 中
 {
     // `TestData`
 
-    // The environment to run the test in
-    // Points to 'data/examplemod/test_environment/example_environment.json'
+    // 运行测试的环境
+    // 指向 'data/examplemod/test_environment/example_environment.json'
     "environment": "examplemod:example_environment",
 
-    // The structure used for the game test
-    // Points to 'data/examplemod/structure/example_structure.nbt'
+    // 游戏测试使用的结构体
+    // 指向 'data/examplemod/structure/example_structure.nbt'
     "structure": "examplemod:example_structure",
 
-    // The number of ticks that the game test will run until it automatically fails
+    // GameTest 自动失败前允许运行的 tick 数
     "max_ticks": 400,
 
-    // The number of ticks that are used to setup everything required for the game test
-    // This is not counted towards the maximum number of ticks the test can take
-    // If not specified, defaults to 0
+    // 用于完成 GameTest 初始化的 tick 数
+    // 这不计入测试允许使用的最大 tick 数
+    // 如果未指定，默认为 0
     "setup_ticks": 50,
 
-    // Whether the test is required to succeed to mark the batch run as successful
-    // If not specified, defaults to true
+    // 是否需要测试成功才能标记批量运行成功
+    // 如果未指定，则默认为 true
     "required": true,
 
-    // Specifies how the structure and all subsequent helper methods should be rotated for the test
-    // If not specified, nothing is rotated
-    // Can be 'none', 'clockwise_90', '180', 'counterclockwise_90'
+    // 指定应如何旋转结构和所有后续辅助方法以进行测试
+    // 如果未指定，则不旋转任何内容
+    // 可以是 'none'、'clockwise_90'、'180'、'counterclockwise_90'
     "rotation": "clockwise_90",
 
-    // When true, the test can only be ran through the `/test` command
-    // If not specified, defaults to false
+    // 为 true 时，只能通过 `/test` 命令运行测试
+    // 如果未指定，则默认为 false
     "manual_only": true,
 
-    // Specifies the maximum number of times that the test can be reran
-    // If not specified, defaults to 1
+    // 指定测试可以重新运行的最大次数
+    // 如果未指定，则默认为 1
     "max_attempts": 3,
 
-    // Specifies the minimum number of successes that must occur for a test to be marked as successful
-    // This must be less than or equal to the maximum number of attempts allowed
-    // If not specified, defaults to 1
+    // 指定测试标记为成功必须发生的最小成功次数
+    // 这必须小于或等于允许的最大尝试次数
+    // 如果未指定，则默认为 1
     "required_successes": 1,
 
-    // Returns whether the structure boundary should keep the top empty
-    // This is currently only used in block-based test instances
-    // If not specified, defaults to false 
+    // 返回结构边界是否应保持顶部为空
+    // 目前仅用于基于方块的测试实例
+    // 如果未指定，则默认为 false
     "sky_access": false
 
     // ...
@@ -76,64 +76,64 @@ GameTest 是运行游戏内单元测试的一种方式。该系统的设计目�
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_INSTANCE, bootstrap -> {
-            // Use this to get the test environments
+            // 使用此获取测试环境
             HolderGetter<TestEnvironmentDefinition<?>> environments = bootstrap.lookup(Registries.TEST_ENVIRONMENT);
 
-            // Register a game test
-            // Any fields not relevant to the test data are hidden
+            // 注册游戏测试
+            // 隐藏与测试数据无关的任何字段
             bootstrap.register(..., new FunctionGameTestInstance(...,
                 new TestData<>(
-                    // The environment to run the test in
-                    // Points to 'data/examplemod/test_environment/example_environment.json'
+                    // 运行测试的环境
+                    // 指向 'data/examplemod/test_environment/example_environment.json'
                     environments.getOrThrow(EXAMPLE_ENVIRONMENT),
 
-                    // The structure used for the game test
-                    // Points to 'data/examplemod/structure/example_structure.nbt'
+                    // 游戏测试使用的结构体
+                    // 指向 'data/examplemod/structure/example_structure.nbt'
                     Identifier.fromNamespaceAndPath("examplemod", "example_structure"),
 
-                    // The number of ticks that the game test will run until it automatically fails
+                    // GameTest 自动失败前允许运行的 tick 数
                     400,
 
-                    // The number of ticks that are used to setup everything required for the game test
-                    // This is not counted towards the maximum number of ticks the test can take
-                    // If not specified, defaults to 0
+                    // 用于完成 GameTest 初始化的 tick 数
+                    // 这不计入测试允许使用的最大 tick 数
+                    // 如果未指定，默认为 0
                     50,
 
-                    // Whether the test is required to succeed to mark the batch run as successful
-                    // If not specified, defaults to true
+                    // 是否需要测试成功才能标记批量运行成功
+                    // 如果未指定，则默认为 true
                     true,
 
-                    // Specifies how the structure and all subsequent helper methods should be rotated for the test
-                    // If not specified, nothing is rotated
-                    // Can be 'none', 'clockwise_90', '180', 'counterclockwise_90'
+                    // 指定应如何旋转结构和所有后续辅助方法以进行测试
+                    // 如果未指定，则不旋转任何内容
+                    // 可以是 'none'、'clockwise_90'、'180'、'counterclockwise_90'
                     Rotation.CLOCKWISE_90,
 
-                    // When true, the test can only be ran through the `/test` command
-                    // If not specified, defaults to false
+                    // 为 true 时，只能通过 `/test` 命令运行测试
+                    // 如果未指定，则默认为 false
                     true,
 
-                    // Specifies the maximum number of times that the test can be reran
-                    // If not specified, defaults to 1
+                    // 指定测试可以重新运行的最大次数
+                    // 如果未指定，则默认为 1
                     3,
 
-                    // Specifies the minimum number of successes that must occur for a test to be marked as successful
-                    // This must be less than or equal to the maximum number of attempts allowed
-                    // If not specified, defaults to 1
+                    // 指定测试标记为成功必须发生的最小成功次数
+                    // 这必须小于或等于允许的最大尝试次数
+                    // 如果未指定，则默认为 1
                     1,
 
-                    // Returns whether the structure boundary should keep the top empty
-                    // This is currently only used in block-based test instances
-                    // If not specified, defaults to false 
+                    // 返回结构边界是否应保持顶部为空
+                    // 目前仅用于基于方块的测试实例
+                    // 如果未指定，则默认为 false
                     false
                 )
             ));
@@ -164,11 +164,11 @@ GameTest 在 structure（即 template）所加载的场景中执行。所有 tem
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:game_rules",
 
-    // A map of game rules to their set values
+    // 游戏规则与其设定值的映射
     "rules": {
         "minecraft:fire_damage": false,
         "minecraft:players_sleeping_percentage": 50
@@ -181,23 +181,23 @@ GameTest 在 structure（即 template）所加载的场景中执行。所有 tem
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.SetGameRules(
                     new GameRuleMap.Builder()
-                        // A map of game rules to their set values
+                        // 游戏规则与其设定值的映射
                         .set(GameRules.FIRE_DAMAGE, false)
                         .set(GameRules.PLAYERS_SLEEPING_PERCENTAGE, 50)
                         .build()
@@ -220,15 +220,15 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:clock_time",
 
-    // The clock to set the time of
-    // Points to a registered clock at `data/<namespace>/world_clock/<path>.json`
+    // 设置时间的时钟
+    // 指向在 `data/<namespace>/world_clock/<path>.json` 注册的时钟
     "clock": "minecraft:overworld",
 
-    // Sets the time of the clock
+    // 设置时钟的时间
     "time": 13000
 }
 ```
@@ -238,26 +238,26 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
-            // Getting clocks
+            // 获取时钟
             HolderGetter<WorldClock> clocks = bootstrap.lookup(Registries.WORLD_CLOCK);
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.ClockTime(
-                    // The clock to set the time of
+                    // 设置时间的时钟
                     clocks.getOrThrow(WorldClocks.OVERWORLD),
-                    // Sets the time of the clock
+                    // 设置时钟的时间
                     13000
                 )
             );
@@ -278,11 +278,11 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:timeline_attributes",
 
-    // The timelines to apply to the level
+    // 适用于该级别的时间表
     "timelines": [
         "minecraft:day",
         "minecraft:moon"
@@ -295,24 +295,24 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
-            // Getting timelines
+            // 获取时间表
             HolderGetter<Timeline> timelines = bootstrap.lookup(Registries.TIMELINE);
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.Timelines(
-                    // The timelines to apply to the level
+                    // 适用于该级别的时间表
                     List.of(
                         timelines.getOrThrow(Timelines.OVERWORLD_DAY),
                         timelines.getOrThrow(Timelines.MOON)
@@ -336,14 +336,14 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:weather",
 
-    // Can be one of three values:
-    // - clear   (No weather)
-    // - rain    (Rain)
-    // - thunder (Rain and thunder)
+    // 可以是三个值之一：
+    // - clear（无天气）
+    // - rain（雨）
+    // - thunder（雨和雷）
     "weather": "thunder"
 }
 ```
@@ -353,25 +353,25 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.Weather(
-                    // Can be one of three values:
-                    // - clear   (No weather)
-                    // - rain    (Rain)
-                    // - thunder (Rain and thunder)
+                    // 可以是三个值之一：
+                    // - clear（无天气）
+                    // - rain（雨）
+                    // - thunder（雨和雷）
                     TestEnvironmentDefinition.Weather.Type.THUNDER
                 )
             );
@@ -392,18 +392,18 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:function",
 
-    // The setup mcfunction to use
-    // If not specified, nothing will be ran
-    // Points to 'data/examplemod/function/example/setup.mcfunction'
+    // 要使用的初始化 mcfunction
+    // 如果未指定，则不会运行任何内容
+    // 指向 'data/examplemod/function/example/setup.mcfunction'
     "setup": "examplemod:example/setup",
 
-    // The teardown mcfunction to use
-    // If not specified, nothing will be ran
-    // Points to 'data/examplemod/function/example/teardown.mcfunction'
+    // 要使用的清理 mcfunction
+    // 如果未指定，则不会运行任何内容
+    // 指向 'data/examplemod/function/example/teardown.mcfunction'
     "teardown": "examplemod:example/teardown"
 }
 ```
@@ -413,29 +413,29 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.Functions(
-                    // The setup mcfunction to use
-                    // If not specified, nothing will be ran
-                    // Points to 'data/examplemod/function/example/setup.mcfunction'
+                    // 要使用的初始化 mcfunction
+                    // 如果未指定，则不会运行任何内容
+                    // 指向 'data/examplemod/function/example/setup.mcfunction'
                     Optional.of(Identifier.fromNamespaceAndPath("examplemod", "example/setup")),
 
-                    // The teardown mcfunction to use
-                    // If not specified, nothing will be ran
-                    // Points to 'data/examplemod/function/example/teardown.mcfunction'
+                    // 要使用的清理 mcfunction
+                    // 如果未指定，则不会运行任何内容
+                    // 指向 'data/examplemod/function/example/teardown.mcfunction'
                     Optional.of(Identifier.fromNamespaceAndPath("examplemod", "example/teardown"))
                 )
             );
@@ -456,17 +456,17 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "minecraft:all_of",
 
-    // A list of test environments to use
-    // Can either specified the registry name or the environment itself
+    // 要使用的测试环境列表
+    // 可以指定注册表名称或环境本身
     "definitions": [
-        // Points to 'data/minecraft/test_environment/default.json'
+        // 指向 'data/minecraft/test_environment/default.json'
         "minecraft:default",
         {
-            // A raw environment definition
+            // 原始环境定义
             "type": "..."
         }
         // ...
@@ -479,28 +479,28 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
-            // Getting existing environments
+            // 获取现有环境
             HolderGetter<TestEnvironmentDefinition<?>> environments = bootstrap.lookup(Registries.TEST_ENVIRONMENT);
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new TestEnvironmentDefinition.AllOf(
                     List.of(
-                        // Points to 'data/minecraft/test_environment/default.json'
+                        // 指向 'data/minecraft/test_environment/default.json'
                         environments.getOrThrow(GameTestEnvironments.DEFAULT_KEY),
                         Holder.direct(
-                            // Create a new TestEnvironmentDefinition here
+                            // 在此创建新的 TestEnvironmentDefinition
                             ...
                         )
                         // ...
@@ -522,7 +522,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 ```java
 public record ExampleEnvironmentType(int value1, boolean value2) implements TestEnvironmentDefinition<Pair<Integer, Boolean>> {
 
-    // Construct the map codec to register
+    // 构造映射编解码器进行注册
     public static final MapCodec<ExampleEnvironmentType> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.INT.fieldOf("value1").forGetter(ExampleEnvironmentType::value1),
             Codec.BOOL.fieldOf("value2").forGetter(ExampleEnvironmentType::value2)
@@ -531,14 +531,14 @@ public record ExampleEnvironmentType(int value1, boolean value2) implements Test
 
     @Override
     public Pair<Integer, Boolean> setup(ServerLevel level) {
-        // Setup whatever is necessary here
-        // return the original values of the modified level data
+        // 此处设置必要的内容
+        // 返回修改世界数据前的原始值
     }
 
     @Override
     public void teardown(ServerLevel level, Pair<Integer, Boolean> originalState) {
-        // Undo whatever was changed within the setup method
-        // This use the original state to reset the data
+        // 撤消设置方法中所做的任何更改
+        // 这个使用原来的状态来重置数据
     }
 
     @Override
@@ -570,7 +570,7 @@ public static final Supplier<MapCodec<ExampleEnvironmentType>> EXAMPLE_ENVIRONME
 
 ```json5
 // examplemod:example_environment
-// In 'data/examplemod/test_environment/example_environment.json'
+// 在 'data/examplemod/test_environment/example_environment.json' 中
 {
     "type": "examplemod:example_environment_type",
 
@@ -584,18 +584,18 @@ public static final Supplier<MapCodec<ExampleEnvironmentType>> EXAMPLE_ENVIRONME
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_ENVIRONMENT, bootstrap -> {
 
-            // Register the environment
+            // 注册环境
             bootstrap.register(
                 EXAMPLE_ENVIRONMENT,
                 new ExampleEnvironmentType(
@@ -617,13 +617,13 @@ GameTest 的基本概念围绕运行某个接受 `GameTestHelper` 且不返回�
 ```java
 public class ExampleFunctions {
 
-    // Here is our example function
+    // 这是我们的示例函数
     public static void exampleTest(GameTestHelper helper) {
-        // Do Stuff
+        // 做事
     }
 }
 
-// Register our function for use
+// 注册我们的函数使用
 public static final DeferredRegister<Consumer<GameTestHelper>> TEST_FUNCTION = DeferredRegister.create(
         BuiltInRegistries.TEST_FUNCTION,
         "examplemod"
@@ -645,7 +645,7 @@ public static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHe
 `/test pos` 生成的局部变量可以通过在命令末尾追加名称来指定其引用名称：
 
 ```bash
-/test pos <var> # Exports 'final BlockPos <var> = new BlockPos(...);'
+/test pos <var> # 出口 'final BlockPos <var> = new BlockPos(...);'
 ```
 :::
 
@@ -692,8 +692,8 @@ GameTest 期间的任何时候都可以进行 assertion，检查给定条件是�
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some game test examplemod:example_test
-// In 'data/examplemod/test_instance/example_test.json'
+// 对于一些游戏测试 examplemod:example_test
+// 在 'data/examplemod/test_instance/example_test.json' 中
 {
     // `TestData`
 
@@ -711,7 +711,7 @@ GameTest 期间的任何时候都可以进行 assertion，检查给定条件是�
     // `FunctionGameTestInstance`
     "type": "minecraft:function",
 
-    // Points to a 'Consumer<GameTestHelper>' in the test function registry
+    // 指向测试函数注册表中的 'Consumer<GameTestHelper>'
     "function": "examplemod:example_function"
 }
 ```
@@ -721,30 +721,30 @@ GameTest 期间的任何时候都可以进行 assertion，检查给定条件是�
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// The test instance key
+// 测试实例键
 public static final ResourceKey<GameTestInstance> EXAMPLE_TEST_INSTANCE = ResourceKey.create(
     Registries.TEST_INSTANCE,
     Identifier.fromNamespaceAndPath("examplemod", "example_test")
 );
 
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_INSTANCE, bootstrap -> {
-            // Use this to get the test environments
+            // 使用此获取测试环境
             HolderGetter<TestEnvironmentDefinition<?>> environments = bootstrap.lookup(Registries.TEST_ENVIRONMENT);
 
-            // Register a game test
-            // Any fields not relevant to the test data are hidden
+            // 注册游戏测试
+            // 隐藏与测试数据无关的任何字段
             bootstrap.register(EXAMPLE_TEST_INSTANCE,
                 new FunctionGameTestInstance(
-                    // Points to a 'Consumer<GameTestHelper>' in the test function registry
+                    // 指向测试函数注册表中的 'Consumer<GameTestHelper>'
                     EXAMPLE_FUNCTION.getKey()
                     new TestData<>(
                         environments.getOrThrow(EXAMPLE_ENVIRONMENT),
@@ -775,8 +775,8 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some game test examplemod:example_test
-// In 'data/examplemod/test_instance/example_test.json'
+// 对于一些游戏测试 examplemod:example_test
+// 在 'data/examplemod/test_instance/example_test.json' 中
 {
     // `TestData`
 
@@ -801,27 +801,27 @@ public static void gatherData(GatherDataEvent.Client event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// The test instance key
+// 测试实例键
 public static final ResourceKey<GameTestInstance> EXAMPLE_TEST_INSTANCE = ResourceKey.create(
     Registries.TEST_INSTANCE,
     Identifier.fromNamespaceAndPath("examplemod", "example_test")
 );
 
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_INSTANCE, bootstrap -> {
-            // Use this to get the test environments
+            // 使用此获取测试环境
             HolderGetter<TestEnvironmentDefinition<?>> environments = bootstrap.lookup(Registries.TEST_ENVIRONMENT);
 
-            // Register a game test
-            // Any fields not relevant to the test data are hidden
+            // 注册游戏测试
+            // 隐藏与测试数据无关的任何字段
             bootstrap.register(EXAMPLE_TEST_INSTANCE,
                 new BlockBasedTestInstance(
                     new TestData<>(
@@ -858,10 +858,10 @@ public class ExampleTestInstance extends GameTestInstance {
 
     @Override
     public void run(GameTestHelper helper) {
-        // Run whatever game test commands you want
+        // 运行你想要的任何游戏测试命令
         helper.assertBlockPresent(...);
 
-        // Make sure you have some way to succeed
+        // 确保你有成功的方法
         helper.succeedIf(() -> ...);
     }
 
@@ -872,13 +872,13 @@ public class ExampleTestInstance extends GameTestInstance {
 
     @Override
     protected MutableComponent typeDescription() {
-        // Provides a description about what this test is supposed to be
-        // Should use a translatable component
+        // 提供有关此测试应该是什么的描述
+        // 应使用可翻译组件
         return Component.literal("Example Test Instance");
     }
 }
 
-// Register our test instance for use
+// 注册我们的测试实例以供使用
 public static final DeferredRegister<MapCodec<? extends GameTestInstance>> TEST_INSTANCE = DeferredRegister.create(
         BuiltInRegistries.TEST_INSTANCE_TYPE,
         "examplemod"
@@ -901,8 +901,8 @@ public static final Supplier<MapCodec<? extends GameTestInstance>> EXAMPLE_INSTA
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some game test examplemod:example_test
-// In 'data/examplemod/test_instance/example_test.json'
+// 对于一些游戏测试 examplemod:example_test
+// 在 'data/examplemod/test_instance/example_test.json' 中
 {
     // `TestData`
 
@@ -930,27 +930,27 @@ public static final Supplier<MapCodec<? extends GameTestInstance>> EXAMPLE_INSTA
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// The test instance key
+// 测试实例键
 public static final ResourceKey<GameTestInstance> EXAMPLE_TEST_INSTANCE = ResourceKey.create(
     Registries.TEST_INSTANCE,
     Identifier.fromNamespaceAndPath("examplemod", "example_test")
 );
 
-// Let's assume we have some test environment
+// 假设我们有一些测试环境
 public static final ResourceKey<TestEnvironmentDefinition<?>> EXAMPLE_ENVIRONMENT = ResourceKey.create(
     Registries.TEST_ENVIRONMENT,
     Identifier.fromNamespaceAndPath("examplemod", "example_environment")
 );
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(
         new RegistrySetBuilder().add(Registries.TEST_INSTANCE, bootstrap -> {
-            // Use this to get the test environments
+            // 使用此获取测试环境
             HolderGetter<TestEnvironmentDefinition<?>> environments = bootstrap.lookup(Registries.TEST_ENVIRONMENT);
 
-            // Register a game test
-            // Any fields not relevant to the test data are hidden
+            // 注册游戏测试
+            // 隐藏与测试数据无关的任何字段
             bootstrap.register(EXAMPLE_TEST_INSTANCE,
                 new ExampleTestInstance(
                     0,
@@ -981,19 +981,19 @@ public static void gatherData(GatherDataEvent.Client event) {
 如果不想使用 datapack 构造 GameTest，可以改为在 [模组事件总线][event] 上监听 `RegisterGameTestsEvent`，并分别通过 `registerEnvironment` 与 `registerTest` 注册 environment 和 test 实例。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerTests(RegisterGameTestsEvent event) {
     Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(
-        // The name of the test environment
+        // 测试环境名称
         EXAMPLE_ENVIRONMENT.identifier(),
-        // A varargs of test environment definitions
+        // 测试环境定义的可变参数
         new ExampleEnvironmentType(
             0, true
         )
     );
 
     event.registerTest(
-        // The name of the test instance
+        // 测试实例的名称
         EXAMPLE_TEST_INSTANCE.identifier(),
         new ExampleTestInstance(
             0,
@@ -1044,7 +1044,7 @@ GameTest Server 是运行构建服务端的特殊配置。构建服务端返回�
 默认情况下，只有 `client` 与 `gameTestServer` 运行配置启用 GameTest。如果其他运行配置也应运行 GameTest，必须把 `neoforge.enableGameTest` property 设置为 `true`。
 
 ```gradle
-// Inside a run configuration
+// 运行配置内部
 property 'neoforge.enableGameTest', 'true'
 ```
 

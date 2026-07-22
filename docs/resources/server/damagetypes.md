@@ -17,22 +17,22 @@ public static final ResourceKey<DamageType> EXAMPLE_DAMAGE =
 
 ```json5
 {
-    // The death message id of the damage type. The full death message translation key will be
-    // "death.attack.examplemod.example" (with swapped-out mod id and name).
+    // 伤害类型的死亡消息ID。完整的死亡消息翻译键将是
+    // "death.attack.examplemod.example"（带有换出的模组 ID 和名称）。
     "message_id": "examplemod.example",
-    // Whether this damage type's damage amount scales with difficulty or not. Valid vanilla values are:
-    // - "never": The damage value remains the same on any difficulty. Common for player-caused damage types.
-    // - "when_caused_by_living_non_player": The damage value is scaled if the entity is caused by a
-    //   living entity of some sort, including indirectly (e.g. an arrow shot by a skeleton), that is not a player.
-    // - "always": The damage value is always scaled. Commonly used by explosion-like damage.
+    // 此伤害类型的伤害量是否难以缩放。有效的原版值是：
+    // - "never"：任何难度下伤害值都保持不变。常见于玩家造成的伤害类型。
+    // - "when_caused_by_living_non_player"：如果实体是由以下原因造成的，则伤害值会按比例缩放：
+    //   某种非玩家生物实体，包括间接来源（例如骷髅射出的箭）。
+    // - "always"：伤害值始终按比例缩放，常用于爆炸类伤害。
     "scaling": "when_caused_by_living_non_player",
-    // The amount of exhaustion caused by receiving this kind of damage.
+    // 受到此类伤害时产生的饥饿消耗量。
     "exhaustion": 0.1,
-    // The damage effects (currently only sound effects) that are applied when receiving this kind of damage. Optional.
-    // Valid vanilla values are "hurt" (default), "thorns", "drowning", "burning", "poking", and "freezing".
+    // 受到此类伤害时施加的伤害 effects（当前仅声音效果）。 可选。
+    // 有效的原版值为 "hurt"（默认）、"thorns"、"drowning"、"burning"、"poking" 和 "freezing"。
     "effects": "hurt",
-    // The death message type. Determines how the death message is built. Optional.
-    // Valid vanilla values are "default" (default), "fall_variants", and "intentional_game_design".
+    // 死亡消息类型。确定如何构建死亡消息。 可选。
+    // 有效的原版值为 "default"（默认）、"fall_variants" 和 "intentional_game_design"。
     "death_message_type": "default"
 }
 ```
@@ -49,17 +49,17 @@ public static final ResourceKey<DamageType> EXAMPLE_DAMAGE =
 
 ```java
 DamageSource damageSource = new DamageSource(
-        // The damage type holder to use. Query from the registry. This is the only required parameter.
+        // 要使用的伤害类型 Holder。请从注册表查询；这是唯一的必填参数。
         registryAccess.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(EXAMPLE_DAMAGE),
-        // The direct entity. For example, if a skeleton shot you, the skeleton would be the causing entity
-        // (= the parameter above), and the arrow would be the direct entity (= this parameter). Similar to
-        // the causing entity, this isn't always applicable and therefore nullable. Optional, defaults to null.
+        // 直接实体。例如，如果骷髅朝你开枪，那么骷髅就是造成事件的实体
+        // （=上面的参数），箭头将是直接的实体（=此参数）。类似于
+        // 导致实体此并不总是适用，因此可为空。 可选，默认为null。
         null,
-        // The entity causing the damage. This isn't always applicable (e.g. when falling out of the world)
-        // and may therefore be null. Optional, defaults to null.
+        // 造成伤害的实体。该值并非始终适用（例如掉出世界时）
+        // ，因此可能是 null。 可选，默认为null。
         null,
-        // The damage source position. This is rarely used, one example would be intentional game design
-        // (= nether beds exploding). Nullable and optional, defaulting to null.
+        // 伤害源位置。这很少使用，一个例子是有意的游戏设计
+        // （=下层床爆炸）。可空且可选，默认为 null。
         null
 );
 ```
@@ -85,7 +85,7 @@ public static DamageSource exampleDamage(Entity causer) {
 伤害来源最主要的用途是 `Entity#hurt`。每当 Entity 受到伤害时都会调用该方法。要使用自定义伤害类型伤害某个 Entity，只需自行调用 `Entity#hurt`：
 
 ```java
-// The second parameter is the amount of damage, in half hearts.
+// 第二个参数是伤害量，以半颗心为单位。
 entity.hurt(exampleDamage(player), 10);
 ```
 
@@ -98,16 +98,16 @@ _更多信息请参阅[数据包 Registry 的数据生成][drdatagen]。_
 伤害类型 JSON 文件可以通过[数据生成][datagen]创建。由于伤害类型属于数据包 Registry，因此我们通过 `GatherDataEvent#createDatapackRegistryObjects` 添加 `DatapackBuiltinEntriesProvider`，并将自己的伤害类型放入 `RegistrySetBuilder`：
 
 ```java
-// In your datagen class
-@SubscribeEvent // on the mod event bus
+// 在你的 datagen 类中
+@SubscribeEvent // 位于模组事件总线上
 public static void onGatherData(GatherDataEvent.Client event) {
     event.createDatapackRegistryObjects(new RegistrySetBuilder()
-        // Add a datapack builtin entry provider for damage types. If this lambda becomes longer,
-        // this should probably be extracted into a separate method for the sake of readability.
+        // 为伤害类型添加数据包内置条目提供器。如果此 Lambda 表达式变得更长，
+        // 此可能应该被提取到一个单独的方法中。
         .add(Registries.DAMAGE_TYPE, bootstrap -> {
-            // Use new DamageType() to create an in-code representation of a damage type.
-            // The parameters map to the values of the JSON file, in the order seen above.
-            // All parameters except for the message id and the exhaustion value are optional.
+            // 使用 new DamageType() 创建伤害类型在代码中的表示。
+            // 这些参数按照上面所示的顺序映射到 JSON 文件的值。
+            // 除了消息ID和耗尽值之外的所有参数都是可选的。
             bootstrap.register(EXAMPLE_DAMAGE, new DamageType(EXAMPLE_DAMAGE.identifier(),
                 DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER,
                 0.1f,
@@ -115,7 +115,7 @@ public static void onGatherData(GatherDataEvent.Client event) {
                 DeathMessageType.DEFAULT)
             )
         })
-        // Add datapack providers for other datapack entries, if applicable.
+        // 添加其他数据包条目的数据包提供器（如果适用）。
         .add(...)
     );
 

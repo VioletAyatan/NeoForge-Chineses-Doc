@@ -8,73 +8,73 @@
 
 ```json5
 {
-    // The text component that will be used as the in-game name of the enchantment.
-    // Can be a translation key or a literal string. 
-    // Remember to translate this in your lang file if you use a translation key!
+    // 将用作附魔的游戏内名称的文本组件。
+    // 可以是翻译键或文字字符串。
+    // 如果你使用翻译键，请记住在你的 lang 文件中翻译此！
     "description": {
         "translate": "enchantment.examplemod.enchant_name"
     },
     
-    // Which items this enchantment can be applied to.
-    // Can be either an item id, such as "minecraft:trident",
-    // or a list of item ids, such as ["examplemod:red_sword", "examplemod:blue_sword"]
-    // or an item tag, such as "#examplemod:enchantable/enchant_name".
-    // Note that this doesn't cause the enchantment to appear for these items in the enchanting table.
+    // 此附魔可以应用于哪些物品。
+    // 可以是物品 ID，例如 "minecraft:trident"，
+    // 或物品 ID 列表，例如 ["examplemod:red_sword", "examplemod:blue_sword"]
+    // 或物品标签，例如 "#examplemod:enchantable/enchant_name"。
+    // 请注意，这不会让附魔出现在这些物品的附魔台选项中。
     "supported_items": "#examplemod:enchantable/enchant_name",
 
-    // (Optional) Which items this enchantment appears for in the enchanting table or as part of an enchantment provider.
-    // For the enchantment to be shown in an enchantment table for the item, it must be added to the `minecraft:in_enchanting_table` tag.
-    // `minecraft:non_treasure` entries are already in the enchantment table tag by default.
-    // Can be an item, list of items, or item tag.
-    // If left unspecified, this is the same as `supported_items`.
+    // （可选）此附魔可在附魔台或附魔提供器中出现在哪些物品上。
+    // 要让附魔出现在物品的附魔台选项中，还必须将其加入 `minecraft:in_enchanting_table` 标签。
+    // 默认情况下，`minecraft:non_treasure` 条目已包含在该标签中。
+    // 可以是物品、物品列表或物品标签。
+    // 未指定时，与 `supported_items` 相同。
     "primary_items": [
         "examplemod:item_a",
         "examplemod:item_b"
     ],
 
-    // (Optional) Which enchantments are incompatible with this one.
-    // Can be an enchantment id, such as "minecraft:sharpness",
-    // or a list of enchantment ids, such as ["minecraft:sharpness", "minecraft:fire_aspect"],
-    // or enchantment tag, such as "#examplemod:exclusive_to_enchant_name".
-    // Incompatible enchantments will not be added to the same item by vanilla mechanics.
+    // （可选）与此附魔不兼容的附魔。
+    // 可以是附魔 ID，例如 "minecraft:sharpness"，
+    // 或附魔 ID 列表，例如 ["minecraft:sharpness", "minecraft:fire_aspect"]，
+    // 或附魔标签，例如 "#examplemod:exclusive_to_enchant_name"。
+    // 原版机制不会将不兼容的附魔添加到同一物品中。
     "exclusive_set": "#examplemod:exclusive_to_enchant_name",
     
-    // The likelihood that this enchantment will appear in the Enchanting Table. 
-    // Bounded by [1, 1024].
+    // 此附魔出现在附魔台中的权重。
+    // 以 [1, 1024] 为界。
     "weight": 6,
     
-    // The maximum level this enchantment is allowed to reach.
-    // Bounded by [1, 255].
+    // 此附魔允许达到的最高等级。
+    // 以 [1, 255] 为界。
     "max_level": 3,
     
-    // The maximum cost of this enchantment, measured in "enchanting power". 
-    // This corresponds to, but is not equivalent to, the threshold in levels the player needs to meet to bestow this enchantment.
-    // See below for details.
-    // The actual cost will be between this and the min_cost.
+    // 此附魔的最高附魔成本，以 enchanting power 衡量。
+    // 这对应于但不等同于玩家授予此附魔所需达到的等级阈值。
+    // 详情请参见下文。
+    // 实际成本位于 min_cost 与此值之间。
     "max_cost": {
         "base": 45,
         "per_level_above_first": 9
     },
     
-    // Specifies the minimum cost of this enchantment; otherwise as above.
+    // 指定此附魔的最低成本；否则如上所述。
     "min_cost": {
         "base": 2,
         "per_level_above_first": 8
     },
 
-    // The cost that this enchantment adds to repairing an item in an anvil in levels. The cost is multiplied by enchantment level.
-    // If an item has a DataComponentTypes.STORED_ENCHANTMENTS component, the cost is halved. In vanilla, this only applies to enchanted books.
-    // Bounded by [1, inf).
+    // 此附魔在铁砧中修复物品时增加的等级花费；该花费会乘以附魔等级。
+    // 如果物品具有 DataComponentTypes.STORED_ENCHANTMENTS 组件，则成本减半。在原版中，这仅适用于附魔书。
+    // 以 [1, inf) 为界。
     "anvil_cost": 2,
     
-    // (Optional) A list of slot groups this enchantment provides effects in. 
-    // A slot group is defined as one of the possible values of the EquipmentSlotGroup enum.
-    // In vanilla, these are: `any`, `hand`, `mainhand`, `offhand`, `armor`, `feet`, `legs`, `chest`, `head`, and  `body`.
+    // （可选）此附魔生效的槽位组列表。
+    // 槽位组是 EquipmentSlotGroup 枚举值。
+    // 在原版中，这些是：`any`、`hand`、`mainhand`、`offhand`、`armor`、`feet`、`legs`、`chest`、 `head` 和 `body`。
     "slots": [
         "mainhand"
     ],
 
-    // The effects that this enchantment provides as a map of enchantment effect components (read on).
+    // 此附魔提供的效果作为附魔效果组件的映射（继续阅读）。
     "effects": {
         "examplemod:custom_effect": [
             {
@@ -115,7 +115,7 @@
 应用自定义附魔效果组件的逻辑必须完全由其创建者实现。首先，应定义一个类或 record，用于保存实现特定效果所需的信息。例如，创建一个示例 record 类 `Increment`：
 
 ```java
-// Define an example data-bearing record.
+// 定义示例数据承载 record。
 public record Increment(int value) {
     public static final Codec<Increment> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -132,7 +132,7 @@ public record Increment(int value) {
 附魔效果组件类型必须[注册][registered]到 `BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE`，它接收 `DataComponentType<?>`。例如，可以按如下方式注册一个能够存储 `Increment` 对象的附魔效果组件：
 
 ```java
-// In some registration class
+// 在某些注册类中
 public static final DeferredRegister.DataComponents ENCHANTMENT_COMPONENT_TYPES =
     DeferredRegister.createDataComponents(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, "examplemod");
 
@@ -146,23 +146,23 @@ public static final Supplier<DataComponentType<Increment>> INCREMENT =
 现在，可以实现一些使用此组件修改整数值的游戏逻辑：
 
 ```java
-// Somewhere in game logic where an `itemStack` is available.
-// `INCREMENT` is the enchantment component type holder defined above.
-// `value` is an integer.
+// 游戏逻辑中 `itemStack` 可用的位置。
+// `INCREMENT` 是上文定义的附魔组件类型 Holder。
+// `value` 是一个整数。
 AtomicInteger atomicValue = new AtomicInteger(value);
 
 EnchantmentHelper.runIterationOnItem(stack, (enchantmentHolder, enchantLevel) -> {
-    // Acquire the Increment instance from the enchantment holder (or null if this is a different enchantment)
+    // 从附魔 Holder 获取 Increment 实例（如果是其他附魔，则得到 null）。
     Increment increment = enchantmentHolder.value().effects().get(INCREMENT.get());
 
-    // If this enchant has an Increment component, use it.
+    // 如果此附魔有 Increment 组件，请使用它。
     if(increment != null){
         atomicValue.set(increment.add(atomicValue.get()));
     }
 });
 
 int modifiedValue = atomicValue.get();
-// Use the now-modified value elsewhere in your game logic.
+// 在游戏逻辑中的其他地方使用现在修改的值。
 ```
 
 首先，调用 `EnchantmentHelper#runIterationOnItem` 的某个重载。该函数接受 `EnchantmentHelper.EnchantmentVisitor`；这是一个接收附魔及其等级的函数式接口，会对给定 ItemStack 拥有的所有附魔调用（本质上是 `BiConsumer<Holder<Enchantment>, Integer>`）。
@@ -177,14 +177,14 @@ int modifiedValue = atomicValue.get();
 原版还添加了一个辅助方法，以进一步简化条件检查过程：`Enchantment#applyEffects()`。该方法接收 `List<ConditionalEffect<T>>`，对条件求值，并针对每个条件满足的 `ConditionalEffect` 所包含的 `T` 运行 `Consumer<T>`。由于许多原版附魔效果组件都定义为 `List<ConditionalEffect<?>>`，因此可以像下面这样直接传入该辅助方法：
 
 ```java
-// `enchant` is an Enchantment instance.
-// `lootContext` is a LootContext instance.
+// `enchant` 是一个附魔实例。
+// `lootContext` 是 LootContext 实例。
 enchant.applyEffects(
-    // Or whichever other List<ConditionalEffect<T>> you want
+    // 或所需的其他任意 List<ConditionalEffect<T>>
     enchant.getEffects(EnchantmentEffectComponents.KNOCKBACK),
-    // The context to test the conditions against
+    // 测试条件的上下文
     lootContext,
-    (effectData) -> // Use the effectData (in this example, an EnchantmentValueEffect) however you want.
+    (effectData) -> // 根据需要使用 effectData（在此示例中为 EnchantmentValueEffect）。
 );
 ```
 
@@ -194,9 +194,9 @@ enchant.applyEffects(
 public static final DeferredHolder<DataComponentType<?>, DataComponentType<ConditionalEffect<Increment>>> CONDITIONAL_INCREMENT =
     ENCHANTMENT_COMPONENT_TYPES.register("conditional_increment",
         () -> DataComponentType.ConditionalEffect<Increment>builder()
-            // The ContextKeySet needed depends on what the enchantment is supposed to do.
-            // This might be one of ENCHANTED_DAMAGE, ENCHANTED_ITEM, ENCHANTED_LOCATION, ENCHANTED_ENTITY, or HIT_BLOCK
-            // since all of these bring the enchantment level into context (along with whatever other information is indicated).
+            // 所需的 ContextKeySet 取决于附魔的用途。
+            // 这可能是 ENCHANTED_DAMAGE、ENCHANTED_ITEM、ENCHANTED_LOCATION、ENCHANTED_ENTITY 或 HIT_BLOCK 之一
+            // ，因为所有这些都将附魔级别带入上下文（以及指示的任何其他信息）。
             .persistent(ConditionalEffect.codec(Increment.CODEC, LootContextParamSets.ENCHANTED_DAMAGE))
             .build());
 ```
@@ -214,50 +214,50 @@ public static final DeferredHolder<DataComponentType<?>, DataComponentType<Condi
 
 ```java
 
-// This RegistrySetBuilder should be passed into a DatapackBuiltinEntriesProvider in your `GatherDataEvent`s listener.
+// 应将此 RegistrySetBuilder 传给 `GatherDataEvent` 监听器中的 DatapackBuiltinEntriesProvider。
 RegistrySetBuilder BUILDER = new RegistrySetBuilder();
 BUILDER.add(
     Registries.ENCHANTMENT,
     bootstrap -> bootstrap.register(
-        // Define the ResourceKey for our enchantment.
+        // 为我们的附魔定义 ResourceKey。
         ResourceKey.create(
             Registries.ENCHANTMENT,
             Identifier.fromNamespaceAndPath("examplemod", "example_enchantment")
         ),
         new Enchantment(
-            // The text Component that specifies the enchantment's name.
+            // 指定附魔名称的文本组件。
             Component.literal("Example Enchantment"),  
             
-            // Specify the enchantment definition of for our enchantment.
+            // 指定此附魔的定义。
             new Enchantment.EnchantmentDefinition(
-                // A HolderSet of Items that the enchantment will be compatible with.
+                // 与此附魔兼容的 Item HolderSet。
                 HolderSet.direct(...), 
 
-                // An Optional<HolderSet> of items that the enchantment considers "primary".
+                // 此附魔视为 primary 的物品 Optional<HolderSet>。
                 Optional.empty(), 
 
-                // The weight of the enchantment.
+                // 附魔的重量。
                 30, 
 
-                // The maximum level this enchantment can be.
+                // 此附魔可达到的最高等级。
                 3, 
 
-                // The minimum cost of the enchantment. The first parameter is base cost, the second is cost per level.
+                // 附魔的最低成本。第一个参数是基本成本，第二个参数是每级成本。
                 Enchantment.dynamicCost(3, 1), 
 
-                // The maximum cost of the enchantment. As above.
+                // 附魔的最大成本。如上所述。
                 Enchantment.dynamicCost(4, 2), 
 
-                // The anvil cost of the enchantment.
+                // 附魔的铁砧成本。
                 2, 
 
-                // A list of EquipmentSlotGroups that this enchantment has effects in.
+                // 此附魔生效的 EquipmentSlotGroup 列表。
                 List.of(EquipmentSlotGroup.ANY) 
             ),
-            // A HolderSet of incompatible other enchantments.
+            // 不兼容的其他附魔的 HolderSet。
             HolderSet.empty(), 
 
-            // A DataComponentMap of the enchantment effect components associated with this enchantment and their values.
+            // 与此附魔及其值相关的附魔效果组件的 DataComponentMap。
             DataComponentMap.builder() 
                 .set(MY_ENCHANTMENT_EFFECT_COMPONENT_TYPE, new ExampleData())
                 .build()
@@ -272,43 +272,43 @@ BUILDER.add(
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For more detail on each entry, please check the section above on the enchantment JSON format.
+// 有关每个条目的更多详细信息，请查看上面有关附魔 JSON 格式的部分。
 {
-    // The anvil cost of the enchantment.
+    // 附魔的铁砧成本。
     "anvil_cost": 2,
 
-    // The text Component that specifies the enchantment's name.
+    // 指定附魔名称的文本组件。
     "description": "Example Enchantment",
 
-    // A map of the effect components associated with this enchantment and their values.
+    // 与此附魔相关的效果组件及其值的映射。
     "effects": {
-        // <effect components>
+        // <效果组件>
     },
 
-    // The maximum cost of the enchantment.
+    // 附魔的最大成本。
     "max_cost": {
         "base": 4,
         "per_level_above_first": 2
     },
 
-    // The maximum level this enchantment can be.
+    // 此附魔可达到的最高等级。
     "max_level": 3,
 
-    // The minimum cost of the enchantment.
+    // 附魔的最低成本。
     "min_cost": {
         "base": 3,
         "per_level_above_first": 1
     },
 
-    // A list of EquipmentSlotGroup aliases that this enchantment has effects in.
+    // 此附魔生效的 EquipmentSlotGroup 别名列表。
     "slots": [
         "any"
     ],
 
-    // The set of items that this enchantment can be applied to using an anvil.
-    "supported_items": /* <supported item list> */,
+    // 可以使用铁砧应用此附魔的一组物品。
+    "supported_items": /* <支持的物品列表>*/,
 
-    // The weight of this enchantment.
+    // 此附魔的重量。
     "weight": 30
 }
 ```

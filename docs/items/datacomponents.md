@@ -17,14 +17,14 @@
 :::
 
 ```java
-// A record example
+// record 示例
 public record ExampleRecord(int value1, boolean value2) {}
 
-// A class example
+// 类示例
 public class ExampleClass {
 
     private final int value1;
-    // Can be mutable, but care needs to be taken when using
+    // 可以可变，但使用时需要注意
     private boolean value2;
 
     public ExampleClass(int value1, boolean value2) {
@@ -65,11 +65,11 @@ Builder 中必须提供 `persistent` 或 `networkSynchronized`，否则会抛出
 `DataComponentType` 是注册表对象，必须[注册][registered]。
 
 ```java
-// Using ExampleRecord(int, boolean)
-// Only one Codec and/or StreamCodec should be used below
-// Multiple are provided for an example
+// 使用 ExampleRecord(int、boolean)
+// 下面只能使用一个 Codec and/or StreamCodec
+// 提供多个作为示例
 
-// Basic codec
+// 基本编解码器
 public static final Codec<ExampleRecord> BASIC_CODEC = RecordCodecBuilder.create(instance ->
     instance.group(
         Codec.INT.fieldOf("value1").forGetter(ExampleRecord::value1),
@@ -82,35 +82,35 @@ public static final StreamCodec<ByteBuf, ExampleRecord> BASIC_STREAM_CODEC = Str
     ExampleRecord::new
 );
 
-// Unit stream codec if nothing should be sent across the network
+// 如果不应该通过网络发送任何内容，则单元流编解码器
 public static final StreamCodec<ByteBuf, ExampleRecord> UNIT_STREAM_CODEC = StreamCodec.unit(new ExampleRecord(0, false));
 
 
-// In another class
-// The specialized DeferredRegister.DataComponents simplifies data component registration and avoids some generic inference issues with the `DataComponentType.Builder` within a `Supplier`
+// 在另一个类中
+// 专用的 DeferredRegister.DataComponents 简化了数据组件注册，并避免了 `Supplier` 中 `DataComponentType.Builder` 的一些泛型推断问题
 public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, "examplemod");
 
 public static final Supplier<DataComponentType<ExampleRecord>> BASIC_EXAMPLE = REGISTRAR.registerComponentType(
     "basic",
     builder -> builder
-        // The codec to read/write the data to disk
+        // 用于将数据读写到磁盘的编解码器
         .persistent(BASIC_CODEC)
-        // The codec to read/write the data across the network
+        // 用于通过网络读写数据的流编解码器
         .networkSynchronized(BASIC_STREAM_CODEC)
 );
 
-/// Component will not be saved to disk
+/// 组件不会保存到磁盘
 public static final Supplier<DataComponentType<ExampleRecord>> TRANSIENT_EXAMPLE = REGISTRAR.registerComponentType(
     "transient",
     builder -> builder.networkSynchronized(BASIC_STREAM_CODEC)
 );
 
-// No data will be synced across the network
+// 没有数据将通过网络同步
 public static final Supplier<DataComponentType<ExampleRecord>> NO_NETWORK_EXAMPLE = REGISTRAR.registerComponentType(
    "no_network",
    builder -> builder
         .persistent(BASIC_CODEC)
-        // Note we use a unit stream codec here
+        // 注意我们这里使用单位流编解码器
         .networkSynchronized(UNIT_STREAM_CODEC)
 );
 ```
@@ -122,10 +122,10 @@ public static final Supplier<DataComponentType<ExampleRecord>> NO_NETWORK_EXAMPL
 对于注册表对象，可以通过 `Holder#components` 获取 `DataComponentMap`。
 
 ```java
-// For some Item item
+// 对于某个 Item item
 
-// Will get dye color if component is present
-// Otherwise null
+// 如果存在组件，将获得染料颜色
+// 否则 null
 @Nullable
 DyeColor color = item.builtInRegistryHolder().components().get(DataComponents.BASE_COLOR);
 ```
@@ -137,14 +137,14 @@ DyeColor color = item.builtInRegistryHolder().components().get(DataComponents.BA
 `PatchedDataComponentMap` 使用原型与补丁映射存储更改。原型是 `DataComponentMap`，包含该映射应具有的默认组件及其值。补丁映射是从 `DataComponentType` 到 `Optional` 值的映射，包含对默认组件所做的更改。
 
 ```java
-// For some PatchedDataComponentMap map
+// 对于某个 PatchedDataComponentMap map
 
-// Sets the base color to white
+// 将基色设置为白色
 map.set(DataComponents.BASE_COLOR, DyeColor.WHITE);
 
-// Removes the base color by
-// - Removing the patch if no default is provided
-// - Setting an empty optional if there is a default
+// 删除基色
+// - 如果未提供默认值，则删除补丁
+// - 如果有默认值，则设置空选项
 map.remove(DataComponents.BASE_COLOR);
 ```
 
@@ -161,9 +161,9 @@ map.remove(DataComponents.BASE_COLOR);
 所有引用底层数据组件映射的实例都实现 `DataComponentHolder`，后者扩展 `DataComponentGetter`。`DataComponentHolder` 实质上会委托给 `DataComponentMap` 中的只读方法。
 
 ```java
-// For some DataComponentHolder holder
+// 对于某个 DataComponentHolder holder
 
-// Delegates to 'DataComponentMap#get'
+// 委托给 DataComponentMap#get
 @Nullable
 DyeColor color = holder.get(DataComponents.BASE_COLOR);
 ```
@@ -175,32 +175,32 @@ DyeColor color = holder.get(DataComponents.BASE_COLOR);
 此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到映射。操作函数可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
 
 ```java
-// For some ItemStack stack
+// 对于某个 ItemStack stack
 
 FireworkExplosion explosion = stack.get(DataComponents.FIREWORK_EXPLOSION);
 
-// Modifying the component value
+// 修改组件值
 explosion = explosion.withFadeColors(new IntArrayList(new int[] {1, 2, 3}));
 
-// Since we modified the component value, 'set' should be called afterward
+// 由于修改了组件值，因此之后应调用 set
 stack.set(DataComponents.FIREWORK_EXPLOSION, explosion);
 
-// Update the component value (calls 'set' internally)
+// 更新组件值（内部调用 set）
 stack.update(
     DataComponents.FIREWORK_EXPLOSION,
-    // Default value if no component value is present
+    // 如果不存在任何组件值，则使用默认值
     FireworkExplosion.DEFAULT,
-    // Return a new FireworkExplosion to set
+    // 返回一个新 FireworkExplosion 来设置
     explosion -> explosion.withFadeColors(new IntArrayList(new int[] {4, 5, 6}))
 );
 
 stack.update(
     DataComponents.FIREWORK_EXPLOSION,
-    // Default value if no component value is present
+    // 如果不存在任何组件值，则使用默认值
     FireworkExplosion.DEFAULT,
-    // An object that is supplied to the function
+    // 提供给函数的对象
     new IntArrayList(new int[] {7, 8, 9}),
-    // Return a new FireworkExplosion to set
+    // 返回一个新 FireworkExplosion 来设置
     FireworkExplosion::withFadeColors
 );
 ```
@@ -210,15 +210,15 @@ stack.update(
 尽管可变数据组件存储在 `ItemStack` 上，但可以通过 `Item` 设置默认组件映射；该映射会存储到 `Holder<Item>` 上，最后在构造 `ItemStack` 时作为原型传给它。可通过 `Item.Properties#component` 向 `Item` 添加组件。对于依赖动态生成数据的组件（例如[数据包注册表对象][datapackregistry]），应改用 `Item.Properties#delayedComponent`，根据注册表的 `HolderLookup.Provider` 构造值。
 
 ```java
-// For some DeferredRegister.Items REGISTRAR
+// 对于某些 DeferredRegister.Items REGISTRAR
 public static final Item COMPONENT_EXAMPLE = REGISTRAR.register("component",
-    // register is used over other overloads as the DataComponentType has not been registered yet
+    // 这里使用 registryName 重载，因为 DataComponentType 尚未注册
     registryName -> new Item(
         new Item.Properties()
         .setId(ResourceKey.create(Registries.ITEM, registryName))
-        // Passes in the direct component value.
+        // 直接传入组件值。
         .component(BASIC_EXAMPLE.get(), new ExampleRecord(24, true))
-        // Passes in a component factory, taking in the registry context and returning the value.
+        // 传入组件工厂，获取注册表上下文并返回值。
         .delayedComponent(DataComponents.DAMAGE_RESISTANT, context -> new DamageResistant(context.getOrThrow(DamageTypeTags.IS_EXPLOSION)))
     )
 );
@@ -227,14 +227,14 @@ public static final Item COMPONENT_EXAMPLE = REGISTRAR.register("component",
 如果应将数据组件添加到属于原版或其他模组的现有 Item，就应在 [**模组事件总线**][modbus] 上监听 `ModifyDefaultComponentsEvent`。该事件提供 `modify` 与 `modifyMatching` 方法，允许修改关联 Item 的 `DataComponentPatch.Builder`。Builder 可以 `#set` 现有组件，也可以将其 `#set` 为 null，从而有效移除它们。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void modifyComponents(ModifyDefaultComponentsEvent event) {
-    // Sets the component on melon seeds
+    // 为西瓜种子设置组件
     event.modify(Items.MELON_SEEDS, builder ->
         builder.set(BASIC_EXAMPLE.get(), new ExampleRecord(10, false))
     );
 
-    // Removes the component for any items that have a crafting remainder
+    // 移除所有具有合成剩余物的物品上的组件
     event.modifyMatching(
         (item, components) -> item.getCraftingRemainder() != null,
         builder -> builder.set(DataComponents.BUCKET_ENTITY_DATA, null)
@@ -252,7 +252,7 @@ public class ExampleHolder implements MutableDataComponentHolder {
     private int data;
     private final PatchedDataComponentMap components;
 
-    // Overloads can be provided to supply the map itself
+    // 可以提供重载来提供映射本身
     public ExampleHolder() {
         this.data = 0;
         this.components = new PatchedDataComponentMap(DataComponentMap.EMPTY);
@@ -285,7 +285,7 @@ public class ExampleHolder implements MutableDataComponentHolder {
         this.components.setAll(components);
     }
 
-    // Other methods
+    // 其他方法
 }
 ```
 
@@ -316,9 +316,9 @@ public class ExampleHolder implements MutableDataComponentHolder {
     public ExampleHolder(int data, DataComponentPatch patch) {
         this.data = data;
         this.components = PatchedDataComponentMap.fromPatch(
-            // The prototype map to apply to
+            // 适用的原型图
             DataComponentMap.EMPTY,
-            // The associated patches
+            // 相关补丁
             patch
         );
     }

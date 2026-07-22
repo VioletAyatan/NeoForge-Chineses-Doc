@@ -15,14 +15,14 @@ JSON 本身采用相对简单的格式：
     "homepage": "<homepage/download page for your mod>",
     "<mcversion>": {
         "<modversion>": "<changelog for this version>", 
-        // List all versions of your mod for the given Minecraft version, along with their changelogs
+        // 列出给定 Minecraft 版本的模组的所有版本及其变更日志
         // ...
     },
     "promos": {
         "<mcversion>-latest": "<modversion>",
-        // Declare the latest "bleeding-edge" version of your mod for the given Minecraft version
+        // 为给定的 Minecraft 版本声明你的模组的最新 "bleeding-edge" 版本
         "<mcversion>-recommended": "<modversion>",
-        // Declare the latest "stable" version of your mod for the given Minecraft version
+        // 为给定的 Minecraft 版本声明你的模组的最新 "stable" 版本
         // ...
     }
 }

@@ -74,17 +74,17 @@ NeoForge 允许[扩展][extended] `ItemDisplayContext`，用于自定义渲染�
 通常可以在代码中用某种 Delegate 包装现有 BlockState Model 或 ItemStack Model，从而修改它。BlockState Model 提供 `DelegateBlockStateModel`，而 ItemStack Model 没有现成实现。你的实现可以只重写所需方法：
 
 ```java
-// For block states
+// 对于方块状态
 public class MyDelegateBlockStateModel extends DelegateBlockStateModel {
-    // Pass the original model to super.
+    // 将原始模型传递给super。
     public MyDelegateBlockStateModel(BlockStateModel originalModel) {
         super(originalModel);
     }
     
-    // Override whatever methods you want here. You may also access originalModel if needed.
+    // 在此重写所需的任意方法。如有需要，也可以访问 originalModel。
 }
 
-// For item models
+// 适用于物品模型
 public class MyDelegateItemModel implements ItemModel {
 
     private final ItemModel originalModel;
@@ -93,7 +93,7 @@ public class MyDelegateItemModel implements ItemModel {
         this.originalModel = originalModel;
     }
 
-    // Override whatever methods you want here. You may also access originalModel if needed.
+    // 在此重写所需的任意方法。如有需要，也可以访问 originalModel。
     @Override
     public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed
     ) {
@@ -105,22 +105,22 @@ public class MyDelegateItemModel implements ItemModel {
 编写 Model Wrapper 类后，必须把 Wrapper 应用于应受影响的 Model。请在 [**模组事件总线**][modbus] 上为 `ModelEvent.ModifyBakingResult` 编写[客户端][sides][事件处理器][event]：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void modifyBakingResult(ModelEvent.ModifyBakingResult event) {
-    // For block state models
+    // 适用于方块状态模型
     event.getBakingResult().blockStateModels().computeIfPresent(
-        // The block state of the model to modify.
+        // 要修改的模型的方块状态。
         MyBlocksClass.EXAMPLE_BLOCK.get().defaultBlockState(),
-        // A BiFunction with the location and the original models as parameters, returning the new model.
+        // A BiFunction，以位置和原始模型为参数，返回新模型。
         (location, model) -> new MyDelegateBakedModel(model);
     );
 
-    // For item models
+    // 适用于物品模型
     event.getBakingResult().itemStackModels().computeIfPresent(
-        // The resource location the model to modify.
-        // Typically the item registry name; however, can be anything due to the ITEM_MODEL data component
+        // 要修改的模型的资源位置。
+        // 通常为物品注册表名称；但是，由于 ITEM_MODEL 数据组件，可以是任何内容
         MyItemsClass.EXAMPLE_ITEM.getKey().identifier(),
-        // A BiFunction with the location and the original models as parameters, returning the new model.
+        // A BiFunction，以位置和原始模型为参数，返回新模型。
         (location, model) -> new MyDelegateItemModel(model);
     );
 }

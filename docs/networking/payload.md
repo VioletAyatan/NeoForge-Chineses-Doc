@@ -3,9 +3,9 @@
 Payload 用于在客户端与服务器之间发送任意数据。它们通过 `RegisterPayloadHandlersEvent` 事件提供的 `PayloadRegistrar` 进行注册。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(RegisterPayloadHandlersEvent event) {
-    // Sets the current network version
+    // 设置当前网络版本
     final PayloadRegistrar registrar = event.registrar("1");
 }
 ```
@@ -23,10 +23,10 @@ public record MyData(String name, int age) implements CustomPacketPayload {
     
     public static final CustomPacketPayload.Type<MyData> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("mymod", "my_data"));
 
-    // Each pair of elements defines the stream codec of the element to encode/decode and the getter for the element to encode
-    // 'name' will be encoded and decoded as a string
-    // 'age' will be encoded and decoded as an integer
-    // The final parameter takes in the previous parameters in the order they are provided to construct the payload object
+    // 每对元素定义该元素的流编解码器为 encode/decode 以及该元素要编码的 getter
+    // 'name' 将被编码和解码为字符串
+    // 'age' 将被编码和解码为整数
+    // 最后一个参数按提供顺序接收前述参数，用于构造 payload 对象
     public static final StreamCodec<ByteBuf, MyData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.STRING_UTF8,
         MyData::name,
@@ -47,9 +47,9 @@ public record MyData(String name, int age) implements CustomPacketPayload {
 最后，可以通过 registrar 注册该 payload：
 
 ```java
-// In some common event class
+// 在一些常见的事件类中
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(RegisterPayloadHandlersEvent event) {
     final PayloadRegistrar registrar = event.registrar("1");
     registrar.playBidirectional(
@@ -59,9 +59,9 @@ public static void register(RegisterPayloadHandlersEvent event) {
     );
 }
 
-// In some client-only event class
+// 在某些仅限客户端的事件类中
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void register(RegisterClientPayloadHandlersEvent event) {
     event.register(
         MyData.TYPE,
@@ -93,7 +93,7 @@ public static void register(RegisterClientPayloadHandlersEvent event) {
 public class ClientPayloadHandler {
     
     public static void handleDataOnMain(final MyData data, final IPayloadContext context) {
-        // Do something with the data, on the main thread
+        // 在主线程上对数据做一些事情
         blah(data.age());
     }
 }
@@ -107,12 +107,12 @@ public class ClientPayloadHandler {
 如果需要执行资源开销很大的计算，应将这些工作放在网络线程中执行，避免阻塞主线程。对于发往服务器的连接，可以在注册 payload 之前调用 `PayloadRegistrar#executesOn`，把 `PayloadRegistrar` 的 `HandlerThread` 设置为 `HandlerThread#NETWORK`；对于发往客户端的连接，则需要把 `HandlerThread` 传给 `RegisterClientPayloadHandlersEvent#register`。
 
 ```java
-// In some common event class
+// 在一些常见的事件类中
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(RegisterPayloadHandlersEvent event) {
     final PayloadRegistrar registrar = event.registrar("1")
-        .executesOn(HandlerThread.NETWORK); // All subsequent payloads will register on the network thread
+        .executesOn(HandlerThread.NETWORK); // 所有后续有效负载将在网络线程上注册
     registrar.playBidirectional(
         MyData.TYPE,
         MyData.STREAM_CODEC,
@@ -120,13 +120,13 @@ public static void register(RegisterPayloadHandlersEvent event) {
     );
 }
 
-// In some client-only event class
+// 在某些仅限客户端的事件类中
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void register(RegisterClientPayloadHandlersEvent event) {
     event.register(
         MyData.TYPE,
-        HandlerThread.NETWORK // Payload handler will be invoked on the network thread
+        HandlerThread.NETWORK // Payload 处理器将在网络线程上调用
         ClientPayloadHandler::handleDataOnNetwork
     );
 }
@@ -138,21 +138,21 @@ public static void register(RegisterClientPayloadHandlersEvent event) {
 ```java
 PayloadRegistrar registrar = event.registrar("1");
 
-registrar.playBidirectional(...); // On the main thread
-registrar.playBidirectional(...); // On the main thread
+registrar.playBidirectional(...); // 在主线程上
+registrar.playBidirectional(...); // 在主线程上
 
-// Configuration methods modify the state of the registrar
-// by creating a new instance, so the change needs to be
-/// updated by storing the result
+// 配置方法修改注册器的状态
+// 通过创建新实例，因此需要进行更改
+/// 通过存储结果进行更新
 registrar = registrar.executesOn(HandlerThread.NETWORK);
 
-registrar.playBidirectional(...); // On the network thread
-registrar.playBidirectional(...); // On the network thread
+registrar.playBidirectional(...); // 网络线程上
+registrar.playBidirectional(...); // 网络线程上
 
 registrar = registrar.executesOn(HandlerThread.MAIN);
 
-registrar.playBidirectional(...); // On the main thread
-registrar.playBidirectional(...); // On the main thread
+registrar.playBidirectional(...); // 在主线程上
+registrar.playBidirectional(...); // 在主线程上
 ```
 :::
 
@@ -167,15 +167,15 @@ registrar.playBidirectional(...); // On the main thread
 public class ClientPayloadHandler {
     
     public static void handleDataOnNetwork(final MyData data, final IPayloadContext context) {
-        // Do something with the data, on the network thread
+        // 在网络线程上对数据执行某些操作
         blah(data.name());
         
-        // Do something with the data, on the main thread
+        // 在主线程上对数据做一些事情
         context.enqueueWork(() -> {
             blah(data.age());
         })
         .exceptionally(e -> {
-            // Handle exception
+            // 处理异常
             context.disconnect(Component.translatable("my_mod.networking.failed", e.getMessage()));
             return null;
         });
@@ -194,18 +194,18 @@ public class ClientPayloadHandler {
 ```java
 // ON THE CLIENT
 
-// Send payload to server
+// 发送负载到服务器
 ClientPacketDistributor.sendToServer(new MyData(...));
 
 // ON THE SERVER
 
-// Send to one player (ServerPlayer serverPlayer)
+// 发送至一位玩家 (ServerPlayer serverPlayer)
 PacketDistributor.sendToPlayer(serverPlayer, new MyData(...));
 
-/// Send to all players tracking this chunk (ServerLevel serverLevel, ChunkPos chunkPos)
+/// 发送给所有追踪此 chunk 的玩家 (ServerLevel serverLevel, ChunkPos chunkPos)
 PacketDistributor.sendToPlayersTrackingChunk(serverLevel, chunkPos, new MyData(...));
 
-/// Send to all connected players
+/// 发送给所有连接的玩家
 PacketDistributor.sendToAllPlayers(new MyData(...));
 ```
 

@@ -8,14 +8,14 @@
 {
     "neoforge:conditions": [
         {
-            // Condition 1
+            // 条件 1
         },
         {
-            // Condition 2
+            // 条件 2
         },
         // ...
     ],
-    // The rest of the data file
+    // 数据文件的其余部分
 }
 ```
 
@@ -25,7 +25,7 @@
 ```json5
 {
     "neoforge:conditions": [ /* ...*/ ],
-    "neoforge:value": 2 // The value to load
+    "neoforge:value": 2 // 要加载的值
 }
 ```
 :::
@@ -59,7 +59,7 @@
 
 ```json5
 {
-    // Will always return true (or false for "neoforge:never")
+    // 始终为返回 true（或 false 对于 "neoforge:never"）
     "type": "neoforge:always"
 }
 ```
@@ -80,10 +80,10 @@
 
 ```json5
 {
-    // Inverts the result of the stored condition
+    // 反转存储条件的结果
     "type": "neoforge:not",
     "value": {
-        // Another condition
+        // 另一个条件
     }
 }
 ```
@@ -94,14 +94,14 @@
 
 ```json5
 {
-    // ANDs the stored conditions together (or ORs for "neoforge:or")
+    // 对存储的条件执行 AND 运算（"neoforge:or" 则执行 OR 运算）
     "type": "neoforge:and",
     "values": [
         {
-            // First condition
+            // 第一个条件
         },
         {
-            // Second condition
+            // 第二个条件
         }
     ]
 }
@@ -114,7 +114,7 @@
 ```json5
 {
     "type": "neoforge:mod_loaded",
-    // Returns true if "examplemod" is loaded
+    // 如果加载 "examplemod"，则返回 true
     "modid": "examplemod"
 }
 ```
@@ -126,10 +126,10 @@
 ```json5
 {
     "type": "neoforge:registered",
-    // The registry to check the value for
-    // Defaults to `minecraft:item`
+    // 用于检查值的注册表
+    // 默认为 `minecraft:item`
     "registry": "minecraft:item",
-    // Returns true if "examplemod:example_item" has been registered
+    // 如果 "examplemod:example_item" 已注册，则返回 true
     "value": "examplemod:example_item"
 }
 ```
@@ -141,10 +141,10 @@
 ```json5
 {
     "type": "neoforge:tag_empty",
-    // The registry to check the tag for
-    // Defaults to `minecraft:item`
+    // 检查标签的注册表
+    // 默认为 `minecraft:item`
     "registry": "minecraft:item",
-    // Returns true if "examplemod:example_tag" is an empty tag
+    // 如果 "examplemod:example_tag" 是空标签，则返回 true
     "tag": "examplemod:example_tag"
 }
 ```
@@ -156,7 +156,7 @@
 ```json5
 {
     "type": "neoforge:feature_flags_enabled",
-    // Returns true if the "examplemod:example_feature" is enabled
+    // 如果启用 "examplemod:example_feature"，则返回 true
     "flags": [
         "examplemod:example_feature"
     ]
@@ -206,16 +206,16 @@ public static final Supplier<MapCodec<XorCondition>> XOR =
         {
             "type": "examplemod:xor",
             "first": {
-                // Either this condition is true
+                // 此条件为 true
                 "type": "..."
             },
             "second": {
-                // Or this condition, not both!
+                // 或此条件，不能同时存在！
                 "type": "..."
             }
         }
     ],
-    // The rest of the data file
+    // 数据文件的其余部分
 }
 ```
 

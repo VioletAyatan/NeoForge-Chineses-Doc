@@ -29,48 +29,48 @@ GUI 渲染分两个阶段进行：提交阶段与渲染阶段。
 `GuiGraphicsExtractor` 将当前 pose 公开为 `Matrix3x2fStack`，可用于应用任意 XY 变换：
 
 ```java
-// For some GuiGraphicsExtractor graphics
+// 对于某个 GuiGraphicsExtractor graphics
 
-// Push a new matrix onto the stack
+// 将新矩阵压入姿势栈
 graphics.pose().pushMatrix();
 
-// Apply the transformations you want the element to render with
+// 应用渲染该元素时所需的变换
 
-// Takes in some XY offset
+// 接受 XY 偏移量
 graphics.pose().translate(10, 10);
-// Takes in some rotation angle in radians
+// 接受以弧度表示的旋转角
 graphics.pose().rotate((float) Math.PI);
-// Takes in some XY scalar
+// 接受 XY 缩放系数
 graphics.pose().scale(2f, 2f);
 
-// Submit elements to the `GuiRenderState`
+// 将元素提交到 `GuiRenderState`
 graphics.blitSprite(...);
 
-// Pop the matrix to reset the transformations
+// 弹出矩阵以重置变换
 graphics.pose().popMatrix();
 ```
 
 此外，可以使用 `enableScissor` 与 `disableScissor` 将元素裁剪到特定区域：
 
 ```java
-// For some GuiGraphicsExtractor graphics
+// 对于某个 GuiGraphicsExtractor graphics
 
-// Enable the scissor with the bounds to render within
+// 启用裁剪，并指定渲染边界
 graphics.enableScissor(
-    // The left X coordinate
+    // 左侧 X 坐标
     0,
-    // The top Y coordinate
+    // 顶部 Y 坐标
     0,
-    // The right X coordinate
+    // 右侧 X 坐标
     10,
-    // The bottom Y coordinate
+    // 底部 Y 坐标
     10
 );
 
-// Submit elements to the `GuiRenderState`
+// 将元素提交到 `GuiRenderState`
 graphics.blitSprite(...);
 
-// Disable the scissor to reset the rendering area
+// 禁用裁剪并重置渲染区域
 graphics.disableScissor();
 ```
 
@@ -97,32 +97,32 @@ graphics.disableScissor();
 如果 `GuiGraphicsExtractor` 提供的现有方法不足以满足需求，NeoForge 添加了 `GuiGraphicsExtractor#submitGuiElementRenderState` 方法，用于提交自定义元素渲染状态。
 
 ```java
-// For some GuiGraphicsExtractor graphics
+// 对于某个 GuiGraphicsExtractor graphics
 graphics.submitGuiElementRenderState(new GuiElementRenderState() {
 
-    // Store the current pose of the stack
+    // 存储姿势栈的当前 pose
     private final Matrix3x2f pose = new Matrix3x2f(graphics.pose());
-    // Store the current scissor area
+    // 存储当前裁剪区域
     @Nullable
     private final ScreenRectangle scissorArea = graphics.peekScissorStack();
 
     @Override
     public ScreenRectangle bounds() {
-        // We will assume the bounds is 0, 0, 10, 10
+        // 我们假设边界是 0, 0, 10, 10
         
-        // Compute the initial rectangle
+        // 计算初始矩形
         ScreenRectangle rectangle = new ScreenRectangle(
-            // The XY position
+            // XY 坐标
             0, 0,
-            // The width and height of the element
+            // 元素的宽度和高度
             10, 10
         );
 
-        // Transform the rectangle to its appropriate location using the pose
+        // 使用 pose 将矩形变换到适当的位置
         rectangle = rectangle.transformMaxBounds(this.pose);
 
-        // If there is a scissor area defined, return the intersection of the two rectangles
-        // Otherwise, return the full bounds
+        // 如果定义了裁剪区域，则返回两个矩形的交集
+        // 否则返回完整边界
         return this.scissorArea != null
             ? this.scissorArea.intersection(rectangle)
             : rectangle;
@@ -141,21 +141,21 @@ graphics.submitGuiElementRenderState(new GuiElementRenderState() {
 
     @Override
     public TextureSetup textureSetup() {
-        // Returns the textures to be used by the samplers in a fragment shader
-        // When used by the fragment shader:
-        // - Sampler0 typically contains the element texture
-        // - Sampler1 typically provides a second element texture, currently only used by the end portal pipeline
-        // - Sampler2 typically contains the game's lightmap texture
+        // 返回片段着色器中采样器使用的纹理
+        // 当由片段着色器使用时：
+        // - Sampler0 通常包含元素纹理
+        // - Sampler1 通常提供第二个元素纹理，目前仅由末地传送门 pipeline 使用
+        // - Sampler2 通常包含游戏的光照贴图纹理
 
-        // Should generally specify at least one texture in Sampler0
+        // 通常应在 Sampler0 中指定至少一个纹理
         return TextureSetup.noTexture();
     }
 
     @Override
     public void buildVertices(VertexConsumer consumer) {
-        // Build the vertices using the vertex format specified by the pipeline
-        // For GUI, uses quads with position and color
-        // Color must be in ARGB format
+        // 使用管道指定的顶点格式构建顶点
+        // 对于 GUI，使用带有位置和颜色的四边形
+        // 颜色必须采用 ARGB 格式
         consumer.addVertexWith2DPose(this.pose, 0,   0).setUv(0, 0).setColor(0xFFFFFFFF);
         consumer.addVertexWith2DPose(this.pose, 0,  10).setUv(0, 1).setColor(0xFFFFFFFF);
         consumer.addVertexWith2DPose(this.pose, 10, 10).setUv(1, 1).setColor(0xFFFFFFFF);
@@ -215,7 +215,7 @@ graphics.submitGuiElementRenderState(new GuiElementRenderState() {
 纹理通过 `BlitRenderState` 提交，因此方法名为 `blit`。`BlitRenderState` 复制图像位，并通过 `RenderPipeline` 参数将其渲染到 Screen。每个 `blit` 还接收一个 `Identifier`，表示纹理的绝对位置：
 
 ```java
-// Points to 'assets/examplemod/textures/gui/container/example_container.png'
+// 指向 'assets/examplemod/textures/gui/container/example_container.png'
 private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("examplemod", "textures/gui/container/example_container.png");
 ```
 
@@ -234,7 +234,7 @@ private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("examp
 `blitSprite` 是 `blit` 的特殊实现，其纹理取自 GUI 纹理图集。大多数覆盖在背景上的纹理都是 Sprite，例如熔炉 GUI 中的“燃烧进度”叠加层。所有 Sprite 纹理路径都相对于 `textures/gui/sprites`，无需指定文件扩展名。
 
 ```java
-// Points to 'assets/examplemod/textures/gui/sprites/container/example_container/example_sprite.png'
+// 指向 'assets/examplemod/textures/gui/sprites/container/example_container/example_sprite.png'
 private static final Identifier SPRITE = Identifier.fromNamespaceAndPath("examplemod", "container/example_container/example_sprite");
 ```
 
@@ -247,10 +247,10 @@ private static final Identifier SPRITE = Identifier.fromNamespaceAndPath("exampl
 可在与纹理文件同名的 mcmeta 文件中添加 `gui.scaling` JSON 对象来设置此行为。
 
 ```json5
-// For some texture file example_sprite.png
-// In example_sprite.png.mcmeta
+// 对于某些纹理文件 example_sprite.png
+// 在 example_sprite.png.mcmeta
 
-// Stretch example
+// 拉伸示例
 {
     "gui": {
         "scaling": {
@@ -259,37 +259,37 @@ private static final Identifier SPRITE = Identifier.fromNamespaceAndPath("exampl
     }
 }
 
-// Tile example
+// 平铺示例
 {
     "gui": {
         "scaling": {
             "type": "tile",
-            // The size to begin tiling at
-            // This is usually the size of the texture
+            // 开始平铺的尺寸
+            // 这通常是纹理的大小
             "width": 40,
             "height": 40
         }
     }
 }
 
-// Nine slice example
+// 九片示例
 {
     "gui": {
         "scaling": {
             "type": "nine_slice",
-            // The size to begin tiling at
-            // This is usually the size of the texture
+            // 开始平铺的尺寸
+            // 这通常是纹理的大小
             "width": 40,
             "height": 40,
             "border": {
-                // The padding of the texture that will be sliced into the border texture
+                // 将被切片到边框纹理中的纹理的填充
                 "left": 1,
                 "right": 1,
                 "top": 1,
                 "bottom": 1
             },
-            // When true the center part of the texture will be applied like
-            // the stretch type instead of a nine slice tiling.
+            // 当 true 时，纹理的中心部分将像这样应用
+            // 拉伸类型而不是九片平铺。
             "stretch_inner": true
         }
     }
@@ -327,18 +327,18 @@ Item 装饰（例如耐久条、冷却与数量）通过 `itemDecorations` 处�
 每个 PiP 都会提交 `PictureInPictureRenderState`，将对象渲染到 Screen。与 `GuiElementRenderState` 类似，`PictureInPictureRenderState` 也扩展 `ScreenArea`，通过 `bounds` 定义边界，并通过 `scissorArea` 定义裁剪。随后，`PictureInPictureRenderState` 会定义画面的渲染位置与大小，指定左侧 X（`x0`）、右侧 X（`x1`）、顶部 Y（`y0`）和底部 Y（`y1`）。画面内的元素还可以按某个 float 值进行 `scale`。最后，可以使用额外的 `pose` 变换画面的 XY 坐标。默认使用单位 pose，因为渲染对象通常已在画面自身内部完成变换。为简化实现，可以使用 `PictureInPictureRenderState#getBounds` 计算 `bounds`；但如果修改了 `pose`，就需要实现自己的逻辑。
 
 ```java
-// Other parameters can be added, but this is the minimum required to implement all methods
+// 可以添加其他参数，但这是实现所有方法所需的最低限度
 public record ExampleRenderState(
-    int x0, // The left X
-    int x1, // The right X
-    int y0, // The top Y
-    int y1, // The bottom Y
-    float scale, // The scale factor when drawing to the picture
-    @Nullable ScreenRectangle scissorArea, // The rendering area
-    @Nullable ScreenRectangle bounds // The bounds of the element
+    int x0, // 左X
+    int x1, // 右X
+    int y0, // 顶部Y
+    int y1, // 底部Y
+    float scale, // 绘制到图片时的比例因子
+    @Nullable ScreenRectangle scissorArea, // 渲染区域
+    @Nullable ScreenRectangle bounds // 元素的边界
 ) implements PictureInPictureRenderState {
 
-    // Additional constructors
+    // 附加构造器
     public ExampleRenderState(int x, int y, int width, int height, @Nullable ScreenRectangle scissorArea) {
         this(
             x, // x0
@@ -362,68 +362,68 @@ public record ExampleRenderState(
 ```java
 public class ExampleRenderer extends PictureInPictureRenderer<ExampleRenderState> {
 
-    // Takes in the buffers used to write the object to the picture
+    // 接收用于将对象写入图片的缓冲区
     public ExampleRenderer(MultiBufferSource.BufferSource bufferSource) {
         super(bufferSource);
     }
 
     @Override
     public Class<ExampleRenderState> getRenderStateClass() {
-        // Returns the render state class
+        // 返回渲染状态类
         return ExampleRenderState.class;
     }
 
     @Override
     protected String getTextureLabel() {
-        // Can be any string, but should be unique
-        // Prefix with mod id for greater clarity
+        // 可以是任何字符串，但应该是唯一的
+        // 带模组 ID 的前缀，以便更清晰
         return "examplemod: example pip";
     }
 
     @Override
     protected void renderToTexture(ExampleRenderState renderState, PoseStack pose) {
-        // Modify pose if desired
-        // Can push/pop if wanted, but a new `PoseStack` is created for writing to the picture
+        // 根据需要修改姿势
+        // 如果需要，可以使用 push/pop，但是创建新 `PoseStack` 用于写入图片
         pose.translate(...);
 
-        // Render the object to the screen
+        // 将对象渲染到屏幕
         VertexConsumer consumer = this.bufferSource.getBuffer(RenderType.lines());
         consumer.addVertex(...).setColor(...).setNormal(...);
         consumer.addVertex(...).setColor(...).setNormal(...);
     }
 
-    // Additional methods
+    // 附加方法
 
     @Override
     protected void blitTexture(ExampleRenderState renderState, GuiRenderState guiState) {
-        // Submits the picture to the gui render state as a `BlitRenderState` by default
-        // Override this if you want to modify the `BlitRenderState`
-        // Should call `GuiRenderState#submitBlitToCurrentLayer`
-        // Bounds can be `null`
+        // 默认将图片作为 `BlitRenderState` 提交到 gui 渲染状态
+        // 如果要修改 `BlitRenderState`，请重写此方法
+        // 应调用 `GuiRenderState#submitBlitToCurrentLayer`
+        // 边界可以是 `null`
         super.blitTexture(renderState, guiState);
     }
 
     @Override
     protected boolean textureIsReadyToBlit(ExampleRenderState renderState) {
-        // When true, this reuses the already written-to picture instead of
-        // constructing a new picture and writing to it using `renderToTexture`.
-        // This should only be true if it is guaranteed that two elements will
-        // be rendered *exactly* the same.
+        // 当 true 时，此处会复用已经写入内容的图像，而不是
+        // 构造一幅新图像并使用 `renderToTexture` 写入。
+        // 只有能保证两个元素会
+        // 以*完全*相同的方式渲染时，此值才应为 true。
         return super.textureIsReadyToBlit(renderState);
     }
 
     @Override
     protected float getTranslateY(int scaledHeight, int guiScale) {
-        // Sets the initial offset the `PoseStack` is translated by in the Y direction.
-        // Common implementations use `scaledHeight / 2f` to center the Y coordinate similar to X.
+        // 设置 `PoseStack` 在 Y 方向平移的初始偏移量。
+        // 常见实现使用 `scaledHeight / 2f` 将 Y 坐标居中，类似于 X。
         return scaledHeight;
     }
 
     @Override
     public boolean canBeReusedFor(ExampleRenderState state, int textureWidth, int textureHeight) {
-        // A NeoForge-added method used to check if this renderer can be reused on a subsequent frame.
-        // When true, this will reuse the constructed state and renderer from the previous frame.
-        // When false, a new renderer will be created.
+        // NeoForge 新增的方法，用于检查此渲染器能否在后续帧复用。
+        // 当 true 时，此将重用前一帧的构造状态和渲染器。
+        // 当 false 时，将创建一个新渲染器。
         return super.canBeReusedFor(state, textureWidth, textureHeight);
     }
 }
@@ -432,12 +432,12 @@ public class ExampleRenderer extends PictureInPictureRenderer<ExampleRenderState
 要使用 PiP，必须在[模组事件总线][modbus]上将 Renderer 注册到 `RegisterPictureInPictureRenderersEvent`。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
     event.register(
-        // The PiP render state class
+        // PiP 渲染状态类
         ExampleRenderState.class,
-        // A factory that takes in the `MultiBufferSource.BufferSource` and returns the PiP renderer
+        // 接收 `MultiBufferSource.BufferSource` 并返回 PiP 渲染器的工厂
         ExampleRenderer::new
     );
 }
@@ -446,11 +446,11 @@ public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
 随后可以使用 NeoForge 添加的 `GuiGraphicsExtractor#submitPictureInPictureRenderState` 提交 PiP 渲染状态：
 
 ```java
-// For some GuiGraphicsExtractor graphics
+// 对于某个 GuiGraphicsExtractor graphics
 graphics.submitPictureInPictureRenderState(new ExampleRenderState(
     0, 0,
     10, 10,
-    // Get the scissor area from the stack
+    // 从裁剪栈中获取裁剪区域
     graphics.peekScissorStack()
 ));
 ```
@@ -500,7 +500,7 @@ Minecraft 的所有 Widget 都是 `NarratableEntry`，因此使用现有子类�
 首先，所有 Screen 都接收一个表示 Screen 标题的 `Component`。该组件通常由某个子类型绘制到 Screen；在基础 Screen 中，它只用于旁白消息。Screen 还可以接收 `Minecraft` 实例以及渲染文本时使用的 `Font`；若未指定，则使用默认实例与 Font。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 public MyScreen(Component title) {
     super(Minecraft.getInstance(), Minecraft.getInstance().font, title);
 }
@@ -521,13 +521,13 @@ Screen 初始化后会调用 `#init` 方法。`init` 方法根据 `Minecraft` �
 通常最常使用 `addRenderableWidget`。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 @Override
 protected void init() {
     super.init();
 
-    // Add widgets and precomputed values
-    this.addRenderableWidget(new EditBox(/* ... */));
+    // 添加小部件和预先计算的值
+    this.addRenderableWidget(new EditBox(/* ...*/));
 }
 ```
 
@@ -536,12 +536,12 @@ protected void init() {
 Screen 也会使用 `#tick` 方法执行 tick，以便为渲染运行一定程度的客户端逻辑。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 @Override
 public void tick() {
     super.tick();
 
-    // Execute some logic every frame
+    // 每帧执行一些逻辑
 }
 ```
 
@@ -564,25 +564,25 @@ Screen 通过 `#extractRenderStateWithTooltipAndSubtitles` 在三个不同层级
 最后，悬浮层级提交位于先前元素之上的元素，例如工具提示。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 
-// mouseX and mouseY indicate the scaled coordinates of where the cursor is in on the screen
+// mouseX 和 mouseY 表示光标在屏幕上所在位置的缩放坐标
 @Override
 public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-    // Submit things on the background stratum
+    // 后台层提交东西
     this.extractTransparentBackground(graphics);
 }
 
 @Override
 public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-    // Submit things before widgets
+    // 在小部件之前提交内容
 
-    // Then the widgets if this is a direct child of the Screen
+    // 如果这是屏幕的直接子元素，则为小部件
     super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
-    // Submit things after widgets
+    // 在小部件之后提交东西
 
-    // Set the tooltip to be added above everything in this method
+    // 设置要在此方法中的所有内容之上添加的工具提示
     graphics.setTooltipForNextFrame(...);
 }
 ```
@@ -596,21 +596,21 @@ public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mo
 `removed` 会在 Screen 切换并交由垃圾收集器回收之前调用。它负责处理所有尚未重置回 Screen 打开前初始状态的内容。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 
 @Override
 public void onClose() {
-    // Stop any handlers here
+    // 在此处停止任何处理器
 
-    // Call last in case it interferes with the override
+    // 最后调用，以防干扰覆盖
     super.onClose();
 }
 
 @Override
 public void removed() {
-    // Reset initial states here
+    // 在此重置初始状态
 
-    // Call last in case it interferes with the override
+    // 最后调用，以防干扰覆盖
     super.removed()
 ;}
 ```
@@ -644,7 +644,7 @@ public void removed() {
 :::
 
 ```java
-// In some AbstractContainerScreen subclass
+// 在某些 AbstractContainerScreen 子类中
 public MyContainerScreen(MyMenu menu, Inventory playerInventory, Component title) {
     super(menu, playerInventory, title, 176, 166);
 
@@ -662,12 +662,12 @@ public MyContainerScreen(MyMenu menu, Inventory playerInventory, Component title
 当玩家存活且正在查看 Screen 时，容器 Screen 会在 `#tick` 方法中通过 `#containerTick` 执行 tick。它实质上取代了容器 Screen 中的 `tick`，最常见的用途是让配方书执行 tick。
 
 ```java
-// In some AbstractContainerScreen subclass
+// 在某些 AbstractContainerScreen 子类中
 @Override
 protected void containerTick() {
     super.containerTick();
 
-    // Tick things here
+    // 在此执行 tick 逻辑
 }
 ```
 
@@ -678,21 +678,21 @@ protected void containerTick() {
 先从背景开始：调用 `extractBackground`，将 Screen 的背景元素提交到背景层级。
 
 ```java
-// In some AbstractContainerScreen subclass
+// 在某些 AbstractContainerScreen 子类中
 
-// The location of the background texture (assets/<namespace>/<path>)
+// 背景纹理的位置（assets/<namespace>/<path>）
 private static final Identifier BACKGROUND_LOCATION = Identifier.fromNamespaceAndPath(MOD_ID, "textures/gui/container/my_container_screen.png");
 
 @Override
 protected void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
     super.extractBackground(graphics, mouseX, mouseY, a);
 
-    // Submits the background texture. 'leftPos' and 'topPos' should
-    // already represent the top left corner of where the texture
-    // should be rendered as it was precomputed from the 'imageWidth'
-    // and 'imageHeight'. The two zeros represent the integer u/v
-    // coordinates inside the PNG file, whose size is represented by
-    // the last two integers (typically 256 x 256).
+    // 提交背景纹理。 'leftPos' 和 'topPos' 应
+    // 已经代表了纹理的左上角应渲染
+    // ，因为它是根据 'imageWidth' 预先计算的
+    // 和 'imageHeight'。两个零代表整数u/v
+    // PNG 文件内的坐标，其大小表示为
+    // 最后两个 integers（通常为 256 x 256）。
     graphics.blit(
         RenderPipelines.GUI_TEXTURED,
         BACKGROUND_LOCATION,
@@ -707,15 +707,15 @@ protected void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int 
 调用 `extractLabels`，在渲染层级中的 Widget 之后提交文本。它以 Screen Font 调用 `text`，提交关联组件。
 
 ```java
-// In some AbstractContainerScreen subclass
+// 在某些 AbstractContainerScreen 子类中
 @Override
 protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
     super.extractLabels(graphics, mouseX, mouseY);
 
-    // Assume we have some Component 'label'
-    // 'label' is drawn at 'labelX' and 'labelY'
-    // The color is an ARGB value
-    // The final boolean renders the drop shadow when true
+    // 假设我们有一些组件 'label'
+    // 'label' 绘制在 'labelX' 和 'labelY'
+    // 颜色是 ARGB 值
+    // final boolean 在 true 时渲染投影
     graphics.text(this.font, this.label, this.labelX, this.labelY, 0xFF404040, false);
 }
 ```
@@ -729,7 +729,7 @@ protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mous
 要将 `AbstractContainerScreen` 与 Menu 配合使用，必须在[**模组事件总线**][modbus]的 `RegisterMenuScreensEvent` 中调用 `register` 完成注册。
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerScreens(RegisterMenuScreensEvent event) {
     event.register(MY_MENU.get(), MyContainerScreen::new);
 }

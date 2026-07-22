@@ -37,12 +37,12 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 ```json5
 {
     "values": {
-        // Attach a value to the carrot item
+        // 为胡萝卜物品附加一个值
         "minecraft:carrot": {
             "amount": 12,
             "chance": 1
         },
-        // Attach a value to all items in the logs tag
+        // 为日志标签中的所有物品附加一个值
         "#minecraft:logs": {
             "amount": 1,
             "chance": 0.1
@@ -56,11 +56,11 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 ```json5
 {
     "values": {
-        // Overwrite the value of the carrot item
+        // 覆盖胡萝卜物品的值
         "minecraft:carrot": {
             // highlight-next-line
             "replace": true,
-            // The new value will be under a value sub-object
+            // 新值将位于值子对象下
             "value": {
                 "amount": 12,
                 "chance": 1
@@ -76,7 +76,7 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 
 ```json5
 {
-    // We do not want the potato to have a value, even if another mod's data map added it
+    // 我们不希望土豆有一个值，即使另一个模组的数据映射添加了它
     "remove": [
         "minecraft:potato"
     ]
@@ -88,9 +88,9 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 ```json5
 {
     "values": {
-        "#minecraft:logs": { /* ... */ }
+        "#minecraft:logs": { /* ...*/ }
     },
-    // Exclude crimson stem again
+    // 再次排除深红色茎
     "remove": [
         "minecraft:crimson_stem"
     ]
@@ -102,8 +102,8 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 ```json5
 {
     "remove": {
-        // The remover will be deserialized from the value (`somekey1` in this case)
-        // and applied to the value attached to the carrot item
+        // 移除器将从值反序列化（本例为 `somekey1`），
+        // 并应用到胡萝卜物品所附加的值上
         "minecraft:carrot": "somekey1"
     }
 }
@@ -131,15 +131,15 @@ public record ExampleData(float amount, float chance) {
 接下来创建数据映射本身：
 
 ```java
-// In this example, we register the data map for the minecraft:item registry, hence we use Item as the generic.
-// Adjust the types accordingly if you want to create a data map for a different registry.
+// 本例为 minecraft:item 注册表注册数据映射，因此使用 Item 作为泛型。
+// 如果要为不同的注册表创建数据映射，请相应地调整类型。
 public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.builder(
-        // The ID of the data map. Data map files for this data map will be located at
+        // 数据映射的 ID。此数据映射的文件位于
         // <yourmodid>:examplemod/data_maps/item/example_data.json.
         Identifier.fromNamespaceAndPath("examplemod", "example_data"),
-        // The registry to register the data map for.
+        // 用于注册数据映射的注册表。
         Registries.ITEM,
-        // The codec of the data map entries.
+        // 数据映射条目的编解码器。
         ExampleData.CODEC
 ).build();
 ```
@@ -147,7 +147,7 @@ public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.bu
 最后，在[模组事件总线][modbus]的 [`RegisterDataMapTypesEvent`][events] 中注册数据映射：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerDataMapTypes(RegisterDataMapTypesEvent event) {
     event.register(EXAMPLE_DATA);
 }
@@ -160,11 +160,11 @@ public static void registerDataMapTypes(RegisterDataMapTypesEvent event) {
 ```java
 public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.builder(...)
         .synced(
-                // The codec used for syncing. May be identical to the normal codec, but may also be
-                // a codec with less fields, omitting parts of the object that are not required on the client.
+                // 用于同步的编解码器。可能与普通编解码器相同，但也可能是
+                // 字段较少的编解码器，省略了客户端不需要的部分对象。
                 ExampleData.CODEC,
-                // Whether the data map is mandatory or not. Marking a data map as mandatory will disconnect clients
-                // that are missing the data map on their side; this includes vanilla clients.
+                // 数据映射是否强制。将数据映射标记为强制将断开客户端连接
+                // 缺少其一侧的数据映射； 这包括原版客户端。
                 false
         ).build();
 ```
@@ -176,16 +176,16 @@ public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.bu
 随后可通过 `Holder#getData(DataMapType)` 查询数据映射值。如果对象没有附加数据映射值，该方法会返回 `null`。继续使用之前的 `ExampleData`，让玩家每次拾取这些 Item 时获得治疗：
 
 ```java
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void itemPickup(ItemEntityPickupEvent.Post event) {
     ItemStack stack = event.getOriginalStack();
-    // Get a Holder<Item> via ItemStack#getItemHolder.
+    // 通过 ItemStack#getItemHolder 获取 Holder<Item>。
     Holder<Item> holder = stack.getItemHolder();
-    // Get the data from the holder.
+    // 从 Holder 获取数据。
     //highlight-next-line
     ExampleData data = holder.getData(EXAMPLE_DATA);
     if (data != null) {
-        // The values are present, so let's do something with them!
+        // 值已经存在，所以让我们用它们做点什么！
         Player player = event.getPlayer();
         if (player.getLevel().getRandom().nextFloat() > data.chance()) {
             player.heal(data.amount());
@@ -228,7 +228,7 @@ public class IntMerger implements DataMapValueMerger<Item, Integer> {
 最后，不要忘记在 builder 中实际指定合并器：
 
 ```java
-// The types of the data map must match the type of the merger.
+// 数据映射的类型必须与合并的类型匹配。
 AdvancedDataMapType<Item, Integer> ADVANCED_MAP = AdvancedDataMapType.builder(...)
         .merger(new IntMerger())
         .build();
@@ -277,8 +277,8 @@ public record MapRemover(String key) implements DataMapValueRemover<Item, Map<St
 ```json5
 {
     "remove": {
-        // As the remover is decoded as a string, we can use a string as the value here.
-        // If it were decoded as an object, we would have needed to use an object.
+        // 由于删除器被解码为字符串，因此我们可以使用字符串作为此处的值。
+        // 如果将其解码为对象，我们就需要使用对象。
         "minecraft:carrot": "somekey1"
     }
 }
@@ -299,7 +299,7 @@ public record MapRemover(String key) implements DataMapValueRemover<Item, Map<St
 与合并器一样，不要忘记将移除器添加到 builder。请注意，这里只需使用 codec：
 
 ```java
-// We assume AdvancedData contains a Map<String, String> property of some sort.
+// 假设 AdvancedData 包含某种 Map<String, String> property。
 AdvancedDataMapType<Item, AdvancedData> ADVANCED_MAP = AdvancedDataMapType.builder(...)
         .remover(MapRemover.CODEC)
         .build();
@@ -317,18 +317,18 @@ public class MyDataMapProvider extends DataMapProvider {
     
     @Override
     protected void gather() {
-        // We create a builder for the EXAMPLE_DATA data map and add our entries using #add.
+        // 为 EXAMPLE_DATA 数据映射创建 builder，并使用 #add 添加条目。
         this.builder(EXAMPLE_DATA)
-                // We turn on replacing. Don't ever ship a mod like this! This is purely for educational purposes.
+                // 启用替换。不要发布采用这种写法的模组；这里只用于演示。
                 .replace(true)
-                // We add the value "amount": 10, "chance": 1 for all slabs. The boolean parameter controls
-                // the "replace" field, which should always be false in a mod.
+                // 为所有台阶添加值 "amount": 10、"chance": 1。boolean 参数控制
+                // "replace" 字段；在模组中，该字段应始终为 false。
                 .add(ItemTags.SLABS, new ExampleData(10, 1), false)
-                // We add the value "amount": 5, "chance": 0.2 for apples.
-                .add(Items.APPLE.builtInRegistryHolder(), new ExampleData(5, 0.2f), false) // Can also use Registry#wrapAsHolder to get the holder of a registry object
-                // We remove wooden slabs again.
+                // 为苹果添加值 "amount": 5、"chance": 0.2。
+                .add(Items.APPLE.builtInRegistryHolder(), new ExampleData(5, 0.2f), false) // 也可以使用 Registry#wrapAsHolder 获取注册表对象的 Holder
+                // 再次移除木质台阶。
                 .remove(ItemTags.WOODEN_SLABS)
-                // We add a mod loaded condition for Botania, because why not.
+                // 为 Botania 添加模组加载条件。
                 .conditions(new ModLoadedCondition("botania"));
     }
 }
@@ -364,9 +364,9 @@ public class MyDataMapProvider extends DataMapProvider {
 与所有数据提供器一样，不要忘记将该提供器添加到事件：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createProvider(MyDataMapProvider::new);
 }

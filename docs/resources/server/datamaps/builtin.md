@@ -8,7 +8,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 
 ```json5
 {
-    // The maximum block distance that a villager will detect this entity as hostile
+    // 村民将此实体检测为敌对的最大方块距离
     "acceptable_villager_distance": 4.0
 }
 ```
@@ -18,7 +18,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 ```json5
 {
     "values": {
-        // Villagers will detect a blaze as hostile if it is within 4 blocks of its position
+        // 如果火焰位于距其位置 4 格以内，村民将检测为敌对火焰
         "minecraft:blaze": {
             "acceptable_villager_distance": 4.0
         }
@@ -32,9 +32,9 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 
 ```json5
 {
-    // A 0 to 1 (inclusive) float representing the chance that the item will update the level of the composter
+    // A 0 到 1（含） float 代表该物品更新堆肥器等级的机会
     "chance": 1,
-    // Optional, defaults to false - whether farmer villagers can compost this item
+    // 可选，默认为false - 农民村民是否可以堆肥此物品
     "can_villager_compost": false
 }
 ```
@@ -44,7 +44,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 ```json5
 {
     "values": {
-        // Give acacia logs a 50% chance that they will fill a composter
+        // 给予金合欢原木 50% 的机会填满堆肥器
         "minecraft:acacia_log": {
             "chance": 0.5
         }
@@ -58,7 +58,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 
 ```json5
 {
-    // A positive integer representing the item's burn time in ticks
+    // 一个正整数，表示该物品的燃烧时间（以刻度为单位）
     "burn_time": 1000
 }
 ```
@@ -68,7 +68,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 ```json5
 {
     "values": {
-        // Give anvils a 2 seconds burn time
+        // 给予砧座 2 秒的燃烧时间
         "minecraft:anvil": {
             "burn_time": 40
         }
@@ -87,14 +87,14 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 {
     "replace": false,
     "values": [
-        // values here
+        // 值在这里
     ],
     "remove": [
         "examplemod:example_nether_wood_planks",
         "#examplemod:example_nether_wood_stems",
         "examplemod:example_nether_wood_door",
-        // etc.
-        // other removals here
+        // 等
+        // 其他删除此处
     ]
 }
 ```
@@ -106,7 +106,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The weight of this mob, relative to other mobs in the datamap
+    // 此生物相对于数据映射中其他生物的权重
     "weight": 100
 }
 ```
@@ -116,7 +116,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```json5
 {
     "values": {
-        // Make squids appear in monster room spawners with a weight of 100
+        // 使鱿鱼出现在怪物室刷怪笼中，重量为100
         "minecraft:squid": {
             "weight": 100
         }
@@ -130,7 +130,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The block this block will turn into once oxidized
+    // 该方块此方块一旦被氧化就会变成
     "next_oxidation_stage": "examplemod:oxidized_block"
 }
 ```
@@ -145,7 +145,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 {
     "values": {
         "mymod:custom_copper": {
-            // Make a custom copper block oxidize into custom oxidized copper
+            // 将定制铜方块氧化成定制氧化铜
             "next_oxidation_stage": "mymod:custom_oxidized_copper"
         }
     }
@@ -158,7 +158,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The ID of the sound that parrots will produce when imitating the mob
+    // 鹦鹉模仿生物时发出的声音 ID
     "sound": "minecraft:entity.parrot.imitate.creeper"
 }
 ```
@@ -168,7 +168,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```json5
 {
     "values": {
-        // Make parrots produce the ambient cave sound when imitating allays
+        // 让鹦鹉在模仿鸣叫时发出环境洞穴声音
         "minecraft:allay": {
             "sound": "minecraft:ambient.cave"
         }
@@ -182,7 +182,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The ID of the loot table that a villager profession will hand out after a raid
+    // 村民职业在袭击后发放的战利品表的ID
     "loot_table": "minecraft:gameplay/hero_of_the_village/armorer_gift"
 }
 ```
@@ -193,7 +193,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 {
     "values": {
         "minecraft:armorer": {
-            // Make armorers give the raid hero the armorer gift loot table
+            // 让护甲师给突袭英雄护甲师礼物战利品表
             "loot_table": "minecraft:gameplay/hero_of_the_village/armorer_gift"
         }
     }
@@ -206,7 +206,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The block this block will turn into when stripped by tool with the item ability `ItemAbilities#AXE_STRIP`
+    // 当使用具有物品能力 `ItemAbilities#AXE_STRIP` 的工具剥离时，将变成此方块
     "stripped_block": "examplemod:stripped_wood"
 }
 ```
@@ -217,7 +217,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 {
     "values": {
         "examplemod:wood": {
-            // Make a custom wood block strip into a custom stripped wood block
+            // 将定制木方块条制作成定制条状木方块
             "stripped_block": "examplemod:stripped_wood"
         }
     }
@@ -230,7 +230,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // An integer between 1 and 15 (inclusive) that indicates the vibration frequency of the event
+    // 1～15（含）之间的整数，表示事件的振动频率
     "frequency": 2
 }
 ```
@@ -240,7 +240,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```json5
 {
     "values": {
-        // Make the splash in water game event vibrate on the second frequency
+        // 使水游戏活动中的水花以第二频率振动
         "minecraft:splash": {
             "frequency": 2
         }
@@ -254,8 +254,8 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The villager type that will spawn in this biome
-    // If no villager type is specified for a biome, then `minecraft:plains` will be used
+    // 将在此生物群落中生成的村民类型
+    // 如果没有为生物群落指定村民类型，则将使用 `minecraft:plains`
     "villager_type": "minecraft:desert"
     
 }
@@ -266,7 +266,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```json5
 {
     "values": {
-        // Make villagers in the jungle biome be of the desert type
+        // 使丛林生物群落中的村民成为沙漠类型
         "minecraft:jungle": {
             "villager_type": "minecraft:desert"
         }
@@ -280,7 +280,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ```json5
 {
-    // The waxed variant of this block
+    // 此方块的打蜡变体
     "waxed": "minecraft:iron_block"
 }
 ```
@@ -290,7 +290,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```json5
 {
     "values": {
-        // Make gold blocks turn into iron blocks once waxed
+        // 让金方块打蜡后变成铁方块
         "minecraft:gold_block": {
             "waxed": "minecraft:iron_block"
         }

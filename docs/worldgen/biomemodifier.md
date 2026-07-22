@@ -47,16 +47,16 @@
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> NO_OP_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "no_op_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "no_op_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(NO_OP_EXAMPLE, NoneBiomeModifier.INSTANCE);
 });
 ```
@@ -74,16 +74,16 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:add_features",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:your_biome_tag",
-    // Can either be a placed feature id, such as "examplemod:add_features_example",
-    // or a list of placed feature ids, such as ["examplemod:add_features_example", minecraft:ice_spike", ...],
-    // or a placed feature tag, such as "#examplemod:placed_feature_tag".
+    // 可以是放置的要素 ID，例如 "examplemod:add_features_example"，
+    // 或放置的要素 ID 列表，例如 ["examplemod:add_features_example", minecraft:ice_spike", ...]，
+    // 或放置的特征标签，例如 "#examplemod:placed_feature_tag"。
     "features": "namespace:your_feature",
-    // See the GenerationStep.Decoration enum in code for a list of valid enum names.
-    // The decoration step section further down also has the list of values for reference.
+    // 有关有效枚举名称的列表，请参阅代码中的 GenerationStep.Decoration 枚举。
+    // 装饰步骤部分下面也有值列表可供参考。
     "step": "underground_ores"
 }
 ```
@@ -92,29 +92,29 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Assume we have some PlacedFeature named EXAMPLE_PLACED_FEATURE.
-// Define the ResourceKey for our BiomeModifier.
+// 假设我们有一些名为 EXAMPLE_PLACED_FEATURE 的 PlacedFeature。
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> ADD_FEATURES_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "add_features_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "add_features_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<PlacedFeature> placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(ADD_FEATURES_EXAMPLE,
         new AddFeaturesBiomeModifier(
-            // The biome(s) to generate within
+            // 要在其中生成的生物群系
             HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),
-            // The feature(s) to generate within the biomes
+            // 在生物群落内生成的 feature
             HolderSet.direct(placedFeatures.getOrThrow(EXAMPLE_PLACED_FEATURE)),
-            // The generation step
+            // 生成步骤
             GenerationStep.Decoration.LOCAL_MODIFICATIONS
         )
     );
@@ -140,18 +140,18 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:remove_features",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:your_biome_tag",
-    // Can either be a placed feature id, such as "examplemod:add_features_example",
-    // or a list of placed feature ids, such as ["examplemod:add_features_example", "minecraft:ice_spike", ...],
-    // or a placed feature tag, such as "#examplemod:placed_feature_tag".
+    // 可以是放置的要素 ID，例如 "examplemod:add_features_example"，
+    // 或放置的要素 ID 列表，例如 ["examplemod:add_features_example"、"minecraft:ice_spike"、...]，
+    // 或放置的特征标签，例如 "#examplemod:placed_feature_tag"。
     "features": "namespace:problematic_feature",
-    // Optional field specifying a GenerationStep, or a list of GenerationSteps, to remove features from.
-    // If omitted, defaults to all GenerationSteps.
-    // See the GenerationStep.Decoration enum in code for a list of valid enum names.
-    // The decoration step section further down also has the list of values for reference.
+    // 可选字段，指定要从中移除特征的 GenerationStep 或 GenerationStep 列表。
+    // 如果省略，则默认为全部 GenerationSteps。
+    // 有关有效枚举名称的列表，请参阅代码中的 GenerationStep.Decoration 枚举。
+    // 装饰步骤部分下面也有值列表可供参考。
     "steps": ["underground_ores", "underground_decoration"]
 }
 ```
@@ -160,28 +160,28 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> REMOVE_FEATURES_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "remove_features_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "remove_features_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<PlacedFeature> placedFeatures = bootstrap.lookup(Registries.PLACED_FEATURE);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(REMOVE_FEATURES_EXAMPLE,
         new RemoveFeaturesBiomeModifier(
-            // The biome(s) to remove from
+            // 要从中删除的生物群系
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-            // The feature(s) to remove from the biomes
+            // 要从生物群落中移除的 feature
             HolderSet.direct(placedFeatures.getOrThrow(OrePlacements.ORE_DIAMOND)),
-            // The generation steps to remove from
+            // 删除的生成步骤
             Set.of(
                 GenerationStep.Decoration.LOCAL_MODIFICATIONS,
                 GenerationStep.Decoration.UNDERGROUND_ORES
@@ -210,17 +210,17 @@ _另请参阅 [LivingEntity/自然生成][spawning]。_
 ```json5
 {
     "type": "neoforge:add_spawns",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:biome_tag",
-    // Can be either a single object or a list of objects.
+    // 可以是单个对象或对象列表。
     "spawners": [
         {
-            "type": "namespace:entity_type", // The id of the entity type to spawn
-            "weight": 100, // non-negative int, spawn weight
-            "minCount": 1, // positive int, minimum group size
-            "maxCount": 4 // positive int, maximum group size
+            "type": "namespace:entity_type", // 要生成的实体类型的 ID
+            "weight": 100, // 非负 int，生成重量
+            "minCount": 1, // 正 int，最小组大小
+            "maxCount": 4 // 正 int，最大组大小
         },
         {
             "type": "minecraft:ghast",
@@ -236,26 +236,26 @@ _另请参阅 [LivingEntity/自然生成][spawning]。_
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Assume we have some EntityType<?> named EXAMPLE_ENTITY.
-// Define the ResourceKey for our BiomeModifier.
+// 假设我们有一些名为 EXAMPLE_ENTITY 的 EntityType<?>。
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> ADD_SPAWNS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "add_spawns_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "add_spawns_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(ADD_SPAWNS_EXAMPLE,
         new AddSpawnsBiomeModifier(
-            // The biome(s) to spawn the mobs within
+            // 在生物群系中生成小怪
             HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),
-            // The spawners of the entities to add
+            // 要添加的实体的生成器
             List.of(
                 new SpawnerData(EXAMPLE_ENTITY, 100, 1, 4),
                 new SpawnerData(EntityType.GHAST, 1, 5, 10)
@@ -278,13 +278,13 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:remove_spawns",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:biome_tag",
-    // Can either be an entity type id, such as "minecraft:ghast",
-    // or a list of entity type ids, such as ["minecraft:ghast", "minecraft:skeleton", ...],
-    // or an entity type tag, such as "#minecraft:skeletons".
+    // 可以是实体类型ID，例如"minecraft:ghast"，
+    // 或实体类型 ID 列表，例如 ["minecraft:ghast", "minecraft:skeleton", ...]，
+    // 或实体类型标签，例如 "#minecraft:skeletons"。
     "entity_types": "#namespace:entitytype_tag"
 }
 ```
@@ -293,26 +293,26 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> REMOVE_SPAWNS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "remove_spawns_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "remove_spawns_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<EntityType<?>> entities = bootstrap.lookup(Registries.ENTITY_TYPE);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(REMOVE_SPAWNS_EXAMPLE,
         new RemoveSpawnsBiomeModifier(
-            // The biome(s) to remove the spawns from
+            // 要从中移除生成的生物群系
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-            // The entities to remove spawns for
+            // 要移除生成的实体
             entities.getOrThrow(EntityTypeTags.SKELETONS)
         )
     );
@@ -338,18 +338,18 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:add_spawn_costs",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:biome_tag",
-    // Can either be an entity type id, such as "minecraft:ghast",
-    // or a list of entity type ids, such as ["minecraft:ghast", "minecraft:skeleton", ...],
-    // or an entity type tag, such as "#minecraft:skeletons".
+    // 可以是实体类型ID，例如"minecraft:ghast"，
+    // 或实体类型 ID 列表，例如 ["minecraft:ghast", "minecraft:skeleton", ...]，
+    // 或实体类型标签，例如 "#minecraft:skeletons"。
     "entity_types": "#minecraft:skeletons",
     "spawn_cost": {
-        // The energy budget
+        // 能源预算
         "energy_budget": 1.0,
-        // The amount of charge each entity takes up from the budget
+        // 各实体从预算中占用的费用金额
         "charge": 0.1
     }
 }
@@ -359,30 +359,30 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> ADD_SPAWN_COSTS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "add_spawn_costs_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "add_spawn_costs_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<EntityType<?>> entities = bootstrap.lookup(Registries.ENTITY_TYPE);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(ADD_SPAWN_COSTS_EXAMPLE,
         new AddSpawnCostsBiomeModifier(
-            // The biome(s) to add the spawn costs to
+            // 将生成成本添加到的生物群系
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-            // The entities to add the spawn costs for
+            // 添加生成成本的实体
             entities.getOrThrow(EntityTypeTags.SKELETONS),
             new MobSpawnSettings.MobSpawnCost(
-                1.0, // The energy budget
-                0.1  // The amount of charge each entity takes up from the budget
+                1.0, // 能源预算
+                0.1  // 各实体从预算中占用的费用金额
             )
         )
     );
@@ -402,13 +402,13 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:remove_spawn_costs",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "#namespace:biome_tag",
-    // Can either be an entity type id, such as "minecraft:ghast",
-    // or a list of entity type ids, such as ["minecraft:ghast", "minecraft:skeleton", ...],
-    // or an entity type tag, such as "#minecraft:skeletons".
+    // 可以是实体类型ID，例如"minecraft:ghast"，
+    // 或实体类型 ID 列表，例如 ["minecraft:ghast", "minecraft:skeleton", ...]，
+    // 或实体类型标签，例如 "#minecraft:skeletons"。
     "entity_types": "#minecraft:skeletons"
 }
 ```
@@ -417,26 +417,26 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> REMOVE_SPAWN_COSTS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "remove_spawn_costs_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "remove_spawn_costs_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<EntityType<?>> entities = bootstrap.lookup(Registries.ENTITY_TYPE);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(REMOVE_SPAWN_COSTS_EXAMPLE,
         new RemoveSpawnCostsBiomeModifier(
-            // The biome(s) to remove the spawn costs from
+            // 用于消除生成成本的生物群系
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-            // The entities to remove spawn costs for
+            // 删除生成成本的实体
             entities.getOrThrow(EntityTypeTags.SKELETONS)
         )
     );
@@ -456,13 +456,13 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
     {
     "type": "neoforge:add_carvers",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "minecraft:plains",
-    // Can either be a carver id, such as "examplemod:add_carvers_example",
-    // or a list of carver ids, such as ["examplemod:add_carvers_example", "minecraft:canyon", ...],
-    // or a carver tag, such as "#examplemod:configured_carver_tag".
+    // 可以是雕刻者ID，例如"examplemod:add_carvers_example"，
+    // 或雕刻者 ID 列表，例如 ["examplemod:add_carvers_example", "minecraft:canyon", ...]，
+    // 或雕刻标签，例如 "#examplemod:configured_carver_tag"。
     "carvers": "examplemod:add_carvers_example"
 }
 ```
@@ -471,27 +471,27 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Assume we have some ConfiguredWorldCarver named EXAMPLE_CARVER.
-// Define the ResourceKey for our BiomeModifier.
+// 假设我们有一些名为 EXAMPLE_CARVER 的 ConfiguredWorldCarver。
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> ADD_CARVERS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "add_carvers_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "add_carvers_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<ConfiguredWorldCarver<?>> carvers = bootstrap.lookup(Registries.CONFIGURED_CARVER);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(ADD_CARVERS_EXAMPLE,
         new AddCarversBiomeModifier(
-            // The biome(s) to generate within
+            // 要在其中生成的生物群系
             HolderSet.direct(biomes.getOrThrow(Biomes.PLAINS)),
-            // The carver(s) to generate within the biomes
+            // 在生物群落内生成的 carver
             HolderSet.direct(carvers.getOrThrow(EXAMPLE_CARVER))
         )
     );
@@ -511,13 +511,13 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 ```json5
 {
     "type": "neoforge:remove_carvers",
-    // Can either be a biome id, such as "minecraft:plains",
-    // or a list of biome ids, such as ["minecraft:plains", "minecraft:badlands", ...],
-    // or a biome tag, such as "#c:is_overworld".
+    // 可以是生物群系 ID，例如 "minecraft:plains"，
+    // 或生物群系 ID 列表，例如 ["minecraft:plains"、"minecraft:badlands"、...]，
+    // 或生物群落标签，例如 "#c:is_overworld"。
     "biomes": "minecraft:plains",
-    // Can either be a carver id, such as "examplemod:add_carvers_example",
-    // or a list of carver ids, such as ["examplemod:add_carvers_example", "minecraft:canyon", ...],
-    // or a carver tag, such as "#examplemod:configured_carver_tag".
+    // 可以是雕刻者ID，例如"examplemod:add_carvers_example"，
+    // 或雕刻者 ID 列表，例如 ["examplemod:add_carvers_example", "minecraft:canyon", ...]，
+    // 或雕刻标签，例如 "#examplemod:configured_carver_tag"。
     "carvers": "examplemod:add_carvers_example"
 }
 ```
@@ -526,26 +526,26 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> REMOVE_CARVERS_EXAMPLE = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "remove_carvers_example") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "remove_carvers_example") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
     HolderGetter<ConfiguredWorldCarver<?>> carvers = bootstrap.lookup(Registries.CONFIGURED_CARVER);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(REMOVE_CARVERS_EXAMPLE,
         new AddFeaturesBiomeModifier(
-            // The biome(s) to remove from
+            // 要从中删除的生物群系
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
-            // The carver(s) to remove from the biomes
+            // 要从生物群落中移除的 carver
             HolderSet.direct(carvers.getOrThrow(Carvers.CAVE))
         )
     );
@@ -600,8 +600,8 @@ public record ExampleBiomeModifier(HolderSet<Biome> biomes, int value) implement
     
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
-        if (phase == /* Pick the phase that best matches what your want to modify */) {
-            // Modify the 'builder', checking any information about the biome itself
+        if (phase == /* 选择与你要修改的内容最匹配的阶段*/) {
+            // 修改'builder'，检查有关生物群落本身的任何信息
         }
     }
 
@@ -611,7 +611,7 @@ public record ExampleBiomeModifier(HolderSet<Biome> biomes, int value) implement
     }
 }
 
-// In some registration class
+// 在某些注册类中
 private static final DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIERS =
     DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MOD_ID);
 
@@ -631,20 +631,20 @@ public static final Supplier<MapCodec<ExampleBiomeModifier>> EXAMPLE_BIOME_MODIF
 有关 `RegistrySetBuilder` 与 `DatapackBuiltinEntriesProvider` 工作方式的更多信息，请参阅[数据包 Registry 的数据生成][datapackdatagen]一文。
 
 ```java
-// Define the ResourceKey for our BiomeModifier.
+// 为我们的 BiomeModifier 定义 ResourceKey。
 public static final ResourceKey<BiomeModifier> EXAMPLE_MODIFIER = ResourceKey.create(
-    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // The registry this key is for
-    Identifier.fromNamespaceAndPath(MOD_ID, "example_modifier") // The registry name
+    NeoForgeRegistries.Keys.BIOME_MODIFIERS, // 注册表此键用于
+    Identifier.fromNamespaceAndPath(MOD_ID, "example_modifier") // 注册表名称
 );
 
-// BUILDER is a RegistrySetBuilder passed to DatapackBuiltinEntriesProvider
-// in a listener for the `GatherDataEvent`s.
+// BUILDER 是传递给 DatapackBuiltinEntriesProvider 的 RegistrySetBuilder
+// 位于 `GatherDataEvent` 的侦听器中。
 BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
-    // Lookup any necessary registries.
-    // Static registries only need to be looked up if you need to grab the tag data.
+    // 查找任何必要的注册表。
+    // 仅当需要抓取标签数据时才需要查找静态注册表。
     HolderGetter<Biome> biomes = bootstrap.lookup(Registries.BIOME);
 
-    // Register the biome modifiers.
+    // 注册生物群系修改器。
     bootstrap.register(EXAMPLE_MODIFIER,
         new ExampleBiomeModifier(
             biomes.getOrThrow(Tags.Biomes.IS_OVERWORLD),
@@ -657,11 +657,11 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 这会生成以下 JSON：
 
 ```json5
-// In data/examplemod/neoforge/biome_modifier/example_modifier.json
+// 在 data/examplemod/neoforge/biome_modifier/example_modifier.json 中
 {
-    // The registry key of the MapCodec for the modifier
+    // 修饰符的 MapCodec 的注册表项
     "type": "examplemod:example_biome_modifier",
-    // All additional settings are applied to the root object
+    // 所有附加设置均应用于根对象
     "biomes": "#c:is_overworld",
     "value": 20
 }
@@ -688,12 +688,12 @@ BUILDER.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -> {
 要通过数据生成创建生物群系标签的可选条目，代码大致如下：
 
 ```java
-// In a KeyTagProvider<Biome> subclass
-// Assume we have some example TagKey<Biome> OPTIONAL_BIOMES_TAG
+// 在 KeyTagProvider<Biome> 子类中
+// 假设存在示例 TagKey<Biome> OPTIONAL_BIOMES_TAG
 @Override
 protected void addTags(HolderLookup.Provider registries) {
     this.tag(OPTIONAL_BIOMES_TAG)
-        // Must be a ResourceKey<Biome>
+        // 必须是 ResourceKey<Biome>
         .addOptional(Biomes.PALE_GARDEN);
 }
 ```

@@ -31,32 +31,32 @@ JSON Metadata 对象划分为多个 Section，其中键表示 Section 类型，�
 要获取 Metadata Section 中的数据，需要访问从 `ResourceManager` 取得的文件 `Resource`，调用 `Resource#metadata` 获取 `ResourceMetadata`，再使用 `MetadataSectionType` 调用 `ResourceMetadata#getSection`。
 
 ```java
-// For some `ResourceManager` resourceManager
+// 对于某些 `ResourceManager` resourceManager
 
-// Get the metadata for the topmost resource
+// 获取最顶层资源的元数据
 Optional<AnimationMetadataSection> waterStillMetadata = resourceManager.getResource(
-    // Identifier must specify exact path to the backing resource resource.
+    // Identifier 必须指定后备资源资源的确切路径。
     Identifier.fromNamespaceAndPath("minecraft", "textures/block/water_still.png")
 ).flatMap(resource -> {
     try {
-        // Get the metadata for the resource if present, otherwise an empty optional.
+        // 获取资源的元数据（如果存在），否则为空可选。
         return resource.metadata().getSection(AnimationMetadataSection.TYPE);
     } catch (IOException e) {
-        // If an exception is thrown trying to read the metadata file.
+        // 如果尝试读取元数据文件时抛出异常。
         return Optional.empty();
     }
 });
 
-// Get the metadata of every resource for the identifier
+// 获取标识符的每个资源的元数据
 List<AnimationMetadataSection> waterStillsMetadata = resourceManager.getResourceStack(
-    // Identifier must specify exact path to the backing resource resource.
+    // Identifier 必须指定后备资源资源的确切路径。
     Identifier.fromNamespaceAndPath("minecraft", "textures/block/water_still.png")
 ).map(resource -> {
     try {
-        // Get the metadata for the resource if present, otherwise an empty optional.
+        // 获取资源的元数据（如果存在），否则为空可选。
         return resource.metadata().getSection(AnimationMetadataSection.TYPE);
     } catch (IOException e) {
-        // If an exception is thrown trying to read the metadata file.
+        // 如果尝试读取元数据文件时抛出异常。
         return Optional.empty();
     }
 }).filter(Optional::isPresent).map(Optional::get);
@@ -73,9 +73,9 @@ public record ExampleMetadataSection(String value) {
     public static final Codec<ExampleMetadataSection> CODEC = Codec.STRING.xmap(ExampleMetadataSection::new, ExampleMetadataSection::value);
 
     public static final MetadataSectionType<ExampleMetadataSection> TYPE = new MetadataSectionType<>(
-        // The key for the section in the .mcmeta, should be prefixed with your mod id.
+        // .mcmeta 中该部分的键应以你的模组 ID 为前缀。
         "examplemod:example_section",
-        // The codec to serialize and deserialize the section data.
+        // 用于序列化和反序列化节数据的编解码器。
         CODEC
     );
 }
@@ -84,7 +84,7 @@ public record ExampleMetadataSection(String value) {
 完成后，就可以把该 Metadata Section 添加到对象的 `.mcmeta` 中：
 
 ```json5
-// In 'assets/examplemod/textures/block/example_block.png.mcmeta'
+// 在 'assets/examplemod/textures/block/example_block.png.mcmeta'
 {
     "examplemod:example_section": "Hello world!"
 }
@@ -101,14 +101,14 @@ public record ExampleMetadataSection(String value) {
 `PackMetadataGenerator` 用于生成模组或其捆绑子 Pack 的 `pack.mcmeta`。Metadata Section 通过 `add` 方法添加，该方法接收 `MetadataSectionType` 及其值。`PackMetadataGenerator` 还提供 `forFeaturePack`，用于生成包含 `PackMetadataSection` 以及可选 `FeatureFlagsMetadataSection` 的 `pack.mcmeta`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(PackMetadataGenerator::new)
-        // Can chain multiple `add` calls.
+        // 可以链接多个 `add` 调用。
         .add(
-            // The metadata section to add.
+            // 要添加的元数据部分。
             LanguageMetadataSection.TYPE,
-            // The value of the metadata section.
+            // 元数据部分的值。
             Map.of(
                 "hello_world",
                 new LanguageInfo(
@@ -137,15 +137,15 @@ public class ResourceMetadataProvider implements DataProvider {
     }
 
     protected void add() {
-        // Add metadata here.
+        // 在此处添加元数据。
         this.textureMetadata(Identifier.fromNamespaceAndPath(
             "examplemod", "block/example_texture"
         ))
-            // Can chain multiple `add` calls.
+            // 可以链接多个 `add` 调用。
             .add(
-                // The metadata section to add.
+                // 要添加的元数据部分。
                 TextureMetadataSection.TYPE
-                // The value of the metadata section.
+                // 元数据部分的值。
                 new TextureMetadataSection(
                     true, TextureMetadataSection.DEFAULT_CLAMP, MipmapStrategy.AUTO, TextureMetadataSection.DEFAULT_ALPHA_CUTOFF_BIAS
                 )
@@ -205,7 +205,7 @@ public class ResourceMetadataProvider implements DataProvider {
 随后可以把它添加到 `GatherDataEvent`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(ResourceMetadataProvider::new);
 }

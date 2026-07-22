@@ -21,29 +21,29 @@
 可以调用 `Item.Properties#component` 添加 `Consumable` 组件：
 
 ```java
-// Assume there is some DeferredRegister.Items ITEMS
+// 假设有一些 DeferredRegister.Items ITEMS
 public static final DeferredItem<Item> CONSUMABLE = ITEMS.registerSimpleItem(
     "consumable",
     props -> props.component(
         DataComponents.CONSUMABLE,
         Consumable.builder()
-            // Spend 2 seconds, or 40 ticks, to consume
+            // 花费 2 秒，即 40 个节拍，消耗
             .consumeSeconds(2f)
-            // Sets the animation to play while consuming
+            // 设置消费时播放的动画
             .animation(ItemUseAnimation.BLOCK)
-            // Play sound while consuming every tick
+            // 消耗期间每个 tick 都播放声音
             .sound(SoundEvents.ARMOR_EQUIP_CHAIN)
-            // Play sound once finished consuming
+            // 消费完成后播放声音
             .soundAfterConsume(SoundEvents.BREEZE_WIND_CHARGE_BURST)
-            // Don't show particles while eating
+            // 进食时不显示粒子
             .hasConsumeParticles(false)
             .onConsume(
-                // When finished consuming, applies the effects with a 30% chance
+                // 消耗完毕后，有30%的几率施加效果
                 new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.HUNGER, 600, 0), 0.3F)
             )
-            // Can have multiple
+            // 可以有多个
             .onConsume(
-                // Teleports the entity randomly in a 50 block radius
+                // 在 50 格半径内随机传送实体
                 new TeleportRandomlyConsumeEffect(100f)
             )
             .build()
@@ -70,29 +70,29 @@ public record UsePortalConsumeEffect(ResourceKey<Level> level)
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, entity.blockPosition());
 
-            // Can successfully use portal
+            // 可以成功使用门户
             return true;
         }
 
-        // Cannot use portal
+        // 无法使用门户
         return false;
     }
 
     @Override
     public ConsumeEffect.Type<? extends ConsumeEffect> getType() {
-        // Set to registered object
+        // 设置为注册对象
         return USE_PORTAL.get();
     }
 
     @Override
     @Nullable
     public TeleportTransition getPortalDestination(ServerLevel level, Entity entity, BlockPos pos) {
-        // Set teleport location
+        // 设置传送位置
     }
 }
 
-// In some registrar class
-// Assume there is some DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT_TYPES
+// 在某些注册商类别中
+// 假设有一些 DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT_TYPES
 public static final Supplier<ConsumeEffect.Type<UsePortalConsumeEffect>> USE_PORTAL =
     CONSUME_EFFECT_TYPES.register("use_portal", () -> new ConsumeEffect.Type<>(
         ResourceKey.codec(Registries.DIMENSION).optionalFieldOf("dimension")
@@ -101,7 +101,7 @@ public static final Supplier<ConsumeEffect.Type<UsePortalConsumeEffect>> USE_POR
             .map(UsePortalConsumeEffect::new, UsePortalConsumeEffect::level)
     ));
 
-// For some Item.Properties that is adding a CONSUMABLE component
+// 对于某些正在添加 CONSUMABLE 组件的 Item.Properties
 Consumable.builder()
     .onConsume(
         new UsePortalConsumeEffect(Level.END)
@@ -127,9 +127,9 @@ Consumable.builder()
             "name": "EXAMPLEMOD_ITEM_USE_ANIMATION",
             "constructor": "(ILjava/lang/String;)V",
             "parameters": [
-                // The id, should always be -1
+                // ID，应始终为-1
                 -1,
-                // The name, should be a unique identifier
+                // 名称，应该是唯一标识符
                 "examplemod:item_use_animation"
             ]
         }
@@ -147,16 +147,16 @@ public static final ItemUseAnimation EXAMPLE_ANIMATION = ItemUseAnimation.valueO
 
 ```java
 public class ConsumableClientItemExtensions implements IClientItemExtensions {
-    // Implement methods here
+    // 此处实现方法
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
     event.registerItem(
-        // The instance of the item extensions
+        // 物品扩展的实例
         new ConsumableClientItemExtensions(),
-        // A vararg of items that use this
+        // 使用其物品的可变参数
         CONSUMABLE
     )
 }
@@ -176,7 +176,7 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
         PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand,
         float partialTick, float equipProcess, float swingProcess
     ) {
-        // We first need to check if the item is being used and has our animation
+        // 我们首先需要检查该物品是否正在被使用并且有我们的动画
         HumanoidArm usingArm = entity.getUsedItemHand() == InteractionHand.MAIN_HAND
             ? entity.getMainArm()
             : entity.getMainArm().getOpposite();
@@ -184,12 +184,12 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
             entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0
             && usingArm == arm && itemInHand.getUseAnimation() == EXAMPLE_ANIMATION
         ) {
-            // Apply transformations to pose stack (translate, scale, mulPose)
+            // 应用变换来姿势 stack（平移、缩放、mulPose）
             // ...
             return true;
         }
 
-        // Do nothing
+        // 什么都不做
         return false;
     }
 }
@@ -213,10 +213,10 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
             "name": "EXAMPLEMOD_ARM_POSE",
             "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
             "parameters": {
-                // Point to class where the proxy is located
-                // Should be separate as this is a client only class
+                // 指向代理所在的类
+                // 应该分开，因为这是仅客户端类
                 "class": "example/examplemod/client/MyClientEnumParams",
-                // The field name of the enum proxy
+                // 枚举代理的字段名称
                 "field": "CUSTOM_ARM_POSE"
             }
         }
@@ -225,27 +225,27 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
 ```
 
 ```java
-// Create the enum parameters
+// 创建枚举参数
 public class MyClientEnumParams {
     public static final EnumProxy<HumanoidModel.ArmPose> CUSTOM_ARM_POSE = new EnumProxy<>(
         HumanoidModel.ArmPose.class,
-        // Whether the pose uses both arms
+        // 姿势是否使用双臂
         false,
-        // Whether the offhand location should be affected by the model pose
+        // 副手位置是否受模型姿态影响
         false,
-        // The pose transformer
+        // 姿势变换器
         (IArmPoseTransformer) MyClientEnumParams::applyCustomModelPose
     );
 
     private static void applyCustomModelPose(
         HumanoidModel<?> model, HumanoidRenderState state, HumanoidArm arm
     ) {
-        // Apply model transforms here
+        // 在此处应用模型变换
         // ...
     }
 }
 
-// In some client only class
+// 在某些仅客户端类中
 public static final HumanoidModel.ArmPose EXAMPLE_POSE = HumanoidModel.ArmPose.valueOf("EXAMPLEMOD_ARM_POSE");
 ```
 
@@ -260,17 +260,17 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
     public HumanoidModel.ArmPose getArmPose(
         LivingEntity entity, InteractionHand hand, ItemStack stack
     ) {
-        // We first need to check if the item is being used and has our animation
+        // 我们首先需要检查该物品是否正在被使用并且有我们的动画
         if (
             entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0
             && entity.getUsedItemHand() == hand
             && itemInHand.getUseAnimation() == EXAMPLE_ANIMATION
         ) {
-            // Return pose to apply
+            // 返回姿势应用
             return EXAMPLE_POSE;
         }
 
-        // Otherwise return null
+        // 否则返回 null
         return null;
     }
 }
@@ -287,7 +287,7 @@ public class MyEntity extends LivingEntity implements Consumable.OverrideConsume
 
     @Override
     public SoundEvent getConsumeSound(ItemStack stack) {
-        // Return the sound to play
+        // 返回播放声音
     }
 }
 ```
@@ -307,7 +307,7 @@ public record MyConsumableListener() implements ConsumableListener {
     public void onConsume(
         Level level, LivingEntity entity, ItemStack stack, Consumable consumable
     ) {
-        // Do things here
+        // 在这里做事
     }
 }
 ```
@@ -323,21 +323,21 @@ public record MyConsumableListener() implements ConsumableListener {
 - `alwaysEdible`——该 Item 是否始终可食用，即使饥饿条已满。默认为 `false`；金苹果及其他除填充饥饿条外还提供加成的 Item 为 `true`。
 
 ```java
-// Assume there is some DeferredRegister.Items ITEMS
+// 假设有一些 DeferredRegister.Items ITEMS
 public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
     "food",
     props -> props.food(
         new FoodProperties.Builder()
-            // Heals 1.5 hearts
+            // 治愈 1.5 颗心
             .nutrition(3)
-            // Carrot is 0.3
-            // Raw Cod is 0.1
-            // Cooked Chicken is 0.6
-            // Cooked Beef is 0.8
-            // Golden Aple is 1.2
+            // 胡萝卜 0.3
+            // 生鳕鱼为 0.1
+            // 熟鸡为0.6
+            // 熟牛肉为0.8
+            // 金苹果 1.2
             .saturationModifier(0.3f)
-            // When set, the food can alway be eaten even with
-            //  a full hunger bar.
+            // 设置后，即使有食物也可以食用
+            //  满饥饿吧。
             .alwaysEdible()
     )
 );

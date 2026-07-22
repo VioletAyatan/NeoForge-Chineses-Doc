@@ -15,9 +15,9 @@ Composite Model 可用于在 Parent 中指定不同 Model Part，而在 Child �
 ```json5
 {
     "loader": "neoforge:composite",
-    // Specify model parts.
+    // 指定模型零件。
     "children": {
-        // These can either be references to another model or a model itself.
+        // 这些可以是对另一个模型的引用，也可以是模型本身的引用。
         "part_1": {
             "parent": "examplemod:some_model_1"
         },
@@ -26,7 +26,7 @@ Composite Model 可用于在 Parent 中指定不同 Model Part，而在 Child �
         }
     },
     "visibility": {
-        // Disable part 2 by default.
+        // 默认禁用第 2 部分。
         "part_2": false
     }
 }
@@ -37,7 +37,7 @@ Composite Model 可用于在 Parent 中指定不同 Model Part，而在 Child �
 ```json5
 {
     "parent": "examplemod:example_composite_model",
-    // Override visibility. If a part is missing, it will use the parent model's visibility value.
+    // 覆盖可见性。如果某个部件丢失，它将使用父模型的可见性值。
     "visibility": {
         "part_1": false,
         "part_2": true
@@ -68,26 +68,26 @@ OBJ Model Loader 允许在游戏中使用 Wavefront `.obj` 3D Model，使 Model 
 ```json5
 {
     "loader": "neoforge:obj",
-    // Required. Reference to the model file. Note that this is relative to the namespace root, not the model folder.
+    // 必填。参考模型文件。请注意，这是相对于命名空间根目录的，而不是相对于模型文件夹的。
     "model": "examplemod:models/example.obj",
-    // Normally, .mtl files must be put into the same location as the .obj file, with only the file ending differing.
-    // This will cause the loader to automatically pick them up. However, you can also set the location
-    // of the .mtl file manually if needed.
+    // 通常，.mtl 文件必须与 .obj 文件放在同一位置，只是文件结尾不同。
+    // 加载器会自动发现这些文件。不过，也可以按需手动设置
+    // .mtl 文件的位置。
     "mtl_override": "examplemod:models/example_other_name.mtl",
-    // These textures can be referenced in the .mtl file as #texture0, #particle, etc.
-    // This usually requires manual editing of the .mtl file.
+    // 这些纹理可以在 .mtl 文件中以 #texture0、#particle 等名称引用。
+    // 这通常需要手动编辑 .mtl 文件。
     "textures": {
         "texture0": "minecraft:block/cobblestone",
         "particle": "minecraft:block/stone"
     },
-    // Enable or disable automatic culling of the model. Optional, defaults to true.
+    // 启用或禁用模型的自动剔除。 可选，默认为true。
     "automatic_culling": false,
-    // Whether to shade the model or not. Optional, defaults to true.
+    // 是否对模型进行着色。 可选，默认为true。
     "shade_quads": false,
-    // Some modeling programs will assume V=0 to be bottom instead of the top. This property flips the Vs upside-down.
-    // Optional, defaults to false.
+    // 某些建模程序会假设 V=0 为底部而不是顶部。此 property 将 V 颠倒过来。
+    // 可选，默认为 false。
     "flip_v": true,
-    // Whether to enable emissivity or not. Optional, defaults to true.
+    // 是否启用发射率。 可选，默认为true。
     "emissive_ambient": false
 }
 ```
@@ -118,64 +118,64 @@ OBJ Model Loader 允许在游戏中使用 Wavefront `.obj` 3D Model，使 Model 
 下面通过基础类结构进一步说明。Loader 类名为 `MyUnbakedModelLoader`，Unbaked 类名为 `MyUnbakedModel`，Unbaked Geometry 名为 `MyUnbakedGeometry`。同时假定 Model Loader 需要某种缓存：
 
 ```java
-// This is the class used to load the model into its unbaked format
+// 这是用于将模型加载为其未烘焙格式的类
 public class MyUnbakedModelLoader implements UnbakedModelLoader<MyUnbakedModel>, ResourceManagerReloadListener {
-    // It is highly recommended to use a singleton pattern for unbaked model loaders, as all models can be loaded through one loader.
+    // 强烈建议对未烘焙的模型加载器使用单例模式，因为所有模型都可以通过一个加载器加载。
     public static final MyUnbakedModelLoader INSTANCE = new MyUnbakedModelLoader();
-    // The id we will use to register this loader. Also used in the loader datagen class.
+    // 我们将用来注册此加载程序的 ID。也用于加载器 datagen 类。
     public static final Identifier ID = Identifier.fromNamespaceAndPath("examplemod", "my_custom_loader");
 
-    // In accordance with the singleton pattern, make the constructor private.        
+    // 按照单例模式，制作构造器private。
     private MyUnbakedModelLoader() {}
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        // Handle any cache clearing logic
+        // 处理任何缓存清除逻辑
     }
 
     @Override
     public MyUnbakedModel read(JsonObject obj, JsonDeserializationContext context) throws JsonParseException {
-        // Use the given JsonObject and, if needed, the JsonDeserializationContext to get properties from the model JSON.
-        // The MyUnbakedModel constructor may have constructor parameters (see below).
+        // 使用给定的 JsonObject 和 JsonDeserializationContext（如果需要）从模型 JSON 获取 property。
+        // MyUnbakedModel 构造器可以带有参数（见下文）。
 
-        // Read the data used to create the quads
+        // 读取用于创建四边形的数据
         MyUnbakedGeometry geometry;
 
-        // For the basic parameters provided by vanilla and NeoForge, you can use the StandardModelParameters
+        // 对于vanilla和NeoForge提供的基本参数，可以使用StandardModelParameters
         StandardModelParameters params = StandardModelParameters.parse(obj, context);
 
         return new MyUnbakedModel(params, geometry);
     }
 }
 
-// Holds the unbaked quads to render
-// Other information that is stored in the unbaked model should be passed to the context map
+// 保存未烘焙的四边形进行渲染
+// 存储在未烘焙模型中的其他信息应传递给上下文映射
 public class MyUnbakedGeometry implements ExtendedUnbakedGeometry {
 
     public MyUnbakedGeometry(...) {
-        // Store the unbaked quads to bake
+        // 存放未烘烤的四边形以进行烘烤
     }
 
-    // Method responsible for model baking, returning the quad collection. Parameters in this method are:
-    // - The map of texture names to their associated materials.
-    // - The model baker. Can be used for getting sub-models to bake and getting sprites from the texture slots.
-    // - The model state. This holds the transformations from the blockstate file, typically from rotations and the uvlock.
-    // - The name of the model.
-    // - A ContextMap of settings provided by NeoForge and your unbaked model. See the 'NeoForgeModelProperties' class for all available properties.
+    // 负责模型烘焙的方法，返回quad集合。 此方法中的参数为：
+    // - 纹理名称与其关联材质的映射。
+    // - 模型烘焙器。可用于取得待烘焙的子模型，以及从纹理槽位取得 sprite。
+    // - 模型状态。它保存来自方块状态文件的转换，通常来自旋转和 uvlock。
+    // - 模型名称。
+    // - 由 NeoForge 和你的未烘焙模型提供的 ContextMap 设置。有关所有可用 property，请参阅 'NeoForgeModelProperties' 类。
     @Override
     public QuadCollection bake(TextureSlots textureSlots, ModelBaker baker, ModelState state, ModelDebugName debugName, ContextMap additionalProperties) {
-        // The builder to create the collection
+        // 创建集合的 builder
         var builder = new QuadCollection.Builder();
-        // Build the quads for baking
-        builder.addUnculledFace(...); // or addCulledFace(Direction, BakedQuad)
-        // Create the quad collection
+        // 构建用于烘焙的四边形
+        builder.addUnculledFace(...); // 或 addCulledFace（方向，BakedQuad）
+        // 创建四元集合
         return builder.build();
     }
 }
 
-// The unbaked model contains all the information read from the JSON.
-// It provides the basic settings and geometry.
-// Using AbstractUnbakedModel sets the Vanilla and NeoForge properties methods
+// 未烘焙的模型包含从 JSON 读取的所有信息。
+// 它提供基本设置和几何形状。
+// 使用 AbstractUnbakedModel 设置原版和 NeoForge property 方法
 public class MyUnbakedModel extends AbstractUnbakedModel {
 
     private final MyUnbakedGeometry geometry;
@@ -187,15 +187,15 @@ public class MyUnbakedModel extends AbstractUnbakedModel {
 
     @Override
     public UnbakedGeometry geometry() {
-        // The geometry to used to construct the baked quads
+        // 用于构造烘焙四边形的几何体
         return this.geometry;
     }
 
     @Override
     public void fillAdditionalProperties(ContextMap.Builder propertiesBuilder) {
         super.fillAdditionalProperties(propertiesBuilder);
-        // Add additional properties below by calling withParameter(ContextKey<T>, T)
-        // They can then be accessed in the ContextMap provided in UnbakedGeometry#bake
+        // 通过调用 withParameter(ContextKey<T>, T) 添加以下附加 property
+        // 然后可以在 UnbakedGeometry#bake 中提供的 ContextMap 中访问它们
     }
 }
 ```
@@ -203,18 +203,18 @@ public class MyUnbakedModel extends AbstractUnbakedModel {
 全部完成后，不要忘记真正注册 Loader：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerLoaders(ModelEvent.RegisterLoaders event) {
     event.register(MyUnbakedModelLoader.ID, MyUnbakedModelLoader.INSTANCE);
 }
 
-// If you are caching data in the model loader:
-@SubscribeEvent // on the mod event bus only on the physical client
+// 如果你在模型加载器中缓存数据：
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void addClientResourceListeners(AddClientReloadListenersEvent event) {
-    // Register the listener with our id
+    // 用我们的ID注册监听器
     event.addListener(MyUnbakedModelLoader.ID, MyUnbakedModelLoader.INSTANCE);
-    // Add a dependency for our model loader to run before models are loaded
-    // Allows the cache to be cleared before the new data is populated
+    // 添加模型加载器的依赖项以在加载模型之前运行
+    // 允许在填充新数据之前清除缓存
     event.addDependency(MyUnbakedModelLoader.ID, VanillaClientListeners.MODELS);
 }
 ```
@@ -227,29 +227,29 @@ public static void addClientResourceListeners(AddClientReloadListenersEvent even
 public class MyLoaderBuilder extends CustomLoaderBuilder {
     public MyLoaderBuilder() {
         super(
-            // Your model loader's id.
+            // 你的模型加载器的 ID。
             MyUnbakedModelLoader.ID,
-            // Whether the loader allows inline vanilla elements as a fallback if the loader is absent.
+            // 如果加载器不存在，加载器是否允许内联原版元素作为后备。
             false
         );
     }
     
-    // Add fields and setters for the fields here. The fields can then be used below.
+    // 在此处添加字段和字段的设置器。然后可以在下面使用这些字段。
 
     @Override
     protected CustomLoaderBuilder copyInternal() {
-        // Create a new instance of your loader builder and copy the properties from this builder
-        // to the new instance.
+        // 创建加载程序 builder 的新实例并从此 builder 复制 property
+        // 到新实例。
         MyLoaderBuilder builder = new MyLoaderBuilder();
         // builder.<field> = this.<field>;
         return builder;
     }
     
-    // Serialize the model to JSON.
+    // 将模型序列化为 JSON。
     @Override
     public JsonObject toJson(JsonObject json) {
-        // Add your fields to the given JsonObject.
-        // Then call super, which adds the loader property and some other things.
+        // 将你的字段添加到给定的 JsonObject。
+        // 然后调用 super，它添加了 loader property 和其他一些东西。
         return super.toJson(json);
     }
 }
@@ -258,27 +258,27 @@ public class MyLoaderBuilder extends CustomLoaderBuilder {
 要使用此 Loader Builder，请在 Block（或 Item）[Model Datagen][modeldatagen] 期间执行以下操作：
 
 ```java
-// This assumes an extension of ModelProvider and a DeferredBlock<Block> EXAMPLE_BLOCK.
-// The parameter for customLoader() is a Supplier to construct the builder and a Consumer to set to associated properties.
+// 这里假定存在 ModelProvider 的子类和 DeferredBlock<Block> EXAMPLE_BLOCK。
+// customLoader() 的参数是用于构造 builder 的 Supplier 和用于设置关联 property 的 Consumer。
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     blockModels.createTrivialBlock(
-        // The block to generate the model for
+        // 生成模型的方块
         EXAMPLE_BLOCK.get(),
         TexturedModel.createDefault(
-            // A mapping used to get the textures
+            // 用于获取纹理的映射
             block -> new TextureMapping().put(
                 TextureSlot.ALL, TextureMapping.getBlockTexture(block)
             ),
-            // The model template builder used to create the JSON
+            // 用于创建 JSON 的模型模板 builder
             ExtendedModelTemplateBuilder.builder()
-                // Say we are using a custom model loader
+                // 假设我们正在使用自定义模型加载器
                 .customLoader(MyLoaderBuilder::new, loader -> {
-                    // Set any required fields here
+                    // 设置此处任何必填字段
                 })
-                // Textures required by the model
+                // 模型所需的纹理
                 .requiredTextureSlot(TextureSlot.ALL)
-                // Call build once complete
+                // 完成后调用构建
                 .build()
         )
     );
@@ -302,9 +302,9 @@ Composite BlockState Model 可用于同时渲染多个 `BlockStateModel`。
     "variants": {
         "": {
             "type": "neoforge:composite",
-            // Specify model parts.
+            // 指定模型零件。
             "models": [
-                // These must be inlined block state models
+                // 这些必须是内联方块状态模型
                 {
                     "variants": {
                         // ...
@@ -337,19 +337,19 @@ public class MyUnbakedModelLoader implements UnbakedModelLoader<MyUnbakedModel> 
 
     @Override
     public MyUnbakedModel read(JsonObject jsonObject, JsonDeserializationContext context) throws JsonParseException {
-        // Trick the deserializer into thinking this is a normal model by removing the loader field
-        // Then, pass it to the deserializer.
+        // 移除 loader 字段，让反序列化器将其视为普通模型，
+        // 然后把它传给反序列化器。
         jsonObject.remove("loader");
         UnbakedModel model = context.deserialize(jsonObject, UnbakedModel.class);
-        return new MyUnbakedModel(model, /* other parameters here */);
+        return new MyUnbakedModel(model, /* 其他参数在这里*/);
     }
 }
 
-// We extend the delegate class as that stores the wrapped model
+// 我们扩展委托类来存储包装的模型
 public class MyUnbakedModel extends DelegateUnbakedModel {
 
-    // Store the model for use below
-    public MyUnbakedModel(UnbakedModel model, /* other parameters here */) {
+    // 存储模型以供下面使用
+    public MyUnbakedModel(UnbakedModel model, /* 其他参数在这里*/) {
        super(model);
     }
 }
@@ -375,56 +375,56 @@ public class MyUnbakedModel extends DelegateUnbakedModel {
 下面通过基础类结构进一步说明。Baked Model 名为 `MyBlockStateModel`，Unbaked 类是内部 Record `MyBlockStateModel.Unbaked`，Model Part 名为 `MyBlockStateModelPart`，Unbaked Part 类是内部 Record `MyBlockStateModelPart.Unbaked`，`ModelState` 名为 `MyModelState`：
 
 ```java
-// The model state used to apply the necessary transformations
-// If you are using an intermediate object to hold the model state, it must be transformable to a ModelState
+// 用于应用必要转换的模型状态
+// 如果你使用中间对象来保存模型状态，则它必须可转换为 ModelState
 public class MyModelState implements ModelState {
 
-    // Used for the unbaked block model part
+    // 用于未烘烤的方块模型部分
     public static final Codec<MyModelState> CODEC = Codec.unit(new MyModelState());
 
     public MyModelState() {}
 
     @Override
     public Transformation transformation() {
-        // Returns the model rotation to apply to the baking vertices
+        // 返回模型旋转以应用于烘焙顶点
         return Transformation.identity();
     }
 
     @Override
     public Matrix4fc faceTransformation(Direction direction) {
-        // Returns the matrix that is applied to a given face on the model after the transformation
-        // This is currently unused in Vanilla
+        // 返回变换后应用于模型上给定面的矩阵
+        // 目前在原版中未使用
         return NO_TRANSFORM;
     }
 
     @Override
     public Matrix4fc inverseFaceTransformation(Direction direction) {
-        // Returns the inverse of faceTransformation that is applied to a given face on the model
-        // This is passed to the FaceBakery
+        // 返回应用于模型上给定面的 faceTransformation 的倒数
+        // 这被传递到 FaceBakery
         return NO_TRANSFORM;
     }
 }
 
-// The model part representing a baked model
-// useAmbientOcclusion and particleMaterial are implemented as part of the record
+// 代表烘焙模型的模型部分
+// useAmbientOcclusion 和 particleMaterial 作为 record 的一部分实现
 public record MyBlockStateModelPart(QuadCollection quads, boolean useAmbientOcclusion, Material.Baked particleMaterial) implements BlockStateModelPart {
 
-    // Get the baked quads to render
+    // 获取烘焙的四边形进行渲染
     @Override
     List<BakedQuad> getQuads(@Nullable Direction direction) {
         return this.quads.getQuads(direction);
     }
 
-    // The flags of the materials backing the quads.
+    // 支持四边形的材料的标志。
     @Override
     public int materialFlags() {
         return this.quads.materialFlags();
     }
 
-    // The unbaked model that is read from the block state json
+    // 从方块状态json读取的未烘焙模型
     public record Unbaked(Identifier modelLocation, MyModelState modelState) implements BlockStateModelPart.Unbaked {
 
-        // Used for the unbaked block state model
+        // 用于未烘焙方块状态模型
         public static final MapCodec<MyBlockStateModelPart.Unbaked> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                 Identifier.CODEC.fieldOf("model").forGetter(MyBlockStateModelPart.Unbaked::modelLocation),
@@ -434,84 +434,84 @@ public record MyBlockStateModelPart(QuadCollection quads, boolean useAmbientOccl
 
         @Override
         public void resolveDependencies(ResolvableModel.Resolver resolver) {
-            // Mark any models used by the model part
+            // 标记模型部分使用的任何模型
             resolver.markDependency(this.modelLocation);
         }
 
         @Override
         public BlockStateModelPart bake(ModelBaker baker) {
-            // Get the model to bake
+            // 获取模型进行烘焙
             ResolvedModel resolvedModel = baker.getModel(this.modelLocation);
 
-            // Get the necessary settings for the model part
+            // 获取模型零件的必要设置
             TextureSlots slots = resolvedModel.getTopTextureSlots();
             boolean ao = resolvedModel.getTopAmbientOcclusion();
             Material.Baked particle = resolvedModel.resolveParticleMaterial(slots, baker);
             QuadCollection quads = resolvedModel.bakeTopGeometry(slots, baker, this.modelState);
             
-            // Return the baked part
+            // 返回烘焙部分
             return new MyBlockStateModelPart(quads, ao, particle);
         }
     }
 }
 
-// The state model representing the baked block state
+// 代表烘焙方块状态的状态模型
 public record MyBlockStateModel(MyBlockStateModelPart model) implements DynamicBlockStateModel {
 
-    // Sets the particle material
-    // While it needs to be implemented, any actual logic should be delegated to the level-aware version
+    // 设置粒子材质
+    // 虽然需要实现，但任何实际逻辑都应委托给级别感知版本
     @Override
     public Material.Baked particleMaterial() {
         return this.model.particleMaterial();
     }
 
-    // The flags of the materials backing the quads.
-    // While it needs to be implemented, any actual logic should be delegated to the level-aware version
+    // 支持四边形的材料的标志。
+    // 虽然需要实现，但任何实际逻辑都应委托给级别感知版本
     @Override
     public int materialFlags() {
         return this.quads.materialFlags();
     }
 
-    // This effectively acts as a key to reuse geometry previous produced. This should generally be as deterministic as possible.
+    // 这有效地充当了重复使用先前生成的几何体的关键。这通常应该尽可能具有确定性。
     @Override
     public Object createGeometryKey(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random) {
         return this;
     }
 
-    // Method responsible for collecting the parts to be rendered. Parameters in this method are:
-    // - The getter for the blocks and tints, usually the level.
-    // - The position of the block to render.
-    // - The state of the block.
-    // - A random instance.
-    // - This list of model parts to be rendered. Add your model parts here.
+    // 负责收集要渲染的部分的方法。 此方法中的参数为：
+    // - Block 与 tint 的 getter，通常是 Level。
+    // - 要渲染的方块的位置。
+    // - 方块的状态。
+    // - 随机实例。
+    // - 要渲染的模型零件列表。在此添加你的模型零件。
     @Override
     public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
-        // If you want the block rendered to be dependent on the block entity (e.g., your block entity implements `BlockEntity#getModelData`)
-        // You can call `BlockAndTintGetter#getModelData` with the block position
-        // You can read the property using `get` with the `ModelProperty` key
-        // Remember that your block entity should call `BlockEntity#requestModelDataUpdate` to sync the model data to the client
+        // 如果你希望渲染的方块依赖于方块实体（例如，你的方块实体实现了 `BlockEntity#getModelData`）
+        // 你可以使用方块位置调用`BlockAndTintGetter#getModelData`
+        // 你可以使用 `get` 和 `ModelProperty` 键读取 property
+        // 请记住，你的方块实体应调用 `BlockEntity#requestModelDataUpdate` 将模型数据同步到客户端
         ModelData data = level.getModelData(pos);
 
-        // Add the model to be rendered
+        // 添加要渲染的模型
         parts.add(this.model);
     }
 
     @Override
     public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
-        // Override this if you want to use the level to determine what particle to render
+        // 如果要根据世界决定渲染哪种粒子，请重写此方法
         return self().particleMaterial();
     }
 
     @Override
     public int materialFlags(BlockAndTintGetter level, BlockPos pos, BlockState state) {
-        // Override this if you want to use the level to determine what material flags the model has
+        // 如果要根据世界决定模型具有哪些材质标志，请重写此方法
         return self().materialFlags();
     }
 
-    // The unbaked model that is read from the block state json
+    // 从方块状态json读取的未烘焙模型
     public record Unbaked(MyBlockStateModelPart.Unbaked model) implements CustomUnbakedBlockStateModel {
 
-        // The codec to register
+        // 要注册的编解码器
         public static final MapCodec<MyBlockStateModel.Unbaked> CODEC = MyBlockStateModelPart.Unbaked.CODEC.xmap(
             MyBlockStateModel.Unbaked::new, MyBlockStateModel.Unbaked::model
         );
@@ -519,13 +519,13 @@ public record MyBlockStateModel(MyBlockStateModelPart model) implements DynamicB
 
         @Override
         public void resolveDependencies(ResolvableModel.Resolver resolver) {
-            // Mark any models used by the state model
+            // 标记状态模型使用的任何模型
             this.model.resolveDependencies(resolver);
         }
 
         @Override
         public BlockStateModel bake(ModelBaker baker) {
-            // Bake the model parts and pass into the block state model
+            // 烘烤模型零件并传入方块状态模型
             return new MyBlockStateModel(this.model.bake(baker));
         }
     }
@@ -536,7 +536,7 @@ public record MyBlockStateModel(MyBlockStateModelPart model) implements DynamicB
 全部完成后，不要忘记真正注册 Loader：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerDefinitions(RegisterBlockStateModels event) {
     event.registerModel(MyBlockStateModel.Unbaked.ID, MyBlockStateModel.Unbaked.CODEC);
 }
@@ -547,23 +547,23 @@ public static void registerDefinitions(RegisterBlockStateModels event) {
 当然，也可以通过 [Datagen][datagen] 生成 Model。为此，需要一个扩展 `CustomBlockStateModelBuilder` 的类：
 
 ```java
-// The builder used to construct the block state JSON
+// 用于构建方块状态的 builder JSON
 public class MyBlockStateModelBuilder extends CustomBlockStateModelBuilder {
 
     private MyBlockStateModelPart.Unbaked model;
 
     public MyBlockStateModelBuilder() {}
     
-    // Add fields and setters for the fields here. The fields can then be used below.
+    // 在此处添加字段和字段的设置器。然后可以在下面使用这些字段。
 
     @Override
     public MyBlockStateModelBuilder with(VariantMutator variantMutator) {
-        // If you want to apply any mutators that assumes your unbaked model part is a `Variant`
-        // If not, this should do nothing
+        // 如果你想应用任何假设你的未烘焙模型部件是 `Variant` 的变异器
+        // 如果不是，此应该什么也不做
         return this;
     }
 
-    // This is for generalized unbaked blockstate models
+    // 这是针对广义未烘焙方块状态模型
     @Override
     public MyBlockStateModelBuilder with(UnbakedMutator unbakedMutator) {
         var result = new MyBlockStateModelBuilder();
@@ -575,7 +575,7 @@ public class MyBlockStateModelBuilder extends CustomBlockStateModelBuilder {
         return result;
     }
 
-    // Converts the builder to its unbaked variant to encode
+    // 将 builder 转换为其未烘焙的变体进行编码
     @Override
     public CustomUnbakedBlockStateModel toUnbaked() {
         return new MyBlockStateModel.Unbaked(this.model);
@@ -586,14 +586,14 @@ public class MyBlockStateModelBuilder extends CustomBlockStateModelBuilder {
 要使用此 State Definition Loader Builder，请在 Block（或 Item）[Model Datagen][modeldatagen] 期间执行以下操作：
 
 ```java
-// This assumes an extension of ModelProvider and a DeferredBlock<Block> EXAMPLE_BLOCK.
+// 这里假定存在 ModelProvider 的子类和 DeferredBlock<Block> EXAMPLE_BLOCK。
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     blockModels.blockStateOutput.accept(
         MultiVariantGenerator.dispatch(
-            // The block to generate the model for
+            // 生成模型的方块
             EXAMPLE_BLOCK.get(),
-            // Our custom block state builder
+            // 我们的自定义方块状态 builder
             MultiVariant.of(new CustomBlockStateModelBuilder().with(...))
         )
     );
@@ -607,7 +607,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
   "variants": {
     "": {
         "type": "examplemod:my_custom_model_loader"
-        // Other fields
+        // 其他字段
     }
   }
 }
@@ -636,19 +636,19 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 ```java
 public record MyBlockModelDefinition(MyBlockStateModel.Unbaked model) implements CustomBlockModelDefinition {
 
-    // The codec to register
+    // 要注册的编解码器
     public static final MapCodec<MyBlockModelDefinition> CODEC = MyBlockStateModel.Unbaked.CODEC.xmap(
         MyBlockModelDefinition::new, MyBlockModelDefinition::model
     );
     public static final Identifier ID = Identifier.fromNamespaceAndPath("examplemod", "my_custom_definition_loader");
 
-    // This method maps all possible states to some unbaked root
-    // As the root will generally share block states models, they are typically operated using a `ModelBaker.SharedOperationKey` to cache the loading model
+    // 该方法将所有可能的状态映射到某个未烘焙的根
+    // 由于根通常会共享方块状态模型，因此通常使用 `ModelBaker.SharedOperationKey` 来操作它们来缓存加载模型
     @Override
     public Map<BlockState, BlockStateModel.UnbakedRoot> instantiate(StateDefinition<Block, BlockState> states, Supplier<String> sourceSupplier) {
         Map<BlockState, BlockStateModel.UnbakedRoot> result = new HashMap<>();
 
-        // Handle for all possible states
+        // 所有可能状态的句柄
         var unbakedRoot = this.model.asRoot();
         states.getPossibleStates().forEach(state -> result.put(state, unbakedRoot));
 
@@ -665,7 +665,7 @@ public record MyBlockModelDefinition(MyBlockStateModel.Unbaked model) implements
 全部完成后，不要忘记真正注册 Loader：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerDefinitions(RegisterBlockStateModels event) {
     event.registerDefinition(MyBlockModelDefinition.ID, MyBlockModelDefinition.CODEC);
 }
@@ -692,13 +692,13 @@ public class MyBlockModelDefinitionGenerator implements BlockModelDefinitionGene
 
     @Override
     public Block block() {
-        // Returns the block you are generating the definition file for
+        // 返回你为其生成定义文件的方块
         return this.block;
     }
 
     @Override
     public BlockModelDefinition create() {
-        // Creates the block model definition used to encode and decode the file
+        // 创建用于编码和解码文件的方块模型定义
         return new MyBlockModelDefinition(this.builder.toUnbaked());
     }
 } 
@@ -707,12 +707,12 @@ public class MyBlockModelDefinitionGenerator implements BlockModelDefinitionGene
 要使用此 State Definition Loader Builder，请在 Block（或 Item）[Model Datagen][modeldatagen] 期间执行以下操作：
 
 ```java
-// This assumes a DeferredBlock<Block> EXAMPLE_BLOCK.
+// 这里假定存在 DeferredBlock<Block> EXAMPLE_BLOCK。
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     blockModels.blockStateOutput.accept(
         MyBlockModelDefinitionGenerator.dispatch(
-            // The block to generate the model for
+            // 生成模型的方块
             EXAMPLE_BLOCK.get(),
             new CustomBlockStateModelBuilder(...)
         )
@@ -725,7 +725,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 ```json5
 {
     "neoforge:definition_type": "examplemod:my_custom_definition_loader"
-    // Other fields
+    // 其他字段
 }
 ```
 

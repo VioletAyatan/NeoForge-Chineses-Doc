@@ -20,12 +20,12 @@
 
 ```java
 public class MyEntity extends Entity {
-    // The generic type must match the one of the second parameter below.
+    // 泛型类型必须与下面第二个参数之一匹配。
     public static final EntityDataAccessor<Integer> MY_DATA =
         SynchedEntityData.defineId(
-            // The class of the entity.
+            // 实体的类。
             MyEntity.class,
-            // The entity data accessor type.
+            // 实体数据访问器类型。
             EntityDataSerializers.INT
         );
 }
@@ -43,7 +43,7 @@ public class MyEntity extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        // Our default value is zero.
+        // 我们的默认值为零。
         builder.define(MY_DATA, 0);
     }
 }
@@ -61,7 +61,7 @@ this.getEntityData().set(MY_DATA, 1);
 这两个方法用于从磁盘读取数据及向磁盘写入数据。它们通过从 [value I/O][valueio] 加载值或向其中保存值来工作，如下所示：
 
 ```java
-// Assume that an `int data` exists in the class.
+// 假设类中存在 `int data`。
 @Override
 protected void readAdditionalSaveData(ValueInput input) {
     this.data = input.getIntOr("my_data", 0);
@@ -94,9 +94,9 @@ public void readSpawnData(RegistryFriendlyByteBuf buf) {
 ```java
 @Override
 public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> packetConsumer) {
-    // Call super for some base functionality.
+    // 调用 super 来获取某些基本功能。
     super.sendPairingData(player, packetConsumer);
-    // Add your own packets.
+    // 添加你自己的数据包。
     packetConsumer.accept(new MyPacket(...));
 }
 ```

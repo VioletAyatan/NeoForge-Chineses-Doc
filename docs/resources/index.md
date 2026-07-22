@@ -132,10 +132,10 @@ public class MyRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes() {
-        // Register your recipes here.
+        // 在这里注册你的配方。
     }
 
-    // The data provider class
+    // 数据提供器类
     public static class Runner extends RecipeProvider.Runner {
 
         public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -149,28 +149,28 @@ public class MyRecipeProvider extends RecipeProvider {
     }
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus
+// 在某些事件处理器类中
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
-    // Data providers should start by calling event.createDatapackRegistryObjects(...)
-    // to register their datapack registry objects. This allows other providers
-    // to use these objects during their own data generation.
+    // 数据提供器应先调用 event.createDatapackRegistryObjects(...)
+    // 注册其数据包注册表对象。这允许其他提供器
+    // 在这些对象自己的数据生成期间使用它们。
 
-    // From there, providers can generally be registered using event.createProvider(...),
-    // which acts as a function that provides the PackOutput and optionally the
+    // 之后，通常可以使用 event.createProvider(...) 注册提供器，
+    // 充当提供 PackOutput 和可选的函数
     // CompletableFuture<HolderLookup.Provider>.
 
-    // Register the provider.
+    // 注册提供器。
     event.createProvider(MyRecipeProvider.Runner::new);
-    // Other data providers here.
+    // 其他数据提供器在这里。
 
-    // If you want to create a datapack within the global pack, you can call
-    // DataGenerator#getBuiltinDatapack. From there, you must use the
-    // PackGenerator#addProvider method to add any providers to that pack.
+    // 如果你想在全局包内创建数据包，你可以调用
+    // DataGenerator#getBuiltinDatapack。从那里，你必须使用
+    // PackGenerator#addProvider 方法将任何提供器添加到该包。
     DataGenerator.PackGenerator examplePack = event.getGenerator().getBuiltinDatapack(
-        true, // Should always be true.
-        "examplemod", // The mod id.
-        "example_pack" // The name of the pack.
+        true, // 应始终为 true。
+        "examplemod", // 模组 ID。
+        "example_pack" // 包的名称。
     );
     
     examplePack.addProvider(output -> ...);
@@ -205,10 +205,10 @@ Data Generator 可接受多个命令行参数：
 
 ```groovy
 runs {
-    // other run configurations here
+    // 其他运行配置在这里
 
     clientData {
-        arguments.addAll '--arg1', 'value1', '--arg2', 'value2', '--all' // boolean args have no value
+        arguments.addAll '--arg1', 'value1', '--arg2', 'value2', '--all' // boolean 参数没有值
     }
 }
 ```
@@ -217,10 +217,10 @@ runs {
 
 ```groovy
 runs {
-    // other run configurations here
+    // 其他运行配置在这里
 
     clientData {
-        arguments.addAll '--mod', 'examplemod', // insert your own mod id
+        arguments.addAll '--mod', 'examplemod', // 插入你自己的模组 ID
                 '--output', file('src/generated/resources').getAbsolutePath(),
                 '--all'
     }

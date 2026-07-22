@@ -9,37 +9,37 @@ Entity 渲染使用所谓的 Entity Render State。简单来说，它是一个�
 最简单的 Entity Renderer 直接扩展 `EntityRenderer`：
 
 ```java
-// The generic type in the superclass should be set to what entity you want to render.
-// If you wanted to enable rendering for any entity, you'd use Entity, like we do here.
-// You'd also use an EntityRenderState that fits your use case. More on this below.
+// 超类中的泛型类型应设置为要呈现的实体。
+// 如果你想为任何实体启用渲染，你可以使用实体，就像我们在这里所做的那样。
+// 你还可以使用适合你的用例的 EntityRenderState。有关其更多信息如下。
 public class MyEntityRenderer extends EntityRenderer<Entity, EntityRenderState> {
-    // In our constructor, we just forward to super.
+    // 在我们的构造器中，我们只是转发到 super。
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
-    // Tell the render engine how to create a new entity render state.
+    // 告诉渲染引擎如何创建新实体渲染状态。
     @Override
     public EntityRenderState createRenderState() {
         return new EntityRenderState();
     }
 
-    // Update the render state by copying the needed values from the passed entity to the passed state.
-    // Both Entity and EntityRenderState may be replaced with more concrete types,
-    // based on the generic types that have been passed to the supertype.
+    // 通过将所需的值从传递的实体复制到传递的状态来更新渲染状态。
+    // 实体和 EntityRenderState 都可以替换为更具体的类型，
+    // 基于已传递给超类型的泛型类型。
     @Override
     public void extractRenderState(Entity entity, EntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
-        // Extract and store any additional values in the state here.
+        // 提取任何附加值并将其存储在此处的状态中。
     }
     
-    // Actually submit the features of the entity to render.
-    // The first parameter matches the render state's generic type.
-    // Calling super will handle leash and name tag submission for you, if applicable.
+    // 实际提交实体的特征进行渲染。
+    // 第一个参数与渲染状态的泛型类型匹配。
+    // 致电 super 将为你处理皮带和姓名标签提交（如果适用）。
     @Override
     public void submit(EntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
         super.submit(renderState, poseStack, collector, cameraState);
-        // Do your own submission here
+        // 在此自行提交
     }
 }
 ```
@@ -47,7 +47,7 @@ public class MyEntityRenderer extends EntityRenderer<Entity, EntityRenderState> 
 有了 Entity Renderer 后，还需要注册它并将其连接到所属 Entity。这可在 [`EntityRenderersEvent.RegisterRenderers`][events] 中完成：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     event.registerEntityRenderer(MY_ENTITY_TYPE.get(), MyEntityRenderer::new);
 }
@@ -73,29 +73,29 @@ public class MyEntityRenderState extends EntityRenderState {
 
 ```java
 public static final ContextKey<String> EXAMPLE_CONTEXT = new ContextKey<>(
-    // The id of your context key. Used for distinguishing between keys internally.
+    // 你的上下文键的 ID。用于内部区分按键。
     Identifier.fromNamespaceAndPath("examplemod", "example_context"));
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
     event.registerEntityModifier(
-        // A TypeToken for the renderer. It is REQUIRED for this to be instantiated as an anonymous class
-        // (i.e., with {} at the end) and to have explicit generic parameters, due to generics nonsense.
+        // 渲染器的 TypeToken。 此实例化为匿名类是必填
+        // （即末尾有 {}），并且受 Java 泛型限制，需要显式指定泛型参数。
         new TypeToken<LivingEntityRenderer<LivingEntity, LivingEntityRenderState, ?>>(){},
-        // The modifier itself. This is a BiConsumer of the entity and the entity render state.
-        // Exact generic types are inferred from the generics in the renderer class used.
+        // 修饰符本身。这是实体和实体渲染状态的 BiConsumer。
+        // 精确的泛型类型是从所使用的渲染器类中的泛型推断出来的。
         (entity, state) -> state.setRenderData(EXAMPLE_CONTEXT, "Hello World!");
     );
     
-    // Overload of the above method that accepts a Class<?>.
-    // This should ONLY be used for renderers without any generics, such as PigRenderer.
+    // 接受 Class<?> 的上述方法的重载。
+    // 这应当仅用于不带任何泛型的渲染器，例如 PigRenderer。
     event.registerEntityModifier(
         PigRenderer.class,
         (entity, state) -> state.setRenderData(EXAMPLE_CONTEXT, "Hello World!");
     );
 
-    // Convenience method for working around issues around modifying an avatar's
-    // render state (e.g. players).
+    // 解决修改头像问题的便捷方法
+    // 渲染 state（例如玩家）。
     event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
         @Override
         public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState state) {
@@ -173,52 +173,52 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {}
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {
-    // A static method in which we create our layer definition. createBodyLayer() is the name
-    // most vanilla models use. If you have multiple layers, you will have multiple of these static methods.
+    // 一个 static 方法，我们在其中创建图层定义。 createBodyLayer() 是名称
+    // 大多数原版模型使用。如果你有多个层，你将拥有多个 static 方法。
     public static LayerDefinition createBodyLayer() {
-        // Create our mesh.
+        // 创建我们的网格。
         MeshDefinition mesh = new MeshDefinition();
-        // The mesh initially contains no object other than the root, which is invisible (has a size of 0x0x0).
+        // 网格最初除根部之外不包含任何对象，根部为 invisible（大小为 0x0x0）。
         PartDefinition root = mesh.getRoot();
-        // We add a head part.
+        // 我们添加了头部部分。
         PartDefinition head = root.addOrReplaceChild(
-            // The name of the part.
+            // 零件的名称。
             "head",
-            // The CubeListBuilder we want to add.
+            // 我们要添加的CubeListBuilder。
             CubeListBuilder.create()
-                // The UV coordinates to use within the texture. Texture binding itself is explained below.
-                // In this example, we start at U=10, V=20.
+                // 在纹理内使用的 UV 坐标。下面解释纹理绑定本身。
+                // 在本例中，从 U=10、V=20 开始。
                 .texOffs(10, 20)
-                // Add our cube. May be called multiple times to add multiple cubes.
-                // This is relative to the parent part. For the root part, it is relative to the entity's position.
-                // Be aware that the y axis is flipped, i.e. "up" is subtractive and "down" is additive.
+                // 添加我们的立方体。可以多次调用以添加多个立方体。
+                // 这是相对于父部件的。对于根部分来说，它是相对于实体的位置而言的。
+                // 请注意，y 轴已翻转，即 "up" 是减法，"down" 是加法。
                 .addBox(
-                    // The top-left-back corner of the cube, relative to the parent object's position.
+                    // 立方体的左上角，相对于父对象的位置。
                     -5, -5, -5,
-                    // The size of the cube.
+                    // 立方体的大小。
                     10, 10, 10
                 )
-                // Call texOffs and addBox again to add another cube.
+                // 再次调用 texOffs 和 addBox 添加另一个立方体。
                 .texOffs(30, 40)
                 .addBox(-1, -1, -1, 1, 1, 1)
-                // Various overloads of addBox() are available, which allow for additional operations
-                // such as texture mirroring, texture scaling, specifying the directions to be rendered,
-                // and a global scale to all cubes, known as a CubeDeformation.
-                // This example uses the latter, please check the usages of the individual methods for more examples.
+                // addBox()的各种重载可用，允许附加操作
+                // 如纹理镜像、纹理缩放、指定要渲染的方向、
+                // 和全局范围内的所有多维数据集，称为 CubeDeformation。
+                // 本示例使用后者，更多示例请查看各个方法的用法。
                 .texOffs(50, 60)
                 .addBox(5, 5, 5, 4, 4, 4, CubeDeformation.extend(1.2f)),
-            // The initial positioning to apply to all elements of the CubeListBuilder. Besides PartPose#offset,
-            // PartPose#offsetAndRotation is also available. This can be reused across multiple PartDefinitions.
-            // This may not be used by all models. For example, making custom armor layers will use the associated
-            // player (or other humanoid) renderer's PartPose instead to have the armor "snap" to the player model.
+            // 适用于 CubeListBuilder 的所有元素的初始定位。除了PartPose#offset之外，
+            // PartPose#offsetAndRotation 也可用。这可以在多个 PartDefinitions 之间重复使用。
+            // 这可能不适用于所有模型。例如，制作自定义盔甲层将使用关联的
+            // 玩家（或其他人形）渲染器的 PartPose，使盔甲“贴合”玩家模型。
             PartPose.offset(0, 8, 0)
         );
-        // We can now add children to any PartDefinition, thus creating a hierarchy.
+        // 我们现在可以将子项添加到任何 PartDefinition，从而创建层次结构。
         PartDefinition part1 = root.addOrReplaceChild(...);
         PartDefinition part2 = head.addOrReplaceChild(...);
         PartDefinition part3 = part1.addOrReplaceChild(...);
-        // At the end, we create a LayerDefinition from the MeshDefinition.
-        // The two integers are the expected dimensions of the texture; 64x32 in our example.
+        // 最后，我们从 MeshDefinition 创建一个 LayerDefinition。
+        // 这两个整数是纹理的预期尺寸；在我们的示例中为 64x32。
         return LayerDefinition.create(mesh, 64, 32);
     }
 }
@@ -235,19 +235,19 @@ Blockbench 还提供将 Model 导出为 `LayerDefinition` 创建方法的选项�
 有了 Entity Layer Definition 后，需要在 `EntityRenderersEvent.RegisterLayerDefinitions` 中注册它。为此，需要使用 `ModelLayerLocation`，它实质上是 Layer 的 Identifier（请记住，一个 Entity 可以有多个 Layer）。
 
 ```java
-// Our ModelLayerLocation.
+// 我们的 ModelLayerLocation。
 public static final ModelLayerLocation MY_LAYER = new ModelLayerLocation(
-    // Should be the name of the entity this layer belongs to.
-    // May be more generic if this layer can be used on multiple entities.
+    // 应为此层所属实体的名称。
+    // 如果此层可用于多个实体，则可能更通用。
     Identifier.fromNamespaceAndPath("examplemod", "example_entity"),
-    // The name of the layer itself. Should be main for the entity's base model,
-    // and a more descriptive name (e.g. "wings") for more specific layers.
+    // 图层本身的名称。应该是实体基本模型的 main，
+    // 以及更具描述性的 name (例如"wings") 用于更具体的层。
     "main"
 );
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-    // Add our layer here.
+    // 在这里添加我们的图层。
     event.add(MY_LAYER, MyEntityModel::createBodyLayer);
 }
 ```
@@ -258,27 +258,27 @@ public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDe
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {
-    // Storing specific model parts as fields for use below.
+    // 将特定模型零件存储为字段以供下面使用。
     private final ModelPart head;
     
-    // The ModelPart passed here is the root of our baked model.
-    // We will get to the actual baking in just a moment.
+    // 这里传递的ModelPart是我们烘焙模型的根。
+    // 我们很快就会开始实际的烘焙。
     public MyEntityModel(ModelPart root) {
-        // The super constructor call can optionally specify a RenderType.
+        // super 构造器调用可以选择指定 RenderType。
         super(root);
-        // Store the head part for use below.
+        // 将头部存放在下面以供使用。
         this.head = root.getChild("head");
     }
 
     public static LayerDefinition createBodyLayer() {...}
 
-    // Use this method to update the model rotations, visibility etc. from the render state. If you change the
-    // generic parameter of the EntityModel superclass, this parameter type changes with it.
+    // 使用此方法从渲染状态更新模型旋转、可见性等。如果你更改
+    // EntityModel 超类的泛型参数，此参数类型随之变化。
     @Override
     public void setupAnim(MyEntityRenderState state) {
-        // Calling super to reset all values to default.
+        // 调用super 将所有值重置为默认值。
         super.setupAnim(state);
-        // Change the model parts.
+        // 更改模型零件。
         head.visible = state.myBoolean();
         head.xRot = state.myXRotation();
         head.yRot = state.myYRotation();
@@ -290,24 +290,24 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
 现在 Model 已能正确接收 Bake 后的 `ModelPart`，可以创建 `RenderLayer` 子类，并用它 Bake `LayerDefinition`：
 
 ```java
-// The generic parameters need the proper types you used everywhere else up to this point.
+// 泛型参数需要你在其他地方使用的正确类型，直到此点。
 public class MyRenderLayer extends RenderLayer<MyEntityRenderState, MyEntityModel> {
     private final MyEntityModel model;
     
-    // Create the render layer. The renderer parameter is required for passing to super.
-    // Other parameters can be added as needed. For example, we need the EntityModelSet for model baking.
+    // 创建渲染层。传递给 super 需要渲染器参数。
+    // 可以按需添加其他参数。例如，模型烘焙需要 EntityModelSet。
     public MyRenderLayer(MyEntityRenderer renderer, EntityModelSet entityModelSet) {
         super(renderer);
-        // Bake and store our layer definition, using the ModelLayerLocation from back when we registered the layer definition.
-        // If applicable, you can also store multiple models this way and use them below.
+        // 使用我们注册图层定义时的 ModelLayerLocation 烘焙并存储我们的图层定义。
+        // 如果适用，你还可以以其方式存储多个模型并在下面使用它们。
         this.model = new MyEntityModel(entityModelSet.bakeLayer(MY_LAYER));
     }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, MyEntityRenderState renderState, float yRot, float xRot) {
-        // Submit the features for the layer here. We have stored the entity model in a field, you probably want to use it in some way.
+        // 在此处提交图层的要素。我们已将实体模型存储在一个字段中，你可能想以某种方式使用它。
         collector
-            .order(1) // We submit the feature on a later iteration so it renders on top of the entity
+            .order(1) // 我们在稍后的迭代中提交该功能，以便它呈现在实体之上
             .submitModel(this.model, renderState, poseStack, ...);
     }
 }
@@ -318,14 +318,14 @@ public class MyRenderLayer extends RenderLayer<MyEntityRenderState, MyEntityMode
 最后，把 Layer 添加到 Renderer（现在它必须是 Living Renderer），将所有部分连接起来：
 
 ```java
-// Plugging in our custom render state class as the generic type.
-// Also, we need to implement RenderLayerParent. Some existing renderers, such as LivingEntityRenderer, do this for you.
+// 插入我们的自定义渲染状态类作为泛型类型。
+// 另外，我们需要实现 RenderLayerParent。一些现有的渲染器（例如 LivingEntityRenderer）可以为你执行此操作。
 public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityRenderState, MyEntityModel> {
     public MyEntityRenderer(EntityRendererProvider.Context context) {
-        // For LivingEntityRenderer, the super constructor requires a "base" model and a shadow radius to be supplied.
+        // 对于 LivingEntityRenderer，super 构造器需要提供 "base" 模型和阴影半径。
         super(context, new MyEntityModel(context.bakeLayer(MY_LAYER)), 0.5f);
-        // Add the layer. Get the EntityModelSet from the context. For the purpose of the example,
-        // we ignore that the render layer submits the "base" model, this would be a different model in practice.
+        // 添加图层。从上下文中获取 EntityModelSet。出于示例的目的，
+        // 我们忽略渲染层提交 "base" 模型，此在实践中将是不同的模型。
         this.addLayer(new MyRenderLayer(this, context.getModelSet()));
     }
 
@@ -337,20 +337,20 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityRen
     @Override
     public void extractRenderState(MyEntity entity, MyEntityRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
-        // Extract your own stuff here, see the beginning of the article.
+        // 在这里提取自己的东西，见文章开头。
     }
 
     @Override
     public void submit(MyEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
-        // Calling super will automatically submit the features of the layer for you.
+        // 调用super会自动为你提交该图层的特征。
         super.submit(renderState, poseStack, collector, cameraState);
-        // Then, do custom submission here, if applicable.
+        // 然后，在此处进行自定义提交（如果适用）。
     }
 
-    // getTextureLocation is an abstract method in LivingEntityRenderer that we need to override.
-    // The texture path is relative to the namespace, so it must specify the exact path within the namespace in the assets directory.
-    // In this example, the texture should be located at `assets/examplemod/textures/entity/example_entity.png`.
-    // The texture will then be supplied to and used by the model.
+    // getTextureLocation 是我们需要重写的 LivingEntityRenderer 中的 abstract 方法。
+    // 纹理路径是相对于命名空间的，因此必须在assets目录中指定命名空间内的确切路径。
+    // 在此示例中，纹理应位于 `assets/examplemod/textures/entity/example_entity.png`。
+    // 然后纹理将提供给模型并由模型使用。
     @Override
     public Identifier getTextureLocation(MyEntityRenderState state) {
         return Identifier.fromNamespaceAndPath("examplemod", "textures/entity/example_entity.png");
@@ -452,12 +452,12 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityRen
 ```
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
     event.add(MyEntityModel.MY_LAYER, MyEntityModel::createBodyLayer);
 }
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     event.registerEntityRenderer(MY_ENTITY_TYPE.get(), MyEntityRenderer::new);
 }
@@ -468,17 +468,17 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 某些情况下，需要为现有 Entity Renderer 添加内容，例如在现有 Entity 上渲染额外效果。多数时候，这会影响 Living Entity，即使用 `LivingEntityRenderer` 的 Entity。这使我们可以按如下方式向 Entity 添加 [Render Layer][renderlayer]：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void addLayers(EntityRenderersEvent.AddLayers event) {
-    // Add a layer to every single entity type.
+    // 向每个实体类型添加一个层。
     for (EntityType<?> entityType : event.getEntityTypes()) {
-        // Get our renderer.
+        // 获取我们的渲染器。
         EntityRenderer<?, ?> renderer = event.getRenderer(entityType);
-        // We check if our render layer is supported by the renderer.
-        // If you want a more general-purpose render layer, you will need to work with wildcard generics.
+        // 我们检查渲染器是否支持渲染层。
+        // 如果你想要更通用的渲染层，则需要使用通配符泛型。
         if (renderer instanceof MyEntityRenderer myEntityRenderer) {
-            // Add the layer to the renderer. Like above, construct a new MyRenderLayer.
-            // The EntityModelSet can be retrieved from the event through #getEntityModels.
+            // 将图层添加到渲染器。同上，构造一个新 MyRenderLayer。
+            // 可以通过 #getEntityModels 从事件中检索 EntityModelSet。
             myEntityRenderer.addLayer(new MyRenderLayer(renderer, event.getEntityModels()));
         }
     }
@@ -488,15 +488,15 @@ public static void addLayers(EntityRenderersEvent.AddLayers event) {
 对于玩家，需要做一些特殊处理，因为实际上可能存在多个 Player Renderer。事件会分别管理它们，可以按如下方式进行交互：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
-    // Iterate over all possible player models.
+    // 迭代所有可能的玩家模型。
     for (PlayerModelType type : event.getSkins()) {
-        // Get the associated AvatarRenderer.
+        // 获取关联的 AvatarRenderer。
         AvatarRenderer<AbstractClientPlayer> playerRenderer = event.getPlayerRenderer(type);
         if (playerRenderer != null) {
-            // Add the layer to the renderer. This assumes that the render layer
-            // has proper generics to support players and player renderers.
+            // 将图层添加到渲染器。这假设渲染层
+            // 有适当的泛型来支持玩家和玩家渲染器。
             playerRenderer.addLayer(new MyRenderLayer(playerRenderer, event.getEntityModels()));
         }
     }
@@ -511,29 +511,29 @@ Minecraft 通过 `AnimationDefinition` 类为 Entity Model 提供动画系统。
 
 ```json5
 {
-    // The duration of the animation, in seconds.
+    // 动画的持续时间，以秒为单位。
     "length": 1.5,
-    // Whether the animation should loop (true) or stop (false) when finished.
-    // Optional, defaults to false.
+    // 动画完成后是否应为 loop (true) 或 stop (false)。
+    // 可选，默认为 false。
     "loop": true,
-    // A list of parts to be animated, and their animation data.
+    // 要动画的部件列表及其动画数据。
     "animations": [
         {
-            // The name of the part to be animated. Must match the name of a part
-            // defined in your LayerDefinition (see above). If there are multiple matches,
-            // the first match from the performed depth-first search will be picked.
+            // 要动画的部分的名称。必须与零件名称匹配
+            // 在你的 LayerDefinition 中定义（见上文）。如果有多个匹配项，
+            // 将选取执行的深度优先搜索中的第一个匹配项。
             "bone": "head",
-            // The value to be changed. See below for available targets.
+            // 要更改的值。请参阅下文了解可用目标。
             "target": "minecraft:rotation",
-            // A list of keyframes for the part.
+            // 零件的关键帧列表。
             "keyframes": [
                 {
-                    // The timestamp of the keyframe, in seconds.
-                    // Should be between 0 and the animation length.
+                    // 关键帧的时间戳，以秒为单位。
+                    // 应介于 0 和动画长度之间。
                     "timestamp": 0.5,
-                    // The actual "value" of the keyframe.
+                    // 关键帧的实际 "value"。
                     "target": [22.5, 0, 0],
-                    // The interpolation method to use. See below for available methods.
+                    // 要使用的插值方法。请参阅下文了解可用方法。
                     "interpolation": "minecraft:linear"
                 }
             ]
@@ -550,36 +550,36 @@ Minecraft 通过 `AnimationDefinition` 类为 Entity Model 提供动画系统。
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {
-    // Create and store a reference to the animation holder.
+    // 创建并存储对动画持有者的引用。
     public static final AnimationHolder EXAMPLE_ANIMATION =
             Model.getAnimation(Identifier.fromNamespaceAndPath("examplemod", "example"));
 
-    // A field to hold the baked animation
+    // 保存烘焙动画的字段
     private final KeyframeAnimation example;
 
     public MyEntityModel(ModelPart root) {
-        // Bake the animation for the model
-        // Pass in whatever 'ModelPart' that the animation is applied to
-        // It should cover all referenced bones
+        // 烘焙模型动画
+        // 传入应用动画的 'ModelPart'
+        // 它应该覆盖所有引用的骨骼
         this.example = EXAMPLE_ANIMATION.get().bake(root);
     }
     
-    // Other stuff here.
+    // 这里还有其他东西。
     
     @Override
     public void setupAnim(MyEntityRenderState state) {
         super.setupAnim(state);
-        // Other stuff here.
+        // 这里还有其他东西。
         
         this.example.apply(
-            // Get the animation state to use from your EntityRenderState.
+            // 从 EntityRenderState 获取要使用的动画状态。
             state.myAnimationState,
-            // Your entity age, in ticks.
+            // 你的实体年龄，以刻度为单位。
             state.ageInTicks
         );
-        // A specialized version of apply(), designed for walking animations.
+        // apply()的专门版本，专为行走动画而设计。
         this.example.applyWalk(state.walkAnimationPos, state.walkAnimationSpeed, 1, 1);
-        // A version of apply() that only applies the first frame of animation.
+        // apply() 的一个版本，仅应用动画的第一帧。
         this.example.applyStatic();
     }
 }
@@ -596,12 +596,12 @@ NeoForge 默认添加以下 Keyframe Target：
 可以创建新的 `AnimationTarget`，并在 `RegisterJsonAnimationTypesEvent` 中注册，从而添加自定义值：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerJsonAnimationTypes(RegisterJsonAnimationTypesEvent event) {
     event.registerTarget(
-        // The name of the new target, to be used in JSON and other places.
+        // 新目标的名称，用于 JSON 等地方。
         Identifier.fromNamespaceAndPath("examplemod", "example"),
-        // The AnimationTarget to register.
+        // 要注册的 AnimationTarget。
         new AnimationTarget(...)
     );
 }
@@ -617,12 +617,12 @@ NeoForge 默认添加以下 Keyframe 插值：
 可以创建新的 `AnimationChannel.Interpolation`（函数式接口），并在 `RegisterJsonAnimationTypesEvent` 中注册，从而添加自定义插值：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerJsonAnimationTypes(RegisterJsonAnimationTypesEvent event) {
     event.registerInterpolation(
-        // The name of the new interpolation, to be used in JSON and other places.
+        // 新插值的名称，用于JSON等地方。
         Identifier.fromNamespaceAndPath("examplemod", "example"),
-        // The AnimationChannel.Interpolation to register.
+        // 要注册的 AnimationChannel.Interpolation。
         (vector, keyframeDelta, keyframes, currentKeyframe, nextKeyframe, scale) -> {...}
     );
 }

@@ -100,9 +100,9 @@
 首先是 `InteractionResult.Success`，表示操作应视为成功，并结束流程。成功状态有两个参数：`SwingSource` 表示 Entity 是否应在相应[逻辑端][side]挥手；`InteractionResult.ItemContext` 保存交互是否由手持 Item 引起，以及手持 Item 使用后转变成什么。挥手来源由以下某个默认状态决定：`InteractionResult#SUCCESS` 表示客户端挥手，`InteractionResult#SUCCESS_SERVER` 表示服务端挥手，`InteractionResult#CONSUME` 表示不挥手。如果 `ItemStack` 发生变化，通过 `Success#heldItemTransformedTo` 设置 Item 上下文；如果手持 Item 与对象之间没有交互，则通过 `withoutItem` 设置。默认表示发生了 Item 交互，但 Item 没有转变。
 
 ```java
-// In some method that returns an interaction result
+// 在某些返回交互结果的方法中
 
-// Item in hand will turn into an apple
+// 物品手里会变成苹果
 return InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.APPLE));
 ```
 
@@ -121,7 +121,7 @@ return InteractionResult.SUCCESS.heldItemTransformedTo(new ItemStack(Items.APPLE
 如果希望操作视为成功，但不希望手臂挥动，也不希望获得 `ITEM_USED` 统计值，请使用 `InteractionResult#CONSUME` 并调用 `#withoutItem`。
 
 ```java
-// In Item#useOn
+// 在 Item#useOn 中
 return InteractionResult.CONSUME.withoutItem();
 ```
 

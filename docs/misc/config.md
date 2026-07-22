@@ -15,21 +15,21 @@
 `ModConfigSpec.Builder#configure` 通常与 `static` 块以及一个构造器接收 `ModConfigSpec.Builder` 的类配合使用，用于附加并保存值：
 
 ```java
-//Define a field to keep the config and spec for later
+//定义一个字段以保留配置和规格以供以后使用
 public static final ExampleConfig CONFIG;
 public static final ModConfigSpec CONFIG_SPEC;
 
 private ExampleConfig(ModConfigSpec.Builder builder) {
-    // Define properties used by the configuration
+    // 定义配置使用的 property
     // ...
 }
 
-//CONFIG and CONFIG_SPEC are both built from the same builder, so we use a static block to seperate the properties
+//CONFIG 和 CONFIG_SPEC 均由同一个 builder 构建，因此使用 static 代码块分隔 property
 static {
     Pair<ExampleConfig, ModConfigSpec> pair =
             new ModConfigSpec.Builder().configure(ExampleConfig::new);
         
-    //Store the resulting values
+    //存储结果值
     CONFIG = pair.getLeft();
     CONFIG_SPEC = pair.getRight();
 }
@@ -60,12 +60,12 @@ static {
 - 表示配置值数据类型的类。
 
 ```java
-//Store the config properties as public finals
+//将配置 property 存储为 public 最终值
 public final ModConfigSpec.ConfigValue<String> welcomeMessage;
 
 private ExampleConfig(ModConfigSpec.Builder builder) {
-    //Define each property
-    //One property could be a message to log to the console when the game is initialised
+    //定义每个 property
+    //一个 property 可以是游戏初始化时登录到控制台的消息
     welcomeMessage = builder.define("welcome_message", "Hello from the config!");
 }
 ```
@@ -120,10 +120,10 @@ private ExampleConfig(ModConfigSpec.Builder builder) {
 构建 `ModConfigSpec` 后，必须对其进行注册，NeoForge 才能按需加载、跟踪和同步配置设置。应在模组构造器中通过 `ModContainer#registerConfig` 注册配置。注册时可以提供表示配置所属端的[类型][configtype]、`ModConfigSpec`，还可以选择提供特定的配置文件名。
 
 ```java
-// In the main mod file with a ModConfigSpec CONFIG_SPEC
+// 在主模组文件中带有ModConfigSpec CONFIG_SPEC
 public ExampleMod(ModContainer container) {
     ...
-    //Register the config
+    //注册配置
     container.registerConfig(ModConfig.Type.COMMON, ExampleConfig.CONFIG_SPEC);
     ...
 }
@@ -184,10 +184,10 @@ NeoForge 在其代码库中记录了[配置类型][type]。
 可以在构建[客户端][client]模组时注册 `IConfigScreenFactory` extension point，为模组注册配置界面：
 
 ```java
-// In the main client mod file
+// 在主客户端模组文件中
 public ExampleModClient(ModContainer container) {
     ...
-    // This will use NeoForge's ConfigurationScreen to display this mod's configs
+    // 这将使用 NeoForge 的 ConfigurationScreen 显示此模组的配置
     container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     ...
 }

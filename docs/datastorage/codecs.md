@@ -13,50 +13,50 @@ Codecs 主要用于将 Java 对象编码（或序列化）为某种数据格式�
 [DataFixerUpper] 库提供了 `JsonOps`，用于处理存储在 [`Gson`][gson] `JsonElement` 实例中的 JSON 数据。`JsonOps` 支持两种 `JsonElement` 序列化方式：`JsonOps#INSTANCE` 定义标准 JSON 文件，`JsonOps#COMPRESSED` 则允许将数据压缩到单个字符串中。
 
 ```java
-// Let exampleCodec represent a Codec<ExampleJavaObject>
-// Let exampleObject be a ExampleJavaObject
-// Let exampleJson be a JsonElement
+// 令 exampleCodec 表示 Codec<ExampleJavaObject>
+// 令 exampleObject 为 ExampleJavaObject
+// 令 exampleJson 为 JsonElement
 
-// Encode Java object to regular JsonElement
+// 将 Java 对象编码为常规 JsonElement
 exampleCodec.encodeStart(JsonOps.INSTANCE, exampleObject);
 
-// Encode Java object to compressed JsonElement
+// 将 Java 对象编码为压缩 JsonElement
 exampleCodec.encodeStart(JsonOps.COMPRESSED, exampleObject);
 
-// Decode JsonElement into Java object
-// Assume JsonElement was parsed normally
+// 将 JsonElement 解码为 Java 对象
+// 假设JsonElement被正常解析
 exampleCodec.parse(JsonOps.INSTANCE, exampleJson);
 ```
 
 Minecraft 还提供了 `NbtOps`，用于处理存储在 `Tag` 实例中的 NBT 数据。可通过 `NbtOps#INSTANCE` 引用它。
 
 ```java
-// Let exampleCodec represent a Codec<ExampleJavaObject>
-// Let exampleObject be a ExampleJavaObject
-// Let exampleNbt be a Tag
+// 令 exampleCodec 表示 Codec<ExampleJavaObject>
+// 令 exampleObject 为 ExampleJavaObject
+// 设 exampleNbt 为标签
 
-// Encode Java object to Tag
+// 将 Java 对象编码为标签
 exampleCodec.encodeStart(NbtOps.INSTANCE, exampleObject);
 
-// Decode Tag into Java object
+// 将标签解码为 Java 对象
 exampleCodec.parse(NbtOps.INSTANCE, exampleNbt);
 ```
 
 为了处理 registry 条目，Minecraft 提供了 `RegistryOps`，其中包含一个用于取得可用 registry 元素的查找 provider。可通过 `RegistryOps#create` 创建它：该方法接收用于指定数据存储类型的 `DynamicOps`，以及能够访问可用 registries 的查找 provider。NeoForge 扩展了 `RegistryOps` 并创建了 `ConditionalOps`，这是一种能够处理[条目加载条件][conditions]的 registry codec 查找机制。
 
 ```java
-// Let lookupProvider be a HolderLookup.Provider
-// Let exampleCodec represent a Codec<ExampleJavaObject>
-// Let exampleObject be a ExampleJavaObject
-// Let exampleJson be a JsonElement
+// 令 lookupProvider 为 HolderLookup.Provider
+// 令 exampleCodec 表示 Codec<ExampleJavaObject>
+// 令 exampleObject 为 ExampleJavaObject
+// 令 exampleJson 为 JsonElement
 
-// Get the registry ops for JsonElement
+// 获取 JsonElement 的注册表操作
 RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, lookupProvider);
 
-// Encode Java object to JsonElement
+// 将 Java 对象编码为 JsonElement
 exampleCodec.encodeStart(ops, exampleObject);
 
-// Decode JsonElement into Java object
+// 将 JsonElement 解码为 Java 对象
 exampleCodec.parse(ops, exampleJson);
 ```
 
@@ -65,8 +65,8 @@ exampleCodec.parse(ops, exampleJson);
 `DynamicOps` 也可以单独用于在两种已编码格式之间转换。调用 `#convertTo`，并提供目标 `DynamicOps` 格式及待转换的已编码对象即可完成转换。
 
 ```java
-// Convert Tag to JsonElement
-// Let exampleTag be a Tag
+// 将标签转换为 JsonElement
+// 设 exampleTag 为标签
 JsonElement convertedJson = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, exampleTag);
 ```
 
@@ -77,17 +77,17 @@ JsonElement convertedJson = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, exampleT
 此外，`DataResult` 还提供许多方法，可将结果或错误转换为所需格式。例如，`#resultOrPartial` 会在成功时返回包含结果的 `Optional`，失败时则返回包含部分转换对象的 `Optional`。该方法接收一个字符串 consumer，用来决定在错误消息存在时如何报告它。
 
 ```java
-// Let exampleCodec represent a Codec<ExampleJavaObject>
-// Let exampleJson be a JsonElement
+// 令 exampleCodec 表示 Codec<ExampleJavaObject>
+// 令 exampleJson 为 JsonElement
 
-// Decode JsonElement into Java object
+// 将 JsonElement 解码为 Java 对象
 DataResult<ExampleJavaObject> result = exampleCodec.parse(JsonOps.INSTANCE, exampleJson);
 
 result
-    // Get result or partial on error, report error message
-    .resultOrPartial(errorMessage -> /* Do something with error message */)
-    // If result or partial is present, do something
-    .ifPresent(decodedObject -> /* Do something with decoded object */);
+    // 获取结果或部分错误，报告错误消息
+    .resultOrPartial(errorMessage -> /* 根据错误消息执行某些操作*/)
+    // 如果存在结果或部分结果，则执行某些操作
+    .ifPresent(decodedObject -> /* 对解码后的对象执行某些操作*/);
 ```
 
 ## 现有 Codecs
@@ -139,16 +139,16 @@ Codecs 可以借助 records 定义对象。每个 record codec 都通过具有�
 `RecordCodecBuilder#create` 接收一个函数：该函数定义一个 `Instance`，并返回对象的 application（`App`）。可以把它类比为创建类的 *instance*，以及用构造器把该类 *apply* 到构造出的对象上。
 
 ```java
-// Some object to create a codec for
+// 为其创建编解码器的某个对象
 public class SomeObject {
 
-    public SomeObject(String s, int i, boolean b) { /* ... */ }
+    public SomeObject(String s, int i, boolean b) { /* ...*/ }
 
-    public String s() { /* ... */ }
+    public String s() { /* ...*/ }
 
-    public int i() { /* ... */ }
+    public int i() { /* ...*/ }
 
-    public boolean b() { /* ... */ }
+    public boolean b() { /* ...*/ }
 }
 ```
 
@@ -165,34 +165,34 @@ public class SomeObject {
 然后，可通过 `#apply` 应用得到的 product，从而定义实例应如何为 application 构造对象。为方便起见，分组字段应按照它们在构造器中出现的顺序排列，这样该函数就可以直接使用构造器的方法引用。
 
 ```java
-public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(instance -> // Given an instance
-    instance.group( // Define the fields within the instance
+public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(instance -> // 举例
+    instance.group( // 定义实例内的字段
         Codec.STRING.fieldOf("s").forGetter(SomeObject::s), // String
-        Codec.INT.optionalFieldOf("i", 0).forGetter(SomeObject::i), // Integer, defaults to 0 if field not present
+        Codec.INT.optionalFieldOf("i", 0).forGetter(SomeObject::i), // 整数，如果字段不存在则默认为 0
         Codec.BOOL.fieldOf("b").forGetter(SomeObject::b) // Boolean
-    ).apply(instance, SomeObject::new) // Define how to create the object
+    ).apply(instance, SomeObject::new) // 定义如何创建对象
 );
 ```
 
 ```json5
-// Encoded SomeObject
+// 编码 SomeObject
 {
     "s": "value",
     "i": 5,
     "b": false
 }
 
-// Another encoded SomeObject
+// 另一种编码 SomeObject
 {
     "s": "value2",
-    // i is omitted, defaults to 0
+    // 省略 i，默认为 0
     "b": true
 }
 
-// Another encoded SomeObject
+// 另一种编码 SomeObject
 {
     "s": "value2",
-    // Will throw an error as lenientOptionalFieldOf is not used
+    // 将抛出错误，因为 lenientOptionalFieldOf 未使用
     "i": "bad_value",
     "b": true
 }
@@ -203,19 +203,19 @@ public static final Codec<SomeObject> RECORD_CODEC = RecordCodecBuilder.create(i
 Codecs 可以通过映射方法转换为等价或部分等价的表示形式。每个映射方法都接收两个函数：一个把当前类型转换为新类型，另一个把新类型转换回当前类型。完全等价的转换通过 `#xmap` 函数完成。
 
 ```java
-// A class
+// A级
 public class ClassA {
 
-    public ClassB toB() { /* ... */ }
+    public ClassB toB() { /* ...*/ }
 }
 
-// Another equivalent class
+// 另一个等效类
 public class ClassB {
 
-    public ClassA toA() { /* ... */ }
+    public ClassA toA() { /* ...*/ }
 }
 
-// Assume there is some codec A_CODEC
+// 假设有一些编解码器 A_CODEC
 public static final Codec<ClassB> B_CODEC = A_CODEC.xmap(ClassA::toB, ClassB::toA);
 ```
 
@@ -229,26 +229,26 @@ A 是否完全等价于 B | B 是否完全等价于 A | 转换方法
 否                        | 否                         | `#flatXMap`
 
 ```java
-// Given an string codec to convert to a integer
-// Not all strings can become integers (A is not fully equivalent to B)
-// All integers can become strings (B is fully equivalent to A)
+// 给定一个字符串编解码器以转换为整数
+// 不是所有字符串都能变成integers（A不完全等价于B）
+// 所有整数都可以变成strings（B完全等价于A）
 public static final Codec<Integer> INT_CODEC = Codec.STRING.comapFlatMap(
-    s -> { // Return data result containing error on failure
+    s -> { // 失败时返回包含错误的数据结果
         try {
             return DataResult.success(Integer.valueOf(s));
         } catch (NumberFormatException e) {
             return DataResult.error(s + " is not an integer.");
         }
     },
-    Integer::toString // Regular function
+    Integer::toString // 常规函数
 );
 ```
 
 ```json5
-// Will return 5
+// 将返回 5
 "5"
 
-// Will error, not an integer
+// 会报错，不是整数
 "value"
 ```
 
@@ -261,10 +261,10 @@ public static final Codec<Integer> RANGE_CODEC = Codec.intRange(0, 4);
 ```
 
 ```json5
-// Will be valid, inside [0, 4]
+// 才会有效，[0, 4]里面
 4
 
-// Will error, outside [0, 4]
+// 会出错，在 [0, 4] 之外
 5
 ```
 
@@ -273,14 +273,14 @@ public static final Codec<Integer> RANGE_CODEC = Codec.intRange(0, 4);
 `Codec#stringResolver` 是 `flatXmap` 的一种实现，可将字符串映射为某种对象。
 
 ```java
-public record StringResolverObject(String name) { /* ... */ }
+public record StringResolverObject(String name) { /* ...*/ }
 
-// Assume there is some Map<String, StringResolverObject> OBJECT_MAP
+// 假设存在 Map<String, StringResolverObject> OBJECT_MAP
 public static final Codec<StringResolverObject> STRING_RESOLVER_CODEC = Codec.stringResolver(StringResolverObject::name, OBJECT_MAP::get);
 ```
 
 ```json5
-// Will map this string to its associated object
+// 将此字符串映射到其关联对象
 "example_name"
 ```
 
@@ -290,13 +290,13 @@ public static final Codec<StringResolverObject> STRING_RESOLVER_CODEC = Codec.st
 
 ```java
 public static final Codec<Integer> DEFAULT_CODEC = Codec.INT.orElse(
-    errorMessage -> /* Do something with the error message */,
-    0 // Can also be a supplied value via #orElseGet
+    errorMessage -> /* 对错误消息进行处理*/,
+    0 // 也可以是通过 #orElseGet 提供的值
 ); 
 ```
 
 ```json5
-// Not an integer, defaults to 0
+// 不是整数，默认为 0
 "value"
 ```
 
@@ -306,12 +306,12 @@ public static final Codec<Integer> DEFAULT_CODEC = Codec.INT.orElse(
 
 ```java
 public static final Codec<IEventBus> UNIT_CODEC = MapCodec.unitCodec(
-    () -> NeoForge.EVENT_BUS // Can also be a raw value
+    () -> NeoForge.EVENT_BUS // 也可以是原始值
 );
 ```
 
 ```json5
-// Nothing here, will return the NeoForge event bus
+// 这里什么都没有，返回 NeoForge 事件总线
 ```
 
 ### 延迟初始化
@@ -325,7 +325,7 @@ public static final Codec<IEventBus> LAZY_CODEC = Codec.lazyInitialized(
 ```
 
 ```json5
-// Nothing here, will return the NeoForge event bus
+// 这里什么都没有，返回 NeoForge 事件总线
 // Encodes/decodes the same way as the normal codec
 ```
 
@@ -334,12 +334,12 @@ public static final Codec<IEventBus> LAZY_CODEC = Codec.lazyInitialized(
 可通过 `Codec#listOf` 从对象 codec 生成对象列表的 codec。`listOf` 还可以接收表示列表最小和最大长度的整数。`sizeLimitedListOf` 的作用相同，但只指定最大边界。
 
 ```java
-// BlockPos#CODEC is a Codec<BlockPos>
+// BlockPos#CODEC 是 Codec<BlockPos>
 public static final Codec<List<BlockPos>> LIST_CODEC = BlockPos.CODEC.listOf();
 ```
 
 ```json5
-// Encoded List<BlockPos>
+// 已编码的 List<BlockPos>
 [
     [1, 2, 3], // BlockPos(1, 2, 3)
     [4, 5, 6], // BlockPos(4, 5, 6)
@@ -354,12 +354,12 @@ public static final Codec<List<BlockPos>> LIST_CODEC = BlockPos.CODEC.listOf();
 可通过 `Codec#unboundedMap` 从两个 codecs 生成由键与值对象组成的 map codec。无界 maps 可把任何基于字符串或由字符串转换而来的值指定为键。
 
 ```java
-// BlockPos#CODEC is a Codec<BlockPos>
+// BlockPos#CODEC 是 Codec<BlockPos>
 public static final Codec<Map<String, BlockPos>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, BlockPos.CODEC);
 ```
 
 ```json5
-// Encoded Map<String, BlockPos>
+// 已编码的 Map<String, BlockPos>
 {
     "key1": [1, 2, 3], // key1 -> BlockPos(1, 2, 3)
     "key2": [4, 5, 6], // key2 -> BlockPos(4, 5, 6)
@@ -387,10 +387,10 @@ public static final Codec<Pair<Integer, String>> PAIR_CODEC = Codec.pair(
 ```
 
 ```json5
-// Encoded Pair<Integer, String>
+// 已编码的 Pair<Integer, String>
 {
-    "left": 5,       // fieldOf looks up 'left' key for left object
-    "right": "value" // fieldOf looks up 'right' key for right object
+    "left": 5,       // fieldOf 查找左侧对象的 'left' 键
+    "right": "value" // fieldOf 查找正确对象的 'right' 键
 }
 ```
 
@@ -412,10 +412,10 @@ public static final Codec<Either<Integer, String>> EITHER_CODEC = Codec.either(
 ```
 
 ```json5
-// Encoded Either.Left<Integer, String>
+// 已编码的 Either.Left<Integer, String>
 5
 
-// Encoded Either.Right<Integer, String>
+// 已编码的 Either.Right<Integer, String>
 "value"
 ```
 
@@ -435,17 +435,17 @@ public static final Codec<Either<Integer, String>> XOR_CODEC = Codec.xor(
 ```
 
 ```json5
-// Encoded Either.Left<Integer, String>
+// 已编码的 Either.Left<Integer, String>
 {
     "number": 4
 }
 
-// Encoded Either.Right<Integer, String>
+// 已编码的 Either.Right<Integer, String>
 {
     "text": "value"
 }
 
-// Throws an error as both can be decoded
+// 抛出错误，因为两者都可以解码
 {
     "number": 4,
     "text": "value"
@@ -468,10 +468,10 @@ public static final Codec<BlockPos> ALTERNATIVE_CODEC = Codec.withAlternative(
 ```
 
 ```json5
-// Normal method to decode BlockPos
+// 正常方法解码BlockPos
 [ 1, 2, 3 ]
 
-// Alternative method to decode BlockPos
+// 解码 BlockPos 的替代方法
 {
     "x": 1,
     "y": 2,
@@ -484,11 +484,11 @@ public static final Codec<BlockPos> ALTERNATIVE_CODEC = Codec.withAlternative(
 有时，一个对象会把同类型对象作为字段引用。例如，`EntityPredicate` 会分别接收用于载具、乘客和目标 entity 的 `EntityPredicate`。在这种情况下，可以使用 `Codec#recursive`，把 codec 作为创建该 codec 的函数的一部分提供。
 
 ```java
-// Define our recursive object
-public record RecursiveObject(Optional<RecursiveObject> inner) { /* ... */ }
+// 定义我们的递归对象
+public record RecursiveObject(Optional<RecursiveObject> inner) { /* ...*/ }
 
 public static final Codec<RecursiveObject> RECURSIVE_CODEC = Codec.recursive(
-    RecursiveObject.class.getSimpleName(), // This is for the toString method
+    RecursiveObject.class.getSimpleName(), // 这是用于 toString 方法
     recursedCodec -> RecordCodecBuilder.create(instance -> instance.group(
         recursedCodec.optionalFieldOf("inner").forGetter(RecursiveObject::inner)
     ).apply(instance, RecursiveObject::new))
@@ -496,7 +496,7 @@ public static final Codec<RecursiveObject> RECURSIVE_CODEC = Codec.recursive(
 ```
 
 ```json5
-// An encoded recursive object
+// 编码的递归对象
 {
     "inner": {
         "inner": {}
@@ -511,70 +511,70 @@ Codecs 可以包含子 codecs，并通过 `Codec#dispatch` 根据某种指定类
 dispatch codec 首先尝试从某个字符串键（通常是 `type`）取得已编码的类型。随后解码该类型，并调用 getter 取得用于解码实际对象的特定 codec。如果用于解码对象的 `DynamicOps` 会压缩 map，或者对象 codec 本身没有扩充为 `MapCodec`（例如 records 或带字段的基本类型），对象就需要存储在 `value` 键中。否则，对象可以和其余数据在同一层级解码。
 
 ```java
-// Define our object
+// 定义我们的对象
 public abstract class ExampleObject {
 
-    // Define the method used to specify the object type for encoding
+    // 定义用于指定编码的对象类型的方法
     public abstract MapCodec<? extends ExampleObject> type();
 }
 
-// Create simple object which stores a string
+// 创建存储字符串的简单对象
 public class StringObject extends ExampleObject {
 
-    public StringObject(String s) { /* ... */ }
+    public StringObject(String s) { /* ...*/ }
 
-    public String s() { /* ... */ }
+    public String s() { /* ...*/ }
 
     public MapCodec<? extends ExampleObject> type() {
-        // A registered registry object
+        // 已注册的注册表对象
         // "string":
         //   Codec.STRING.xmap(StringObject::new, StringObject::s).fieldOf("string")
         return STRING_OBJECT_CODEC.get();
     }
 }
 
-// Create complex object which stores a string and integer
+// 创建存储字符串和整数的复杂对象
 public class ComplexObject extends ExampleObject {
 
-    public ComplexObject(String s, int i) { /* ... */ }
+    public ComplexObject(String s, int i) { /* ...*/ }
 
-    public String s() { /* ... */ }
+    public String s() { /* ...*/ }
 
-    public int i() { /* ... */ }
+    public int i() { /* ...*/ }
 
     public MapCodec<? extends ExampleObject> type() {
-        // A registered registry object
+        // 已注册的注册表对象
         // "complex":
         //   RecordCodecBuilder.mapCodec(instance ->
         //     instance.group(
         //       Codec.STRING.fieldOf("s").forGetter(ComplexObject::s),
         //       Codec.INT.fieldOf("i").forGetter(ComplexObject::i)
-        //     ).apply(instance, ComplexObject::new)
+        //     ).apply(实例, ComplexObject::new)
         //   )
         return COMPLEX_OBJECT_CODEC.get();
     }
 }
 
-// Assume there is an Registry<MapCodec<? extends ExampleObject>> DISPATCH
-public static final Codec<ExampleObject> = DISPATCH.byNameCodec() // Gets Codec<MapCodec<? extends ExampleObject>>
+// 假设存在 Registry<MapCodec<? extends ExampleObject>> DISPATCH
+public static final Codec<ExampleObject> = DISPATCH.byNameCodec() // 获取 Codec<MapCodec<? extends ExampleObject>>
     .dispatch(
-        ExampleObject::type, // Get the codec from the specific object
-        Function.identity() // Get the codec from the registry
+        ExampleObject::type, // 从特定对象获取编解码器
+        Function.identity() // 从注册表获取编解码器
     );
 ```
 
 ```json5
-// Simple object
+// 简单对象
 {
-    "type": "string", // For StringObject
-    "value": "value" // Codec type is not augmented from MapCodec, needs field
+    "type": "string", // 对于 StringObject
+    "value": "value" // Codec 类型不是从 MapCodec 扩展而来，需要字段
 }
 
-// Complex object
+// 复杂对象
 {
-    "type": "complex", // For ComplexObject
+    "type": "complex", // 对于 ComplexObject
 
-    // Codec type is augmented from MapCodec, can be inlined
+    // Codec 类型是从 MapCodec 扩充而来，可以内联
     "s": "value",
     "i": 0
 }

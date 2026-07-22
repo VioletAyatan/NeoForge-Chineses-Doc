@@ -148,46 +148,46 @@ _另请参阅：[Minecraft Wiki][mcwiki] 上的 [Blockstate 文件][mcwikiblocks
 Grass 或 Leaves 等 Block 会根据位置和/或 Property 改变纹理颜色。[Model Element][elements] 可以在 Face 上指定 Tint Index，让 Color 处理器处理相应 Face。代码端通过三个事件工作：Block Tint Source、基于 Biome 的 Block Tint（与 Block Tint Source 配合使用）和 Item Tint Source。先看 Block Tint Source：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerBlockColorHandlers(RegisterColorHandlersEvent.BlockTintSources event) {
-    // Parameters are the block's state, the level the block is in, the block's position, and the tint index.
-    // The level and position may be null.
+    // 参数依次为方块的状态、方块所在的世界、方块的位置和着色索引。
+    // 级别和位置可能是 null。
     event.register(
-        // A list of tint sources to apply to the block. The 'tintindex' defined in
-        // the model indexes into the list.
+        // 应用到方块的色调源列表。 'tintindex' 定义于
+        // 模型索引到列表中。
         List.of(
-            // For 'tintindex: 0'.
-            // Takes in the block's state.
+            // 对于 'tintindex: 0'。
+            // 获取方块的状态。
             state -> {
-                // Replace with your own calculation. See the BlockColors class for vanilla references.
-                // Colors are in ARGB format.
+                // 替换为你自己的计算结果。请参阅 BlockColors 类以获取普通参考。
+                // 颜色采用 ARGB 格式。
                 return 0xFFFFFFFF;
             },
-            // For 'tintindex: 1',
+            // 对于 'tintindex: 1'，
             new BlockTintSource() {
 
                 @Override
                 public int color(BlockState state) {
-                    // The default tint to apply.
+                    // 要应用的默认色调。
                     return 0xFFFFFFFF;
                 }
 
                 @Override
                 public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
-                    // The tint to apply when the block is in the world.
-                    // Defaults to `color` if not overridden.
+                    // 当方块位于世界中时要应用的色调。
+                    // 如果未覆盖，则默认为 `color`。
                     return 0xFFFFFFFF;
                 }
 
                 @Override
                 public int colorAsTerrainParticle(BlockState state, BlockAndTintGetter level, BlockPos pos) {
-                    // The tint to apply when a `TerrainParticle` is spawned.
-                    // Defaults to `colorInWorld` if not overridden.
+                    // 生成 `TerrainParticle` 时应用的色调。
+                    // 如果未覆盖，则默认为 `colorInWorld`。
                     return 0xFFFFFFFF;
                 }
             }
         ),
-        // A varargs of blocks to apply the tinting to
+        // 用于应用着色的方块的可变参数
         EXAMPLE_BLOCK.get(), ...
     );
 }
@@ -196,12 +196,12 @@ public static void registerBlockColorHandlers(RegisterColorHandlersEvent.BlockTi
 以下是 Color Resolver 示例：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerColorResolvers(RegisterColorHandlersEvent.ColorResolvers event) {
-    // Parameters are the current biome, the block's X position, and the block's Z position.
+    // 参数依次为当前生物群系、方块的 X 坐标和 Z 坐标。
     event.register((biome, x, z) -> {
-        // Replace with your own calculation. See the BiomeColors class for vanilla references.
-        // Colors are in ARGB format.
+        // 替换为你自己的计算结果。请参阅 BiomeColors 类以获取普通参考。
+        // 颜色采用 ARGB 格式。
         return 0xFFFFFFFF;
     });
 }
@@ -214,14 +214,14 @@ Item Tint 参见客户端 Item 文章中的[相关章节][itemtints]。
 未以某种方式与 Block 或 Item 关联、但其他上下文（例如 [BlockEntity Renderer][ber]）仍需要的 Model，可以通过 `ModelEvent.RegisterStandalone` 注册：
 
 ```java
-// This can be any type as long as it can be obtained from the ResolvedModel and the ModelBaker
-// The generic type should be whatever is the generic type of the UnbakedStandaloneModel<T>
+// 只要能够从 ResolvedModel 和 ModelBaker 获取，就可以使用任意类型
+// 泛型类型应与 UnbakedStandaloneModel<T> 的泛型类型一致
 public static final StandaloneModelKey<QuadCollection> EXAMPLE_KEY = new StandaloneModelKey<>(
     new ModelDebugName() {
         @Override
         public String debugName() {
-            // A name for the standalone model
-            // Can be any string, but it should contain the mod id
+            // 独立模型的名称
+            // 可以是任何字符串，但应包含模组 ID
             return "examplemod: Example Model";
         }
     }
@@ -229,15 +229,15 @@ public static final StandaloneModelKey<QuadCollection> EXAMPLE_KEY = new Standal
 
 
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerAdditional(ModelEvent.RegisterStandalone event) {
     event.register(
-        // The model to get
+        // 获取的模型
         EXAMPLE_KEY,
-        // An UnbakedStandaloneModel<T> we care about, in this case one that returns a QuadCollection
-        // Can use the static methods from SimpleUnbakedStandaloneModel<T> for simplicity
+        // 所需的 UnbakedStandaloneModel<T>；本例使用返回 QuadCollection 的实现
+        // 为简化代码，可以使用 SimpleUnbakedStandaloneModel<T> 的 static 方法
         SimpleUnbakedStandaloneModel.quadCollection(
-            // The model id, relative to `assets/<namespace>/models/<path>.json`
+            // 模型 ID，相对于 `assets/<namespace>/models/<path>.json`
             Identifier.fromNamespaceAndPath("examplemod", "block/example_unused_model")
         )
     );

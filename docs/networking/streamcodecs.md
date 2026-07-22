@@ -11,14 +11,14 @@
 流编解码器分别使用 `StreamCodec#encode` 与 `StreamCodec#decode`，将对象编码到某个流中或从中解码。`encode` 接收流与要编码进流的对象；`decode` 接收流并返回解码后的对象。通常，该流是 `ByteBuf`、`FriendlyByteBuf` 或 `RegistryFriendlyByteBuf`。
 
 ```java
-// Let exampleStreamCodec represent a StreamCodec<ExampleJavaObject>
-// Let exampleObject be a ExampleJavaObject
-// Let buffer be a RegistryFriendlyByteBuf
+// 令 exampleStreamCodec 表示 StreamCodec<ExampleJavaObject>
+// 令 exampleObject 为 ExampleJavaObject
+// 令 buffer 为 RegistryFriendlyByteBuf
 
-// Encode Java object into the buffer stream
+// 将 Java 对象编码到 buffer
 exampleStreamCodec.encode(buffer, exampleObject);
 
-// Read Java object from buffer stream
+// 从 buffer 解码 Java 对象
 ExampleJavaObject obj = exampleStreamCodec.decode(buffer);
 ```
 
@@ -99,20 +99,20 @@ Minecraft 与 NeoForge 为经常编码和解码的对象定义了许多流编解
 `StreamMemberEncoder` 是 `StreamEncoder` 的替代方案，其编码对象位于第一个参数，缓冲区位于第二个参数。通常在编码对象包含将自身写入缓冲区的实例方法时使用。可以调用 `StreamCodec#ofMember`，使用 `StreamMemberEncoder` 创建 `StreamCodec`。
 
 ```java
-// Some object to create a stream codec for
+// 为其创建流编解码器的某个对象
 public class ExampleObject {
     
-    // The normal constructor
-    public ExampleObject(String arg1, int arg2, boolean arg3) { /* ... */ }
+    // 普通构造器
+    public ExampleObject(String arg1, int arg2, boolean arg3) { /* ...*/ }
 
-    // The stream decoder reference
-    public ExampleObject(ByteBuf buffer) { /* ... */ }
+    // 流解码器参考
+    public ExampleObject(ByteBuf buffer) { /* ...*/ }
 
-    // The stream encoder reference
-    public void encode(ByteBuf buffer) { /* ... */ }
+    // 流编码器参考
+    public void encode(ByteBuf buffer) { /* ...*/ }
 }
 
-// What the stream codec would look like
+// 流编解码器是什么样子
 public static StreamCodec<ByteBuf, ExampleObject> STREAM_CODEC =
     StreamCodec.ofMember(ExampleObject::encode, ExampleObject::new);
 ```
@@ -124,24 +124,24 @@ public static StreamCodec<ByteBuf, ExampleObject> STREAM_CODEC =
 `composite` 中每两个参数分别表示用于读写字段的流编解码器，以及从对象获取待编码字段的 getter。最后一个参数是在解码时创建对象新实例的函数。
 
 ```java
-// Objects to create a stream codec for
+// 创建流编解码器的对象
 public record SimpleExample(String arg1, int arg2, boolean arg3) {}
 public record RegistryExample(double arg1, Holder<Item> arg2) {}
 
-// The stream codecs
+// 流编解码器
 public static final StreamCodec<ByteBuf, SimpleExample> SIMPLE_STREAM_CODEC =
     StreamCodec.composite(
-        // Stream codec and getter pair
+        // 流编解码器与 getter 对
         ByteBufCodecs.STRING_UTF8, SimpleExample::arg1,
         ByteBufCodecs.VAR_INT, SimpleExample::arg2,
         ByteBufCodecs.BOOL, SimpleExample::arg3,
         SimpleExample::new
     );
 
-// Since this has a holder, a RegistryFriendlyByteBuf is used
+// 由于这里涉及 Holder，因此使用 RegistryFriendlyByteBuf
 public static final StreamCodec<RegistryFriendlyByteBuf, RegistryExample> REGISTRY_STREAM_CODEC =
     StreamCodec.composite(
-        // Note that ByteBuf stream codecs can be used here
+        // 请注意，此处可以使用 ByteBuf 流编解码器
         ByteBufCodecs.DOUBLE, RegistryExample::arg1,
         ByteBufCodecs.holderRegistry(Registries.ITEM), RegistryExample::arg2,
         RegistryExample::new
@@ -208,9 +208,9 @@ public static final StreamCodec<ByteBuf, Item> LAZY_STREAM_CODEC =
 ```java
 public static final StreamCodec<ByteBuf, Set<BlockPos>> COLLECTION_STREAM_CODEC =
     ByteBufCodecs.collection(
-        HashSet::new, // Constructs a set with the specified capacity
+        HashSet::new, // 构造指定容量的集合
         BlockPos.STREAM_CODEC,
-        256 // The set can only have up to 256 elements
+        256 // 该集合最多只能有 256 个元素
     );
 ```
 
@@ -228,7 +228,7 @@ public static final StreamCodec<ByteBuf, Set<BlockPos>> COLLECTION_STREAM_CODEC 
 ```java
 public static final StreamCodec<ByteBuf, List<BlockPos>> LIST_STREAM_CODEC =
     BlockPos.STREAM_CODEC.apply(
-        // The list can only have up to 256 elements
+        // 列表最多只能包含 256 个元素
         ByteBufCodecs.list(256)
     );
 ```
@@ -240,10 +240,10 @@ public static final StreamCodec<ByteBuf, List<BlockPos>> LIST_STREAM_CODEC =
 ```java
 public static final StreamCodec<ByteBuf, Map<String, BlockPos>> MAP_STREAM_CODEC =
     ByteBufCodecs.map(
-        HashMap::new, // Constructs a map with the specified capacity
+        HashMap::new, // 构造指定容量的map
         ByteBufCodecs.STRING_UTF8,
         BlockPos.STREAM_CODEC,
-        256 // The map can only have up to 256 elements
+        256 // 映射最多只能有 256 个元素
     );
 ```
 
@@ -266,11 +266,11 @@ public static final StreamCodec<ByteBuf, Either<Integer, String>> EITHER_STREAM_
 `ByteBufCodecs#idMapper` 提供了一种便捷的对象 id 发送方式。它接收两个用于在对象与 int 之间互相转换的函数，或一个 `IdMap`。
 
 ```java
-// For some enum
+// 对于某些枚举
 public enum ExampleIdObject {
     ;
 
-    // Gets Id -> Enum
+    // 获取 ID -> 枚举
     public static final IntFunction<ExampleIdObject> BY_ID = 
         ByIdMap.continuous(
             ExampleIdObject::getId,
@@ -278,10 +278,10 @@ public enum ExampleIdObject {
             ByIdMap.OutOfBoundsStrategy.ZERO
     );
     
-    ExampleIdObject(int id) { /* ... */ }
+    ExampleIdObject(int id) { /* ...*/ }
 }
 
-// The stream codec would look like
+// 流编解码器看起来像
 public static final StreamCodec<ByteBuf, ExampleIdObject> ID_STREAM_CODEC =
     ByteBufCodecs.idMapper(ExampleIdObject.BY_ID, ExampleIdObject::getId);
 ```
@@ -306,11 +306,11 @@ Registry 对象可以使用三种方法之一通过网络发送：`registry`、`
 `registry` 与 `holderRegistry` 分别返回 Registry 对象，或由 Holder 包装的 Registry 对象。这些方法会发送表示 Registry 对象的 id。
 
 ```java
-// Registry object
+// 注册表对象
 public static final StreamCodec<RegistryFriendlyByteBuf, Item> VALUE_STREAM_CODEC =
     ByteBufCodecs.registry(Registries.ITEM);
 
-// Holder of registry object
+// 注册表对象的 Holder
 public static final StreamCodec<RegistryFriendlyByteBuf, Holder<Item>> HOLDER_STREAM_CODEC =
     ByteBufCodecs.holderRegistry(Registries.ITEM);
 ```
@@ -342,8 +342,8 @@ public static final StreamCodec<RegistryFriendlyByteBuf, HolderSet<Item>> HOLDER
 有时，对象的某个字段可能引用同类型对象。例如，如果存在隐藏效果，`MobEffectInstance` 会接收一个可选 `MobEffectInstance`。这种情况下，可以使用 `StreamCodec#recursive`，将流编解码器作为函数的一部分提供，以创建流编解码器。
 
 ```java
-// Define our recursive object
-public record RecursiveObject(Optional<RecursiveObject> inner) { /* ... */ }
+// 定义我们的递归对象
+public record RecursiveObject(Optional<RecursiveObject> inner) { /* ...*/ }
 
 public static final StreamCodec<ByteBuf, RecursiveObject> RECURSIVE_CODEC = StreamCodec.recursive(
     recursedStreamCodec -> StreamCodec.composite(
@@ -361,19 +361,19 @@ public static final StreamCodec<ByteBuf, RecursiveObject> RECURSIVE_CODEC = Stre
 分派流编解码器首先尝试读写类型对象。随后使用方法提供的某个函数读写当前对象。第一个 `Function` 接收当前对象，并获取写入该值所需的类型；第二个 `Function` 接收类型对象，并获取用于读取当前对象值的 `StreamCodec`。
 
 ```java
-// Define our object(s)
+// 定义我们的对象
 public abstract class ExampleObject {
 
-    // Define the method used to specify the object type for encoding
+    // 定义用于指定编码的对象类型的方法
     public abstract StreamCodec<? super RegistryFriendlyByteBuf, ? extends ExampleObject> streamCodec();
 }
 
-// Assume there is a ResourceKey<StreamCodec<? super RegistryFriendlyByteBuf, ? extends ExampleObject>> DISPATCH
+// 假设存在 ResourceKey<StreamCodec<? super RegistryFriendlyByteBuf, ? extends ExampleObject>> DISPATCH
 public static final StreamCodec<RegistryFriendlyByteBuf, ExampleObject> DISPATCH_STREAM_CODEC =
     ByteBufCodecs.registry(DISPATCH).dispatch(
-        // Get the stream codec from the specific object
+        // 从特定对象获取流编解码器
         ExampleObject::streamCodec,
-        // Get the stream codec from the registry object
+        // 从注册表对象获取流编解码器
         Function.identity()
     );
 ```

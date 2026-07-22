@@ -22,22 +22,22 @@ Minecraft 声音引擎使用多种术语表示不同事物：
 
 ```java
 public class MySoundsClass {
-    // Assuming that your mod id is examplemod
+    // 假设你的模组 ID 是 examplemod
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, "examplemod");
     
-    // All vanilla sounds use variable range events.
+    // 所有原版声音都使用可变范围事件。
     public static final Holder<SoundEvent> MY_SOUND = SOUND_EVENTS.register(
             "my_sound",
-            // Takes in the registry name
+            // 获取注册表名称
             SoundEvent::createVariableRangeEvent
     );
     
     // There is a currently unused method to register fixed range (= non-attenuating) events as well:
     public static final Holder<SoundEvent> MY_FIXED_SOUND = SOUND_EVENTS.register(
             "my_fixed_sound",
-            // 16 is the default range of sounds. Be aware that due to OpenAL limitations,
-            // values above 16 have no effect and will be capped to 16.
+            // 16 是默认的声音范围。请注意，由于 OpenAL 的限制，
+            // 值高于 16 无效，将上限为 16。
             registryName -> SoundEvent.createFixedRangeEvent(registryName, 16f)
     );
 }
@@ -48,7 +48,7 @@ public class MySoundsClass {
 ```java
 public ExampleMod(IEventBus modBus) {
     MySoundsClass.SOUND_EVENTS.register(modBus);
-    // other things here
+    // 这里还有其他东西
 }
 ```
 
@@ -62,43 +62,43 @@ _另请参阅：[Minecraft Wiki][mcwiki] 上的 [sounds.json][mcwikisounds]_
 
 ```json5
 {
-    // Sound definition for the sound event "examplemod:my_sound"
+    // 声音事件的声音定义 "examplemod:my_sound" 声音对象的
     "my_sound": {
-        // List of sound objects. If this contains more than one element, an element will be chosen randomly.
+        // 声音对象列表。如果包含多个元素，将随机选择一个。
         "sounds": [
-            // Only name is required, all other properties are optional.
+            // 仅名称是必需的，所有其他 property 都是可选的。
             {
-                // Location of the sound file, relative to the namespace's sounds folder.
-                // This example references a sound at assets/examplemod/sounds/sound_1.ogg.
+                // 声音文件的位置，相对于命名空间的声音文件夹。
+                // 此示例引用 assets/examplemod/sounds/sound_1.ogg 处的声音。
                 "name": "examplemod:sound_1",
-                // May be "sound" or "event". "sound" causes the name to refer to a sound file.
-                // "event" causes the name to refer to another sound event. Defaults to "sound".
+                // 可能是 "sound" 或 "event"。 "sound" 使名称引用声音文件。
+                // "event" 使名称引用另一个声音事件。默认为 "sound"。
                 "type": "sound",
-                // The volume this sound will be played at. Must be between 0.0 and 1.0 (default).
+                // 声音的播放音量为此。必须介于 0.0 和 1.0 之间（默认值）。
                 "volume": 0.8,
-                // The pitch value the sound will be played at.
-                // Must be between 0.0 and 2.0. Defaults to 1.0.
+                // 播放声音的音高值。
+                // 必须介于 0.0 和 2.0 之间。默认为 1.0。
                 "pitch": 1.1,
-                // Weight of this sound when choosing a sound from the sounds list. Defaults to 1.
+                // 从声音列表中选择声音时此声音的权重。默认为 1。
                 "weight": 3,
-                // If true, the sound will be streamed from the file instead of loaded all at once.
-                // Recommended for sound files that are more than a few seconds long. Defaults to false.
+                // 如果是 true，声音将从文件中流式传输，而不是一次全部加载。
+                // 建议用于时长超过几秒的声音文件。默认为 false。
                 "stream": true,
-                // Manual override for the attenuation distance. Defaults to 16. Ignored by fixed range sound events.
+                // 手动衰减距离。默认为 16。被固定范围声音事件忽略。
                 "attenuation_distance": 8,
-                // If true, the sound will be loaded into memory on pack load, instead of when the sound is played.
-                // Vanilla uses this for underwater ambience sounds. Defaults to false.
+                // 如果是 true，则声音将在包加载时加载到内存中，而不是在播放声音时加载到内存中。
+                // 原版使用此来实现水下环境声音。默认为 false。
                 "preload": true
             },
-            // Shortcut for { "name": "examplemod:sound_2" }
+            // { "name": "examplemod:sound_2" } 的快捷方式
             "examplemod:sound_2"
         ]
     },
     "my_fixed_sound": {
-        // Optional. If true, replaces sounds from other resource packs instead of adding to them.
-        // See the Merging chapter below for more information.
+        // 可选。如果是 true，则替换其他资源包中的声音而不是添加到其中。
+        // 有关详细信息，请参阅下面的“合并”章节。
         "replace": true,
-        // The translation key of the subtitle displayed when this sound event is triggered.
+        // 此声音事件触发时显示的字幕翻译键。
         "subtitle": "examplemod.my_fixed_sound",
         "sounds": [
             "examplemod:sound_1",
@@ -175,28 +175,28 @@ RP2 中的 `sounds.json`：
 ```json5
 {
     "sound_1": {
-        // replace false and false: add from lower pack, then from upper pack
+        // 替换 false 和 false：从下包添加，然后从上包添加
         "sounds": [
             "sound_5",
             "sound_1"
         ]
     },
     "sound_2": {
-        // replace true in upper pack and false in lower pack: add from upper pack only
+        // 替换上包中的 true 和下包中的 false：仅从上包添加
         "sounds": [
             "sound_2"
         ]
     },
     "sound_3": {
-        // replace false in upper pack and true in lower pack: add from lower pack, then from upper pack
-        // Would still discard values from a third resource pack sitting below RP2
+        // 替换上包中的 false 和下包中的 true：从下包添加，然后从上包添加
+        // 仍会丢弃位于 RP2 下面的第三个资源包中的值
         "sounds": [
             "sound_7",
             "sound_3"
         ]
     },
     "sound_4": {
-        // replace true and true: add from upper pack only
+        // 替换 true 和 true：仅从上层包添加
         "sounds": [
             "sound_8"
         ]
@@ -250,41 +250,41 @@ Minecraft 提供了多种播放声音的方法，有时并不容易判断应使�
 
 ```java
 public class MySoundDefinitionsProvider extends SoundDefinitionsProvider {
-    // Parameters can be obtained from `GatherDataEvent.Client`.
+    // 参数可从`GatherDataEvent.Client` 获取。
     public MySoundDefinitionsProvider(PackOutput output) {
-        // Use your actual mod id instead of "examplemod".
+        // 使用你的实际模组 ID 而不是 "examplemod"。
         super(output, "examplemod");
     }
 
     @Override
     public void registerSounds() {
-        // Accepts a Holder<SoundEvent>, a SoundEvent, or a Identifier as the first parameter.
+        // 第一个参数接受 Holder<SoundEvent>、SoundEvent 或 Identifier。
         add(MySoundsClass.MY_SOUND, SoundDefinition.definition()
-            // Add sound objects to the sound definition. Parameter is a vararg.
+            // 将声音对象添加到声音定义中。参数是一个可变参数。
             .with(
-                // Accepts either a string or a Identifier as the first parameter.
-                // The second parameter can be either SOUND or EVENT, and can be omitted if the former.
+                // 接受字符串或 Identifier 作为第一个参数。
+                // 第二个参数可以是 SOUND 或 EVENT；如果为前者，可以省略。
                 sound("examplemod:sound_1", SoundDefinition.SoundType.SOUND)
-                    // Sets the volume. Also has a double counterpart.
+                    // 设置音量。还有一个 double 对应项。
                     .volume(0.8f)
-                    // Sets the pitch. Also has a double counterpart.
+                    // 设置音高。还有一个 double 对应项。
                     .pitch(1.2f)
-                    // Sets the weight.
+                    // 设置权重。
                     .weight(2)
-                    // Sets the attenuation distance.
+                    // 设置衰减距离。
                     .attenuationDistance(8)
-                    // Enables streaming.
-                    // Also has a parameterless overload that defers to stream(true).
+                    // 启用流式传输。
+                    // 还具有遵循 stream(true) 的无参数重载。
                     .stream(true)
-                    // Enables preloading.
-                    // Also has a parameterless overload that defers to preload(true).
+                    // 启用预加载。
+                    // 还具有遵循 preload(true) 的无参数重载。
                     .preload(true),
-                // The shortest we can get.
+                // 我们能得到的最短的。
                 sound("examplemod:sound_2")
             )
-            // Sets the subtitle.
+            // 设置字幕。
             .subtitle("sound.examplemod.sound_1")
-            // Enables replacing.
+            // 启用替换。
             .replace(true)
         );
     }
@@ -294,7 +294,7 @@ public class MySoundDefinitionsProvider extends SoundDefinitionsProvider {
 与每个 Data Provider 一样，不要忘记把 Provider 注册到事件：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(MySoundDefinitionsProvider::new);
 }

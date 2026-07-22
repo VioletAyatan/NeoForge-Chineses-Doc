@@ -15,16 +15,16 @@ _另请参阅：[Attribute][attributes]。_
 要获取或设置最大生命值，可直接读取或写入 attribute：
 
 ```java
-// Get the attribute map of our entity.
+// 获取我们实体的属性映射。
 AttributeMap attributes = entity.getAttributes();
 
-// Get the max health of our entity.
+// 获取我们实体的最大生命值。
 float maxHealth = attributes.getValue(Attributes.MAX_HEALTH);
-// Shortcut for the above.
+// 上述内容的快捷方式。
 maxHealth = entity.getMaxHealth();
 
-// Setting the max health must either be done by getting the AttributeInstance and calling #setBaseValue, or by
-// adding an attribute modifier. We will do the former here. Please refer to the Attributes article for more details.
+// 设置最大健康状况必须通过获取 AttributeInstance 并调用 #setBaseValue 来完成，或者通过
+// 添加属性修饰符。我们将在这里做前者。更多详细信息请参阅 Attributes 文章。
 attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 ```
 
@@ -51,16 +51,16 @@ attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 减免 modifier 回调允许修改已执行伤害减免的某一部分。例如，它可以让盔甲的伤害减免效果降低 50%。随后，这种变化也会正确传递到 MobEffect，使其基于不同的伤害值继续计算，依此类推。可按如下方式添加减免 modifier 回调：
 
 ```java
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void decreaseArmor(LivingIncomingDamageEvent event) {
-    // We only apply this decrease to players and leave zombies etc. unchanged
+    // 我们只对玩家应用此减少，而僵尸等保持不变
     if (event.getEntity() instanceof Player) {
-        // Add our reduction modifier callback.
+        // 添加我们的归约修饰符回调。
         event.addReductionModifier(
-            // The reduction to target. See the DamageContainer.Reduction enum for possible values.
+            // 减少至目标。有关可能的值，请参阅 DamageContainer.Reduction 枚举。
             DamageContainer.Reduction.ARMOR,
-            // The modification to perform. Gets the damage container and the base reduction as inputs,
-            // and outputs the new reduction. Both input and output reductions are floats.
+            // 要执行的修改。获取伤害容器和基础减少量作为输入，
+            // 并输出新减少。输入和输出减少都是浮点数。
             (container, baseReduction) -> baseReduction * 0.5f
         );
     }
@@ -206,12 +206,12 @@ graph LR;
 为 Mob [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` 类与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
 
 ```java
-// Assume we have a DeferredRegister.Items called ITEMS
+// 假设我们有一个名为 ITEMS 的 DeferredRegister.Items
 DeferredItem<SpawnEggItem> MY_ENTITY_SPAWN_EGG = ITEMS.registerItem("my_entity_spawn_egg",
     properties -> new SpawnEggItem(
-        // The properties passed into the lambda.
-        // Using `spawnEgg` to set the DataComponent.
-        // This is done in the lambda to prevent the entity type from resolving before registration.
+        // 传递到 lambda 的 property。
+        // 使用 `spawnEgg` 设置 DataComponent。
+        // 这是在 lambda 中完成的，以防止在注册之前解析实体类型。
         properties.spawnEgg(MY_ENTITY_TYPE.get())
     ));
 ```

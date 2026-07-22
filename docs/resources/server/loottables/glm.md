@@ -26,17 +26,17 @@ GLM 的一个常见用途是向某个特定战利品表添加额外战利品。�
 
 ```json5
 {
-    // This is the registry name of the loot modifier
+    // 这是战利品修改器的注册表名称
     "type": "examplemod:my_loot_modifier",
     "conditions": [
-        // Loot table conditions here
+        // 战利品表条件在这里
     ],
-    // An optional property typically provided by loot modifiers
-    // to denote the order that the modifiers should be applied,
-    // from highest to lowest.
-    // Typically defaults to 1000.
+    // 通常由战利品修改器提供的可选 property
+    // 表示修饰符的应用顺序，
+    // 从最高到最低。
+    // 通常默认为 1000。
     "priority": 900,
-    // Extra properties specified by the codec
+    // 编解码器指定的额外 property
     "field1": "somestring",
     "field2": 10,
     "field3": "minecraft:dirt"
@@ -48,16 +48,16 @@ GLM 的一个常见用途是向某个特定战利品表添加额外战利品。�
 要真正将战利品修改器应用到战利品表，必须指定一个 `IGlobalLootModifier` 实现。多数情况下，应使用 `LootModifier` 子类，它会代为处理条件和优先级等内容。首先，让战利品修改器类扩展 `LootModifier`：
 
 ```java
-// We cannot use a record because records cannot extend other classes.
+// 我们无法使用 record，因为 record 无法扩展其他类。
 public class MyLootModifier extends LootModifier {
-    // See below for how the codec works.
+    // 请参阅下文了解编解码器的工作原理。
     public static final MapCodec<MyLootModifier> CODEC = ...;
-    // Our extra properties.
+    // 我们的额外 property。
     private final String field1;
     private final int field2;
     private final Item field3;
     
-    // First constructor parameter is the list of conditions. The rest is our extra properties.
+    // 构造器的第一个参数是条件列表。剩下的就是我们的额外 property。
     public MyLootModifier(LootItemCondition[] conditions, int priority, String field1, int field2, Item field3) {
         super(conditions, priority);
         this.field1 = field1;
@@ -65,17 +65,17 @@ public class MyLootModifier extends LootModifier {
         this.field3 = field3;
     }
     
-    // Return our codec here.
+    // 在此处返回我们的编解码器。
     @Override
     public MapCodec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
     
-    // This is where the magic happens. Use your extra properties here if needed.
-    // Parameters are the existing loot, and the loot context.
+    // 这就是奇迹发生的地方。如果需要，请在此处使用你的额外 property。
+    // 参数是现有的战利品和战利品上下文。
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        // Add your items to generatedLoot here.
+        // 在此将你的物品添加到 generatedLoot。
         return generatedLoot;
     }
 }
@@ -91,7 +91,7 @@ public class MyLootModifier extends LootModifier {
 
 ```java
 public static final MapCodec<MyLootModifier> CODEC = RecordCodecBuilder.mapCodec(inst -> 
-        // LootModifier#codecStart adds the conditions field.
+        // LootModifier#codecStart 添加条件字段。
         LootModifier.codecStart(inst).and(inst.group(
                 Codec.STRING.fieldOf("field1").forGetter(e -> e.field1),
                 Codec.INT.fieldOf("field2").forGetter(e -> e.field2),
@@ -121,9 +121,9 @@ NeoForge 提供了一个可直接使用的战利品修改器：
 ```json5
 {
     "type": "neoforge:add_table",
-    "conditions": [], // the required loot conditions
-    "priority": 1000, // the optional priority of execution
-    "table": "minecraft:chests/abandoned_mineshaft" // the second table to roll
+    "conditions": [], // 所需的战利品条件
+    "priority": 1000, // 可选的执行优先级
+    "table": "minecraft:chests/abandoned_mineshaft" // 要抽取的第二张战利品表
 }
 ```
 
@@ -133,24 +133,24 @@ GLM 可以通过[数据生成][datagen]创建。为此，需要继承 `GlobalLoo
 
 ```java
 public class MyGlobalLootModifierProvider extends GlobalLootModifierProvider {
-    // Get the parameters from the `GatherDataEvent`s.
+    // 从`GatherDataEvent`中获取参数。
     public MyGlobalLootModifierProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, ExampleMod.MOD_ID);
     }
     
     @Override
     protected void start() {
-        // Call #add to add a new GLM. This also adds a corresponding entry in global_loot_modifiers.json.
+        // 调用 #add添加一个新 GLM。这也在 global_loot_modifiers.json 中添加了相应的条目。
         this.add(
-                // The name of the modifier. This will be the file name.
+                // 修改器的名称。这将是文件名。
                 "my_loot_modifier_instance",
-                // The loot modifier to add. For the sake of example, we add a weather loot condition.
+                // 要添加的战利品修改器。为了举例，我们添加了天气战利品条件。
                 new MyLootModifier(new LootItemCondition[] {
                         WeatherCheck.weather().setRaining(true).build()
                 }, 900, "somestring", 10, Items.DIRT),
-                // A list of data load conditions. Note that these are unrelated to the loot conditions
-                // specified on the modifier itself. For the sake of example, we add a mod loaded condition.
-                // An overload of #add is available that accepts a vararg of conditions instead of a list.
+                // 数据加载条件列表。请注意，这些与战利品条件无关
+                // 在修饰符本身上指定。为了举例，我们添加了一个模组加载条件。
+                // #add 的重载可用，它接受条件的可变参数而不是列表。
                 List.of(new ModLoadedCondition("create"))
         );
     }
@@ -160,9 +160,9 @@ public class MyGlobalLootModifierProvider extends GlobalLootModifierProvider {
 与所有数据提供器一样，必须将该提供器注册到 `GatherDataEvent`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void onGatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createProvider(MyGlobalLootModifierProvider::new);
 }

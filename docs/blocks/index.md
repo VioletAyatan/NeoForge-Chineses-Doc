@@ -176,20 +176,20 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.register(
     )
 );
 
-// 与上面相同，只是方块property是单独提供的。
-// setId 也在property对象上内部调用。
+// 与上面相同，只是方块 property 是单独提供的。
+// setId 也在 property 对象上内部调用。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // property将传递到的工厂。
-    () -> BlockBehaviour.Properties.of() // 提供的要使用的property。
+    Block::new, // property 将传递到的工厂。
+    () -> BlockBehaviour.Properties.of() // 提供的要使用的 property。
 );
 
 // 与上面相同，但提供和操作的是 `Properties#of`。
-// setId 也在property对象上内部调用。
+// setId 也在 property 对象上内部调用。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // property将传递到的工厂。
-    props -> props // 要使用的property的一元运算符。
+    Block::new, // property 将传递到的工厂。
+    props -> props // 要使用的 property 的一元运算符。
 );
 ```
 
@@ -198,12 +198,12 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
 ```java
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    () -> BlockBehaviour.Properties.of() // 提供的要使用的property。
+    () -> BlockBehaviour.Properties.of() // 提供的要使用的 property。
 );
 
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    props -> props // 要使用的property的一元运算符。
+    props -> props // 要使用的 property 的一元运算符。
 );
 ```
 
@@ -306,7 +306,8 @@ while (leftClickIsBeingHeld()) {
 挖掘速度根据方块硬度、所用[工具][tool]的速度以及若干[实体属性][attributes]，按以下规则计算：
 
 ```java
-// 这将返回工具的采矿速度，或者如果持有的物品是空的，不是工具，或不适用于被破坏的方块。则为1
+// 返回工具的挖掘速度；如果手持物品为空、不是工具，
+// 或不适用于正在破坏的方块，则返回 1。
 float destroySpeed = item.getDestroySpeed(blockState);
 // 如果我们有适用的工具，请添加 minecraft:mining_efficiency 属性作为附加修饰符。
 if (destroySpeed > 1) {
@@ -342,7 +343,7 @@ if (player.isEyeInFluid(FluidTags.WATER)) {
 if (!player.onGround()) {
     destroySpeed /= 5;
 }
-destroySpeed = /* 此处会触发 PlayerEvent.BreakSpeed 事件，允许模组开发者进一步修改该值。 */;
+destroySpeed = /* 此处会触发 PlayerEvent.BreakSpeed 事件，允许模组开发者进一步修改该值。*/;
 return destroySpeed;
 ```
 

@@ -177,35 +177,35 @@ Minecraft 提供以下战利品参数：
 
 ```json5
 {
-    "type": "chest", // loot parameter set
+    "type": "chest", // 战利品参数集
     "neoforge:conditions": [
-        // data load conditions
+        // 数据加载条件
     ],
     "functions": [
-        // table-wide loot functions
+        // 全表战利品功能
     ],
-    "pools": [ // list of loot pools
+    "pools": [ // 战利品池列表
         {
-            "rolls": 1, // amount of rolls of the loot table, using 5 here will yield 5 results from the pool
-            "bonus_rolls": 0.5, // amount of bonus rolls
+            "rolls": 1, // 战利品表的卷数，此处使用 5 将从池中产生 5 个结果
+            "bonus_rolls": 0.5, // 奖金卷数
             "name": "my_pool",
             "conditions": [
-                // pool-wide loot conditions
+                // 全池战利品条件
             ],
             "functions": [
-                // pool-wide loot functions
+                // 池范围的战利品功能
             ],
-            "entries": [ // list of loot table entries
+            "entries": [ // 战利品表条目列表
                 {
-                    "type": "minecraft:item", // loot entry type
-                    "name": "minecraft:dirt", // type-specific properties, for example the name of the item
-                    "weight": 3, // weight of an entry
-                    "quality": 1, // quality of an entry
+                    "type": "minecraft:item", // 战利品输入类型
+                    "name": "minecraft:dirt", // 类型特定的 property，例如物品的名称
+                    "weight": 3, // 条目权重
+                    "quality": 1, // 条目质量
                     "conditions": [
-                        // entry-wide loot conditions
+                        // 入门级战利品条件
                     ],
                     "functions": [
-                        // entry-wide loot functions
+                        // 入门级战利品功能
                     ]
                 }
             ]
@@ -227,36 +227,36 @@ Minecraft 的内置战利品表 ID 可在 `BuiltInLootTables` 类中找到。Blo
 有了战利品表后，接下来构建参数集。首先创建 `LootParams.Builder` 实例：
 
 ```java
-// Make sure that you are on a server, otherwise the cast will fail.
+// 确保你在服务器上，否则转换将失败。
 LootParams.Builder builder = new LootParams.Builder((ServerLevel) level);
 ```
 
 随后添加战利品上下文参数：
 
 ```java
-// Use whatever context parameters and values you need. Vanilla parameters can be found in LootContextParams.
+// 使用你需要的任何上下文参数和值。普通参数可以在 LootContextParams 中找到。
 builder.withParameter(LootContextParams.ORIGIN, position);
-// This variant can accept null as the value, in which case an existing value for that parameter will be removed.
+// 此变体可以接受 null 作为值，在这种情况下，该参数的现有值将被删除。
 builder.withOptionalParameter(LootContextParams.ORIGIN, null);
-// Add a dynamic drop.
+// 添加动态掉落。
 builder.withDynamicDrop(Identifier.fromNamespaceAndPath("examplemod", "example_dynamic_drop"), stackAcceptor -> {
-    // some logic here
+    // 这里有一些逻辑
 });
-// Set our luck value. Assumes that a player is available. Contexts without a player should use 0 here.
+// 设置 luck 值。这里假定玩家可用；没有玩家的上下文应使用 0。
 builder.withLuck(player.getLuck());
 ```
 
 最后，从 builder 创建 `LootParams`，并用它抽取战利品表：
 
 ```java
-// Specify a loot context param set here if you want.
+// 如果需要，请指定此处设置的战利品上下文参数。
 LootParams params = builder.create(LootContextParamSets.EMPTY);
-// Get the loot table.
+// 获取战利品表。
 LootTable table = level.getServer().reloadableRegistries().getLootTable(location);
-// Actually roll the loot table.
+// 实际抽取战利品表。
 List<ItemStack> list = table.getRandomItems(params);
-// Use this instead if you are rolling the loot table for container contents, e.g. loot chests.
-// This method takes care of properly splitting the loot items across the container.
+// 如果要为 Container 内容（例如战利品箱）抽取战利品表，请改用此方法。
+// 此方法负责在容器中正确分配战利品。
 List<ItemStack> containerList = table.fill(container, params, someSeed);
 ```
 
@@ -269,19 +269,19 @@ List<ItemStack> containerList = table.fill(container, params, someSeed);
 可以通过注册 `LootTableProvider`，并在构造器中提供 `LootTableSubProvider` 列表，通过[数据生成][datagen]创建战利品表：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void onGatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createProvider((output, lookupProvider) -> new LootTableProvider(
         output,
-        // A set of required table resource locations. These are later verified to be present.
-        // It is generally not recommended for mods to validate existence,
-        // therefore we pass in an empty set.
+        // 一组所需的表资源位置。这些后来被证实存在。
+        // 一般不建议模组验证存在，
+        // 因此我们传入一个空集。
         Set.of(),
-        // A list of sub provider entries. See below for what values to use here.
+        // 子提供器条目列表。请参阅下文了解此处使用的值。
         List.of(...),
-        // The registry access
+        // 注册表访问
         lookupProvider
     ));
 }
@@ -293,9 +293,9 @@ public static void onGatherData(GatherDataEvent.Client event) {
 
 ```java
 public class MyLootTableSubProvider implements LootTableSubProvider {
-    // The parameter is provided by the lambda (see below). It can be stored and used to lookup other registry entries.
+    // 该参数由 lambda 提供（见下文）。它可以被存储并用于查找其他注册表项。
     public MyLootTableSubProvider(HolderLookup.Provider lookupProvider) {
-        // Store the lookupProvider in a field
+        // 将 lookupProvider 存储在字段中
     }
 
     @Override
@@ -307,19 +307,19 @@ public class MyLootTableSubProvider implements LootTableSubProvider {
                     Identifier.fromNamespaceAndPath(ExampleMod.MOD_ID, "example_loot_table")
                 ),
                 LootTable.lootTable()
-                // Add a loot table-level loot function. This example uses a number provider (see below).
+                // 添加战利品表级战利品功能。此示例使用数字 provider（见下文）。
                 .apply(SetItemCountFunction.setCount(ConstantValue.exactly(5)))
-                // Add a loot pool.
+                // 添加战利品池。
                 .withPool(LootPool.lootPool()
-                        // Add a loot pool-level function, similar to above.
+                        // 添加战利品池级别的功能，与上面类似。
                         .apply(...)
-                        // Add a loot pool-level condition. This example only rolls the pool if it is raining.
+                        // 添加战利品池级条件。本例只在下雨时抽取该池。
                         .when(WeatherCheck.weather().setRaining(true))
-                        // Set the amount of rolls and bonus rolls, respectively.
-                        // Both of these methods utilize a number provider.
+                        // 分别设置抽取次数与额外抽取次数。
+                        // 这两种方法都利用数值提供器。
                         .setRolls(UniformGenerator.between(5, 9))
                         .setBonusRolls(ConstantValue.exactly(1))
-                        // Add a loot entry. This example returns an item loot entry. See below for more loot entries.
+                        // 添加战利品条目。此示例返回一个物品战利品条目。有关更多战利品条目，请参阅下文。
                         .add(LootItem.lootTableItem(Items.DIRT))
                 )
         );
@@ -332,13 +332,13 @@ public class MyLootTableSubProvider implements LootTableSubProvider {
 ```java
 new LootTableProvider(output, Set.of(), List.of(
         new SubProviderEntry(
-                // A reference to the sub provider's constructor.
-                // This is a Function<HolderLookup.Provider, ? extends LootTableSubProvider>.
+                // 对子提供器构造器的引用。
+                // 这是一个 Function<HolderLookup.Provider, ? extends LootTableSubProvider>。
                 MyLootTableSubProvider::new,
-                // An associated loot context set. If you're unsure what to use, use empty.
+                // 关联的战利品上下文集。如果你不确定使用什么，请使用空。
                 LootContextParamSets.EMPTY
         ),
-        // other sub providers here (if applicable)
+        // 其他子提供器 here（如果适用）
     ), lookupProvider
 );
 ```
@@ -349,37 +349,37 @@ new LootTableProvider(output, Set.of(), List.of(
 
 ```java
 public class MyBlockLootSubProvider extends BlockLootSubProvider {
-    // The constructor can be private if this class is an inner class of your loot table provider.
-    // The parameter is provided by the lambda in the LootTableProvider's constructor.
+    // 如果此类是战利品表提供器的内部类，则构造器可以是 private。
+    // 该参数由 LootTableProvider 构造器中的 lambda 提供。
     public MyBlockLootSubProvider(HolderLookup.Provider lookupProvider) {
-        // The first parameter is a set of blocks we are creating loot tables for. Instead of hardcoding,
-        // we use our block registry and just pass an empty set here.
-        // The second parameter is the feature flag set, this will be the default flags
-        // unless you are adding custom flags (which is beyond the scope of this article).
+        // 第一个参数是我们为其创建战利品表的一组方块。而不是硬编码，
+        // 我们使用方块注册表并在此处传递一个空集。
+        // 第二个参数是功能标志设置，此将是默认标志
+        // 除非你要添加自定义 flags（这超出了此文章的范围）。
         super(Set.of(), FeatureFlags.DEFAULT_FLAGS, lookupProvider);
     }
 
-    // The contents of this Iterable are used for validation.
-    // We return an Iterable over our block registry's values here.
+    // 此 Iterable 的内容用于验证。
+    // 我们在这里的方块注册表值上有返回和 Iterable。
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        // The contents of our DeferredRegister.
+        // 我们的 DeferredRegister 的内容。
         return MyRegistries.BLOCK_REGISTRY.getEntries()
                 .stream()
-                // Cast to Block here, otherwise it will be a ? extends Block and Java will complain.
+                // 在这里转换为方块，否则它将是一个 ?扩展方块和 Java 会抱怨。
                 .map(e -> (Block) e.value())
                 .toList();
     }
 
-    // Actually add our loot tables.
+    // 实际上添加我们的战利品表。
     @Override
     protected void generate() {
-        // Equivalent to calling add(MyBlocks.EXAMPLE_BLOCK.get(), createSingleItemTable(MyBlocks.EXAMPLE_BLOCK.get()));
+        // 相当于调用 add(MyBlocks.EXAMPLE_BLOCK.get(), createSingleItemTable(MyBlocks.EXAMPLE_BLOCK.get()));
         this.dropSelf(MyBlocks.EXAMPLE_BLOCK.get());
-        // Add a table with a silk touch only loot table.
+        // 添加一张仅带有丝绸触感的战利品表。
         this.add(MyBlocks.EXAMPLE_SILK_TOUCHABLE_BLOCK.get(),
                 this.createSilkTouchOnlyTable(MyBlocks.EXAMPLE_SILK_TOUCHABLE_BLOCK.get()));
-        // other loot table additions here
+        // 其他战利品表添加在这里
     }
 }
 ```
@@ -389,7 +389,7 @@ public class MyBlockLootSubProvider extends BlockLootSubProvider {
 ```java
 new LootTableProvider(output, Set.of(), List.of(new SubProviderEntry(
         MyBlockLootTableSubProvider::new,
-        LootContextParamSets.BLOCK // it makes sense to use BLOCK here
+        LootContextParamSets.BLOCK // 此处应使用 BLOCK
     )), lookupProvider
 );
 ```
@@ -401,11 +401,11 @@ new LootTableProvider(output, Set.of(), List.of(new SubProviderEntry(
 ```java
 public class MyEntityLootSubProvider extends EntityLootSubProvider {
     public MyEntityLootSubProvider(HolderLookup.Provider lookupProvider) {
-        // Unlike with blocks, we do not provide a set of known entity types. Vanilla instead uses custom checks here.
+        // 与方块不同，我们不提供一组已知的实体类型。 原版在这里使用自定义检查。
         super(FeatureFlags.DEFAULT_FLAGS, lookupProvider);
     }
 
-    // This class uses a Stream instead of an Iterable, so we need to adjust this slightly.
+    // 该类使用 Stream 而不是 Iterable，因此我们需要稍微调整此。
     @Override
     protected Stream<EntityType<?>> getKnownEntityTypes() {
         return MyRegistries.ENTITY_TYPES.getEntries()
@@ -416,7 +416,7 @@ public class MyEntityLootSubProvider extends EntityLootSubProvider {
     @Override
     protected void generate() {
         this.add(MyEntities.EXAMPLE_ENTITY.get(), LootTable.lootTable());
-        // other loot table additions here
+        // 其他战利品表添加在这里
     }
 }
 ```

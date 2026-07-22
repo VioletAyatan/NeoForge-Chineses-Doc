@@ -23,19 +23,19 @@ _另请参阅 Minecraft Wiki 上的[数值效果组件][Value Effect Components]
 
 ```json5
 "effects": {
-    // The type of this effect component is "minecraft:damage".
-    // This means that the effect will modify weapon damage.
-    // See below for a list of more effect component types.
+    // 此效果组件的类型为 "minecraft:damage"。
+    // 这意味着该效果将修改武器伤害。
+    // 请参阅下文了解更多效果组件类型的列表。
     "minecraft:damage": [
         {
-            // A value effect that should be applied.
-            // In this case, since there's only one, this value effect is just named "effect".
+            // 应应用的值效果。
+            // 在此情况下，由于只有一个，因此此值效果仅命名为 "effect"。
             "effect": {
-                // The type of value effect to use. In this case, it is "minecraft:add", so the value (given below) will be added 
-                // to the weapon damage value.
+                // 要使用的值效果类型。在此情况下，它是 "minecraft:add"，因此将添加值（如下所示）
+                // 为武器伤害值。
                 "type": "minecraft:add",
 
-                // The value block. In this case, the value is a LevelBasedValue that starts at 1 and increases by 0.5 every enchantment level.
+                // 值方块。在此情况下，该值为 LevelBasedValue，从 1 开始，每个附魔等级增加 0.5。
                 "value": {
                     "type": "minecraft:linear",
                     "base": 1.0,
@@ -51,13 +51,13 @@ _另请参阅 Minecraft Wiki 上的[数值效果组件][Value Effect Components]
 <TabItem value="sharpness.datagen" label="数据生成">
 
 ```java
-// Passed into 'effects' in an Enchantment during data generation
-// See the Data Generation section of the Enchantments entry to learn more
+// 在数据生成期间通过附魔传递到 'effects'
+// 请参阅附魔条目的数据生成部分以了解更多信息
 DataComponentMap.builder().set(
-    // Selects the "minecraft:damage" component.
+    // 选择 "minecraft:damage" 组件。
     EnchantmentEffectComponents.DAMAGE,
 
-    // Constructs a list of one conditional AddValue without any requirements.
+    // 构造一个包含一个条件 AddValue 的列表，无任何要求。
     List.of(new ConditionalEffect<>(
         new AddValue(LevelBasedValue.perLevel(1.0F, 0.5F)),
         Optional.empty()))
@@ -72,8 +72,8 @@ DataComponentMap.builder().set(
 可以使用 `EnchantmentValueEffect#process` 方法，根据提供的数值运算调整值：
 
 ```java
-// `valueEffect` is an EnchantmentValueEffect instance.
-// `enchantLevel` is an integer representing the level of the enchantment
+// `valueEffect` 是 EnchantmentValueEffect 实例。
+// `enchantLevel` 是代表附魔等级的整数
 float baseValue = 1.0;
 float modifiedValue = valueEffect.process(enchantLevel, server.random, baseValue);
 ```
@@ -129,22 +129,22 @@ _另请参阅 Minecraft Wiki 上的[基于位置的效果组件][Location Based 
 <TabItem value="attribute.json" label="JSON">
 
 ```json5
-// The type is "minecraft:attributes" (described below).
-// In a nutshell, this applies an attribute modifier.
+// 类型为 "minecraft:attributes"（如下所述）。
+// 简而言之，此应用属性修饰符。
 "minecraft:attributes": [
     {
-        // This "amount" block is a LevelBasedValue.
+        // 此 "amount" 代码块是 LevelBasedValue。
         "amount": {
             "type": "minecraft:linear",
             "base": 1,
             "per_level_above_first": 1
         },
 
-        // Which attribute to modify. In this case, modifies "minecraft:scale"
+        // 要修改哪个属性。在此情况下，修改"minecraft:scale"
         "attribute": "minecraft:scale",
-        // The unique identifier for this attribute modifier. Should not overlap with others, but doesn't need to be registered.
+        // 此属性修饰符的唯一标识符。不应与其他重叠，但不需要注册。
         "id": "examplemod:enchantment.size_change",
-        // What operation to use on the attribute. Can be "add_value", "add_multiplied_base", or "add_multiplied_total".
+        // 对属性使用什么操作。可以是 "add_value"、"add_multiplied_base" 或 "add_multiplied_total"。
         "operation": "add_value"
     }
 ],
@@ -154,12 +154,12 @@ _另请参阅 Minecraft Wiki 上的[基于位置的效果组件][Location Based 
 <TabItem value="attribute.datagen" label="数据生成">
 
 ```java
-// Passed into the effects of an Enchantment during data generation
+// 在数据生成过程中进入附魔效果
 DataComponentMap.builder().set(
-    // Specifies the "minecraft:attributes" component type.
+    // 指定 "minecraft:attributes" 组件类型。
     EnchantmentEffectComponents.ATTRIBUTES,
 
-    // This component takes a list of these EnchantmentAttributeEffect objects.
+    // 该组件获取这些 EnchantmentAttributeEffect 对象的列表。
     List.of(new EnchantmentAttributeEffect(
         Identifier.fromNamespaceAndPath("examplemod", "enchantment.size_change"),
         Attributes.SCALE,
@@ -216,17 +216,17 @@ Entity 效果组件是实现 `EnchantmentEntityEffect` 的组件，后者是 `En
 <TabItem value="fire.json" label="JSON">
 
 ```json5
-// This component's type is "minecraft:post_attack" (see below).
+// 该组件的类型为 "minecraft:post_attack"（见下文）。
 "minecraft:post_attack": [
     {
-        // Decides whether the "victim" of the attack, the "attacker", or the "damaging entity" (the projectile if there is one, attacker if not) recieves the effect.
+        // 决定攻击的 "victim"、"attacker" 或 "damaging entity"（存在投射物时指投射物，否则指攻击者）是否获得该效果。
         "affected": "victim",
         
-        // Decides which enchantment entity effect to apply.
+        // 决定应用哪个附魔实体效果。
         "effect": {
-            // The type of this effect is "minecraft:ignite".
+            // 此效果的类型为 "minecraft:ignite"。
             "type": "minecraft:ignite",
-            // "minecraft:ignite" requires a LevelBasedValue as a duration for how long the entity will be ignited.
+            // "minecraft:ignite" 需要一个 LevelBasedValue，表示实体被点燃的持续时间。
             "duration": {
                 "type": "minecraft:linear",
                 "base": 4.0,
@@ -234,10 +234,10 @@ Entity 效果组件是实现 `EnchantmentEntityEffect` 的组件，后者是 `En
             }
         },
 
-        // Decides who (the "victim", "attacker", or "damaging entity") must have the enchantment for it to take effect.
+        // 决定必须由谁（"victim"、"attacker" 或 "damaging entity"）持有该附魔，效果才会生效。
         "enchanted": "attacker",
 
-        // An optional predicate which controls whether the effect applies.
+        // 控制效果是否适用的可选谓词。
         "requirements": {
             "condition": "minecraft:damage_source_properties",
             "predicate": {
@@ -252,26 +252,26 @@ Entity 效果组件是实现 `EnchantmentEntityEffect` 的组件，后者是 `En
 <TabItem value="fire.datagen" label="数据生成">
 
 ```java
-// Passed into the effects of an Enchantment during data generation
+// 在数据生成过程中进入附魔效果
 DataComponentMap.builder().set(
-    // Specifies the "minecraft:post_attack" component type.
+    // 指定 "minecraft:post_attack" 组件类型。
     EnchantmentEffectComponents.POST_ATTACK,
 
-    // Defines the data for this component. In this case, a list of one TargetedConditionalEffect.
+    // 定义此组件的数据。在其情况下，列表中包含一个 TargetedConditionalEffect。
     List.of(
         new TargetedConditionalEffect<>(
 
-            // Determines the "enchanted" field.
+            // 确定 "enchanted" 字段。
             EnchantmentTarget.ATTACKER,
 
-            // Determines the "affected" field.
+            // 确定 "affected" 字段。
             EnchantmentTarget.VICTIM,
 
-            // The enchantment entity effect.
+            // 附魔实体效果。
             new Ignite(LevelBasedValue.perLevel(4.0F, 4.0F)),
 
-            // The "requirements" clause. 
-            // In this case, the only optional part activated is the isDirect boolean flag.
+            // "requirements" 子句。
+            // 在此情况下，激活的唯一可选部分是 isDirect boolean 标志。
             Optional.of(
                 new DamageSourceCondition(
                     Optional.of(

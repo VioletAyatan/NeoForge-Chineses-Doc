@@ -68,7 +68,7 @@ Minecraft 提供了调试分析器（Debug Profiler），它会收集系统数�
 
 ```java
 Profiler.get().push("yourSectionName");
-//The code you want to profile
+//你要分析的代码
 Profiler.get().pop();
 ```
 

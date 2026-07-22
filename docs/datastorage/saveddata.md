@@ -9,12 +9,12 @@ _如果数据只与某些 BlockEntity、区块或 Entity 有关，请考虑改�
 每种 SD 实现都必须继承 `SavedData` 类。它可以像其他对象一样实现，拥有自己的字段和方法；但如果希望把数据或变更保存到磁盘，必须调用 `setDirty`。`setDirty` 会通知游戏存在需要写入的变更。如果没有调用它，数据只会在当前 Level（对于 `MinecraftServer` 则是当前世界）保持加载期间持续存在。
 
 ```java
-// For some saved data implementation
+// 对于一些保存数据的实现
 public class ExampleSavedData extends SavedData {
 
     public void foo() {
-        // Change data in saved data
-        // Call set dirty if data changes
+        // 更改已保存数据中的数据
+        // 如果数据更改则调用设置为脏
         this.setDirty();
     }
 }
@@ -36,49 +36,49 @@ public class ExampleSavedData extends SavedData {
 `SavedDataType` 构造器有两种形式。第一种接收作为构造器的普通 `Supplier`，以及负责磁盘处理的常规 `Codec`。如果希望存储当前 `ServerLevel` 或世界种子，则可以使用 NeoForge 添加的重载；它为这两个参数接收 `SavedDataType.Factory`，并提供一个 `ServerLevel`。
 
 ```java
-// For some saved data implementation
+// 对于一些保存数据的实现
 public class NoContextExampleSavedData extends SavedData {
 
     public static final SavedDataType<NoContextExampleSavedData> ID = new SavedDataType<>(
-        // The identifier of the saved data
-        // Used as the path within the `data` folder
+        // 保存数据的标识符
+        // 用作 `data` 文件夹内的路径
         Identifier.fromNamespaceAndPath("examplemod", "example"),
-        // The initial constructor
+        // 初始构造器
         NoContextExampleSavedData::new,
-        // The codec used to serialize the data
+        // 用于序列化数据的编解码器
         RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("val1").forGetter(sd -> sd.val1),
             BuiltInRegistries.BLOCK.byNameCodec().fieldOf("val2").forGetter(sd -> sd.val2)
         ).apply(instance, NoContextExampleSavedData::new))
     );
 
-    // Initial constructor
+    // 初始构造器
     public NoContextExampleSavedData() {
         // ...
     }
 
-    // Data constructor
+    // 数据构造器
     public NoContextExampleSavedData(int val1, Block val2) {
         // ...
     }
 
     public void foo() {
-        // Change data in saved data
-        // Call set dirty if data changes
+        // 更改已保存数据中的数据
+        // 如果数据更改则调用设置为脏
         this.setDirty();
     }
 }
 
-// For some saved data implementation
+// 对于一些保存数据的实现
 public class ContextExampleSavedData extends SavedData {
 
     public static final SavedDataType<ContextExampleSavedData> ID = new SavedDataType<>(
-        // The identifier of the saved data
-        // Used as the path within the `data` folder
+        // 保存数据的标识符
+        // 用作 `data` 文件夹内的路径
         Identifier.fromNamespaceAndPath("examplemod", "example"),
-        // The initial constructor
+        // 初始构造器
         ContextExampleSavedData::new,
-        // The codec used to serialize the data
+        // 用于序列化数据的编解码器
         level -> RecordCodecBuilder.create(instance -> instance.group(
             RecordCodecBuilder.point(level),
             Codec.INT.fieldOf("val1").forGetter(sd -> sd.val1),
@@ -86,19 +86,19 @@ public class ContextExampleSavedData extends SavedData {
         ).apply(instance, ContextExampleSavedData::new))
     );
 
-    // Initial constructor
+    // 初始构造器
     public ContextExampleSavedData(ServerLevel level) {
         // ...
     }
 
-    // Data constructor
+    // 数据构造器
     public ContextExampleSavedData(ServerLevel level, int val1, Block val2) {
         // ...
     }
 
     public void foo() {
-        // Change data in saved data
-        // Call set dirty if data changes
+        // 更改已保存数据中的数据
+        // 如果数据更改则调用设置为脏
         this.setDirty();
     }
 }
@@ -111,7 +111,7 @@ public class ContextExampleSavedData extends SavedData {
 `SavedData` 通过 `SavedDataStorage` 创建并加载；调用 `ServerChunkCache#getDataStorage` 或 `ServerLevel#getDataStorage` 均可访问该 storage。之后，可以调用 `SavedDataStorage#computeIfAbsent` 并传入 `SavedDataType`，取得或创建 SD 实例。该方法会尝试取得现有 SD 实例；如果不存在，则创建新实例并加载所有可用数据。
 
 ```java
-// In some method with access to the SavedDataStorage
+// 在某些方法中可以访问 SavedDataStorage
 netherDataStorage.computeIfAbsent(ContextExampleSavedData.ID);
 ```
 

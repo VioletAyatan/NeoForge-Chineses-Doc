@@ -7,30 +7,30 @@ Value I/O 系统是一种标准化序列化方式，用于操作某个底层对�
 Value I/O 系统由两部分组成：序列化期间向对象写入数据的 `ValueOutput`，以及反序列化期间从对象读取数据的 `ValueInput`。实现方法通常只接收 `ValueOutput` 或 `ValueInput` 作为参数，并且没有返回值。Value I/O 要求底层对象是由 string 键映射到对象值的字典；随后通过系统提供的方法，从底层对象读取信息或向其中写入信息。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
-    // Write data to the output
+    // 将数据写入输出
 }
 
 @Override
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
-    // Read data from the input
+    // 从输入读取数据
 }
 
-// For some Entity subclass
+// 对于某些实体子类
 @Override
 protected void addAdditionalSaveData(ValueOutput output) {
     super.addAdditionalSaveData(output);
-    // Write data to the output
+    // 将数据写入输出
 }
 
 @Override
 protected void readAdditionalSaveData(ValueInput input) {
     super.readAdditionalSaveData(input);
-    // Read data from the input
+    // 从输入读取数据
 }
 ```
 
@@ -53,16 +53,16 @@ Value I/O 提供了读写某些 primitive 的方法。`ValueOutput` 方法以 `p
 \* 这些 `ValueInput` 方法不会接收并返回某个 fallback，而是返回 `Optional` 包装的 primitive。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
     output.putBoolean(
-        // The string key
+        // 字符串键
         "boolValue",
-        // The value associated with this key
+        // 与此键关联的值
         true
     );
     output.putString("stringValue", "Hello world!");
@@ -72,19 +72,19 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
 
-    // Defaults to false if not present
+    // 如果不存在则默认为 false
     boolean boolValue = input.getBooleanOr(
-        // The string key to retrieve
+        // 要检索的字符串键
         "boolValue",
-        // The default value to return if the key is not present
+        // 如果键不存在，则默认值为返回
         false
     );
 
-    // Defaults to 'Dummy!' if not present
+    // 如果不存在则默认为 'Dummy!'
     String stringValue = input.getStringOr("stringValue", "Dummy!");
-    // Returns an optional-wrapped value
+    // 返回可选包装值
     Optional<String> stringValueOpt = input.getString("stringValue");
 }
 ```
@@ -94,12 +94,12 @@ protected void loadAdditional(ValueInput input) {
 [`Codec`][codec] 也可以通过 Value I/O 存储和读取值。在原版中，所有 `Codec` 都通过 `RegistryOps` 处理，因此可以存储数据包条目。`ValueOutput#store` 和 `storeNullable` 接收键、负责写入对象的 Codec 以及对象本身；如果对象为 `null`，`storeNullable` 不会写入任何内容。`ValueInput#read` 接收键和 Codec 来读取对象，并返回 `Optional` 包装的对象。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
     output.storeNullable("codecValue", Rarity.CODEC, Rarity.EPIC);
 }
 
@@ -107,7 +107,7 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
     Optional<Rarity> codecValue = input.read("codecValue", Rarity.CODEC);
 }
 ```
@@ -115,12 +115,12 @@ protected void loadAdditional(ValueInput input) {
 `ValueOutput` 和 `ValueInput` 还为 `MapCodec` 提供 `store` / `read` 方法。与 `Codec` 相比，`MapCodec` 形式会把值合并到当前根节点。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
     output.store(
         SingleFile.MAP_CODEC,
         new SingleFile(Identifier.fromNamespaceAndPath("examplemod", "example"))
@@ -131,11 +131,11 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
 
-    // No key is needed as they are stored on the root value access
+    // 不需要键，因为它们存储在根值访问中
     Optional<SingleFile> file = input.read(SingleFile.MAP_CODEC);
-    // This is present as `SingleFile` writes the `resource` parameter
+    // 当 `SingleFile` 写入 `resource` 参数时出现
     String resource = input.getStringOr("resource", "Not present!");
 }
 ```
@@ -151,16 +151,16 @@ protected void loadAdditional(ValueInput input) {
 调用 `ValueOutput#childrenList` 并传入键可以创建 list。它返回 `ValueOutput.ValueOutputList`，后者相当于只写的 value 对象 list。调用 `ValueOutputList#addChild` 可以向 list 添加新的 value 对象，并返回一个 `ValueOutput`，用于写入该 value 对象的数据。随后可以通过 `ValueInput#childrenList` 读取 list；如果希望在 list 不存在时默认为空 list，则使用 `childrenListOrEmpty`。这些方法返回 `ValueInput.ValueInputList`，它相当于只读的 iterable，也可以通过 `stream` 作为 stream 使用。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
 
-    // Create List
+    // 创建 List
     ValueOutput.ValueOutputList listValue = output.childrenList("listValue");
-    // Add elements
+    // 添加元素
     ValueOutput childIdx0 = listValue.addChild();
     childIdx0.putBoolean("boolChild", false);
     ValueOutput childIdx1 = listValue.addChild();
@@ -171,9 +171,9 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
 
-    // Read values of list
+    // 读取列表值
     for (ValueInput childInput : input.childrenListOrEmpty("listValue")) {
         boolean boolChild = childInput.getBooleanOr("boolChild", false);
     }
@@ -187,16 +187,16 @@ protected void loadAdditional(ValueInput input) {
 :::
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
 
-    // Create List
+    // 创建 List
     ValueOutput.TypedInputList<Rarity> listValue = output.list("listValue", Rarity.CODEC);
-    // Add elements
+    // 添加元素
     listValue.add(Rarity.COMMON);
     listValue.add(Rarity.EPIC);
 }
@@ -205,9 +205,9 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
 
-    // Read values of list
+    // 读取列表值
     for (Rarity rarity : input.listOrEmpty("listValue", Rarity.CODEC)) {
         // ...
     }
@@ -218,19 +218,19 @@ protected void loadAdditional(ValueInput input) {
 即使 list 为空，它仍会写入 `ValueOutput`。如果不希望写入该 list，`TypedOutputList` 或 `ValueOutputList` 应先通过 `isEmpty` 检查，再使用 list 的键调用 `discard`。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
 
-    // Create List
+    // 创建 List
     ValueOutput.TypedInputList<Rarity> listValue = output.list("listValue", Rarity.CODEC);
     
-    // Check if list is empty
+    // 检查列表是否为空
     if (listValue.isEmpty()) {
-        // Discard from output
+        // 从输出中丢弃
         output.discard("listValue");
     }
 }
@@ -242,16 +242,16 @@ protected void saveAdditional(ValueOutput output) {
 可以通过 child 创建和读取对象。`ValueOutput#child` 接收一个键并创建新的 `ValueObject`。随后可以使用 `ValueInput#child` 读取该对象；如果希望默认得到一个底层值为空的 `ValueInput`，则使用 `childOrEmpty`。
 
 ```java
-// For some BlockEntity subclass
+// 对于某些 BlockEntity 子类
 @Override
 protected void saveAdditional(ValueOutput output) {
     super.saveAdditional(output);
     
-    // Write data to the output
+    // 将数据写入输出
 
-    // Create object
+    // 创建对象
     ValueOutput objectValue = output.child("objectValue");
-    // Add data to object
+    // 将数据添加到对象
     objectValue.putBoolean("boolChild", true);
     objectValue.putInt("intChild", 20);
 }
@@ -260,11 +260,11 @@ protected void saveAdditional(ValueOutput output) {
 protected void loadAdditional(ValueInput input) {
     super.loadAdditional(input);
 
-    // Read data from the input
+    // 从输入读取数据
 
-    // Read object
+    // 读取对象
     ValueInput objectValue = input.childOrEmpty("objectValue");
-    // Get data from object
+    // 从对象获取数据
     boolean boolChild = objectValue.getBooleanOr("boolChild", false);
     int intChild = objectValue.getIntOr("intChild", 0);
 }
@@ -279,12 +279,12 @@ public class ExampleObject implements ValueIOSerializable {
     
     @Override
     public void serialize(ValueOutput output) {
-        // Write the object data here
+        // 此处写入对象数据
     }
 
     @Override
     public void deserialize(ValueInput input) {
-        // Read the object data here
+        // 在此读取对象数据
     }
 }
 ```
@@ -302,21 +302,21 @@ public class ExampleObject implements ValueIOSerializable {
 两个 Value I/O 还都接收 `ProblemReporter`。`ProblemReporter` 用于收集读写过程中的所有内部错误；目前只跟踪 `Codec` 错误。错误如何处理由模组开发者决定。原版实现在 `ProblemReporter` 不为空时会抛出异常。
 
 ```java
-// Assume we have access to a HolderLookup.Provider lookupProvider
+// 假设我们可以访问 HolderLookup.Provider lookupProvider
 
 TagValueOutput output = TagValueOutput.createWithContext(
-    ProblemReporter.DISCARDING, // Choose to discard all errors
+    ProblemReporter.DISCARDING, // 选择放弃所有错误
     lookupProvider
 );
 
-// Write to the output...
+// 写入输出...
 
 CompoundTag tag = output.buildResult();
 
-// Collect the errors
+// 收集错误
 ProblemReporter.Collector reporter = new ProblemReporter.Collector(
-    // Optionally takes in the root path element
-    // Some objects (e.g., block entities, entities) have a #problemPath() method that can be supplied
+    // 可选择接受根路径元素
+    // 某些对象（例如方块实体和实体）具有可提供的 #problemPath() 方法
     new RootFieldPathElement("example_object")
 );
 
@@ -326,7 +326,7 @@ TagValueInput input = TagValueInput.create(
     tag
 );
 
-// Read from the input...
+// 从输入读取……
 ```
 
 [attachments]: attachments.md

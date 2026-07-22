@@ -39,43 +39,43 @@
 public class MyQuadParticle extends SingleQuadParticle {
 
     public static final SingleQuadParticle.Layer EXAMPLE_LAYER = new SingleQuadParticle.Layer(
-        // Whether the particle will have textures that are not fully opaque.
+        // 粒子是否具有不完全不透明的纹理。
         true,
-        // The texture atlas used to get the sprite from.
-        // This should match `TextureAtlasSprite#atlasLocation`.
+        // 用于从纹理图集中获取 sprite。
+        // 这应该与 `TextureAtlasSprite#atlasLocation` 匹配。
         TextureAtlas.LOCATION_PARTICLES,
-        // The render pipeline used to draw the particle.
-        // Custom render pipelines should be based from `RenderPipelines#PARTICLE_SNIPPET`
-        // to specify the available uniforms and samplers.
+        // 用于绘制粒子的渲染管道。
+        // 自定义渲染管道应基于 `RenderPipelines#PARTICLE_SNIPPET`
+        // 并指定可用的 uniform 和 sampler。
         RenderPipelines.WEATHER_DEPTH_WRITE
     );
 
     private final SpriteSet spriteSet;
 
-    // First four parameters are self-explanatory.
-    // The sprite set or atlas sprite are typically given through the provider, see below.
-    // Additional parameters can be added as needed, e.g., xSpeed/ySpeed/zSpeed.
+    // 前四个参数是不言自明的。
+    // SpriteSet 或 atlas sprite 通常由提供器传入，见下文。
+    // 可按需添加其他参数，例如 xSpeed/ySpeed/zSpeed。
     public MyQuadParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet) {
-        // Initial sprite set in constructor
+        // 构造器中设置的初始 sprite
         super(level, x, y, z, spriteSet.first());
         this.spriteSet = spriteSet;
-        this.gravity = 0; // Our particle floats in midair now, because why not.
+        this.gravity = 0; // 我们的粒子现在漂浮在半空中，因为为什么不呢。
     }
 
     @Override
     public void tick() {
-        // Let super handle movement.
-        // You may replace this with your own movement if needed.
-        // You may also override move() if you only want to modify the built-in movement.
+        // 让 super 处理移动逻辑。
+        // 如有需要，可以替换为自定义移动逻辑。
+        // 如果你只想修改内置运动，你也可以重写 move()。
         super.tick();
 
-        // Set the sprite for the current particle age, i.e. advance the animation.
+        // 根据当前粒子年龄设置 sprite，即推进动画。
         this.setSpriteFromAge(this.spriteSet);
     }
 
     @Override
     protected abstract SingleQuadParticle.Layer getLayer() {
-        // Sets the layer used to get and submit the texture.
+        // 设置用于获取和提交纹理的图层。
         return EXAMPLE_LAYER;
     }
 }
@@ -90,12 +90,12 @@ public class MyQuadParticle extends SingleQuadParticle {
 如果一个粒子需要比四边形更复杂的结构，就需要拥有自己的 `ParticleGroup<P>`，其中 `P` 是 `Particle` 的类型。`ParticleGroup` 负责 tick 指定的一组 `Particle`，并在 `Particle#isAlive` 返回 false 时将其移除。每个 group 最多可以排队 16,384 个粒子；队列已满时会移除最早的粒子。
 
 ```java
-// Let's assume we have the following particle class
+// 假设我们有以下粒子类
 public class ComplexParticle extends Particle {
 
-    // You are not required to use these fields or store these values.
-    // It is up to you to determine what you wish to render and get the
-    // appropriate data.
+    // 你不需要使用这些字段或存储这些值。
+    // 由你决定要渲染的内容，并取得
+    // 相应的数据。
     private final Model.Simple model;
     private final SpriteId sprite;
 
@@ -116,7 +116,7 @@ public class ComplexParticle extends Particle {
     }
 }
 
-// We can create a basic particle group like so
+// 我们可以像这样创建一个基本粒子组
 public class ComplexParticleGroup extends ParticleGroup<ComplexParticle> {
 
     public ComplexParticleGroup(ParticleEngine engine) {
@@ -130,29 +130,29 @@ public class ComplexParticleGroup extends ParticleGroup<ComplexParticle> {
 `Particle` 加入 `ParticleGroup` 后，会在 [Feature 提交][features]期间通过 `ParticleGroup#extractRenderState` 提取为 `ParticleGroupRenderState`。`ParticleGroupRenderState` 既是包含已提取粒子的 RenderState，也是把粒子元素提交给渲染器的处理器（通过 `#submit`）。
 
 ```java
-// The particle group render state
+// 粒子组渲染状态
 public record ComplexParticleRenderState(List<ComplexParticleRenderState.Entry> entries) implements ParticleGroupRenderState {
 
-    // Each entry represents a particle in the group
+    // 每个条目代表组中的一个粒子
     public record Entry(Model.Simple model, SpriteId sprite, PoseStack pose) {}
 
     @Override
     public void submit(SubmitNodeCollector collector, CameraRenderState camera) {
-        // Submit the particle elements to render
+        // 提交粒子元素进行渲染
         for (ComplexParticleRenderState.Entry entry : this.entries) {
             collector.submitModel(...);
         }
     }
 }
 
-// And in the group...
+// 并且在组中...
 public class ComplexParticleGroup extends ParticleGroup<ComplexParticle> {
 
     // ...
 
     @Override
     public ParticleGroupRenderState extractRenderState(Frustum frustum, Camera camera, float partialTickTime) {
-        // Extract the render state from the particles
+        // 从粒子中提取渲染状态
         List<ComplexParticleRenderState.Entry> entries = new ArrayList<>();
 
         for (ComplexParticle particle : this.particles) {
@@ -170,13 +170,13 @@ public class ComplexParticleGroup extends ParticleGroup<ComplexParticle> {
 `Particle` 本身不知道自己属于哪个 `ParticleGroup`，`ParticleEngine` 也不知道这个 group 的存在。三者通过 `ParticleRenderType` 关联起来；它是 group 的唯一标识符。`ParticleRenderType` 通过[客户端][side][模组事件总线][modbus]上的 `RegisterParticleGroupsEvent` 与 `ParticleGroup` 关联。随后，`Particle` 可以通过让 `Particle#getGroup` 返回所创建的类型来使用该 group。
 
 ```java
-// Create the render type
-// The string passed in should be a stringified `Identifier`
+// 创建渲染类型
+// 传入的字符串应该是字符串化的 `Identifier`
 public static final ParticleRenderType COMPLEX = new ParticleRenderType("examplemod:complex");
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerParticleProviders(RegisterParticleGroupsEvent event) {
-    // Link the render type to the particle group
+    // 将渲染类型链接到粒子组
     event.register(COMPLEX, ComplexParticleGroup::new);
 }
 
@@ -186,7 +186,7 @@ public class ComplexParticle extends Particle {
 
     @Override
     public ParticleRenderType getGroup() {
-        // Tell the particle to render using the particle group
+        // 告诉粒子使用粒子组进行渲染
         return COMPLEX;
     }
 }
@@ -197,25 +197,25 @@ public class ComplexParticle extends Particle {
 为某种粒子类型创建粒子后，必须通过 `ParticleProvider` 把粒子类型与粒子关联起来。`ParticleProvider` 是仅客户端类，负责通过 `createParticle` 从 `ParticleEngine` 中实际创建 `Particle`。这里可以包含更复杂的代码，但许多 particle provider 都和下面一样简单：
 
 ```java
-// The generic type of ParticleProvider must match the type of the particle type this provider is for.
+// ParticleProvider 的泛型类型必须与其所提供的粒子类型一致。
 public class MyQuadParticleProvider implements ParticleProvider<SimpleParticleType> {
 
-    // A set of particle sprites.
+    // 一组粒子 sprite。
     private final SpriteSet spriteSet;
 
-    // The registration function passes a SpriteSet, so we accept that and store it for further use.
-    // If your particle does not require a SpriteSet, this constructor can be omitted.
+    // 注册函数传递 SpriteSet，因此我们接受该值并将其存储以供进一步使用。
+    // 如果你的粒子不需要 SpriteSet，则可以省略此构造器。
     public MyParticleProvider(SpriteSet spriteSet) {
         this.spriteSet = spriteSet;
     }
 
-    // This is where the magic happens. We return a new particle each time this method is called!
-    // The type of the first parameter matches the generic type passed to the super interface.
+    // 每次调用此方法都会返回一个新粒子。
+    // 第一个参数的类型与传递给 super 接口的泛型类型匹配。
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double xd, double yd, double zd, RandomSource random
     ) {
-        // We don't use the type, speed deltas, or engine random.
+        // 我们不随机使用类型、速度增量或引擎。
         return new MyQuadParticle(level, x, y, z, this.spriteSet);
     }
 }
@@ -224,14 +224,14 @@ public class MyQuadParticleProvider implements ParticleProvider<SimpleParticleTy
 随后，必须在[客户端][side][模组事件总线][modbus]上的 `RegisterParticleProvidersEvent` 中，把 particle provider 与粒子类型关联起来：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-    // There are multiple ways to register providers, all differing in the functional type they provide in the
-    // second parameter. For example, #registerSpriteSet represents a Function<SpriteSet, ParticleProvider<?>>:
+    // 注册提供器有多种方式，区别在于第二个参数所接受的函数类型。
+    // 例如，#registerSpriteSet 表示 Function<SpriteSet, ParticleProvider<?>>：
     event.registerSpriteSet(MyParticleTypes.MY_QUAD_PARTICLE.get(), MyQuadParticleProvider::new);
 
-    // #registerSpecial, on the other hand, maps to a ParticleProvider<?>.
-    // This should be used if the sprite is not obtained from the particle description.
+    // #registerSpecial 映射到 ParticleProvider<?>。
+    // 如果 sprite 不是从粒子描述中取得，应使用此方法。
 }
 ```
 

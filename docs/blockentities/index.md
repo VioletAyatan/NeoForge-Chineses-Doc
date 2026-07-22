@@ -34,10 +34,11 @@ public static final Supplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY = B
         () -> new BlockEntityType<>(
                 // 用于构造方块实体实例的 Supplier。
                 MyBlockEntity::new,
-                // 一个可选值；为 true 时，仅允许具有 OP 权限的玩家加载 NBT 数据（例如放置方块物品）
+                // 一个可选值；为 true 时，仅允许具有 OP 权限的玩家
+                // 加载 NBT 数据（例如放置方块物品）
                 false,
                 // 可拥有此方块实体的方块 varargs。
-                // This assumes the existence of the referenced blocks as DeferredBlock<Block>s.
+                // 这里假定所引用的方块均以 DeferredBlock<Block> 形式存在。
                 MyBlocks.MY_BLOCK_1.get(), MyBlocks.MY_BLOCK_2.get()
         )
 );
@@ -83,9 +84,9 @@ public class MyEntityBlock extends Block implements EntityBlock {
 
 ```java
 public static final DeferredBlock<MyEntityBlock> MY_BLOCK_1 =
-        BLOCKS.register("my_block_1", () -> new MyEntityBlock( /* ... */ ));
+        BLOCKS.register("my_block_1", () -> new MyEntityBlock( /* ...*/ ));
 public static final DeferredBlock<MyEntityBlock> MY_BLOCK_2 =
-        BLOCKS.register("my_block_2", () -> new MyEntityBlock( /* ... */ ));
+        BLOCKS.register("my_block_2", () -> new MyEntityBlock( /* ...*/ ));
 ```
 
 ## 存储数据
@@ -100,7 +101,7 @@ public static final DeferredBlock<MyEntityBlock> MY_BLOCK_2 =
 
 ```java
 public class MyBlockEntity extends BlockEntity {
-    // 只要能够通过Value I/O 序列化，就可以使用任意类型的任意值。
+    // 只要能够通过 value I/O 序列化，就可以使用任意类型的任意值。
     // 作为示例，我们将使用 int。
     private int value;
 
@@ -213,14 +214,14 @@ BlockEntity 逻辑通常在服务端运行。因此，我们需要把正在进�
 public class MyBlockEntity extends BlockEntity {
     // ...
 
-    // 此处创建更新标签。对于只有几个字段的方块实体，此可以直接调用#saveWithoutMetadata。
+    // 在此创建更新标签。对于只有少量字段的方块实体，可以直接调用 #saveWithoutMetadata。
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 
-    // 此处处理收到的更新标签。默认实现在这里调用#loadWithComponents，
-    // 因此，如果你不打算执行任何其他操作，则无需覆盖 此方法。
+    // 在此处理收到的更新标签。默认实现在此调用 #loadWithComponents；
+    // 如果不需要执行其他操作，就无需重写此方法。
     @Override
     public void handleUpdateTag(ValueInput input) {
         super.handleUpdateTag(input);
@@ -242,20 +243,20 @@ public class MyBlockEntity extends BlockEntity {
         return this.saveWithoutMetadata(registries);
     }
 
-    // 在这里退回我们的数据包。此方法返回非 null 结果告诉游戏使用 此数据包进行同步。
+    // 在此返回更新数据包。返回非 null 结果会让游戏使用该数据包进行同步。
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-        // 该数据包使用#getUpdateTag返回的CompoundTag。存在 #create 的替代重载
-        // ，允许你指定自定义更新标记，包括省略客户端可能不需要的数据的能力。
+        // 该数据包使用 #getUpdateTag 返回的 CompoundTag。#create 还提供另一个重载，
+        // 可指定自定义更新标签，并省略客户端不需要的数据。
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     // 可选：收到数据包时运行一些自定义逻辑。
-    // super/default 实现转发到#loadWithComponents。
+    // super/default 实现转发到 #loadWithComponents。
     @Override
     public void onDataPacket(Connection connection, ValueInput input) {
         super.onDataPacket(connection, input);
-        // 在这里做你需要做的任何事情。
+        // 在此执行所需的任意逻辑。
     }
 }
 ```

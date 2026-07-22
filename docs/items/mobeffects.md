@@ -22,28 +22,28 @@ public class MyMobEffect extends MobEffect {
     
     @Override
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
-        // Apply your effect logic here.
+        // 在此应用你的效果逻辑。
 
-        // If this returns false when shouldApplyEffectTickThisTick returns true, the effect will immediately be removed
+        // 如果此方法返回 false，则当 shouldApplyEffectTickThisTick 返回 true 时，效果会立即被移除。
         return true;
     }
     
-    // Whether the effect should apply this tick. Used e.g. by the Regeneration effect that only applies
-    // once every x ticks, depending on the tick count and amplifier.
+    // 效果是否应在当前 tick 应用。例如，再生效果只会在特定 tick 应用
+    // 每 x 个 tick 一次，具体取决于 tick 计数和 amplifier。
     @Override
     public boolean shouldApplyEffectTickThisTick(int tickCount, int amplifier) {
-        return tickCount % 2 == 0; // replace this with whatever check you want
+        return tickCount % 2 == 0; // 将此替换为你想要的任何检查
     }
     
-    // Utility method that is called when the effect is first added to the entity.
-    // This does not get called again until all instances of this effect have been removed from the entity.
+    // 首次将效果添加到实体时调用的实用方法。
+    // 直到从实体中删除此效果的所有实例后，才会再次调用此函数。
     @Override
     public void onEffectAdded(LivingEntity entity, int amplifier) {
         super.onEffectAdded(entity, amplifier);
     }
 
-    // Utility method that is called when the effect is added to the entity.
-    // This gets called every time this effect is added to the entity.
+    // 将效果添加到实体时调用的实用方法。
+    // 每次将此效果添加到实体时都会调用此函数。
     @Override
     public void onEffectStarted(LivingEntity entity, int amplifier) {
     }
@@ -53,11 +53,11 @@ public class MyMobEffect extends MobEffect {
 与所有注册表对象一样，`MobEffect` 必须[注册][registration]：
 
 ```java
-// MOB_EFFECTS is a DeferredRegister<MobEffect>
+// MOB_EFFECTS 是 DeferredRegister<MobEffect>
 public static final Holder<MobEffect> MY_MOB_EFFECT = MOB_EFFECTS.register("my_mob_effect", () -> new MyMobEffect(
-        //Can be either BENEFICIAL, NEUTRAL or HARMFUL. Used to determine the potion tooltip color of this effect.
+        //可以是 BENEFICIAL、NEUTRAL 或 HARMFUL。用于确定此效果的药水工具提示颜色。
         MobEffectCategory.BENEFICIAL,
-        //The color of the effect particles in RGB format.
+        //RGB 格式的效果粒子的颜色。
         0xffffff
 ));
 ```
@@ -82,7 +82,7 @@ public class MyMobEffect extends InstantenousMobEffect {
 
     @Override
     public void applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
-        // Apply your effect logic here.
+        // 在此应用你的效果逻辑。
     }
 }
 ```
@@ -104,19 +104,19 @@ public class MyMobEffect extends InstantenousMobEffect {
 
 ```java
 MobEffectInstance instance = new MobEffectInstance(
-        // The mob effect to use.
+        // 要使用的生物效果。
         MobEffects.REGENERATION,
-        // The duration to use, in ticks. Defaults to 0 if not specified.
+        // 使用的持续时间（以 tick 为单位）。如果未指定，则默认为 0。
         500,
-        // The amplifier to use. This is the "strength" of the effect, i.e. Strength I, Strength II, etc.
-        // Must be between 0 and 255 (inclusive). Defaults to 0 if not specified.
+        // 要使用的放大器。这是效果的"strength"，即强度 I、强度 II 等
+        // 必须介于 0 到 255（含）之间。如果未指定，则默认为 0。
         0,
-        // Whether the effect is an "ambient" effect, meaning it is being applied by an ambient source,
-        // of which Minecraft currently has the beacon and the conduit. Defaults to false if not specified.
+        // 该效果是否是 "ambient" 效果，表示它由环境源应用，
+        // Minecraft 当前的此类来源包括信标和潮涌核心。如果未指定，则默认为 false。
         false,
-        // Whether the effect is visible in the inventory. Defaults to true if not specified.
+        // 效果在物品栏中是否可见。如果未指定，则默认为 true。
         true,
-        // Whether an effect icon is visible in the top right corner. Defaults to true if not specified.
+        // 右上角是否可见效果图标。如果未指定，则默认为 true。
         true
 );
 ```
@@ -151,11 +151,11 @@ livingEntity.removeEffect(MobEffects.REGENERATION);
 创建 `Potion` 时，调用 `Potion` 的构造器并传入希望 `Potion` 拥有的 `MobEffectInstance`。例如：
 
 ```java
-//POTIONS is a DeferredRegister<Potion>
+//POTIONS 是 DeferredRegister<Potion>
 public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", registryName -> new Potion(
-    // The suffix applied to the potion
+    // 药水的后缀
     registryName.getPath(),
-    // The effects used by the potion
+    // 药水使用的效果
     new MobEffectInstance(MY_MOB_EFFECT, 3600)
 ));
 ```
@@ -173,18 +173,18 @@ public static final Holder<Potion> MY_POTION = POTIONS.register("my_potion", reg
 传统上，`Potion` 在酿造台中制作。遗憾的是，Mojang 没有为酿造配方提供[数据包][datapack]支持，因此必须稍微采用传统方式，通过 `RegisterBrewingRecipesEvent` 事件用代码添加配方。具体如下：
 
 ```java
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
-    // Gets the builder to add recipes to
+    // 获取 builder 添加配方
     PotionBrewing.Builder builder = event.getBuilder();
 
-    // Will add brewing recipes for all container potions (e.g. potion, splash potion, lingering potion)
+    // 将为所有容器potions添加酿造配方（例如药水、飞溅药水、滞留药水）
     builder.addMix(
-        // The initial potion to apply to
+        // 初始药水适用
         Potions.AWKWARD,
-        // The brewing ingredient. This is the item at the top of the brewing stand.
+        // 酿造原料。这是酿造台顶部的物品。
         Items.FEATHER,
-        // The resulting potion
+        // 所得药水
         MY_POTION
     );
 }

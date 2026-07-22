@@ -33,15 +33,15 @@ NeoForge 还添加了 `submitMultiLayerBlockModel`，用于提交一组 `BlockSt
 严格来说，上述所有方法都属于父接口 `OrderedSubmitNodeCollector`。这是因为 collector 可以把 Feature 分组为不同的“order”；每个 order 表示 renderer 的一次独立 pass。默认情况下，所有 Feature 都在 order 0 上渲染，也就是按照下文定义的渲染顺序绘制。数值较小的 order 会先渲染，数值较大的 order 会后渲染。可以使用 `SubmitNodeCollector#order` 指定元素的绘制顺序：
 
 ```java
-// Assume we have some SubmitNodeCollector collector
+// 假设我们有一些 SubmitNodeCollector 收集器
 
-// This will be rendered on order 0.
+// 这将在订单 0 上渲染。
 collector.submitModel(...);
 
-// This will be rendered before the model.
+// 这将在模型之前渲染。
 collector.order(-1).submitBlockModel(...);
 
-// This will be rendered after the model.
+// 这将在模型之后渲染。
 collector.order(1).submitParticleGroup(...);
 ```
 

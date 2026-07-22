@@ -44,26 +44,26 @@ Minecraft 提供了多种可直接使用的配方类型与序列化器。本文�
 接下来看看如何在 `RecipeProvider#buildRecipes` 中生成该配方：
 
 ```java
-// We use a builder pattern, therefore no variable is created. Create a new builder by calling
-// ShapedRecipeBuilder#shaped with the recipe category (found in the RecipeCategory enum)
-// and a result item, a result item and count, or a result item stack template.
+// 我们使用 builder 模式，因此没有创建变量。通过调用创建新 builder
+// ShapedRecipeBuilder#shaped，配方为类别（在 RecipeCategory 枚举中找到）
+// 和结果项、结果项和计数或ItemStackTemplate。
 ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.TOOLS, Items.IRON_PICKAXE)
-        // Create the lines of your pattern. Each call to #pattern adds a new line.
-        // Patterns will be validated, i.e. their shape will be checked.
+        // 创建图案的线条。每次调用 #pattern 都会添加新行。
+        // 模式将被验证，即他们的形状将被检查。
         .pattern("XXX")
         .pattern(" # ")
         .pattern(" # ")
-        // Create the keys for the pattern. All non-space characters used in the pattern must be defined.
-        // This can either accept Ingredients, TagKey<Item>s or ItemLikes, i.e. items or blocks.
+        // 创建图案的关键点。必须定义模式中使用的所有非空格字符。
+        // 可以接受 Ingredient、TagKey<Item> 或 ItemLike，即物品或方块。
         .define('X', Items.IRON_INGOT)
         .define('#', Items.STICK)
-        // Creates the recipe advancement. While not mandated by the consuming background systems,
-        // the recipe builder will crash if you omit this. The first parameter is the advancement name,
-        // and the second one is the condition. Normally, you want to use the has() shortcut for the condition.
-        // Multiple advancement requirements can be added by calling #unlockedBy multiple times.
+        // 创建配方进展。虽然消费后台系统没有强制要求，
+        // 如果省略此，配方 builder 将会崩溃。第一个参数是进度名称，
+        // 第二个是条件。通常，你需要对条件使用 has() 快捷方式。
+        // 可以通过多次调用 #unlockedBy来添加多个晋级要求。
         .unlockedBy("has_iron_ingot", this.has(Items.IRON_INGOT))
-        // Stores the recipe in the passed RecipeOutput, to be written to disk.
-        // If you want to add conditions to the recipe, those can be set on the output.
+        // 将配方存储在传递的 RecipeOutput 中，以写入磁盘。
+        // 如果要向配方添加条件，可以在输出上设置这些条件。
         .save(this.output);
 ```
 
@@ -100,25 +100,25 @@ ShapedRecipeBuilder.shaped(this.registries.lookupOrThrow(Registries.ITEM), Recip
 接下来看看如何在 `RecipeProvider#buildRecipes` 中生成该配方：
 
 ```java
-// We use a builder pattern, therefore no variable is created. Create a new builder by calling
-// ShapelessRecipeBuilder#shapeless with the recipe category (found in the RecipeCategory enum)
-// and a result item, a result item and count, or a result item stack template.
+// 我们使用 builder 模式，因此没有创建变量。通过调用创建新 builder
+// ShapelessRecipeBuilder#shapeless，配方为类别（在 RecipeCategory 枚举中找到）
+// 和结果项、结果项和计数或ItemStackTemplate。
 ShapelessRecipeBuilder.shapeless(this.registries.lookupOrThrow(Registries.ITEM), RecipeCategory.MISC, Items.MUSHROOM_STEW)
-        // Add the recipe ingredients. This can either accept Ingredients, TagKey<Item>s or ItemLikes.
-        // Overloads also exist that additionally accept a count, adding the same ingredient multiple times.
+        // 添加配方原料。可以接受 Ingredient、TagKey<Item> 或 ItemLike。
+        // 还存在重载，额外接受计数，多次添加相同的成分。
         .requires(Blocks.BROWN_MUSHROOM)
         .requires(Blocks.RED_MUSHROOM)
         .requires(Items.BOWL)
-        // Creates the recipe advancement. While not mandated by the consuming background systems,
-        // the recipe builder will crash if you omit this. The first parameter is the advancement name,
-        // and the second one is the condition. Normally, you want to use the has() shortcut for the condition.
-        // Multiple advancement requirements can be added by calling #unlockedBy multiple times.
+        // 创建配方进展。虽然消费后台系统没有强制要求，
+        // 如果省略此，配方 builder 将会崩溃。第一个参数是进度名称，
+        // 第二个是条件。通常，你需要对条件使用 has() 快捷方式。
+        // 可以通过多次调用 #unlockedBy来添加多个晋级要求。
         .unlockedBy("has_mushroom_stew", this.has(Items.MUSHROOM_STEW))
         .unlockedBy("has_bowl", this.has(Items.BOWL))
         .unlockedBy("has_brown_mushroom", this.has(Blocks.BROWN_MUSHROOM))
         .unlockedBy("has_red_mushroom", this.has(Blocks.RED_MUSHROOM))
-        // Stores the recipe in the passed RecipeOutput, to be written to disk.
-        // If you want to add conditions to the recipe, those can be set on the output.
+        // 将配方存储在传递的 RecipeOutput 中，以写入磁盘。
+        // 如果要向配方添加条件，可以在输出上设置这些条件。
         .save(this.output);
 ```
 
@@ -157,30 +157,30 @@ ShapelessRecipeBuilder.shapeless(this.registries.lookupOrThrow(Registries.ITEM),
 接下来看看如何在 `RecipeProvider#buildRecipes` 中生成该配方：
 
 ```java
-// We use a builder pattern, therefore no variable is created. Create a new builder by calling
-// CustomCraftingRecipeBuilder#customCrafting with the recipe category (found in the RecipeCategory enum)
-// and a factory function that takes in the `Recipe.CommonInfo` and `CraftingRecipe.CraftingBookInfo`
-// to return the `Recipe` instance.
+// 我们使用 builder 模式，因此没有创建变量。通过调用创建新 builder
+// CustomCraftingRecipeBuilder#customCrafting，配方为类别（在 RecipeCategory 枚举中找到）
+// 以及接受 `Recipe.CommonInfo` 和 `CraftingRecipe.CraftingBookInfo` 的工厂函数
+// 并返回 `Recipe` 实例。
 CustomCraftingRecipeBuilder.customCrafting(
     RecipeCategory.MISC,
-    // The function used to construct the recipe instance.
+    // 用于构造配方实例的函数。
     (commonInfo, bookInfo) -> new ImbueRecipe(
         commonInfo, bookInfo,
-        // The source that contains the potion contents.
+        // 包含药水内容的来源。
         Ingredient.of(Items.LINGERING_POTION),
-        // The material used to imbue the source.
+        // 用于灌注源的材料。
         Ingredient.of(Items.ARROW),
-        // The resulting template with the potion contents.
+        // 包含药水内容的生成模板。
         new ItemStackTemplate(Items.TIPPED_ARROW, 8)
     )
 )
-    // Creates the recipe advancement. While not mandated by the consuming background systems,
-    // the recipe builder will crash if you omit this. The first parameter is the advancement name,
-    // and the second one is the condition. Normally, you want to use the has() shortcut for the condition.
-    // Multiple advancement requirements can be added by calling #unlockedBy multiple times.
+    // 创建配方进展。虽然消费后台系统没有强制要求，
+    // 如果省略此，配方 builder 将会崩溃。第一个参数是进度名称，
+    // 第二个是条件。通常，你需要对条件使用 has() 快捷方式。
+    // 可以通过多次调用 #unlockedBy来添加多个晋级要求。
     .unlockedBy("has_lingering_potion", this.has(Items.LINGERING_POTION))
-    // Stores the recipe in the passed RecipeOutput, to be written to disk.
-    // If you want to add conditions to the recipe, those can be set on the output.
+    // 将配方存储在传递的 RecipeOutput 中，以写入磁盘。
+    // 如果要向配方添加条件，可以在输出上设置这些条件。
     .save(this.output, "tipped_arrow");
 ```
 
@@ -219,22 +219,22 @@ CustomCraftingRecipeBuilder.customCrafting(
 接下来看看如何在 `RecipeProvider#buildRecipes` 中生成该配方：
 
 ```java
-// We use a builder pattern, therefore no variable is created. Create a new builder by calling
-// TransmuteRecipeBuilder#transmute with the recipe category (found in the RecipeCategory enum),
-// the ingredient input, the ingredient material, and the resulting item.
+// 我们使用 builder 模式，因此没有创建变量。通过调用创建新 builder
+// TransmuteRecipeBuilder#transmute 以及配方类别（在 RecipeCategory 枚举中找到），
+// 配料输入、配料材料和生成的物品。
 TransmuteRecipeBuilder.transmute(RecipeCategory.MISC, this.tag(ItemTags.SHULKER_BOXES),
     Ingredient.of(DyeItem.byColor(DyeColor.BLUE)), ShulkerBoxBlock.getBlockByColor(DyeColor.BLUE).asItem())
-        // Sets the group of the recipe to display in the recipe book.
+        // 设置在配方簿中显示的配方组。
         .group("shulker_box_dye")
-        // Sets the number of materials required to transmute the stack.
+        // 设置转化堆叠所需的材料数量。
         .setMaterialCount(TransmuteRecipe.DEFAULT_MATERIAL_COUNT)
-        // Creates the recipe advancement. While not mandated by the consuming background systems,
-        // the recipe builder will crash if you omit this. The first parameter is the advancement name,
-        // and the second one is the condition. Normally, you want to use the has() shortcut for the condition.
-        // Multiple advancement requirements can be added by calling #unlockedBy multiple times.
+        // 创建配方进展。虽然消费后台系统没有强制要求，
+        // 如果省略此，配方 builder 将会崩溃。第一个参数是进度名称，
+        // 第二个是条件。通常，你需要对条件使用 has() 快捷方式。
+        // 可以通过多次调用 #unlockedBy来添加多个晋级要求。
         .unlockedBy("has_shulker_box", this.has(ItemTags.SHULKER_BOXES))
-        // Stores the recipe in the passed RecipeOutput, to be written to disk.
-        // If you want to add conditions to the recipe, those can be set on the output.
+        // 将配方存储在传递的 RecipeOutput 中，以写入磁盘。
+        // 如果要向配方添加条件，可以在输出上设置这些条件。
         .save(this.output);
 ```
 
@@ -269,32 +269,32 @@ TransmuteRecipeBuilder.transmute(RecipeCategory.MISC, this.tag(ItemTags.SHULKER_
 接下来看看如何在 `RecipeProvider#buildRecipes` 中生成该配方：
 
 ```java
-// We use a builder pattern, therefore no variable is created. Create a new builder by calling
-// CustomCraftingRecipeBuilder#customCrafting with the recipe category (found in the RecipeCategory enum)
-// and a factory function that takes in the `Recipe.CommonInfo` and `CraftingRecipe.CraftingBookInfo`
-// to return the `Recipe` instance.
+// 我们使用 builder 模式，因此没有创建变量。通过调用创建新 builder
+// CustomCraftingRecipeBuilder#customCrafting，配方为类别（在 RecipeCategory 枚举中找到）
+// 以及接受 `Recipe.CommonInfo` 和 `CraftingRecipe.CraftingBookInfo` 的工厂函数
+// 并返回 `Recipe` 实例。
 CustomCraftingRecipeBuilder.customCrafting(
     RecipeCategory.MISC,
-    // The function used to construct the recipe instance.
+    // 用于构造配方实例的函数。
     (commonInfo, bookInfo) -> new DyeRecipe(
         commonInfo, bookInfo,
-        // The target to apply the dyes to.
+        // 应用染料的目标。
         Ingredient.of(Items.LEATHER_BOOTS),
-        // The dyes that can be applied to the target.
+        // 可应用于目标的染料。
         this.tag(ItemTags.DYES),
-        // The resulting template with the applied dye color.
+        // 所得到的模板以及所应用的染料颜色。
         new ItemStackTemplate(Items.LEATHER_BOOTS)
     )
 )
-    // Sets the group of the recipe to display in the recipe book.
+    // 设置在配方簿中显示的配方组。
     .group("dyed_armor")
-    // Creates the recipe advancement. While not mandated by the consuming background systems,
-    // the recipe builder will crash if you omit this. The first parameter is the advancement name,
-    // and the second one is the condition. Normally, you want to use the has() shortcut for the condition.
-    // Multiple advancement requirements can be added by calling #unlockedBy multiple times.
+    // 创建配方进展。虽然消费后台系统没有强制要求，
+    // 如果省略此，配方 builder 将会崩溃。第一个参数是进度名称，
+    // 第二个是条件。通常，你需要对条件使用 has() 快捷方式。
+    // 可以通过多次调用 #unlockedBy来添加多个晋级要求。
     .unlockedBy("has_leather_boots", this.has(Items.LEATHER_BOOTS))
-    // Stores the recipe in the passed RecipeOutput, to be written to disk.
-    // If you want to add conditions to the recipe, those can be set on the output.
+    // 将配方存储在传递的 RecipeOutput 中，以写入磁盘。
+    // 如果要向配方添加条件，可以在输出上设置这些条件。
     .save(this.output, "dyed_leather_boots");
 ```
 
@@ -322,7 +322,7 @@ Minecraft 为大多数特殊合成配方添加 `crafting_special_` 前缀，但�
 在 `RecipeProvider#buildRecipes` 中生成该配方的方式如下：
 
 ```java
-// The parameter of #special is a Supplier<Recipe<?>>.
+// #special 的参数是 Supplier<Recipe<?>>。
 SpecialRecipeBuilder.special(
     () -> new FireworkRocketRecipe(
         Ingredient.of(Items.PAPER),
@@ -331,7 +331,7 @@ SpecialRecipeBuilder.special(
         new ItemStackTemplate(Items.FIREWORK_ROCKET, 3)
     )
 )
-    // This overload of #save allows us to specify a name. It can also be used on other recipe builders.
+    // #save 的重载允许我们指定一个名称。它也可以用于其他配方 builder。
     .save(this.output, "firework_rocket");
 ```
 
@@ -378,24 +378,24 @@ SpecialRecipeBuilder.special(
 这些配方在 `RecipeProvider#buildRecipes` 中的数据生成写法如下：
 
 ```java
-// Use #smoking for smoking recipes, #blasting for blasting recipes, and #campfireCooking for campfire recipes.
-// All of these builders work the same otherwise.
+// 对于吸烟配方使用 #smoking，对于爆破配方使用 #blasting，对于篝火配方使用 #campfireCooking。
+// 所有这些 builder 的工作方式都相同。
 SimpleCookingRecipeBuilder.smelting(
-        // Our input ingredient.
+        // 我们的输入成分。
         Ingredient.of(Items.KELP),
-        // Our recipe category.
+        // 我们的配方类别。
         RecipeCategory.FOOD,
         CookingBookCategory.FOOD
-        // Our result item. May also be an ItemStackTemplate.
+        // 我们的结果物品。也可能是 ItemStackTemplate。
         Items.DRIED_KELP,
-        // Our experience reward
+        // 我们的经验奖励
         0.1f,
-        // Our cooking time.
+        // 我们的烹饪时间。
         200
 )
-        // The recipe advancement, like with the crafting recipes above.
+        // 配方的进步，就像上面的制作配方一样。
         .unlockedBy("has_kelp", this.has(Blocks.KELP))
-        // This overload of #save allows us to specify a name.
+        // #save 的重载允许我们指定一个名称。
         .save(this.output, "dried_kelp_smelting");
 ```
 
@@ -462,21 +462,21 @@ SingleItemRecipeBuilder.stonecutting(Ingredient.of(Items.ANDESITE), RecipeCatego
 
 ```java
 SmithingTransformRecipeBuilder.smithing(
-        // The template ingredient.
+        // 模板成分。
         Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
-        // The base ingredient.
+        // 基本成分。
         Ingredient.of(Items.DIAMOND_AXE),
-        // The addition ingredient.
+        // 添加成分。
         this.tag(ItemTags.NETHERITE_TOOL_MATERIALS),
-        // The recipe book category.
+        // 配方书类别。
         RecipeCategory.TOOLS,
-        // The result item. Note that while the recipe codec accepts an item stack template here, the builder does not.
-        // If you need an item stack template output, you need to use your own builder.
+        // 结果项。请注意，虽然配方编解码器在此处接受ItemStack模板，但 builder 不接受。
+        // 如果需要ItemStack模板输出，则需要使用自己的 builder。
         Items.NETHERITE_AXE
 )
-        // The recipe advancement, like with the other recipes above.
+        // 配方进展，与上面的其他配方一样。
         .unlocks("has_netherite_ingot", this.has(ItemTags.NETHERITE_TOOL_MATERIALS))
-        // This overload of #save allows us to specify a name.
+        // #save 的重载允许我们指定一个名称。
         .save(this.output, "netherite_axe_smithing");
 ```
 
@@ -508,20 +508,20 @@ SmithingTransformRecipeBuilder.smithing(
 
 ```java
 SmithingTrimRecipeBuilder.smithingTrim(
-        // The template ingredient.
+        // 模板成分。
         Ingredient.of(Items.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE),
-        // The base ingredient.
+        // 基本成分。
         this.tag(ItemTags.TRIMMABLE_ARMOR),
-        // The addition ingredient.
+        // 添加成分。
         this.tag(ItemTags.TRIM_MATERIALS),
-        // The trim pattern to apply to the base.
+        // 应用到底座的修剪图案。
         this.registries.lookupOrThrow(Registries.TRIM_PATTERN).getOrThrow(TrimPatterns.SPIRE),
-        // The recipe book category.
+        // 配方书类别。
         RecipeCategory.MISC
 )
-        // The recipe advancement, like with the other recipes above.
+        // 配方进展，与上面的其他配方一样。
         .unlocks("has_smithing_trim_template", this.has(Items.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE))
-        // This overload of #save allows us to specify a name. Yes, this name is copied from vanilla.
+        // #save 的重载允许我们指定一个名称。是的，此名称是从原版复制的。
         .save(this.output, "bolt_armor_trim_smithing_template_smithing_trim");
 ```
 

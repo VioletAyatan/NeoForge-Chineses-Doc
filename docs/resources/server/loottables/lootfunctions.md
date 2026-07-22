@@ -15,7 +15,7 @@
 ```json5
 {
     "function": "minecraft:set_item",
-    // The item to use.
+    // 要使用的物品。
     "item": "minecraft:dirt"
 }
 ```
@@ -29,13 +29,13 @@
 ```json5
 {
     "function": "minecraft:set_count",
-    // The count to use.
+    // 要使用的计数。
     "count": {
         "type": "minecraft:uniform",
         "min": 1,
         "max": 3
     },
-    // Whether to add to the existing value instead of setting it. Optional, defaults to false.
+    // 是否添加到现有值而不是设置它。 可选，默认为false。
     "add": true
 }
 ```
@@ -61,7 +61,7 @@
 ```json5
 {
     "function": "minecraft:limit_count",
-    // The limit to use. Can have a min, a max, or both.
+    // 使用限制。可以有最小值、最大值或两者都有。
     "limit": {
         "max": 32
     }
@@ -96,22 +96,22 @@
 ```json5
 {
     "function": "minecraft:copy_custom_data",
-    // The source to use. Valid values are either an entity target, "block_entity" to use the loot context's
-    // block entity parameter, or be "storage" for command storage. If this is "storage", it can instead be a
-    // JSON object that additionally specify the command storage path to be used.
+    // 要使用的源。有效值可以是实体目标，"block_entity"，以使用战利品上下文
+    // 方块实体参数，或者命令存储为 "storage"。如果这是 "storage"，则它可以是
+    // JSON 对象，另外指定要使用的命令存储路径。
     "source": "this",
-    // Example for using "storage".
+    // 使用 "storage" 的示例。
     "source": {
         "type": "storage",
         "source": "examplepath"
     },
-    // The copy operation(s).
+    // 副本 operation。
     "ops": [
         {
-            // The source and target paths. In this example, we copy from "src" in the source to "dest" in the target.
+            // 源路径和目标路径。在此示例中，我们从源中的 "src" 复制到目标中的 "dest"。
             "source": "src",
             "target": "dest",
-            // A merging strategy. Valid values are "replace", "append", and "merge".
+            // 合并策略。有效值为 "replace"、"append" 和 "merge"。
             "op": "merge"
         }
     ]
@@ -127,7 +127,7 @@
 ```json5
 {
     "function": "minecraft:set_components",
-    // Any component can be used. In this example, we set the dyed color of the item to red.
+    // 可以使用任何组件。在此示例中，我们将物品的染色颜色设置为红色。
     "components": {
         "dyed_color": {
             "rgb": 16711680
@@ -145,13 +145,13 @@
 ```json5
 {
     "function": "minecraft:copy_components",
-    // One of the loot params specified in the context
-    // For entities: 'this', 'attacker', 'direct_attacker', 'attacking_player', 'target_entity', 'interacting_entity'
-    // For block entities: 'block_entity'
-    // For item stacks: 'tool'
+    // 上下文中指定的战利品参数之一
+    // 对于实体：'this'、'attacker'、'direct_attacker'、'attacking_player'、'target_entity'、'interacting_entity'
+    // 对于方块实体：'block_entity'
+    // 对于物品堆叠：'tool'
     "source": "block_entity",
-    // By default, all components are copied. The "exclude" list allows excluding certain components, and the
-    // "include" list allows explicitly re-including components. Both fields are optional.
+    // 默认情况下，复制所有组件。 "exclude" 列表允许排除某些组件，并且
+    // "include" 列表允许显式重新包含组件。这两个字段都是可选的。
     "exclude": [],
     "include": []
 }
@@ -166,9 +166,9 @@
 ```json5
 {
     "function": "minecraft:copy_state",
-    // The expected block. If this does not match the block that is actually broken, the function does not run.
+    // 预期的方块。如果与实际被破坏的方块不匹配，函数就不会运行。
     "block": "minecraft:oak_slab",
-    // The block state properties to save.
+    // 要保存的方块状态 property。
     "properties": {
         "type": "top"
     }
@@ -184,9 +184,9 @@
 ```json5
 {
     "function": "minecraft:set_contents",
-    // The contents component to use. Valid values are "container", "bundle_contents" and "charged_projectiles".
+    // 要使用的内容组件。有效值为 "container"、"bundle_contents" 和 "charged_projectiles"。
     "component": "container",
-    // A list of loot entries to add to the contents.
+    // 要添加到内容中的战利品条目列表。
     "entries": [
         {
             "type": "minecraft:empty",
@@ -209,9 +209,9 @@
 ```json5
 {
     "function": "minecraft:modify_contents",
-    // The contents component to use. Valid values are "container", "bundle_contents" and "charged_projectiles".
+    // 要使用的内容组件。有效值为 "container"、"bundle_contents" 和 "charged_projectiles"。
     "component": "container",
-    // The function to use.
+    // 要使用的函数。
     "modifier": "apply_explosion_decay"
 }
 ```
@@ -225,11 +225,11 @@
 ```json5
 {
     "function": "minecraft:set_loot_table",
-    // The id of the loot table to use.
+    // 要使用的战利品表的 ID。
     "name": "minecraft:entities/enderman",
-    // The id of the block entity type of the target block entity.
+    // 目标方块实体的方块实体类型ID。
     "type": "minecraft:chest",
-    // The random seed for generating loot tables. Optional, defaults to 0.
+    // 用于生成战利品表的随机种子。可选，默认为 0。
     "seed": 42
 }
 ```
@@ -244,10 +244,10 @@
 {
     "function": "minecraft:set_name",
     "name": "Funny Item",
-    // The entity target to use.
+    // 要使用的实体目标。
     "entity": "this",
-    // Whether to set the custom name ("custom_name") or the item name ("item_name") itself.
-    // Custom name are displayed in italics and can be changed in an anvil, while item names cannot.
+    // 是否设置自定义name（"custom_name"）或物品name（"item_name"）本身。
+    // 自定义名称以斜体显示，并且可以在铁砧中更改，而物品名称则不能。
     "target": "custom_name"
 }
 ```
@@ -261,7 +261,7 @@
 ```json5
 {
     "function": "minecraft:copy_name",
-    // The entity target, or "block_entity" if a block entity's name should be copied.
+    // 实体目标，如果要复制方块实体的名称，则为 "block_entity"。
     "source": "this"
 }
 ```
@@ -279,19 +279,19 @@
         "Funny Lore",
         "Funny Lore 2"
     ],
-    // The merging mode used. Valid values are:
-    // - "append": Appends the entries to any existing lore entries.
-    // - "insert": Inserts the entries at a certain position. The position is denoted as an additional field
-    //   named "offset". "offset" is optional and defaults to 0.
-    // - "replace_all": Removes all previous entries and then appends the entries.
-    // - "replace_section": Removes a section of entries and then adds the entries at that position.
-    //   The section removed is denoted through the "offset" and optional "size" fields.
-    //   If "size" is omitted, the amount of lines in "lore" is used.
+    // 使用的合并模式。有效值为：
+    // - "append"：将条目附加到任何现有的传说条目中。
+    // - "insert"：在特定位置插入条目。该位置被表示为附加字段
+    //   命名为 "offset"。 "offset" 可选，默认为 0。
+    // - "replace_all"：删除所有以前的条目，然后追加这些条目。
+    // - "replace_section"：删除一部分条目，然后在该位置添加条目。
+    //   删除的部分通过 "offset" 和可选的 "size" 字段表示。
+    //   如果省略 "size"，则使用 "lore" 中的行数。
     "mode": {
         "type": "insert",
         "offset": 0
     },
-    // The entity target to use.
+    // 要使用的实体目标。
     "entity": "this"
 }
 ```
@@ -306,8 +306,8 @@
 {
     "function": "minecraft:toggle_tooltips",
     "toggles": {
-        // All values are optional. If omitted, these values will use pre-existing values on the stack.
-        // The pre-existing values are generally true, unless they have already been modified by another function.
+        // 所有值均为可选。省略时，使用 ItemStack 上已有的值。
+        // 预先存在的值通常是 true，除非它们已被其他函数修改。
         "minecraft:attribute_modifiers": false,
         "minecraft:can_break": false,
         "minecraft:can_place_on": false,
@@ -330,18 +330,18 @@
 ```json5
     {
     "function": "minecraft:enchant_with_levels",
-    // The amount of levels to use.
+    // 要使用的级别数量。
     "levels": {
         "type": "minecraft:uniform",
         "min": 10,
         "max": 30
     },
-    // A list of possible enchantments. Optional, defaults to all applicable enchantments for the item.
+    // 可能的附魔列表。 可选，默认为该物品的所有适用的附魔。
     "options": [
         "minecraft:sharpness",
         "minecraft:fire_aspect"
     ],
-    // Whether to allow this function to apply an additional trade cost if successful.
+    // 如果成功，是否允许此函数应用额外的交易费用。
     "include_additional_cost_component": true
 }
 ```
@@ -355,14 +355,14 @@
 ```json5
 {
     "function": "minecraft:enchant_randomly",
-    // A list of possible enchantments. Optional, defaults to all enchantments.
+    // 可能的附魔列表。 可选，默认为所有附魔。
     "options": [
         "minecraft:sharpness",
         "minecraft:fire_aspect"
     ],
-    // Whether to only allow compatible enchantments, or any enchantments. Optional, defaults to true.
+    // 是否仅允许兼容的附魔，而非任意附魔。可选，默认为 true。
     "only_compatible": true,
-    // Whether to allow this function to apply an additional trade cost if successful.
+    // 如果成功，是否允许此函数应用额外的交易费用。
     "include_additional_cost_component": true
 }
 ```
@@ -376,7 +376,7 @@
 ```json5
 {
     "function": "minecraft:set_enchantments",
-    // A map of enchantments to number providers.
+    // 数值提供器的附魔映射。
     "enchantments": {
         "minecraft:fire_aspect": 2,
         "minecraft:sharpness": {
@@ -385,7 +385,7 @@
         "max": 5,
         }
     },
-    // Whether to add enchantment levels to existing levels instead of overwriting them. Optional, defaults to false.
+    // 是否将附魔等级累加到现有等级，而非覆盖。可选，默认为 false。
     "add": true
 }
 ```
@@ -399,15 +399,15 @@
 ```json5
 {
     "function": "minecraft:enchanted_count_increase",
-    // The enchantment to use.
+    // 要使用的附魔。
     "enchantment": "minecraft:fortune",
-    // The increase count per level. The number provider is rolled once per function, not once per level.
+    // 每级增加的数量。数值提供器每次函数执行只抽取一次，而不是每级抽取一次。
     "count": {
         "type": "minecraft:uniform",
         "min": 1,
         "max": 3
     },
-    // The stack size limit, which will not be exceeded no matter the enchantment level. Optional.
+    // ItemStack 数量上限，无论附魔等级如何都不会超过该值。可选。
     "limit": 5
 }
 ```
@@ -421,18 +421,18 @@
 ```json5
 {
     "function": "minecraft:apply_bonus",
-    // The enchantment value to query.
+    // 要查询的附魔值。
     "enchantment": "minecraft:fortune",
-    // The formula to use. Valid values are:
-    // - "minecraft:binomial_with_bonus_count": Applies a bonus based on a binomial distribution with
+    // 要使用的公式。有效值为：
+    // - "minecraft:binomial_with_bonus_count"：根据二项式分布应用奖金
     //   n = enchantment level + extra and p = probability.
-    // - "minecraft:ore_drops": Applies a bonus based on a special formula for ore drops, including randomness.
-    // - "minecraft:uniform_bonus_count": Adds a bonus based on the enchantment level scaled by a constant multiplier.
+    // - "minecraft:ore_drops"：根据矿石掉落的特殊公式（包括随机性）应用奖励。
+    // - "minecraft:uniform_bonus_count"：根据恒定乘数缩放的附魔等级添加奖励。
     "formula": "ore_drops",
-    // The parameter values, depending on the formula.
-    // If the formula is "minecraft:binomial_with_bonus_count", requires "extra" and "probability".
-    // If the formula is "minecraft:ore_drops", requires no parameters.
-    // If the formula is "minecraft:uniform_bonus_count", requires "bonusMultiplier".
+    // 参数值，取决于公式。
+    // 如果公式为 "minecraft:binomial_with_bonus_count"，则需要 "extra" 和 "probability"。
+    // 如果公式为 "minecraft:ore_drops"，则不需要参数。
+    // 如果公式为 "minecraft:uniform_bonus_count"，则需要 "bonusMultiplier"。
     "parameters": {}
 }
 ```
@@ -446,8 +446,8 @@
 ```json5
 {
     "function": "minecraft:furnace_smelt",
-    // When true, will use the current input material to determine
-    // the base count. Otherwise, will output one result.
+    // 为 true 时，将使用当前输入的材料来确定
+    // 基数。否则，将输出一个结果。
     "use_input_count": true
 }
 ```
@@ -461,13 +461,13 @@
 ```json5
 {
     "function": "minecraft:set_damage",
-    // The damage to set.
+    // 要设置的耐久损耗值。
     "damage": {
         "type": "minecraft:uniform",
         "min": 10,
         "max": 300
     },
-    // Whether to add to the existing damage instead of setting it. Optional, defaults to false.
+    // 是否在现有耐久损耗值上累加，而非直接设置。可选，默认为 false。
     "add": true
 }
 ```
@@ -481,26 +481,26 @@
 ```json5
 {
     "function": "minecraft:set_attributes",
-    // A list of attribute modifiers.
+    // 属性修饰符列表。
     "modifiers": [
         {
-            // The resource location id of the modifier. Should be prefixed by your mod id.
+            // 修改器的资源位置 ID。应以你的模组 ID 为前缀。
             "id": "examplemod:example_modifier",
-            // The id of the attribute the modifier is for.
+            // 修饰符所针对的属性的 ID。
             "attribute": "minecraft:attack_damage",
-            // The attribute modifier operation.
-            // Valid values are "add_value", "add_multiplied_base" and "add_multiplied_total". 
+            // 属性修饰符操作。
+            // 有效值为 "add_value"、"add_multiplied_base" 和 "add_multiplied_total"。
             "operation": "add_value",
-            // The amount of the modifier. This can also be a number provider.
+            // 改性剂的量。这也可以是数值提供器。
             "amount": 5,
-            // The slot(s) the modifier applies for. Valid values are "any" (any inventory slot),
-            // "mainhand", "offhand", "hand", (mainhand/offhand/both hands),
-            // "feet", "legs", "chest", "head", "armor" (boots/leggings/chestplates/helmets/any armor slots)
-            // and "body" (horse armor and similar slots).
+            // 修饰符适用的槽位。有效值为 "any"（任意物品栏槽位）、
+            // "mainhand"、"offhand"、"hand"、（mainhand/offhand/both 手）、
+            // "feet"、"legs"、"chest"、"head"、"armor"（boots/leggings/chestplates/helmets/any盔甲槽）
+            // 和 "body"（马盔甲和类似槽位）。
             "slot": "armor"
         }
     ],
-    // Whether to replace the existing values instead of adding to them. Optional, defaults to true.
+    // 是否替换现有值，而非追加到现有值。可选，默认为 true。
     "replace": false
 }
 ```
@@ -514,7 +514,7 @@
 ```json5
 {
     "function": "minecraft:set_potion",
-    // The id of the potion.
+    // 药水 ID。
     "id": "minecraft:strength"
 }
 ```
@@ -528,7 +528,7 @@
 ```json5
 {
     "function": "minecraft:set_random_dyes",
-    // A number provider of the number of dyes to apply to the result.
+    // 应用于结果的染料数量的数值提供器。
     "number_of_dyes": 3
 }
 ```
@@ -542,10 +542,10 @@
 ```json5
 {
     "function": "minecraft:set_random_potion",
-    // The potions to choose from.
-    // Can either be a potion id, such as "minecraft:strength",
-    // or a list of potion ids, such as ["minecraft:strength", "minecraft:night_vision", ...],
-    // or a potion tag, such as "#minecraft:tradeable".
+    // 可供选择的药水。
+    // 可以是药水 ID，例如 "minecraft:strength"，
+    // 或药水 ID 列表，例如 ["minecraft:strength", "minecraft:night_vision", ...],
+    // 或药水标签，例如 "#minecraft:tradeable"。
     "options": "minecraft:strength"
 }
 ```
@@ -559,12 +559,12 @@
 ```json5
 {
     "function": "minecraft:set_stew_effect",
-    // The effects to set.
+    // 要设置的效果。
     "effects": [
         {
-        // The effect id.
+        // 效果 ID。
         "type": "minecraft:fire_resistance",
-        // The effect duration, in ticks. This can also be a number provider.
+        // 效果持续时间，以 tick 为单位；也可以使用数值提供器。
         "duration": 100
         }
     ]
@@ -580,7 +580,7 @@
 ```json5
 {
     "function": "minecraft:set_ominous_bottle_amplifier",
-    // The amplifier to use.
+    // 要使用的放大器。
     "amplifier": {
         "type": "minecraft:uniform",
         "min": 1,
@@ -598,17 +598,17 @@
 ```json5
 {
     "function": "minecraft:exploration_map",
-    // A structure tag, containing the structures an exploration map can lead to.
-    // Optional, defaults to "minecraft:on_treasure_maps", which only contains buried treasures by default.
+    // 结构标签，包含探索映射可以通向的结构。
+    // 可选，默认为"minecraft:on_treasure_maps"，默认只包含埋藏宝藏。
     "destination": "minecraft:eye_of_ender_located",
-    // The map decoration type to use. See the MapDecorationTypes class for available values.
-    // Optional, defaults to "minecraft:mansion".
+    // 要使用的映射装饰类型。有关可用值，请参阅 MapDecorationTypes 类。
+    // 可选，默认为 "minecraft:mansion"。
     "decoration": "minecraft:target_x",
-    // The zoom level to use. Optional, defaults to 2.
+    // 要使用的缩放级别。 可选，默认为2。
     "zoom": 4,
-    // The search radius to use. Optional, defaults to 50.
+    // 要使用的搜索半径。 可选，默认为 50。
     "search_radius": 25,
-    // Whether existing chunks are skipped when searching for structures. Optional, defaults to true.
+    // 搜索结构时是否跳过现有区块。 可选，默认为true。
     "skip_existing_chunks": true
 }
 ```
@@ -622,7 +622,7 @@
 ```json5
 {
     "function": "minecraft:fill_player_head",
-    // The entity target to use. If this doesn't resolve to a player, the stack is not modified.
+    // 要使用的 Entity target。如果未解析为 Player，则不会修改 ItemStack。
     "entity": "this_entity"
 }
 ```
@@ -636,16 +636,16 @@
 ```json5
 {
     "function": "minecraft:set_banner_patterns",
-    // A list of banner pattern layers.
+    // 横幅图案图层列表。
     "patterns": [
         {
-            // The id of the banner pattern to use.
+            // 要使用的横幅图案的 ID。
             "pattern": "minecraft:globe",
-            // The dye color of the layer.
+            // 图层的染料颜色。
             "color": "light_blue"
         }
     ],
-    // Whether to append to the existing layers instead of replacing them.
+    // 是否追加到现有图层而不是替换它们。
     "append": true
 }
 ```
@@ -659,10 +659,10 @@
 ```json5
 {
     "function": "minecraft:set_instrument",
-    // The instrument tag to use.
-    // Can either be an instrument id, such as "minecraft:admire_goat_horn",
-    // or a list of instrument ids, such as ["minecraft:admire_goat_horn", "minecraft:seek_goat_horn", ...],
-    // or a instrument tag, such as "#minecraft:goat_horns".
+    // 要使用的仪器标签。
+    // 可以是仪器 ID，例如 "minecraft:admire_goat_horn"，
+    // 或乐器 ID 列表，例如 ["minecraft:admire_goat_horn", "minecraft:seek_goat_horn", ...]，
+    // 或仪器标签，例如 "#minecraft:goat_horns"。
     "options": "#minecraft:goat_horns"
 }
 ```
@@ -674,29 +674,29 @@
 ```json5
 {
     "function": "minecraft:set_fireworks",
-    // The explosions to use. Optional, uses the existing data component value if absent.
+    // 爆炸使用。 可选，如果不存在，则使用现有数据组件值。
     "explosions": [
         {
-            // The firework explosion shape to use. Valid vanilla values are "small_ball", "large_ball",
-            // "star", "creeper" and "burst". Optional, defaults to "small_ball".
+            // 使用的烟花爆炸形状。有效的原版值为 "small_ball"、"large_ball"、
+            // "star"、"creeper" 和 "burst"。 可选，默认为"small_ball"。
             "shape": "star",
-            // The colors to use. Optional, defaults to an empty list.
+            // 要使用的颜色。 可选，默认为空列表。
             "colors": [
                 16711680,
                 65280
             ],
-            // The fade colors to use. Optional, defaults to an empty list.
+            // 要使用的淡入淡出颜色。 可选，默认为空列表。
             "fade_colors": [
                 65280,
                 255
             ],
-            // Whether the explosion has a trail. Optional, defaults to false.
+            // 爆炸是否有痕迹。 可选，默认为false。
             "has_trail": true,
-            // Whether the explosion has a twinkle. Optional, defaults to false.
+            // 爆炸是否有闪烁。 可选，默认为false。
             "has_twinkle": true
         }
     ],
-    // The flight duration of the fireworks. Optional, uses the existing data component value if absent.
+    // 烟花的飞行持续时间。 可选，如果不存在，则使用现有数据组件值。
     "flight_duration": 5
 }
 ```
@@ -710,22 +710,22 @@
 ```json5
 {
     "function": "minecraft:set_firework_explosion",
-    // The firework explosion shape to use. Valid vanilla values are "small_ball", "large_ball",
-    // "star", "creeper" and "burst". Optional, defaults to "small_ball".
+    // 使用的烟花爆炸形状。有效的原版值为 "small_ball"、"large_ball"、
+    // "star"、"creeper" 和 "burst"。 可选，默认为"small_ball"。
     "shape": "star",
-    // The colors to use. Optional, defaults to an empty list.
+    // 要使用的颜色。 可选，默认为空列表。
     "colors": [
         16711680,
         65280
     ],
-    // The fade colors to use. Optional, defaults to an empty list.
+    // 要使用的淡入淡出颜色。 可选，默认为空列表。
     "fade_colors": [
         65280,
         255
     ],
-    // Whether the explosion has a trail. Optional, defaults to false.
+    // 爆炸是否有痕迹。 可选，默认为false。
     "trail": true,
-    // Whether the explosion has a twinkle. Optional, defaults to false.
+    // 爆炸是否有闪烁。 可选，默认为false。
     "twinkle": true
 }
 ```
@@ -739,12 +739,12 @@
 ```json5
 {
     "function": "minecraft:set_book_cover",
-    // The book title. Optional, if absent, the book title remains unchanged.
+    // 书名。 可选，如果不存在，则书名不变。
     "title": "Hello World!",
-    // The book author. Optional, if absent, the book author remains unchanged.
+    // 本书作者。 可选，如果缺席，书籍作者不变。
     "author": "Steve",
-    // The book generation, i.e. how often it has been copied. Clamped between 0 and 3.
-    // Optional, if absent, the book generation remains unchanged.
+    // 书代，即它被复制的频率。限制在 0 和 3 之间。
+    // 可选，如果不存在，则书籍生成保持不变。
     "generation": 2
 }
 ```
@@ -758,20 +758,20 @@
 ```json5
 {
     "function": "minecraft:set_written_book_pages",
-    // The pages to set, as a list of strings.
+    // 要设置的页面，作为字符串列表。
     "pages": [
         "Hello World!",
         "Hello World on page 2!",
         "Never Gonna Give You Up!"
     ],
-    // The merging mode used. Valid values are:
-    // - "append": Appends the entries to any existing lore entries.
-    // - "insert": Inserts the entries at a certain position. The position is denoted as an additional field
-    //   named "offset". "offset" is optional and defaults to 0.
-    // - "replace_all": Removes all previous entries and then appends the entries.
-    // - "replace_section": Removes a section of entries and then adds the entries at that position.
-    //   The section removed is denoted through the "offset" and optional "size" fields.
-    //   If "size" is omitted, the amount of lines in "lore" is used.
+    // 使用的合并模式。有效值为：
+    // - "append"：将条目附加到任何现有的传说条目中。
+    // - "insert"：在特定位置插入条目。该位置被表示为附加字段
+    //   命名为 "offset"。 "offset" 可选，默认为 0。
+    // - "replace_all"：删除所有以前的条目，然后追加这些条目。
+    // - "replace_section"：删除一部分条目，然后在该位置添加条目。
+    //   删除的部分通过 "offset" 和可选的 "size" 字段表示。
+    //   如果省略 "size"，则使用 "lore" 中的行数。
     "mode": {
         "type": "insert",
         "offset": 0
@@ -788,20 +788,20 @@
 ```json5
 {
     "function": "minecraft:set_writable_book_pages",
-    // The pages to set, as a list of strings.
+    // 要设置的页面，作为字符串列表。
     "pages": [
         "Hello World!",
         "Hello World on page 2!",
         "Never Gonna Give You Up!"
     ],
-    // The merging mode used. Valid values are:
-    // - "append": Appends the entries to any existing lore entries.
-    // - "insert": Inserts the entries at a certain position. The position is denoted as an additional field
-    //   named "offset". "offset" is optional and defaults to 0.
-    // - "replace_all": Removes all previous entries and then appends the entries.
-    // - "replace_section": Removes a section of entries and then adds the entries at that position.
-    //   The section removed is denoted through the "offset" and optional "size" fields.
-    //   If "size" is omitted, the amount of lines in "lore" is used.
+    // 使用的合并模式。有效值为：
+    // - "append"：将条目附加到任何现有的传说条目中。
+    // - "insert"：在特定位置插入条目。该位置被表示为附加字段
+    //   命名为 "offset"。 "offset" 可选，默认为 0。
+    // - "replace_all"：删除所有以前的条目，然后追加这些条目。
+    // - "replace_section"：删除一部分条目，然后在该位置添加条目。
+    //   删除的部分通过 "offset" 和可选的 "size" 字段表示。
+    //   如果省略 "size"，则使用 "lore" 中的行数。
     "mode": {
         "type": "insert",
         "offset": 0
@@ -818,37 +818,37 @@
 ```json5
 {
     "function": "minecraft:set_custom_model_data",
-    // The float used during item model selection for the specified index
-    // for a client item with a `minecraft:custom_model_data` range property.
+    // 在指定索引的物品模型选择期间使用的 float
+    // 具有 `minecraft:custom_model_data` 范围 property 的客户端物品。
     "floats": [
-        // Will select the model where the property is less than 0.5 when "index": 0
+        // 当 "index": 0 时会选择 property 小于 0.5 的模型
         0.5,
-        // Will select the model where the property is less than 0.25 when "index": 1
+        // 当 "index": 1 时，会选择 property 小于 0.25 的模型
         0.25
     ],
-    // The boolean used during item model selection for the specified index
-    // for a client item with a `minecraft:custom_model_data` condition property.
+    // 在指定索引的物品模型选择期间使用的 boolean
+    // 具有 `minecraft:custom_model_data` 条件 property 的客户端物品。
     "flags": [
-        // Will select the model where the condition is true when "index": 0
+        // 当 "index": 0 时，会选择条件为 true 的模型
         true,
-        // Will select the model where the condition is false when "index": 1
+        // 当 "index": 1 时，将选择条件为 false 的模型
         false
     ],
-    // The string used during item model selection for the specified index
-    // for a client item with a `minecraft:custom_model_data` select property.
+    // 指定索引的物品模型选择时使用的字符串
+    // 用于具有 `minecraft:custom_model_data` 选择 property 的客户端物品。
     "strings": [
-        // Will select the model with the "dummy" case when "index": 0
+        // 当 "index": 0 时，选择 "dummy" 分支对应的模型
         "dummy",
-        // Will select the model with the "example" case when "index": 1
+        // 当 "index": 1 时，选择 "example" 分支对应的模型
         "example"
     ],
-    // The tint color to use for the specified index for a client item
-    // with a `minecraft:custom_model_data` tint source.
-    // 0xFF000000 is ORed with this value for an opaque color.
+    // 用于客户端物品的指定索引的色调颜色
+    // 带有 `minecraft:custom_model_data` 色调源。
+    // 0xFF000000 是 ORed，其中此值表示不透明颜色。
     "colors": [
-        // Blue when "index": 0
+        // 当"index"：0时为蓝色
         255,
-        // Green when "index": 1
+        // 当 "index": 1 时呈绿色
         65280
     ]
 }
@@ -863,17 +863,17 @@
 ```json5
 {
     "function": "minecraft:filtered",
-    // The custom model data value to use. This can also be a number provider.
+    // 要使用的自定义模型数据值。这也可以是数值提供器。
     "item_filter": {
         "items": [
             "minecraft:diamond_shovel"
         ]
     },
-    // The loot function to run if the predicate succeeds.
-    // A loot modifier file or an in-line list of functions.
+    // 谓词成功时运行的掠夺函数。
+    // 战利品修改器文件或内联函数列表。
     "on_pass": "examplemod:example_pass",
-    // The loot function to run if the predicate fails.
-    // A loot modifier file or an in-line list of functions.
+    // 谓词失败时运行的掠夺函数。
+    // 战利品修改器文件或内联函数列表。
     "on_fail": "examplemod:example_fail"
 }
 ```
@@ -891,7 +891,7 @@
 ```json5
 {
     "function": "minecraft:reference",
-    // Refers to the item modifier file at data/examplemod/item_modifier/example_modifier.json.
+    // 指 data/examplemod/item_modifier/example_modifier.json 处的物品修改器文件。
     "name": "examplemod:example_modifier"
 }
 ```
@@ -905,7 +905,7 @@
 ```json5
 {
     "function": "minecraft:sequence",
-    // A list of functions to run.
+    // 要运行的函数列表。
     "functions": [
         {
             "function": "minecraft:set_count",

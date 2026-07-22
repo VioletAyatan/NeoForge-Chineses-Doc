@@ -67,20 +67,20 @@ Mojang 相当随意地设置了某些 attribute 上限，其中尤其明显的�
 创建 `LivingEntity` 时，必须为其注册一组默认 attribute。Entity [生成][spawning]时，会为其设置默认 attribute。默认 attribute 在 [`EntityAttributeCreationEvent`][event] 中注册：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
     event.put(
-        // Your entity type.
+        // 你的实体类型。
         MY_ENTITY.get(),
-        // An AttributeSupplier. This is typically created by calling LivingEntity#createLivingAttributes,
-        // setting your values on it, and calling #build. You can also create the AttributeSupplier from scratch
-        // if you want, see the source of LivingEntity#createLivingAttributes for an example.
+        // AttributeSupplier。这通常是通过调用 LivingEntity#createLivingAttributes 创建的，
+        // 在其上设置你的值，并调用 #build。你还可以从头开始创建 AttributeSupplier
+        // 如果需要，请参阅 LivingEntity#createLivingAttributes 的源代码作为示例。
         LivingEntity.createLivingAttributes()
-            // Add an attribute with its default value.
+            // 添加具有默认值的属性。
             .add(Attributes.MAX_HEALTH)
-            // Add an attribute with a non-default value.
+            // 添加具有非默认值的属性。
             .add(Attributes.MAX_HEALTH, 50)
-            // Build the AttributeSupplier.
+            // 构建 AttributeSupplier。
             .build()
     );
 }
@@ -93,19 +93,19 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
 某些情况下，例如创建[自己的 attribute][custom] 时，需要向现有 Entity 的 `AttributeSupplier` 添加 attribute。这通过 `EntityAttributeModificationEvent` 完成：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void modifyDefaultAttributes(EntityAttributeModificationEvent event) {
     event.add(
-        // The EntityType to add the attribute for.
+        // 要为其添加属性的 EntityType。
         EntityType.VILLAGER,
-        // The Holder<Attribute> to add to the EntityType. Can also be a custom attribute.
+        // 要添加到 EntityType 的 Holder<Attribute>，也可以是自定义属性。
         Attributes.ARMOR,
-        // The attribute value to add.
-        // Can be omitted, if so, the attribute's default value will be used instead.
+        // 要添加的属性值。
+        // 可以省略，如果省略，将使用属性的默认值。
         10.0
     );
-    // We can also check if a given EntityType already has a given attribute.
-    // In this example, if villagers don't have the armor attribute already, we add it.
+    // 我们还可以检查给定的 EntityType 是否已经具有给定的属性。
+    // 在此示例中，如果村民还没有盔甲属性，我们会添加它。
     if (!event.has(EntityType.VILLAGER, Attributes.ARMOR)) {
         event.add(...);
     }
@@ -121,16 +121,16 @@ Attribute 值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attr
 可以调用 `LivingEntity#getAttributes` 获取 Entity 的 `AttributeMap`，随后按如下方式查询 map：
 
 ```java
-// Get the attribute map.
+// 获取属性映射。
 AttributeMap attributes = livingEntity.getAttributes();
-// Get an attribute instance. This may be null if the entity does not have the attribute.
+// 获取属性实例。如果实体没有该属性，则这可能是 null。
 AttributeInstance instance = attributes.getInstance(Attributes.ARMOR);
-// Get the value for an attribute. Will fallback to the default for the entity if needed.
+// 获取属性的值。如果需要，将回退到实体的默认值。
 double value = attributes.getValue(Attributes.ARMOR);
-// Of course, we can also check if an attribute is present to begin with.
+// 当然，我们也可以首先检查属性是否存在。
 if (attributes.hasAttribute(Attributes.ARMOR)) { ... }
 
-// Alternatively, LivingEntity also offers shortcuts:
+// 或者，LivingEntity 还提供快捷方式：
 AttributeInstance instance = livingEntity.getAttribute(Attributes.ARMOR);
 double value = livingEntity.getAttributeValue(Attributes.ARMOR);
 ```
@@ -150,22 +150,22 @@ double value = livingEntity.getAttributeValue(Attributes.ARMOR);
 首先创建 attribute modifier：
 
 ```java
-// The name of the modifier. This is later used to query the modifier from the attribute map
-// and as such must be (semantically) unique.
+// 修改器的名称。稍后用于从属性映射中查询修饰符
+// 和 be（语义上）必须是唯一的。
 Identifier id = Identifier.fromNamespaceAndPath("yourmodid", "my_modifier");
-// The modifier itself.
+// 修饰符本身。
 AttributeModifier modifier = new AttributeModifier(
-    // The name we defined earlier.
+    // 我们之前定义的名称。
     id,
-    // The amount by which we modify the attribute value.
+    // 我们修改属性值的量。
     2.0,
-    // The operation used to apply the modifier. Possible values are:
-    // - AttributeModifier.Operation.ADD_VALUE: Adds the value to the total attribute value.
-    // - AttributeModifier.Operation.ADD_MULTIPLIED_BASE: Multiplies the value with the attribute base value
-    //   and adds it to the total attribute value.
-    // - AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL: Multiplies the value with the total attribute value,
-    //   i.e. the attribute base value with all previous modifications already performed,
-    //   and adds it to the total attribute value.
+    // 用于应用修改器的操作。可能的值为：
+    // - AttributeModifier.Operation.ADD_VALUE：将该值添加到总属性值中。
+    // - AttributeModifier.Operation.ADD_MULTIPLIED_BASE：将该值与属性基值相乘
+    //   并将其添加到总属性值中。
+    // - AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL：将该值与总属性值相乘，
+    //   即已执行所有先前修改的属性基值，
+    //   并将其添加到总属性值中。
     AttributeModifier.Operation.ADD_VALUE
 );
 ```
@@ -174,35 +174,35 @@ AttributeModifier modifier = new AttributeModifier(
 
 ```java
 AttributeMap attributes = livingEntity.getAttributes();
-// Add a transient modifier. If a modifier with the same id is already present, this will throw an exception.
+// 添加瞬态修饰符。如果具有相同 ID 的修饰符已经存在，此将抛出异常。
 attributes.getInstance(Attributes.ARMOR).addTransientModifier(modifier);
-// Add a transient modifier. If a modifier with the same id is already present, it is removed first.
+// 添加瞬态修饰符。如果具有相同 ID 的修饰符已存在，则首先将其删除。
 attributes.getInstance(Attributes.ARMOR).addOrUpdateTransientModifier(modifier);
-// Add a permanent modifier. If a modifier with the same id is already present, this will throw an exception.
+// 添加永久修饰符。如果具有相同 ID 的修饰符已经存在，此将抛出异常。
 attributes.getInstance(Attributes.ARMOR).addPermanentModifier(modifier);
-// Add a permanent modifier. If a modifier with the same id is already present, it is removed first.
+// 添加永久修饰符。如果具有相同 ID 的修饰符已存在，则首先将其删除。
 attributes.getInstance(Attributes.ARMOR).addOrReplacePermanentModifier(modifier);
 ```
 
 也可以再次移除这些 modifier：
 
 ```java
-// Remove by modifier object.
+// 通过修饰符对象删除。
 attributes.getInstance(Attributes.ARMOR).removeModifier(modifier);
-// Remove by modifier id.
+// 按修饰符 ID 删除。
 attributes.getInstance(Attributes.ARMOR).removeModifier(id);
-// Remove all modifiers for an attribute.
+// 删除属性的所有修饰符。
 attributes.getInstance(Attributes.ARMOR).removeModifiers();
 ```
 
 最后，还可以查询 attribute map 是否有某个 ID 的 modifier，并分别查询基础值与 modifier 值：
 
 ```java
-// Check for the modifier being present.
+// 检查修饰符是否存在。
 if (attributes.getInstance(Attributes.ARMOR).hasModifier(id)) { ... }
-// Get the base armor attribute value.
+// 获取基础护甲属性值。
 double baseValue = attributes.getBaseValue(Attributes.ARMOR);
-// Get the value of a certain modifier.
+// 获取某个修饰符的值。
 double modifierValue = attributes.getModifierValue(Attributes.ARMOR, id);
 ```
 
@@ -225,11 +225,11 @@ Attribute 本身可以从三个类中选择：
 
 ```java
 public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_attribute", () -> new RangedAttribute(
-    // The translation key to use.
+    // 要使用的翻译键。
     "attributes.yourmodid.my_attribute",
-    // The default value.
+    // 默认值。
     0,
-    // Min and max values.
+    // 最小值和最大值。
     -10000,
     10000
 ));

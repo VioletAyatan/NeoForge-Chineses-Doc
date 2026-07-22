@@ -21,33 +21,33 @@ NeoForge 提供 `ItemStacksResourceHandler` 类，用于在许多位置替代 `C
 ```java
 public class MyContainer implements Container {
     private final NonNullList<ItemStack> items = NonNullList.withSize(
-            // The size of the list, i.e. the amount of slots in our container.
+            // 列表的大小，即我们容器中的槽位数量。
             27,
-            // The default value to be used in place of where you'd use null in normal lists.
+            // 用于代替普通列表中 null 的默认值。
             ItemStack.EMPTY
     );
 
-    // The amount of slots in our container.
+    // 容器中的槽位数量。
     @Override
     public int getContainerSize() {
         return 27;
     }
 
-    // Whether the container is considered empty.
+    // 容器是否被视为空。
     @Override
     public boolean isEmpty() {
         return this.items.stream().allMatch(ItemStack::isEmpty);
     }
 
-    // Return the item stack in the specified slot.
+    // 返回指定槽位中的 ItemStack。
     @Override
     public ItemStack getItem(int slot) {
         return this.items.get(slot);
     }
 
-    // Remove the specified amount of items from the given slot, returning the stack that was just removed.
-    // We defer to ContainerHelper here, which does this as expected for us.
-    // However, we must call #setChanged manually.
+    // 从给定槽位中移除指定数量的物品，并返回刚移除的 ItemStack。
+    // 这里我们遵循 ContainerHelper，它按照我们的预期执行此。
+    // 但是，我们必须手动调用 #setChanged。
     @Override
     public ItemStack removeItem(int slot, int amount) {
         ItemStack stack = ContainerHelper.removeItem(this.items, slot, amount);
@@ -55,8 +55,8 @@ public class MyContainer implements Container {
         return stack;
     }
 
-    // Remove all items from the specified slot, returning the stack that was just removed.
-    // We again defer to ContainerHelper here, and we again have to call #setChanged manually.
+    // 从指定槽位中移除所有物品，并返回刚移除的 ItemStack。
+    // 这里我们再次遵循ContainerHelper，并且我们再次必须手动调用 #setChanged。
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         ItemStack stack = ContainerHelper.takeItem(this.items, slot);
@@ -64,7 +64,7 @@ public class MyContainer implements Container {
         return stack;
     }
 
-    // Set the given item stack in the given slot. Limit to the max stack size of the container first.
+    // 设置指定槽位中的 ItemStack。首先根据容器的最大堆叠数量进行限制。
     @Override
     public void setItem(int slot, ItemStack stack) {
         stack.limitSize(this.getMaxStackSize(stack));
@@ -72,21 +72,21 @@ public class MyContainer implements Container {
         this.setChanged();
     }
 
-    // Call this when changes are done to the container, i.e. when item stacks are added, modified, or removed.
-    // For example, you could call BlockEntity#setChanged here.
+    // Container 内容发生变化（例如添加、修改或移除 ItemStack）时调用此方法。
+    // 例如，你可以在此处调用 BlockEntity#setChanged。
     @Override
     public void setChanged() {
 
     }
 
-    // Whether the container is considered "still valid" for the given player. For example, chests and
-    // similar blocks check if the player is still within a given distance of the block here.
+    // 对于给定的玩家，容器是否被视为 "still valid"。例如，箱子和
+    // 类似方块会在此检查玩家是否仍处于方块的指定距离内。
     @Override
     public boolean stillValid(Player player) {
         return true;
     }
 
-    // Clear the internal storage, setting all slots to empty again.
+    // 清除内部存储，将所有槽位再次设置为空。
     @Override
     public void clearContent() {
         items.clear();
@@ -112,41 +112,41 @@ public class MyContainer implements Container {
 
 ```java
 public class MyBlockEntity extends BaseContainerBlockEntity {
-    // The container size. This can of course be any value you want.
+    // 容器尺寸。这当然可以是你想要的任何值。
     public static final int SIZE = 9;
-    // Our item stack list. This is not final due to #setItems existing.
+    // 我们的 ItemStack 列表。这不是 final，因为 #setItems 已存在。
     private NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
 
-    // The constructor, like before.
+    // 构造器，与之前一样。
     public MyBlockEntity(BlockPos pos, BlockState blockState) {
         super(MY_BLOCK_ENTITY.get(), pos, blockState);
     }
 
-    // The container size, like before.
+    // 容器尺寸，与之前一样。
     @Override
     public int getContainerSize() {
         return SIZE;
     }
 
-    // The getter for our item stack list.
+    // 我们的 ItemStack 列表的 getter。
     @Override
     protected NonNullList<ItemStack> getItems() {
         return items;
     }
 
-    // The setter for our item stack list.
+    // 我们的 ItemStack 列表的 setter。
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
         this.items = items;
     }
 
-    // The display name of the menu. Don't forget to add a translation!
+    // 菜单的显示名称。不要忘记添加翻译！
     @Override
     protected Component getDefaultName() {
         return Component.translatable("container.examplemod.myblockentity");
     }
 
-    // The menu to create from this container. See below for what to return here.
+    // 从此容器创建的菜单。请参阅下文了解返回的内容。
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
         return null;
@@ -165,31 +165,31 @@ public class MyBlockEntity extends BaseContainerBlockEntity {
 `WorldlyContainer` 是 `Container` 的子接口，允许按 `Direction` 访问给定 `Container` 的槽位。它主要用于只向特定一侧暴露 Container 一部分的 BlockEntity。例如，可用于一侧输出、其他所有侧输入的机器，反之亦然。该接口的简单实现如下：
 
 ```java
-// See BaseContainerBlockEntity methods above. You can of course extend BlockEntity directly
-// and implement Container yourself if needed.
+// 请参阅上面的 BaseContainerBlockEntity 方法。你当然可以直接扩展 BlockEntity
+// 并根据需要自行实现容器。
 public class MyBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
-    // other stuff here
+    // 在此处理其他内容
     
-    // Assume that slot 0 is our output and slots 1-8 are our inputs.
-    // Further assume that we output to the top and take inputs from all other sides.
+    // 假设槽位 0 是我们的输出，槽位 1-8 是我们的输入。
+    // 进一步假设我们输出到顶部并从所有其他方面获取输入。
     private static final int[] OUTPUTS = new int[]{0};
     private static final int[] INPUTS = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
 
-    // Return an array of exposed slot indices based on the passed Direction.
+    // 根据传递的 Direction 返回公开槽索引的数组。
     @Override
     public int[] getSlotsForFace(Direction side) {
         return side == Direction.UP ? OUTPUTS : INPUTS;
     }
 
-    // Whether items can be placed through the given side at the given slot.
-    // For our example, we return true only if we're not inputing from above and are in the index range [1, 8].
+    // 物品是否可以通过给定槽位的给定侧放置。
+    // 对于我们的示例，仅当我们不是从上面输入并且在索引范围 [1, 8] 内时，我们才使用返回 true。
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
         return direction != Direction.UP && index > 0 && index < 9;
     }
 
-    // Whether items can be taken from the given side and the given slot.
-    // For our example, we return true only if we're pulling from above and from slot index 0.
+    // 是否可以从给定的边和给定的槽中获取物品。
+    // 对于我们的示例，仅当我们从上方和槽索引 0 中拉取时，我们才使用返回 true。
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return direction == Direction.UP && index == 0;
@@ -205,20 +205,20 @@ public class MyBlockEntity extends BaseContainerBlockEntity implements WorldlyCo
 
 ```java
 if (blockEntity instanceof Container container) {
-    // do something with the container
+    // 对容器做一些事情
 }
 ```
 
 随后即可使用之前提到的方法，例如：
 
 ```java
-// Get the first item in the container.
+// 获取容器中的第一个物品。
 ItemStack stack = container.getItem(0);
 
-// Set the first item in the container to dirt.
+// 将 Container 中的第一个物品设为泥土。
 container.setItem(0, new ItemStack(Items.DIRT));
 
-// Removes a quantity of (up to) 16 from the third slot.
+// 从第三个槽位移除一定数量的物品（最多 16 个）。
 container.removeItem(2, 16);
 ```
 
@@ -237,27 +237,27 @@ container.removeItem(2, 16);
 到目前为止，主要讨论的是 `BlockEntity` 上的 `Container`。不过，也可以使用 `minecraft:container` [数据组件][datacomponent] 将其应用到 [`ItemStack`][itemstack]：
 
 ```java
-// We use SimpleContainer as the superclass here so we don't have to reimplement the item handling logic ourselves.
-// Due to implementation details of SimpleContainer, this may lead to race conditions if multiple parties
-// can access the container at the same time, so we're just going to assume our mod doesn't allow that.
-// You may of course use a different implementation of Container (or implement Container yourself) if needed.
+// 我们在这里使用 SimpleContainer 作为超类，因此我们不必自己重新实现物品处理逻辑。
+// 由于 SimpleContainer 的实现细节，如果多方参与，此可能会导致竞争条件
+// 可以同时访问 Container，因此这里直接假定模组不允许这种情况。
+// 如果需要，你当然可以使用 Container 的不同实现（或自己实现容器）。
 public class MyBackpackContainer extends SimpleContainer {
-    // The item stack this container is for. Passed into and set in the constructor.
+    // 此 Container 对应的 ItemStack；由构造器传入并设置。
     private final ItemStack stack;
     
     public MyBackpackContainer(ItemStack stack) {
-        // We call super with our desired container size.
+        // 我们将所需的容器尺寸称为 super。
         super(27);
-        // Setting the stack field.
+        // 设置 ItemStack 字段。
         this.stack = stack;
-        // We load the container contents from the data component (if present), which is represented
-        // by the ItemContainerContents class. If absent, we use ItemContainerContents.EMPTY.
+        // 我们从数据组件（如果存在）加载容器内容，该数据表示
+        // 由 ItemContainerContents 类组成。如果不存在，我们使用 ItemContainerContents.EMPTY。
         ItemContainerContents contents = stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-        // Copy the data component contents into our item stack list.
+        // 将数据组件内容复制到我们的 ItemStack 列表中。
         contents.copyInto(this.getItems());
     }
 
-    // When the contents are changed, we save the data component on the stack.
+    // 当内容发生变化时，将数据组件保存到 ItemStack 上。
     @Override
     public void setChanged() {
         super.setChanged();
@@ -287,13 +287,13 @@ public class MyBackpackContainer extends SimpleContainer {
 与 Mob “槽位”交互的示例如下：
 
 ```java
-// Get the item stack in the HEAD (helmet) slot.
+// 获取HEAD（头盔）槽中的ItemStack。
 ItemStack helmet = mob.getItemBySlot(EquipmentSlot.HEAD);
 
-// Put bedrock into the mob's FEET (boots) slot.
+// 将基岩放入生物的 FEET（靴子）槽中。
 mob.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.BEDROCK));
 
-// Enable that bedrock to always drop if the mob is killed.
+// 使该基岩在生物被杀死时始终掉落。
 mob.setDropChance(EquipmentSlot.FEET, 1f);
 ```
 

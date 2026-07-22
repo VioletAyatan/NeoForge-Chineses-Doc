@@ -10,18 +10,18 @@ Particle 使用 `ParticleType` 注册。它的工作方式类似 `EntityType` �
 
 ```java
 public class MyParticleTypes {
-    // Assuming that your mod id is examplemod
+    // 假设你的模组 ID 是 examplemod
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
         DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, "examplemod");
     
-    // The easiest way to add new particle types is reusing vanilla's SimpleParticleType.
-    // Implementing a custom ParticleType is also possible, see below.
+    // 添加新粒子类型的最简单方法是重用原版的 SimpleParticleType。
+    // 也可以实现自定义 ParticleType，请参见下文。
     public static final Supplier<SimpleParticleType> MY_QUAD_PARTICLE = PARTICLE_TYPES.register(
-        // The name of the particle type.
+        // 粒子类型的名称。
         "my_quad_particle",
-        // The supplier. The boolean parameter denotes whether setting the Particles option in the
-        // video settings to Minimal will affect this particle type or not; this is false for
-        // most vanilla particles, but true for e.g. explosions, campfire smoke, or squid ink.
+        // 提供器。boolean 参数表示在较低的粒子设置下是否限制该粒子类型；
+        // 此处为 false。
+        // 大多数原版粒子为 false，但爆炸、营火烟雾或鱿鱼墨汁等粒子为 true。
         () -> new SimpleParticleType(false)
     );
 }
@@ -38,20 +38,20 @@ public class MyParticleTypes {
 ```java
 public class MyParticleOptions implements ParticleOptions {
     
-    // A map codec defining additional information for the particle, used e.g. in commands.
-    // Since there is no information in our type, use a unit map codec;
-    // this corresponds to using an empty string in a command.
+    // 用于定义粒子附加信息的映射编解码器，例如供命令使用。
+    // 由于我们的类型中没有信息，因此使用单元映射编解码器；
+    // 这对应于在命令中使用空字符串。
     public static final MapCodec<MyParticleOptions> CODEC = MapCodec.unit(new MyParticleOptions());
 
-    // Read and write information to the network buffer.
+    // 向网络缓冲区读写信息。
     public static final StreamCodec<ByteBuf, MyParticleOptions> STREAM_CODEC = StreamCodec.unit(new MyParticleOptions());
 
-    // Does not need any parameters, but may define any fields necessary for the particle to work.
+    // 不需要任何参数，但可以定义粒子工作所需的任何字段。
     public MyParticleOptions() {}
 
     @Override
     public ParticleType<?> getType() {
-        // Return the registered particle type
+        // 返回注册的粒子类型
     }
 }
 ```
@@ -60,10 +60,10 @@ public class MyParticleOptions implements ParticleOptions {
 
 ```java
 public class MyParticleType extends ParticleType<MyParticleOptions> {
-    // The boolean parameter again determines whether to limit particles at lower particle settings.
-    // See implementation of the MyParticleTypes class near the top of the article for more information.
+    // boolean 参数同样决定是否在较低的粒子设置下限制该粒子。
+    // 有关详细信息，请参阅文章顶部附近的 MyParticleTypes 类的实现。
     public MyParticleType(boolean overrideLimiter) {
-        // Pass the deserializer to super.
+        // 将反序列化器传递给 super。
         super(overrideLimiter);
     }
 
@@ -110,10 +110,10 @@ Particle Description 大致如下：
 
 ```json5
 {
-    // A list of textures that will be played in order. Will loop if necessary.
-    // Texture locations are relative to the textures/particle folder.
+    // 将按顺序播放的纹理列表。如果需要的话会循环。
+    // 纹理位置相对于 textures/particle 文件夹。
     "textures": [
-        // Points to `assets/examplemod/textures/particle/my_particle_0.png`
+        // 指向 `assets/examplemod/textures/particle/my_particle_0.png`
         "examplemod:my_particle_0",
         "examplemod:my_particle_1",
         "examplemod:my_particle_2",
@@ -133,7 +133,7 @@ public class MyParticleProvider implements ParticleProvider<SimpleParticleType> 
 
     private final SpriteSet spriteSet;
 
-    // Take in the sprite set provided by the `ParticleResources`.
+    // 获取 `ParticleResources` 提供的 SpriteSet。
     public MyParticleProvider(SpriteSet spriteSet) {
         this.spriteSet = spriteSet;
     }
@@ -141,11 +141,11 @@ public class MyParticleProvider implements ParticleProvider<SimpleParticleType> 
     // ...
 }
 
-// In some client-only event handler
+// 在某些仅限客户端的事件处理器中
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-    // #registerSpriteSet MUST be used when dealing with particle descriptions.
+    // 处理粒子描述时必须使用 #registerSpriteSet。
     event.registerSpriteSet(MyParticleTypes.MY_PARTICLE.get(), MyParticleProvider::new);
 }
 ```
@@ -160,30 +160,30 @@ public static void registerParticleProviders(RegisterParticleProvidersEvent even
 
 ```java
 public class MyParticleDescriptionProvider extends ParticleDescriptionProvider {
-    // Get the parameters from `GatherDataEvent.Client`.
+    // 从 `GatherDataEvent.Client` 获取参数。
     public MyParticleDescriptionProvider(PackOutput output) {
         super(output);
     }
 
-    // Assumes that all the referenced particles actually exists. Replace "examplemod" with your mod id.
+    // 假设所有引用的粒子实际存在。将 "examplemod" 替换为你的模组 ID。
     @Override
     protected void addDescriptions() {
-        // Adds a single sprite particle definition with the file at
+        // 添加单 sprite 粒子定义，文件位于
         // assets/examplemod/textures/particle/my_single_particle.png.
         spriteSet(MyParticleTypes.MY_SINGLE_PARTICLE.get(), Identifier.fromNamespaceAndPath("examplemod", "my_single_particle"));
-        // Adds a multi sprite particle definition, with a vararg parameter. Alternatively accepts an iterable.
+        // 添加多 sprite 粒子定义；此重载接受可变参数，另有接受 Iterable 的重载。
         spriteSet(MyParticleTypes.MY_MULTI_PARTICLE.get(),
             Identifier.fromNamespaceAndPath("examplemod", "my_multi_particle_0"),
             Identifier.fromNamespaceAndPath("examplemod", "my_multi_particle_1"),
             Identifier.fromNamespaceAndPath("examplemod", "my_multi_particle_2")
         );
-        // Alternative for the above, appends "_<index>" to the base name given, for the given amount of textures.
+        // 上述的替代方案，对于给定数量的纹理，将 "_<index>" 附加到给定的基本名称。
         spriteSet(MyParticleTypes.MY_ALT_MULTI_PARTICLE.get(),
-            // The base name.
+            // 基本名称。
             Identifier.fromNamespaceAndPath("examplemod", "my_multi_particle"),
-            // The number of textures.
+            // 纹理的数量。
             3,
-            // Whether to reverse the list, i.e. start at the last element instead of the first.
+            // 是否反转列表，即从最后一个元素而不是第一个元素开始。
             false
         );
     }
@@ -193,7 +193,7 @@ public class MyParticleDescriptionProvider extends ParticleDescriptionProvider {
 不要忘记把 Provider 添加到 `GatherDataEvent.Client`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(MyParticleDescriptionProvider::new);
 }

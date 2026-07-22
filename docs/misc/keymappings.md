@@ -7,12 +7,12 @@
 仅在物理客户端上监听[模组事件总线][eventbus]的 `RegisterKeyMappingsEvent`，并调用 `#register`，即可注册 `KeyMapping`。
 
 ```java
-// In some physical client only class
+// 在某个仅限物理客户端的类中
 
-// Key mapping is lazily initialized so it doesn't exist until it is registered
+// 键映射是延迟初始化的，因此在注册之前它不存在
 public static final Lazy<KeyMapping> EXAMPLE_MAPPING = Lazy.of(() -> /*...*/);
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerBindings(RegisterKeyMappingsEvent event) {
     event.register(EXAMPLE_MAPPING.get());
 }
@@ -28,12 +28,12 @@ public static void registerBindings(RegisterKeyMappingsEvent event) {
 ```java
 public static final KeyMapping.Category EXAMPLE_CATEGORY = new KeyMapping.Category(Identifier.fromNamespaceAndPath("examplemod", "category"));
 
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerBindings(RegisterKeyMappingsEvent event) {
-    // Register category
+    // 寄存器类别
     event.registerCategory(EXAMPLE_CATEGORY);
 
-    // Register binding with category used
+    // 与所使用类别的寄存器绑定
     event.register(EXAMPLE_MAPPING.get());
 }
 ```
@@ -54,10 +54,10 @@ integer 的含义取决于所提供的类型。所有输入码都在 `GLFW` 中�
 
 ```java
 new KeyMapping(
-    "key.examplemod.example1", // Will be localized using this translation key
-    InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
-    GLFW.GLFW_KEY_P, // Default key is P
-    KeyMapping.Category.MISC // Mapping will be in the misc category
+    "key.examplemod.example1", // 将使用此翻译键进行本地化
+    InputConstants.Type.KEYSYM, // 默认映射在键盘上
+    GLFW.GLFW_KEY_P, // 默认键为 P
+    KeyMapping.Category.MISC // 映射将属于杂项类别
 )
 ```
 
@@ -76,10 +76,10 @@ new KeyMapping(
 ```java
 new KeyMapping(
     "key.examplemod.example2",
-    KeyConflictContext.GUI, // Mapping can only be used when a screen is open
-    InputConstants.Type.MOUSE, // Default mapping is on the mouse
-    GLFW.GLFW_MOUSE_BUTTON_LEFT, // Default mouse input is the left mouse button
-    EXAMPLE_CATEGORY // Mapping will be in the new example category
+    KeyConflictContext.GUI, // 映射只能在屏幕打开时使用
+    InputConstants.Type.MOUSE, // 默认映射在鼠标上
+    GLFW.GLFW_MOUSE_BUTTON_LEFT, // 默认鼠标输入为鼠标左键
+    EXAMPLE_CATEGORY // 映射将位于新示例类别中
 )
 ```
 
@@ -93,9 +93,9 @@ new KeyMapping(
 new KeyMapping(
     "key.examplemod.example3",
     KeyConflictContext.UNIVERSAL,
-    KeyModifier.SHIFT, // Default mapping requires shift to be held down
-    InputConstants.Type.KEYSYM, // Default mapping is on the keyboard
-    GLFW.GLFW_KEY_G, // Default key is G
+    KeyModifier.SHIFT, // 默认映射需要按住shift
+    InputConstants.Type.KEYSYM, // 默认映射在键盘上
+    GLFW.GLFW_KEY_G, // 默认键为 G
     KeyMapping.Category.MISC
 )
 ```
@@ -109,10 +109,10 @@ new KeyMapping(
 在游戏中，应监听[事件总线][eventbus]上的 `ClientTickEvent.Post`，并在 while 循环中检查 `KeyMapping#consumeClick`。`#consumeClick` 只会在输入实际发生且此前尚未处理的次数内返回 `true`，因此不会无限阻塞游戏。
 
 ```java
-@SubscribeEvent // on the game event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的游戏事件总线上
 public static void onClientTick(ClientTickEvent.Post event) {
     while (EXAMPLE_MAPPING.get().consumeClick()) {
-        // Execute logic to perform on click here
+        // 执行逻辑点击此处执行
     }
 }
 ```
@@ -128,11 +128,11 @@ public static void onClientTick(ClientTickEvent.Post event) {
 `#keyPressed` 接收一个 `KeyEvent`，其中包含 `GLFW` 按键 token、平台特定的 scan code，以及表示当前按住修饰键的 bitfield。调用 `InputConstants#getKey` 创建输入，即可对照映射检查按键。映射方法本身已经负责检查修饰键。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 @Override
 public boolean keyPressed(KeyEvent event) {
     if (EXAMPLE_MAPPING.get().isActiveAndMatches(InputConstants.getKey(event))) {
-        // Execute logic to perform on key press here
+        // 执行逻辑以在此处按下按键时执行
         return true;
     }
     return super.keyPressed(event);
@@ -146,11 +146,11 @@ public boolean keyPressed(KeyEvent event) {
 `#mouseClicked` 接收一个 `MouseButtonEvent`，其中包含鼠标的 x、y 位置以及被单击的 `MouseButtonInfo`；此外还接收一个表示用户是否双击的 `boolean`。使用 `MOUSE` 输入调用 `InputConstants.Type#getOrCreate` 创建输入，即可对照映射检查鼠标按钮。
 
 ```java
-// In some Screen subclass
+// 在某些 Screen 子类中
 @Override
 public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
     if (EXAMPLE_MAPPING.get().isActiveAndMatches(InputConstants.Type.MOUSE.getOrCreate(event.button()))) {
-        // Execute logic to perform on mouse click here
+        // 执行鼠标单击此处执行的逻辑
         return true;
     }
     return super.mouseClicked(event, doubleClick);

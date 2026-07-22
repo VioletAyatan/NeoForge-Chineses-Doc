@@ -16,26 +16,26 @@
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
-    // Defines the model to submit for rendering
+    // 定义要提交渲染的模型
     "model": {
         "type": "minecraft:model",
-        // Points to a model JSON relative to the 'models' directory
-        // Located at 'assets/examplemod/models/item/example_item.json'
+        // 指向相对于 'models' 目录的模型 JSON
+        // 位于 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item"
     },
-    // Defines some settings to use during the rendering process
+    // 定义渲染过程中使用的一些设置
     "properties": {
-        // When false, disables the animation where the item is raised
-        // up towards its normal position on item swap
+        // 当 false 时，禁用物品抬起的动画
+        // 上升到物品交换的正常位置
         "hand_animation_on_swap": false,
-        // When true, allows the model to render outside its defined
-        // slot bounds (defined in GuiItemRenderState#bounds) in a GUI
-        // instead of being scissored
+        // 当 true 时，允许模型在其定义之外渲染
+        // 槽位 bounds（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
+        // 而不是被剪
         "oversized_in_gui": false,
-        // Applies the scalar to the height of the hand when swapping
+        // 交换时将标量应用于手的高度
         "swap_animation_scale": 1.0
     }
 }
@@ -46,30 +46,30 @@
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.register(
         EXAMPLE_ITEM.get(),
-        // Defines the model to submit for rendering
+        // 定义要提交渲染的模型
         new CuboidItemModelWrapper.Unbaked(
-            // Points to a model JSON relative to the 'models' directory
-            // Located at 'assets/examplemod/models/item/example_item.json'
+            // 指向相对于 'models' 目录的模型 JSON
+            // 位于 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
             Optional.empty(),
             Collections.emptyList()
         ),
-        // Defines some settings to use during the rendering process
+        // 定义渲染过程中使用的一些设置
         new ClientItem.Properties(
-            // When false, disables the animation where the item is raised
-            // up towards its normal position on item swap
+            // 当 false 时，禁用物品抬起的动画
+            // 上升到物品交换的正常位置
             false,
-            // When true, allows the model to render outside its defined
-            // slot bounds (defined in GuiItemRenderState#bounds) in a GUI
-            // instead of being scissored
+            // 当 true 时，允许模型在其定义之外渲染
+            // 槽位 bounds（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
+            // 而不是被剪
             false,
-            // Applies the scalar to the height of the hand when swapping
+            // 交换时将标量应用于手的高度
             1.0F
         )
     );
@@ -87,13 +87,13 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:model",
-        // Points to a model JSON relative to the 'models' directory
-        // Located at 'assets/examplemod/models/item/example_item.json'
+        // 指向相对于 'models' 目录的模型 JSON
+        // 位于 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item"
     }
 }
@@ -104,15 +104,15 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new CuboidItemModelWrapper.Unbaked(
-            // Points to a model JSON relative to the 'models' directory
-            // Located at 'assets/examplemod/models/item/example_item.json'
+            // 指向相对于 'models' 目录的模型 JSON
+            // 位于 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
             Optional.empty(),
             Collections.emptyList()
@@ -132,39 +132,39 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:model",
-        // Points to 'assets/examplemod/models/item/example_item.json'
+        // 指向 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item",
-        // The transformations to apply after the model JSON transforms.
+        // 模型 JSON 变换后要应用的变换。
         "transformation": {
-            // The translation of the client item, specified as `[x, y, z]`.
+            // 客户端物品的平移，指定为 `[x, y, z]`。
             "translation": [
                 0.5,
                 0.0,
                 0.5
             ],
-            // The initial rotation of the client item, specified as:
+            // 客户端物品的初始旋转，指定为：
             // - `[x, y, z, w]`
-            // - { angle, [x, y, z] rotation axis }
+            // - {角度,[x,y,z]旋转轴}
             "left_rotation": [
                 1.0,
                 0.0,
                 0.0,
                 0.0
             ],
-            // The scale of the client item, specified as `[x, y, z]`.
+            // 客户端物品的比例，指定为 `[x, y, z]`。
             "scale": [
                 1.0,
                 1.0,
                 1.0
             ],
-            // The rotation of the client item after scaling, specified as:
+            // 缩放后客户端项的旋转，指定为：
             // - `[x, y, z, w]`
-            // - { angle, [x, y, z] rotation axis }
+            // - {角度,[x,y,z]旋转轴}
             "right_rotation": {
                 "angle": 0,
                 "axis": [
@@ -183,24 +183,24 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new CuboidItemModelWrapper.Unbaked(
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
-            // The transformations to apply after the model JSON transforms.
+            // 模型 JSON 变换后要应用的变换。
             Optional.of(new Transformation(
-                // The translation of the client item.
+                // 客户端物品的平移。
                 new Vector3f(0.5f, 0f, 0.5f),
-                // The initial rotation of the client item.
+                // 客户端物品的初始旋转。
                 new Quaternionf(1f, 0f, 0f, 0f),
-                // The scale of the client item.
+                // 客户端物品的缩放。
                 new Vector3f(1f, 1f, 1f),
-                // The rotation of the client item after scaling.
+                // 缩放后客户端物品的旋转。
                 new Quaternionf(new AxisAngle4f(0f, 0f, 0f, 0f))
             )),
             Collections.emptyList()
@@ -220,26 +220,26 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:model",
-        // Points to 'assets/examplemod/models/item/example_item.json'
+        // 指向 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item",
-        // A list of tints to apply
+        // 要应用的色调列表
         "tints": [
             {
-                // For when tintindex: 0
+                // 当着色索引为 0 时
                 "type": "minecraft:constant",
-                // 0x00FF00 (or pure green)
+                // 0x00FF00（或纯绿色）
                 "value": 65280
             },
             {
-                // For when tintindex: 1
+                // 当着色索引为 1 时
                 "type": "minecraft:dye",
-                // 0x0000FF (or pure blue)
-                // Only is called if `DataComponents#DYED_COLOR` is not set
+                // 0x0000FF（或纯蓝色）
+                // 仅在未设置 `DataComponents#DYED_COLOR` 时调用
                 "default": 255
             }
         ]
@@ -252,27 +252,27 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new CuboidItemModelWrapper.Unbaked(
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
             Optional.empty(),
-            // A list of tints to apply
+            // 要应用的色调列表
             List.of(
-                // For when tintindex: 0
+                // 当着色索引为 0 时
                 new Constant(
-                    // Pure green
+                    // 纯绿色
                     0x00FF00
                 ),
-                // For when tintindex: 1
+                // 当着色索引为 1 时
                 new Dye(
-                    // Pure blue
-                    // Only is called if `DataComponents#DYED_COLOR` is not set
+                    // 纯蓝色
+                    // 仅在未设置 `DataComponents#DYED_COLOR` 时调用
                     0x0000FF
                 )
             )
@@ -289,12 +289,12 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 ```java
 public record DamageBar(int defaultColor) implements ItemTintSource {
 
-    // The map codec to register
+    // 要注册的映射编解码器
     public static final MapCodec<DamageBar> MAP_CODEC = ExtraCodecs.RGB_COLOR_CODEC.fieldOf("default")
         .xmap(DamageBar::new, DamageBar::defaultColor);
 
     public DamageBar(int defaultColor) {
-        // Make sure the passed in color is opaque
+        // 确保传入的颜色是不透明的
         this.defaultColor = ARGB.opaque(defaultColor);
     }
 
@@ -309,13 +309,13 @@ public record DamageBar(int defaultColor) implements ItemTintSource {
     }
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSources event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "damage_bar"),
-        // The map codec
+        // 映射编解码器
         DamageBar.MAP_CODEC
     )
 }
@@ -325,19 +325,19 @@ public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSo
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:model",
-        // Points to 'assets/examplemod/models/item/example_item.json'
+        // 指向 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item",
-        // A list of tints to apply
+        // 要应用的色调列表
         "tints": [
             {
-                // For when tintindex: 0
+                // 当着色索引为 0 时
                 "type": "examplemod:damage_bar",
-                // 0x00FF00 (or pure green)
+                // 0x00FF00（或纯绿色）
                 "default": 65280
             }
         ]
@@ -350,21 +350,21 @@ public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSo
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new CuboidItemModelWrapper.Unbaked(
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
             Optional.empty(),
-            // A list of tints to apply
+            // 要应用的色调列表
             List.of(
-                // For when tintindex: 0
+                // 当着色索引为 0 时
                 new DamageBar(
-                    // Pure green
+                    // 纯绿色
                     0x00FF00
                 )
             )
@@ -384,23 +384,23 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:composite",
 
-        // The models to submit for rendering
-        // Will be drawn in the order they appear in the list
+        // 提交渲染的模型
+        // 将按照它们在列表中出现的顺序进行绘制
         "models": [
             {
                 "type": "minecraft:model",
-                // Points to 'assets/examplemod/models/item/example_item_1.json'
+                // 指向 'assets/examplemod/models/item/example_item_1.json'
                 "model": "examplemod:item/example_item_1"
             },
             {
                 "type": "minecraft:model",
-                // Points to 'assets/examplemod/models/item/example_item_2.json'
+                // 指向 'assets/examplemod/models/item/example_item_2.json'
                 "model": "examplemod:item/example_item_2"
             }
         ]
@@ -413,24 +413,24 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new CompositeModel.Unbaked(
-            // The models to submit for rendering
-            // Will be drawn in the order they appear in the list
+            // 提交渲染的模型
+            // 将按照它们在列表中出现的顺序进行绘制
             List.of(
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item_1.json'
+                    // 指向 'assets/examplemod/models/item/example_item_1.json'
                     Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                     Optional.empty(),
                     Collections.emptyList()
                 ),
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item_2.json'
+                    // 指向 'assets/examplemod/models/item/example_item_2.json'
                     Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                     Optional.empty(),
                     Collections.emptyList()
@@ -456,48 +456,48 @@ Range Dispatch Model 通过类型定义某个 `RangeSelectItemModelProperty`，�
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:range_dispatch",
 
-        // The `RangeSelectItemModelProperty` to use
+        // 使用的`RangeSelectItemModelProperty`
         "property": "minecraft:count",
-        // A scalar to multiply to the computed property value
-        // If count was 0.3 and scale was 0.2, then the threshold checked would be 0.3*0.2=0.06
+        // 与计算的 property 值相乘的标量
+        // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
         "scale": 1,
         "fallback": {
-            // The fallback model to use if no threshold matches
-            // Can be any unbaked model type
+            // 没有阈值匹配时使用的后备模型
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             "model": "examplemod:item/example_item"
         },
 
-        // Properties defined by `Count`
-        // When true, normalizes the count using its max stack size
+        // `Count` 定义的 property
+        // 当 true 时，使用其最大堆栈大小标准化计数
         "normalize": true,
 
-        // Entries with threshold information
+        // 具有阈值信息的条目
         "entries": [
             {
-                // When the count is a third of its current max stack size
+                // 当计数为其当前最大堆栈大小的三分之一时
                 "threshold": 0.33,
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_1.json'
+                    // 指向 'assets/examplemod/models/item/example_item_1.json'
                     "model": "examplemod:item/example_item_1"
                 }
             },
             {
-                // When the count is two thirds of its current max stack size
+                // 当计数为其当前最大堆栈大小的三分之二时
                 "threshold": 0.66,
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_2.json'
+                    // 指向 'assets/examplemod/models/item/example_item_2.json'
                     "model": "examplemod:item/example_item_2"
                 }
             }
@@ -511,49 +511,49 @@ Range Dispatch Model 通过类型定义某个 `RangeSelectItemModelProperty`，�
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new RangeSelectItemModel.Unbaked(
             new Count(
-                // When true, normalizes the count using its max stack size
+                // 当 true 时，使用其最大堆栈大小标准化计数
                 true
             ),
-            // A scalar to multiply to the computed property value
-            // If count was 0.3 and scale was 0.2, then the threshold checked would be 0.3*0.2=0.06
+            // 与计算的 property 值相乘的标量
+            // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
             1,
-            // Entries with threshold information
+            // 具有阈值信息的条目
             List.of(
                 new RangeSelectItemModel.Entry(
-                    // When the count is a third of its current max stack size
+                    // 当计数为其当前最大堆栈大小的三分之一时
                     0.33,
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     new CuboidItemModelWrapper.Unbaked(
-                        // Points to 'assets/examplemod/models/item/example_item_1.json'
+                        // 指向 'assets/examplemod/models/item/example_item_1.json'
                         Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                         Optional.empty(),
                         Collections.emptyList()
                     )
                 ),
                 new RangeSelectItemModel.Entry(
-                    // When the count is two thirds of its current max stack size
+                    // 当计数为其当前最大堆栈大小的三分之二时
                     0.66,
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     new CuboidItemModelWrapper.Unbaked(
-                        // Points to 'assets/examplemod/models/item/example_item_2.json'
+                        // 指向 'assets/examplemod/models/item/example_item_2.json'
                         Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                         Optional.empty(),
                         Collections.emptyList()
                     )
                 )
             ),
-            // The fallback model to use if no threshold matches
+            // 没有阈值匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item.json'
+                    // 指向 'assets/examplemod/models/item/example_item.json'
                     ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
                     Optional.empty(),
                     Collections.emptyList()
@@ -585,13 +585,13 @@ public record AppliedEnchantments() implements RangeSelectItemModelProperty {
     }
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerRangeProperties(RegisterRangeSelectItemModelPropertyEvent event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "applied_enchantments"),
-        // The map codec
+        // 映射编解码器
         AppliedEnchantments.MAP_CODEC
     )
 }
@@ -601,46 +601,46 @@ public static void registerRangeProperties(RegisterRangeSelectItemModelPropertyE
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:range_dispatch",
 
-        // The `RangeSelectItemModelProperty` to use
+        // 使用的`RangeSelectItemModelProperty`
         "property": "examplemod:applied_enchantments",
-        // A scalar to multiply to the computed property value
-        // If count was 0.3 and scale was 0.2, then the threshold checked would be 0.3*0.2=0.06
+        // 与计算的 property 值相乘的标量
+        // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
         "scale": 0.5,
         "fallback": {
-            // The fallback model to use if no threshold matches
-            // Can be any unbaked model type
+            // 没有阈值匹配时使用的后备模型
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             "model": "examplemod:item/example_item"
         },
 
-        // Entries with threshold information
+        // 具有阈值信息的条目
         "entries": [
             {
-                // When there is at least one enchantment present
-                // Since 1 * the scale 0.5 = 0.5
+                // 当至少存在一个附魔时
+                // 由于 1 * 比例 0.5 = 0.5
                 "threshold": 0.5,
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_1.json'
+                    // 指向 'assets/examplemod/models/item/example_item_1.json'
                     "model": "examplemod:item/example_item_1"
                 }
             },
             {
-                // When there are at least two enchantments present
-                // Since 2 * the scale 0.5 = 1
+                // 当至少存在两个附魔时
+                // 由于 2 * 比例 0.5 = 1
                 "threshold": 1,
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_2.json'
+                    // 指向 'assets/examplemod/models/item/example_item_2.json'
                     "model": "examplemod:item/example_item_2"
                 }
             }
@@ -654,46 +654,46 @@ public static void registerRangeProperties(RegisterRangeSelectItemModelPropertyE
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new RangeSelectItemModel.Unbaked(
             new AppliedEnchantments(),
-            // A scalar to multiply to the computed property value
-            // If count was 0.3 and scale was 0.2, then the threshold checked would be 0.3*0.2=0.06
+            // 与计算的 property 值相乘的标量
+            // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
             0.5,
-            // Entries with threshold information
+            // 具有阈值信息的条目
             List.of(
                 new RangeSelectItemModel.Entry(
-                    // When there is at least one enchantment present
+                    // 当至少存在一个附魔时
                     0.5,
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     new CuboidItemModelWrapper.Unbaked(
-                        // Points to 'assets/examplemod/models/item/example_item_1.json'
+                        // 指向 'assets/examplemod/models/item/example_item_1.json'
                         Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                         Optional.empty(),
                         Collections.emptyList()
                     )
                 ),
                 new RangeSelectItemModel.Entry(
-                    // When there are at least two enchantments present
+                    // 当至少存在两个附魔时
                     1,
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     new CuboidItemModelWrapper.Unbaked(
-                        // Points to 'assets/examplemod/models/item/example_item_2.json'
+                        // 指向 'assets/examplemod/models/item/example_item_2.json'
                         Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                         Optional.empty(),
                         Collections.emptyList()
                     )
                 )
             ),
-            // The fallback model to use if no threshold matches
+            // 没有阈值匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item.json'
+                    // 指向 'assets/examplemod/models/item/example_item.json'
                     ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
                     Optional.empty(),
                     Collections.emptyList()
@@ -718,40 +718,40 @@ Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProp
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:select",
 
-        // The `SelectItemModelProperty` to use
+        // 使用的`SelectItemModelProperty`
         "property": "minecraft:display_context",
         "fallback": {
-            // The fallback model to use if no case matches
-            // Can be any unbaked model type
+            // 没有大小写匹配时使用的后备模型
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
             "model": "examplemod:item/example_item"
         },
 
-        // Switch cases based on Selectable Property
+        // 基于可选 property 的开关案例
         "cases": [
             {
-                // When the display context is `ItemDisplayContext#GUI`
+                // 当显示上下文为 `ItemDisplayContext#GUI` 时
                 "when": "gui",
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_1.json'
+                    // 指向 'assets/examplemod/models/item/example_item_1.json'
                     "model": "examplemod:item/example_item_1"
                 }
             },
             {
-                // When the display context is `ItemDisplayContext#FIRST_PERSON_RIGHT_HAND`
+                // 当显示上下文为 `ItemDisplayContext#FIRST_PERSON_RIGHT_HAND` 时
                 "when": "firstperson_righthand",
                 "model": {
-                     // Can be any unbaked model type
+                     // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_2.json'
+                    // 指向 'assets/examplemod/models/item/example_item_2.json'
                     "model": "examplemod:item/example_item_2"
                 }
             }
@@ -765,35 +765,35 @@ Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProp
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new SelectItemModel.Unbaked(
             new SelectItemModel.UnbakedSwitch(
-                // The `SelectItemModelProperty` to use
+                // 使用的`SelectItemModelProperty`
                 new DisplayContext(),
-                // Switch cases based on selectable property
+                // 基于可选 property 切换案例
                 List.of(
                     new SelectItemModel.SwitchCase(
-                        // The list of cases to match for this model
+                        // 此模型要匹配的分支列表
                         List.of(ItemDisplayContext.GUI),
-                        // Can be any unbaked model type
+                        // 可以是任何未烘焙的模型类型
                         new CuboidItemModelWrapper.Unbaked(
-                            // Points to 'assets/examplemod/models/item/example_item_1.json'
+                            // 指向 'assets/examplemod/models/item/example_item_1.json'
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                             Optional.empty(),
                             Collections.emptyList()
                         )
                     ),
                     new SelectItemModel.SwitchCase(
-                        // The list of cases to match for this model
+                        // 此模型要匹配的分支列表
                         List.of(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND),
-                        // Can be any unbaked model type
+                        // 可以是任何未烘焙的模型类型
                         new CuboidItemModelWrapper.Unbaked(
-                            // Points to 'assets/examplemod/models/item/example_item_2.json'
+                            // 指向 'assets/examplemod/models/item/example_item_2.json'
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                             Optional.empty(),
                             Collections.emptyList()
@@ -801,10 +801,10 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                     )
                 )
             ),
-            // The fallback model to use if no case matches
+            // 没有大小写匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item.json'
+                    // 指向 'assets/examplemod/models/item/example_item.json'
                     ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
                     Optional.empty(),
                     Collections.emptyList()
@@ -821,22 +821,22 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 创建自己的 `SelectItemModelProperty` 与基于 Codec 的 Registry Object 类似。创建实现 `SelectItemModelProperty<T>` 的类、用于序列化和反序列化 Property 值的 `Codec`、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`SelectItemModelProperty` 的泛型 `T` 表示进行切换的值。它只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Select Model 解释的任意 `T`。
 
 ```java
-// The select property class
+// 选择 property 类
 public record StackRarity() implements SelectItemModelProperty<Rarity> {
 
-    // The object to register that contains the relevant codecs
+    // 包含相关编解码器的要注册的对象
     public static final SelectItemModelProperty.Type<StackRarity, Rarity> TYPE = SelectItemModelProperty.Type.create(
-        // The map codec for this property
+        // 此 property 的映射编解码器
         MapCodec.unit(new StackRarity()),
-        // The codec for the object being selected
-        // Used to serialize the case entries ("when": <property value>)
+        // 正在选择的对象的编解码器
+        // 用于序列化案例 entries（"when"：<property 值>）
         Rarity.CODEC
     );
 
     @Nullable
     @Override
     public Rarity get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
-        // When null, uses the fallback model
+        // 当null时，使用后备模型
         return stack.get(DataComponents.RARITY);
     }
 
@@ -846,13 +846,13 @@ public record StackRarity() implements SelectItemModelProperty<Rarity> {
     }
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "rarity"),
-        // The property type
+        // property 类型
         StackRarity.TYPE
     )
 }
@@ -862,40 +862,40 @@ public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:select",
 
-        // The `SelectItemModelProperty` to use
+        // 使用的`SelectItemModelProperty`
         "property": "examplemod:rarity",
         "fallback": {
-            // The fallback model to use if no case matches
-            // Can be any unbaked model type
+            // 没有大小写匹配时使用的后备模型
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
             "model": "examplemod:item/example_item"
         },
 
-        // Switch cases based on Selectable Property
+        // 基于可选 property 的开关案例
         "cases": [
             {
-                // When the rarity is `Rarity#UNCOMMON`
+                // 当稀有度为 `Rarity#UNCOMMON` 时
                 "when": "uncommon",
                 "model": {
-                    // Can be any unbaked model type
+                    // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_1.json'
+                    // 指向 'assets/examplemod/models/item/example_item_1.json'
                     "model": "examplemod:item/example_item_1"
                 }
             },
             {
-                // When the rarity is `Rarity#RARE`
+                // 当稀有度为 `Rarity#RARE` 时
                 "when": "rare",
                 "model": {
-                     // Can be any unbaked model type
+                     // 可以是任何未烘焙的模型类型
                     "type": "minecraft:model",
-                    // Points to 'assets/examplemod/models/item/example_item_2.json'
+                    // 指向 'assets/examplemod/models/item/example_item_2.json'
                     "model": "examplemod:item/example_item_2"
                 }
             }
@@ -909,35 +909,35 @@ public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new SelectItemModel.Unbaked(
             new SelectItemModel.UnbakedSwitch(
-                // The `SelectItemModelProperty` to use
+                // 使用的`SelectItemModelProperty`
                 new StackRarity(),
-                // Switch cases based on selectable property
+                // 基于可选 property 切换案例
                 List.of(
                     new SelectItemModel.SwitchCase(
-                        // The list of cases to match for this model
+                        // 此模型要匹配的分支列表
                         List.of(Rarity.UNCOMMON),
-                        // Can be any unbaked model type
+                        // 可以是任何未烘焙的模型类型
                         new CuboidItemModelWrapper.Unbaked(
-                            // Points to 'assets/examplemod/models/item/example_item_1.json'
+                            // 指向 'assets/examplemod/models/item/example_item_1.json'
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                             Optional.empty(),
                             Collections.emptyList()
                         )
                     ),
                     new SelectItemModel.SwitchCase(
-                        // The list of cases to match for this model
+                        // 此模型要匹配的分支列表
                         List.of(Rarity.RARE),
-                        // Can be any unbaked model type
+                        // 可以是任何未烘焙的模型类型
                         new CuboidItemModelWrapper.Unbaked(
-                            // Points to 'assets/examplemod/models/item/example_item_2.json'
+                            // 指向 'assets/examplemod/models/item/example_item_2.json'
                             Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                             Optional.empty(),
                             Collections.emptyList()
@@ -945,10 +945,10 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                     )
                 )
             ),
-            // The fallback model to use if no case matches
+            // 没有大小写匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
-                    // Points to 'assets/examplemod/models/item/example_item.json'
+                    // 指向 'assets/examplemod/models/item/example_item.json'
                     ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
                     Optional.empty(),
                     Collections.emptyList()
@@ -970,27 +970,27 @@ Conditional Model 是三者中最简单的一种。类型定义某个 `Condition
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:condition",
 
-        // The `ConditionalItemModelProperty` to use
+        // 使用的`ConditionalItemModelProperty`
         "property": "minecraft:damaged",
 
-        // What the boolean outcome is
+        // boolean 结果是什么
         "on_true": {
-            // Can be any unbaked model type
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item_1.json'
+            // 指向 'assets/examplemod/models/item/example_item_1.json'
             "model": "examplemod:item/example_item_1"
             
         },
         "on_false": {
-            // Can be any unbaked model type
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item_2.json'
+            // 指向 'assets/examplemod/models/item/example_item_2.json'
             "model": "examplemod:item/example_item_2"
         }
     }
@@ -1002,25 +1002,25 @@ Conditional Model 是三者中最简单的一种。类型定义某个 `Condition
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new ConditionalItemModel.Unbaked(
-            // The property to check
+            // 要检查的 property
             new Damaged(),
-            // When the boolean is true
+            // 当 boolean 为 true 时
             new CuboidItemModelWrapper.Unbaked(
-                // Points to 'assets/examplemod/models/item/example_item_1.json'
+                // 指向 'assets/examplemod/models/item/example_item_1.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                 Optional.empty(),
                 Collections.emptyList()
             ),
-            // When the boolean is false
+            // 当 boolean 为 false 时
             new CuboidItemModelWrapper.Unbaked(
-                // Points to 'assets/examplemod/models/item/example_item_2.json'
+                // 指向 'assets/examplemod/models/item/example_item_2.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                 Optional.empty(),
                 Collections.emptyList()
@@ -1051,13 +1051,13 @@ public record BarVisible() implements ConditionalItemModelProperty {
     }
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerConditionalProperties(RegisterConditionalItemModelPropertyEvent event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "bar_visible"),
-        // The map codec
+        // 映射编解码器
         BarVisible.MAP_CODEC
     )
 }
@@ -1067,27 +1067,27 @@ public static void registerConditionalProperties(RegisterConditionalItemModelPro
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:condition",
 
-        // The `ConditionalItemModelProperty` to use
+        // 使用的`ConditionalItemModelProperty`
         "property": "examplemod:bar_visible",
 
-        // What the boolean outcome is
+        // boolean 结果是什么
         "on_true": {
-            // Can be any unbaked model type
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item_1.json'
+            // 指向 'assets/examplemod/models/item/example_item_1.json'
             "model": "examplemod:item/example_item_1"
             
         },
         "on_false": {
-            // Can be any unbaked model type
+            // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
-            // Points to 'assets/examplemod/models/item/example_item_2.json'
+            // 指向 'assets/examplemod/models/item/example_item_2.json'
             "model": "examplemod:item/example_item_2"
         }
     }
@@ -1099,25 +1099,25 @@ public static void registerConditionalProperties(RegisterConditionalItemModelPro
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new ConditionalItemModel.Unbaked(
-            // The property to check
+            // 要检查的 property
             new BarVisible(),
-            // When the boolean is true
+            // 当 boolean 为 true 时
             new CuboidItemModelWrapper.Unbaked(
-                // Points to 'assets/examplemod/models/item/example_item_1.json'
+                // 指向 'assets/examplemod/models/item/example_item_1.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                 Optional.empty(),
                 Collections.emptyList()
             ),
-            // When the boolean is false
+            // 当 boolean 为 false 时
             new CuboidItemModelWrapper.Unbaked(
-                // Points to 'assets/examplemod/models/item/example_item_2.json'
+                // 指向 'assets/examplemod/models/item/example_item_2.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
                 Optional.empty(),
                 Collections.emptyList()
@@ -1137,26 +1137,26 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:special",
 
-        // The parent model to read the particle texture and display transformation from
-        // Points to 'assets/minecraft/models/item/template_skull.json'
+        // 读取粒子纹理并显示变换的父模型
+        // 指向 'assets/minecraft/models/item/template_skull.json'
         "base": "minecraft:item/template_skull",
         "model": {
-            // The special model renderer to use
+            // 使用的特殊模型渲染器
             "type": "minecraft:head",
 
-            // Properties defined by `SkullSpecialRenderer.Unbaked`
-            // The type of the skull block
+            // `SkullSpecialRenderer.Unbaked` 定义的 property
+            // 头骨方块的类型
             "kind": "wither_skeleton",
-            // The texture to use when rendering the head
-            // Points to 'assets/examplemod/textures/entity/heads/skeleton_override.png'
+            // 渲染头部时使用的纹理
+            // 指向 'assets/examplemod/textures/entity/heads/skeleton_override.png'
             "texture": "examplemod:heads/skeleton_override",
-            // The animation float used to animate the head model
+            // 用于为头部模型制作动画的动画 float
             "animation": 0.5
         }
     }
@@ -1168,26 +1168,26 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new SpecialModelWrapper.Unbaked(
-            // The parent model to read the particle texture and display transformation from
-            // Points to 'assets/minecraft/models/item/template_skull.json'
+            // 读取粒子纹理并显示变换的父模型
+            // 指向 'assets/minecraft/models/item/template_skull.json'
             Identifier.fromNamespaceAndPath("minecraft", "item/template_skull"),
-            // The special model renderer to use
+            // 使用的特殊模型渲染器
             new SkullSpecialRenderer.Unbaked(
-                // The type of the skull block
+                // 头骨方块的类型
                 SkullBlock.Types.WITHER_SKELETON,
-                // The texture to use when rendering the head
-                // Points to 'assets/examplemod/textures/entity/heads/skeleton_override.png'
+                // 渲染头部时使用的纹理
+                // 指向 'assets/examplemod/textures/entity/heads/skeleton_override.png'
                 Optional.of(
                     Identifier.fromNamespaceAndPath("examplemod", "heads/skeleton_override")
                 ),
-                // The animation float used to animate the head model
+                // 用于为头部模型制作动画的动画 float
                 0.5f
             )
         )
@@ -1213,11 +1213,11 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
 
     @Nullable
     public Boolean extractArgument(ItemStack stack) {
-        // Extract the data to be used
+        // 提取要使用的数据
         return stack.isBarVisible();
     }
 
-    // Submit the features of the model
+    // 提交模型的特征
     @Override
     public void submit(Boolean argument, PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
         collector.submitModel(
@@ -1248,10 +1248,10 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
 
         @Override
         public SpecialModelRenderer<?> bake(SpecialModelRenderer.BakingContext ctx) {
-            // Resolve resource location to absolute path
+            // 将资源位置解析为绝对路径
             Identifier textureLoc = this.texture.withPath(path -> "textures/entity/" + path + ".png");
 
-            // Get the model and the sprites to render
+            // 获取要渲染的模型和sprite
             return new ExampleSpecialRenderer(ctx.sprites(), ...);
         }
     }
@@ -1261,28 +1261,28 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
 最后，把对象注册到所需位置。对于客户端 Item，通过[模组事件总线][modbus] 上的 `RegisterSpecialModelRendererEvent` 完成。如果 Special Renderer 还应作为 `BlockEntityRenderer` 的一部分使用，例如在类似 Item 的上下文中渲染（如 Enderman 手持 Block），则应通过[模组事件总线][modbus] 上的 `RegisterBlockModelsEvent` 注册 Block 的 `Unbaked` 版本。
 
 ```java
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "example_special"),
-        // The map codec
+        // 映射编解码器
         ExampleSpecialRenderer.Unbaked.MAP_CODEC
     );
 }
 
-// For rendering a block in an item-like context
-// Assume some DeferredBlock<ExampleBlock> EXAMPLE_BLOCK
-@SubscribeEvent // on the mod event bus only on the physical client
+// 用于在类似物品的上下文中渲染方块
+// 假设存在 DeferredBlock<ExampleBlock> EXAMPLE_BLOCK
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerSpecialBlockRenderers(RegisterBlockModelsEvent event) {
     event.register(
-        // The unbaked instance to use
+        // 要使用的未烘焙实例
         new SpecialBlockModelWrapper.Unbaked(
             new ExampleSpecialRenderer.Unbaked(Identifier.fromNamespaceAndPath("examplemod", "entity/example_special")),
             Optional.empty()
         ),
-        // The block to render for
+        // 要渲染的方块
         EXAMPLE_BLOCK.get()
     );
 }
@@ -1292,22 +1292,22 @@ public static void registerSpecialBlockRenderers(RegisterBlockModelsEvent event)
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "minecraft:special",
 
-        // The parent model to read the particle texture and display transformation from
-        // Points to 'assets/minecraft/models/item/template_skull.json'
+        // 读取粒子纹理并显示变换的父模型
+        // 指向 'assets/minecraft/models/item/template_skull.json'
         "base": "minecraft:item/template_skull",
         "model": {
-            // The special model renderer to use
+            // 使用的特殊模型渲染器
             "type": "examplemod:example_special",
 
-            // Properties defined by `ExampleSpecialRenderer.Unbaked`
-            // The texture to use
-            // Points to 'assets/examplemod/textures/entity/example/example_texture.png'
+            // `ExampleSpecialRenderer.Unbaked` 定义的 property
+            // 使用的纹理
+            // 指向 'assets/examplemod/textures/entity/example/example_texture.png'
             "texture": "examplemod:example/example_texture"
         }
     }
@@ -1319,20 +1319,20 @@ public static void registerSpecialBlockRenderers(RegisterBlockModelsEvent event)
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new SpecialModelWrapper.Unbaked(
-            // The parent model to read the particle texture and display transformation from
-            // Points to 'assets/minecraft/models/item/template_skull.json'
+            // 读取粒子纹理并显示变换的父模型
+            // 指向 'assets/minecraft/models/item/template_skull.json'
             Identifier.fromNamespaceAndPath("minecraft", "item/template_skull"),
-            // The special model renderer to use
+            // 使用的特殊模型渲染器
             new ExampleSpecialRenderer.Unbaked(
-                // The texture to use
-                // Points to 'assets/examplemod/textures/entity/example/example_texture.png'
+                // 使用的纹理
+                // 指向 'assets/examplemod/textures/entity/example/example_texture.png'
                 Identifier.fromNamespaceAndPath("examplemod", "example/example_texture")
             )
         )
@@ -1355,48 +1355,48 @@ NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "neoforge:fluid_container",
 
-        // The textures used to construct the container
-        // These are in reference to the block atlas, so they are relative to the `textures` directory
+        // 用于构造容器的纹理
+        // 这些是参考方块图集的，因此它们是相对于 `textures` 目录的
         "textures": {
-            // Sets the model particle sprite
-            // If not set, uses the first texture that is not null:
-            // - Fluid still texture
-            // - Container base texture
-            // - Container cover texture, if not used as a mask
-            // Points to 'assets/minecraft/textures/item/bucket.png'
+            // 设置模型粒子sprite
+            // 如果未设置，则使用不是 null 的第一个纹理：
+            // - 流体静止纹理
+            // - 容器基础纹理
+            // - 容器盖纹理，如果不用作遮罩
+            // 指向 'assets/minecraft/textures/item/bucket.png'
             "particle": "minecraft:item/bucket",
-            // Sets the texture to use on the first layer, generally the container of the fluid
-            // If not set, the layer will not be added
-            // Points to 'assets/minecraft/textures/item/bucket.png'
+            // 设置第一层使用的纹理，通常是流体的容器
+            // 如果不设置，则不会添加图层
+            // 指向 'assets/minecraft/textures/item/bucket.png'
             "base": "minecraft:item/bucket",
-            // Sets the texture to use as the mask for the still fluid texture
-            // Areas where the fluid is seen should be pure white
-            // If not set or the fluid is empty, then the layer is not drawn
-            // Points to 'assets/neoforge/textures/item/mask/bucket_fluid.png'
+            // 设置用作静止流体纹理蒙版的纹理
+            // 看到液体的区域应为纯白色
+            // 如果不设置或者流体为空，则不绘制图层
+            // 指向 'assets/neoforge/textures/item/mask/bucket_fluid.png'
             "fluid": "neoforge:item/mask/bucket_fluid",
-            // Sets the texture to use as either
-            // - The overlay texture when 'cover_is_mask' is false
-            // - The mask to apply to the base texture (should be pure white to see) when 'cover_is_mask' is true
-            // If not set or no base texture is set when 'cover_is_mask' is true, then the layer is not drawn
-            // Points to 'assets/neoforge/textures/item/mask/bucket_fluid_cover.png'
+            // 设置纹理以用作
+            // - 'cover_is_mask' 为 false 时的叠加纹理
+            // - 当 'cover_is_mask' 为 true 时，应用于底座纹理的遮罩（应该是纯白色才能看到）
+            // 如果'cover_is_mask'为true 时未设置或未设置基础纹理，则不绘制该图层
+            // 指向 'assets/neoforge/textures/item/mask/bucket_fluid_cover.png'
             "cover": "neoforge:item/mask/bucket_fluid_cover",
         },
 
-        // When true, rotates the model 180 degrees for fluids whose density is negative or zero
-        // Defaults to false
+        // 当 true 时，对于密度为负或零的流体，将模型旋转 180 度
+        // 默认为 false
         "flip_gas": true,
-        // When true, uses the cover texture as a mask for the base texture
-        // Defaults to true
+        // 当 true 时，使用覆盖纹理作为基础纹理的遮罩
+        // 默认为 true
         "cover_is_mask": true,
-        // When true, sets the lightmap of the fluid texture layer to its max value
-        // for fluids whose light level is greater than zero
-        // Defaults to true
+        // 为 true 时，将流体纹理层的光照贴图设置为最大值
+        // 适用于光级大于零的流体
+        // 默认为 true
         "apply_fluid_luminosity": false
     }
 }
@@ -1407,47 +1407,47 @@ NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<ExampleFluidContainerItem> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<ExampleFluidContainerItem> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new DynamicFluidContainerModel.Unbaked(
-            // The textures used to construct the container
-            // These are in reference to the block atlas, so they are relative to the `textures` directory
+            // 用于构造容器的纹理
+            // 这些是参考方块图集的，因此它们是相对于 `textures` 目录的
             new DynamicFluidContainerModel.Textures(
-                // Sets the model particle sprite
-                // If not set, uses the first texture that is not null:
-                // - Fluid still texture
-                // - Container base texture
-                // - Container cover texture, if not used as a mask
-                // Points to 'assets/minecraft/textures/item/bucket.png'
+                // 设置模型粒子sprite
+                // 如果未设置，则使用不是 null 的第一个纹理：
+                // - 流体静止纹理
+                // - 容器基础纹理
+                // - 容器盖纹理，如果不用作遮罩
+                // 指向 'assets/minecraft/textures/item/bucket.png'
                 Optional.of(Identifier.withDefaultNamespace("item/bucket")),
-                // Sets the texture to use on the first layer, generally the container of the fluid
-                // If not set, the layer will not be added
-                // Points to 'assets/minecraft/textures/item/bucket.png'
+                // 设置第一层使用的纹理，通常是流体的容器
+                // 如果不设置，则不会添加图层
+                // 指向 'assets/minecraft/textures/item/bucket.png'
                 Optional.of(Identifier.withDefaultNamespace("item/bucket")),
-                // Sets the texture to use as the mask for the still fluid texture
-                // Areas where the fluid is seen should be pure white
-                // If not set or the fluid is empty, then the layer is not rendered
-                // Points to 'assets/neoforge/textures/item/mask/bucket_fluid.png'
+                // 设置用作静止流体纹理蒙版的纹理
+                // 看到液体的区域应为纯白色
+                // 如果未设置或流体为空，则不渲染该图层
+                // 指向 'assets/neoforge/textures/item/mask/bucket_fluid.png'
                 Optional.of(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid")),
-                // Sets the texture to use as either
-                // - The overlay texture when 'cover_is_mask' is false
-                // - The mask to apply to the base texture (should be pure white to see) when 'cover_is_mask' is true
-                // If not set or no base texture is set when 'cover_is_mask' is true, then the layer is not rendered
-                // Points to 'assets/neoforge/textures/item/mask/bucket_fluid_cover.png'
+                // 设置纹理以用作
+                // - 'cover_is_mask' 为 false 时的叠加纹理
+                // - 当 'cover_is_mask' 为 true 时，应用于底座纹理的遮罩（应该是纯白色才能看到）
+                // 如果未设置或当 'cover_is_mask' 为 true 时未设置基础纹理，则不渲染该图层
+                // 指向 'assets/neoforge/textures/item/mask/bucket_fluid_cover.png'
                 Optional.of(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_cover"))
             ),
-            // When true, rotates the model 180 degrees
-            // Defaults to false
+            // 为 true 时，将模型旋转 180 度
+            // 默认为 false
             true,
-            // When true, uses the cover texture as a mask for the base texture
-            // Defaults to true
+            // 当 true 时，使用覆盖纹理作为基础纹理的遮罩
+            // 默认为 true
             true,
-            // When true, sets the lightmap of the fluid texture layer to its max value
-            // Defaults to true
+            // 为 true 时，将流体纹理层的光照贴图设置为最大值
+            // 默认为 true
             false
         )
     );
@@ -1482,23 +1482,23 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 ```java
 public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tints, ModelRenderProperties properties, Matrix4fc transformation) implements ItemModel {
 
-    // Update the render state
+    // 更新渲染状态
     @Override
     public void update(ItemStackRenderState state, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed) {
-        // Set the identity used by the model
+        // 设置模型使用的标识
         state.appendModelIdentityElement(this);
 
-        // Create a new layer
+        // 创建新图层
         ItemStackRenderState.LayerRenderState layerState = state.newLayer();
 
-        // Sets the foil to use
+        // 设置要使用的箔片
         if (stack.hasFoil()) {
             layerState.setFoilType(ItemStackRenderState.FoilType.STANDARD);
             state.appendModelIdentityElement(ItemStackRenderState.FoilType.STANDARD);
         }
 
 
-        // Apply the tint sources
+        // 应用色调源
         int tintSize = this.tints.size();
         int[] tintLayers = layerState.prepareTintLayers(tintSize);
 
@@ -1508,20 +1508,20 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
             state.appendModelIdentityElement(tintColor);
         }
 
-        // Computes the bounds of the model
-        // Used for GUI render bounds (when oversized) and item entity bobbing
+        // 计算模型的边界
+        // 用于 GUI 渲染 bounds（超大时）和物品实体摆动
         layerState.setExtents(CuboidItemModelWrapper.computeExtents(this.quads.getAll()));
 
-        // Set the local transforms to apply for the client item
+        // 设置本地转换申请客户项
         layerState.setLocalTransform(this.transformation);
 
-        // Set other common model properties
+        // 设置其他常见模型 property
         this.properties.applyToLayer(layerState, displayContext);
 
-        // Adds the quads to submit
+        // 添加要提交的四边形
         layerState.prepareQuadList().addAll(this.quads.getAll());
 
-        // Set animated if it has the associated material flag
+        // 设置如果具有关联的材质标志，则进行动画处理
         if (this.quads.hasMaterialFlag(BakedQuad.FLAG_ANIMATED)) {
             layerState.setAnimated();
         }
@@ -1537,7 +1537,7 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
     // ...
 
      public record Unbaked(Identifier model, List<ItemTintSource> tints, Optional<Transformation> transformation) implements ItemModel.Unbaked {
-        // The map codec to register
+        // 要注册的映射编解码器
         public static final MapCodec<ExampleModelWrapper.Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                 Identifier.CODEC.fieldOf("model").forGetter(ExampleModelWrapper.Unbaked::model),
@@ -1549,13 +1549,13 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
 
         @Override
         public void resolveDependencies(ResolvableModel.Resolver resolver) {
-            // Mark all dependencies for this item model
+            // 标记此物品模型的所有依赖项
             resolver.markDependency(this.model);
         }
 
         @Override
         public ItemModel bake(ItemModel.BakingContext context, Matrix4fc parentTransform) {
-            // Get the baked quads and return
+            // 获取烘焙的四边形和返回
             ModelBaker baker = context.blockModelBaker();
             ResolvedModel resolvedModel = baker.getModel(this.model);
             TextureSlots slots = resolvedModel.getTopTextureSlots();
@@ -1579,13 +1579,13 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
 随后，通过[模组事件总线][modbus] 上的 `RegisterItemModelsEvent` 注册 Map Codec。
 
 ```java
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerItemModels(RegisterItemModelsEvent event) {
     event.register(
-        // The name to reference as the type
+        // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "render_type"),
-        // The map codec
+        // 映射编解码器
         ExampleModelWrapper.Unbaked.MAP_CODEC
     )
 }
@@ -1597,14 +1597,14 @@ public static void registerItemModels(RegisterItemModelsEvent event) {
 <TabItem value="json" label="JSON" default>
 
 ```json5
-// For some item 'examplemod:example_item'
-// JSON at 'assets/examplemod/items/example_item.json'
+// 对于某个物品 'examplemod:example_item'
+// JSON 位于 'assets/examplemod/items/example_item.json'
 {
     "model": {
         "type": "examplemod:render_type",
-        // Points to 'assets/examplemod/models/item/example_item.json'
+        // 指向 'assets/examplemod/models/item/example_item.json'
         "model": "examplemod:item/example_item",
-        // Any tints to apply to the model texture
+        // 应用于模型纹理的任何色调
         "tints": []
     }
 }
@@ -1615,18 +1615,18 @@ public static void registerItemModels(RegisterItemModelsEvent event) {
 <TabItem value="datagen" label="Datagen">
 
 ```java
-// Assume there is some DeferredItem<Item> EXAMPLE_ITEM
-// Within an extended ModelProvider
+// 假设存在 DeferredItem<Item> EXAMPLE_ITEM
+// 在扩展 ModelProvider 内
 @Override
 protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new ExampleModelWrapper.Unbaked(
-            // Points to 'assets/examplemod/models/item/example_item.json'
+            // 指向 'assets/examplemod/models/item/example_item.json'
             ModelLocationUtils.getModelLocation(EXAMPLE_ITEM.get()),
-            // Any tints to apply to the model texture
+            // 应用于模型纹理的任何色调
             List.of(),
-            // The transformations to apply after the model JSON transforms
+            // 模型 JSON 变换后要应用的变换
             Optional.empty()
         )
     );

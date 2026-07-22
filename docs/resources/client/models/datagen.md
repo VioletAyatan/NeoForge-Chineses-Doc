@@ -9,20 +9,20 @@
 可以使用 `ModelTemplates` 中的某个方法或调用构造器创建 `ModelTemplate`。构造器接收相对于 `models` 目录的可选 Parent Model `Identifier`、要附加到文件路径末尾的可选 String（例如按下状态的 Button 使用 `_pressed` 后缀），以及必须定义、否则 Datagen 会崩溃的 `TextureSlot` varargs。`TextureSlot` 只是定义 `textures` Map 中纹理“键”的 String。每个键还可拥有一个 Parent `TextureSlot`，当具体 Slot 未指定纹理时会解析到 Parent。例如，`TextureSlot#PARTICLE` 会先查找已定义的 `particle` 纹理，然后检查已定义的 `texture` 值，最后检查 `all`。如果 Slot 及其 Parent 均未定义，数据生成期间会崩溃。
 
 ```java
-// Assumes there is a texture referenced as '#base'
-// Can be resolved by either specifying 'base' or 'all'
+// 假设有一个引用为 '#base' 的纹理
+// 可以通过指定 'base' 或 'all' 来解析
 public static final TextureSlot BASE = TextureSlot.create("base", TextureSlot.ALL);
 
-// Assume there exists some model 'examplemod:block/example_template'
+// 假设存在某个模型 'examplemod:block/example_template'
 public static final ModelTemplate EXAMPLE_TEMPLATE = new ModelTemplate(
-    // The parent model location
+    // 父模型位置
     Optional.of(
         ModelLocationUtils.decorateBlockModelLocation("examplemod:example_template")
     ),
-    // The suffix to apply to the end of any model that uses this template
+    // 适用于任何使用此模板的模型末尾的后缀
     Optional.of("_example"),
-    // All texture slots that must be defined
-    // Should be as specific as possible based on what's undefined in the parent model
+    // 必须定义的所有纹理槽
+    // 应根据父模型中未定义的内容尽可能具体
     TextureSlot.PARTICLE,
     BASE
 );
@@ -55,18 +55,18 @@ NeoForge 添加的 `ExtendedModelTemplate` 可以通过 `ExtendedModelTemplateBu
 :::
 
 ```java
-// Given some BiConsumer<Identifier, ModelInstance> modelOutput
-// Assume there is a DeferredBlock<Block> EXAMPLE_BLOCK
+// 给定 BiConsumer<Identifier, ModelInstance> modelOutput
+// 假设存在 DeferredBlock<Block> EXAMPLE_BLOCK
 EXAMPLE_TEMPLATE.create(
-    // Creates the model at 'assets/minecraft/models/block/example_block_example.json'
+    // 在 'assets/minecraft/models/block/example_block_example.json' 创建模型
     EXAMPLE_BLOCK.get(),
-    // Define textures in slots
+    // 在槽中定义纹理
     new TextureMapping()
         // "particle": "examplemod:item/example_block"
         .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(EXAMPLE_BLOCK.get()))
         // "base": "examplemod:item/example_block_base"
         .put(TextureSlot.BASE, TextureMapping.getBlockTexture(EXAMPLE_BLOCK.get(), "_base")),
-    // The consumer of the generated model json
+    // 生成模型json的消费者
     modelOutput
 );
 ```
@@ -75,20 +75,20 @@ EXAMPLE_TEMPLATE.create(
 
 ```java
 public static final TexturedModel.Provider EXAMPLE_TEMPLATE_PROVIDER = TexturedModel.createDefault(
-    // Block to texture mapping
+    // 方块到纹理的映射
     block -> new TextureMapping()
         .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(block))
         .put(TextureSlot.BASE, TextureMapping.getBlockTexture(block, "_base")),
-    // The template to generate from
+    // 生成的模板
     EXAMPLE_TEMPLATE
 );
 
-// Given some BiConsumer<Identifier, ModelInstance> modelOutput
-// Assume there is a DeferredBlock<Block> EXAMPLE_BLOCK
+// 给定 BiConsumer<Identifier, ModelInstance> modelOutput
+// 假设存在 DeferredBlock<Block> EXAMPLE_BLOCK
 EXAMPLE_TEMPLATE_PROVIDER.create(
-    // Creates the model at 'assets/minecraft/models/block/example_block_example.json'
+    // 在 'assets/minecraft/models/block/example_block_example.json' 创建模型
     EXAMPLE_BLOCK.get(),
-    // The consumer of the generated model json
+    // 生成模型json的消费者
     modelOutput
 );
 ```
@@ -101,13 +101,13 @@ Block 和 Item Model Datagen 分别使用 `registerModels` 提供的 Generator�
 public class ExampleModelProvider extends ModelProvider {
 
     public ExampleModelProvider(PackOutput output) {
-        // Replace "examplemod" with your own mod id.
+        // 将 "examplemod" 替换为你自己的模组 ID。
         super(output, "examplemod");
     }
 
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        // Generate models and associated files here
+        // 在此生成模型和关联文件
     }
 }
 ```
@@ -115,7 +115,7 @@ public class ExampleModelProvider extends ModelProvider {
 与所有 Data Provider 一样，不要忘记把 Provider 注册到事件：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(ExampleModelProvider::new);
 }
@@ -133,38 +133,38 @@ public static void gatherData(GatherDataEvent.Client event) {
 public class ExampleModelProvider extends ModelProvider {
 
     public ExampleModelProvider(PackOutput output) {
-        // Replace "examplemod" with your own mod id.
+        // 将 "examplemod" 替换为你自己的模组 ID。
         super(output, "examplemod");
     }
 
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        // Placeholders, their usages should be replaced with real values. See above for how to use the model builder,
-        // and below for the helpers the model builder offers.
+        // 占位符，其用法应替换为实际值。请参阅上文了解如何使用模型 builder，
+        // 及以下模型 builder 提供的帮助程序。
         Block block = MyBlocksClass.EXAMPLE_BLOCK.get();
 
-        // Create a simple block model with the same texture on each side.
-        // The texture must be located at assets/<namespace>/textures/block/<path>.png, where
-        // <namespace> and <path> are the block's registry name's namespace and path, respectively.
-        // Used by the majority of (full) blocks, such as planks, cobblestone or bricks.
+        // 创建一个简单的方块模型，每侧具有相同的纹理。
+        // 纹理必须位于 assets/<namespace>/textures/block/<path>.png，其中
+        // <namespace> 和 <path> 分别是方块注册名的命名空间与路径。
+        // 用于大多数完整方块，例如木板、圆石或砖块。
         blockModels.createTrivialCube(block);
 
-        // Overload that accepts a `TexturedModel.Provider` to use.
+        // 接受使用 `TexturedModel.Provider` 的重载。
         blockModels.createTrivialBlock(block, EXAMPLE_TEMPLATE_PROVIDER);
 
-        // Block items have a model generated automatically
-        // But let's assume you want to generate a different item, such as a flat item
+        // 方块物品的模型会自动生成
+        // 但是我们假设你想要生成不同的物品，例如扁平物品
         blockModels.registerSimpleFlatItemModel(block);
 
-        // Adds a log block model. Requires two textures at assets/<namespace>/textures/block/<path>.png and
+        // 添加原木方块模型。需要位于 assets/<namespace>/textures/block/<path>.png 和
         // assets/<namespace>/textures/block/<path>_top.png, referencing the side and top texture, respectively.
-        // Note that the block input here is limited to RotatedPillarBlock, which is the class vanilla logs use.
+        // 请注意，此处的方块输入仅限于 RotatedPillarBlock，这是普通日志使用的类。
         blockModels.woodProvider(block).log(block);
         
-        // Like WoodProvider#logWithHorizontal. Used by quartz pillars and similar blocks.
+        // 与 WoodProvider#logWithHorizontal 类似。用于石英柱和类似方块。
         blockModels.createRotatedPillarWithHorizontalVariant(block, TexturedModel.COLUMN_ALT, TexturedModel.COLUMN_HORIZONTAL_ALT);
 
-        // Using the `ExtendedModelTemplate` to specify the render type to use.
+        // 使用 `ExtendedModelTemplate` 指定要使用的渲染类型。
         blockModels.createRotatedPillarWithHorizontalVariant(block,
             TexturedModel.COLUMN_ALT.updateTemplate(template ->
                 template.extend().renderType("minecraft:cutout").build()
@@ -174,9 +174,9 @@ public class ExampleModelProvider extends ModelProvider {
             )
         );
 
-        // Specifies a horizontally-rotatable block model with a side texture, a front texture, and a top texture.
-        // The bottom will use the side texture as well. If you don't need the front or top texture,
-        // just pass in the side texture twice. Used by e.g. furnaces and similar blocks.
+        // 指定具有侧面纹理、正面纹理和顶部纹理的水平旋转方块模型。
+        // 底部也将使用侧面纹理。如果不需要正面或顶部纹理，
+        // 只需传入侧面纹理两次。由例如使用。熔炉和类似的方块。
         blockModels.createHorizontallyRotatedBlock(
             block,
             TexturedModel.Provider.ORIENTABLE_ONLY_TOP.updateTexture(mapping ->
@@ -186,31 +186,31 @@ public class ExampleModelProvider extends ModelProvider {
             )
         );
 
-        // Specifies a horizontally-rotatable block model that is attached to a face, e.g. for buttons.
-        // Accounts for placing the block on the ground and on the ceiling, and rotates them accordingly.
+        // 指定附加到面例如的水平旋转方块模型。对于按钮。
+        // 考虑将方块放置在地面和天花板上，并相应地旋转它们。
         blockModels.familyWithExistingFullBlock(block).button(block);
 
-        // Create a model to use for blockstatefiles
+        // 创建用于块状态文件的模型
         Identifier modelLoc = TexturedModel.CUBE.create(block, blockModels.modelOutput);
 
-        // Create a common variant to transform
+        // 创建通用变体进行变换
         Variant variant = new Variant(modelLoc);
 
-        // Basic single variant model
+        // 基本单一变体模型
         blockModels.blockStateOutput.accept(
             MultiVariantGenerator.dispatch(
                 block,
                 new MultiVariant(
                     WeightedList.of(
                         new Weighted<>(
-                            // Set model
+                            // 设置模型
                             variant
-                                // Set rotations around the x and y axes
+                                // 设置绕 x 轴和 y 轴旋转
                                 .with(VariantMutator.X_ROT.withValue(Quadrant.R90))
                                 .with(VariantMutator.Y_ROT.withValue(Quadrant.R180))
-                                // Set a uvlock
+                                // 设置 uvlock
                                 .with(VariantMutator.UV_LOCK.withValue(true)),
-                            // Set a weight
+                            // 设置重量
                             5
                         )
                     )
@@ -218,15 +218,15 @@ public class ExampleModelProvider extends ModelProvider {
             )
         );
 
-        // Add one or multiple models based on the block state properties
+        // 根据方块状态 property 添加一个或多个模型
         blockModels.blockStateOutput.accept(
             MultiVariantGenerator.dispatch(
                 block,
-                // Create the basic multi-variant
+                // 创建基本多变体
                 BlockModelGenerators.variant(variant)
             ).with(
-                // Apply a property dispatch
-                // Will mutate the variant based on the provided mutators
+                // 申请物业调度
+                // 将根据提供的变异器对变体进行变异
                 PropertyDispatch.modify(BlockStateProperties.AXIS)
                     .select(Direction.Axis.Y, BlockModelGenerators.NOP)
                     .select(Direction.Axis.Z, BlockModelGenerators.X_ROT_90)
@@ -234,20 +234,20 @@ public class ExampleModelProvider extends ModelProvider {
             )
         );
 
-        // Generate a multipart
+        // 生成多部分
         blockModels.blockStateOutput.accept(
             MultiPartGenerator.multiPart(block)
-                // Provide the base model
+                // 提供基础模型
                 .with(BlockModelGenerators.variant(variant))
-                // Add conditions for variant to appear
+                // 添加变体出现的条件
                 .with(
-                    // Add conditions to apply
+                    // 添加申请条件
                     new CombinedCondition(
                         CombinedCondition.Operation.OR,
                         List.of(
-                            // Where at least one of the conditions are true
+                            // 其中至少一个条件为 true
                             BlockModelGenerators.condition().term(BlockStateProperties.FACING, Direction.NORTH, Direction.SOUTH)
-                            // Can nest as many conditions or groups as necessary
+                            // 可以根据需要嵌套任意多个条件或组
                             new CombinedCondition(
                                 CombinedCondition.Operation.AND,
                                 List.of(
@@ -256,7 +256,7 @@ public class ExampleModelProvider extends ModelProvider {
                             )
                         )
                     ),
-                    // Supply variant to mutate
+                    // 提供变异变体
                     BlockModelGenerators.variant(variant)
                 )
         );
@@ -272,51 +272,51 @@ public class ExampleModelProvider extends ModelProvider {
 public class ExampleModelProvider extends ModelProvider {
 
     public ExampleModelProvider(PackOutput output) {
-        // Replace "examplemod" with your own mod id.
+        // 将 "examplemod" 替换为你自己的模组 ID。
         super(output, "examplemod");
     }
 
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        // The most common item
+        // 最常见的物品
         // item/generated with the layer0 texture as the item name
         itemModels.generateFlatItem(MyItemsClass.EXAMPLE_ITEM.get(), ModelTemplates.FLAT_ITEM);
 
-        // A bow-like item
+        // 弓状物品
         ItemModel.Unbaked bow = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(MyItemsClass.EXAMPLE_ITEM.get()));
         ItemModel.Unbaked pullingBow0 = ItemModelUtils.plainModel(this.createFlatItemModel(MyItemsClass.EXAMPLE_ITEM.get(), "_pulling_0", ModelTemplates.BOW));
         ItemModel.Unbaked pullingBow1 = ItemModelUtils.plainModel(this.createFlatItemModel(MyItemsClass.EXAMPLE_ITEM.get(), "_pulling_1", ModelTemplates.BOW));
         ItemModel.Unbaked pullingBow2 = ItemModelUtils.plainModel(this.createFlatItemModel(MyItemsClass.EXAMPLE_ITEM.get(), "_pulling_2", ModelTemplates.BOW));
         this.itemModelOutput.accept(
             MyItemsClass.EXAMPLE_ITEM.get(),
-            // Conditional model for item
+            // 物品的条件模型
             ItemModelUtils.conditional(
-                // Checks if item is being used
+                // 检查物品是否正在使用
                 ItemModelUtils.isUsingItem(),
-                // When true, select model based on use duration
+                // 为 true 时，根据使用时长选择模型
                 ItemModelUtils.rangeSelect(
                     new UseDuration(false),
-                    // Scalar to apply to the thresholds
+                    // 应用于阈值的标量
                     0.05F,
                     pullingBow0,
-                    // Threshold when 0.65
+                    // 0.65时的阈值
                     ItemModelUtils.override(pullingBow1, 0.65F),
-                    // Threshold when 0.9
+                    // 0.9时的阈值
                     ItemModelUtils.override(pullingBow2, 0.9F)
                 ),
-                // When false, use the base bow model
+                // 当false 时，使用基础弓模型
                 bow
             ),
-            // Some settings to use during the rendering process
+            // 渲染过程中使用的一些设置
             new ClientItem.Properties(
-                // When false, disables the animation where the item is raised
-                // up towards its normal position on item swap
+                // 当 false 时，禁用物品抬起的动画
+                // 上升到物品交换的正常位置
                 false,
-                // When true, allows the model to render outside its defined
-                // slot bounds (defined in GuiItemRenderState#bounds) in a GUI
-                // instead of being scissored
+                // 当 true 时，允许模型在其定义之外渲染
+                // 槽位 bounds（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
+                // 而不是被剪
                 false,
-                // Applies the scalar to the height of the hand when swapping
+                // 交换时将标量应用于手的高度
                 1.0F
             )
         );

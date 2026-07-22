@@ -36,26 +36,26 @@ mod 开发者可以通过 `ICustomIngredient` 系统添加自定义 Ingredient �
 public class MinEnchantedIngredient implements ICustomIngredient {
     private final TagKey<Item> tag;
     private final Map<Holder<Enchantment>, Integer> enchantments;
-    // The codec for serializing the ingredient.
+    // 用于序列化成分的编解码器。
     public static final MapCodec<MinEnchantedIngredient> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(e -> e.tag),
             Codec.unboundedMap(Enchantment.CODEC, Codec.INT)
                     .optionalFieldOf("enchantments", Map.of())
                     .forGetter(e -> e.enchantments)
     ).apply(inst, MinEnchantedIngredient::new));
-    // Create a stream codec from the regular codec. In some cases, it might make sense to define
-    // a new stream codec from scratch.
+    // 从常规编解码器创建流编解码器。在某些情况下，定义
+    // 从头开始的新流编解码器。
     public static final StreamCodec<RegistryFriendlyByteBuf, MinEnchantedIngredient> STREAM_CODEC =
             ByteBufCodecs.fromCodecWithRegistries(CODEC.codec());
 
-    // Allow passing in a pre-existing map of enchantments to levels.
+    // 允许将预先存在的附魔映射传递到关卡。
     public MinEnchantedIngredient(TagKey<Item> tag, Map<Holder<Enchantment>, Integer> enchantments) {
         this.tag = tag;
         this.enchantments = enchantments;
     }
 
-    // Check if the passed ItemStack matches our ingredient by verifying the item is in the tag
-    // and by testing for presence of all required enchantments with at least the required level.
+    // 通过验证该物品是否在标签中来检查传递的 ItemStack 是否与我们的成分匹配
+    // 并通过测试是否存在至少达到所需级别的所有必需附魔。
     @Override
     public boolean test(ItemStack stack) {
         return stack.is(tag) && enchantments.keySet()
@@ -63,21 +63,21 @@ public class MinEnchantedIngredient implements ICustomIngredient {
                 .allMatch(ench -> EnchantmentHelper.getEnchantmentsForCrafting(stack).getLevel(ench) >= enchantments.get(ench));
     }
 
-    // Determines whether this ingredient performs NBT or data component matching (false) or not (true).
-    // Also determines whether a stream codec is used for syncing, more on this later.
-    // We query enchantments on the stack, therefore our ingredient is not simple.
+    // 确定此成分是否执行 NBT 或数据组件 matching (false) 或 not (true)。
+    // 还确定是否使用流编解码器进行同步，稍后将详细介绍此。
+    // 我们需要查询 ItemStack 上的附魔，因此该配方原料不是 simple ingredient。
     @Override
     public boolean isSimple() {
         return false;
     }
 
-    // Returns a stream of items that match this ingredient. Mostly for display purposes.
-    // There's a few good practices to follow here:
-    // - Always include at least one item, to prevent accidental recognition as empty.
-    // - Include each accepted Item at least once.
-    // - If #isSimple is true, this should be exact and contain every item that matches.
-    //   If not, this should be as exact as possible, but doesn't need to be super accurate.
-    // In our case, we use all items in the tag.
+    // 返回与此成分匹配的物品流。主要用于展示目的。
+    // 这里有一些值得遵循的良好实践：
+    // - 始终包含至少一项，以防止意外识别为空。
+    // - 每个接受的物品至少包含一次。
+    // - 如果 #isSimple 是 true，则此应该准确并包含每个匹配的物品。
+    //   如果不是，此应尽可能准确，但不需要 super 准确。
+    // 在我们的例子中，我们使用标签中的所有物品。
     @Override
     public Stream<Holder<Item>> items() {
         return BuiltInRegistries.ITEM.getOrThrow(tag).stream();
@@ -93,8 +93,8 @@ public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES =
 
 public static final Supplier<IngredientType<MinEnchantedIngredient>> MIN_ENCHANTED =
         INGREDIENT_TYPES.register("min_enchanted",
-                // The stream codec parameter is optional, a stream codec will be created from the codec
-                // using ByteBufCodecs#fromCodec or #fromCodecWithRegistries if the stream codec isn't specified.
+                // 流编解码器参数是可选的，将从编解码器创建流编解码器如果未指定流编解码器，则使用
+                // 如果未指定流编解码器，则使用 ByteBufCodecs#fromCodec 或 #fromCodecWithRegistries。
                 () -> new IngredientType<>(MinEnchantedIngredient.CODEC, MinEnchantedIngredient.STREAM_CODEC));
 ```
 
@@ -102,7 +102,7 @@ public static final Supplier<IngredientType<MinEnchantedIngredient>> MIN_ENCHANT
 
 ```java
 public class MinEnchantedIngredient implements ICustomIngredient {
-    // other stuff here
+    // 在此处理其他内容
 
     @Override    
     public IngredientType<?> getType() {

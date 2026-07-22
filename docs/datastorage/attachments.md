@@ -25,23 +25,23 @@ _若要存储额外的 Level 数据，也可以使用[数据存档][saveddata]�
 无论使用哪种方式，附件都**必须注册**到 `NeoForgeRegistries.ATTACHMENT_TYPES` 注册表。示例如下：
 
 ```java
-// Create the DeferredRegister for attachment types
+// 为附件类型创建 DeferredRegister
 private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
 
-// Serialization via ValueIOSerializable
+// 通过 ValueIOSerializable 进行序列化
 private static final Supplier<AttachmentType<ItemStacksResourceHandler>> HANDLER = ATTACHMENT_TYPES.register(
     "handler", () -> AttachmentType.serializable(() -> new ItemStacksResourceHandler(1)).build()
 );
-// Serialization via map codec
+// 通过映射编解码器序列化
 private static final Supplier<AttachmentType<Integer>> MANA = ATTACHMENT_TYPES.register(
     "mana", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("mana")).build()
 );
-// No serialization
+// 无序列化
 private static final Supplier<AttachmentType<SomeCache>> SOME_CACHE = ATTACHMENT_TYPES.register(
     "some_cache", () -> AttachmentType.builder(() -> new SomeCache()).build()
 );
 
-// In your mod constructor, don't forget to register the DeferredRegister to your mod bus:
+// 在你的模组构造器中，不要忘记将 DeferredRegister 注册到你的模组总线：
 ATTACHMENT_TYPES.register(modBus);
 ```
 
@@ -50,27 +50,27 @@ ATTACHMENT_TYPES.register(modBus);
 附件类型注册后，可以用于任何 holder 对象。如果当前没有数据，调用 `getData` 会附加一个新的默认实例。
 
 ```java
-// Get the ItemStacksResourceHandler if it already exists, else attach a new one:
+// 获取 ItemStacksResourceHandler（如果已存在），否则附加一个新：
 ItemStacksResourceHandler handler = chunk.getData(HANDLER);
-// Get the current player mana if it is available, else attach 0:
+// 获取当前玩家的法力值（如果可用），否则附加 0：
 int playerMana = player.getData(MANA);
-// And so on...
+// 等等...
 ```
 
 如果不希望自动附加默认实例，可以先用 `hasData` 检查：
 
 ```java
-// Check if the chunk has the HANDLER attachment before doing anything.
+// 执行任何操作前，检查该区块是否具有 HANDLER 附件。
 if (chunk.hasData(HANDLER)) {
     ItemStacksResourceHandler handler = chunk.getData(HANDLER);
-    // Do something with chunk.getData(HANDLER).
+    // 用 chunk.getData(HANDLER) 做一些事情。
 }
 ```
 
 也可以使用 `setData` 更新数据：
 
 ```java
-// Increment mana by 10.
+// 法力增加 10。
 player.setData(MANA, player.getData(MANA) + 10);
 ```
 
@@ -78,7 +78,7 @@ player.setData(MANA, player.getData(MANA) + 10);
 通常，修改 BlockEntity 和区块后，需要通过 `setChanged` 和 `setUnsaved(true)` 将其标记为 dirty。调用 `setData` 时会自动完成这一步：
 
 ```java
-chunk.setData(MANA, chunk.getData(MANA) + 10); // will call setUnsaved automatically
+chunk.setData(MANA, chunk.getData(MANA) + 10); // 会自动调用setUnsaved
 ```
 
 但是，如果修改的是通过 `getData` 取得的数据（包括新创建的默认实例），则必须显式把 BlockEntity 和区块标记为 dirty：
@@ -86,7 +86,7 @@ chunk.setData(MANA, chunk.getData(MANA) + 10); // will call setUnsaved automatic
 ```java
 var mana = chunk.getData(MUTABLE_MANA);
 mana.set(10);
-chunk.setUnsaved(true); // must be done manually because we did not use setData
+chunk.setUnsaved(true); // 必须手动完成，因为我们没有使用setData
 ```
 :::
 
@@ -101,47 +101,47 @@ public class ExampleSyncHandler implements AttachmentSyncHandler<ExampleData> {
 
     @Override
     public void write(RegistryFriendlyByteBuf buf, ExampleData attachment, boolean initialSync) {
-        // Write the attachment data to the buffer
-        // If `initialSync` is true, you should write the entire attachment as the client does not have any prior data
-        // If `initialSync` is false, you can choose to only write the data you would like to update
+        // 将附件数据写入缓冲区
+        // 如果`initialSync`是true，你应该写完整的附件，因为客户没有任何先前的数据
+        // 如果`initialSync`是false，你可以选择只写入你想要更新的数据
         
-        // Example:
+        // 示例：
         if (initialSync) {
-            // Write entire attachment
+            // 写入整个附件
             ExampleData.STREAM_CODEC.encode(buf, attachment);
         } else {
-            // Write update data
+            // 写入更新数据
         }
     }
 
     @Override
     @Nullable
     public ExampleData read(IAttachmentHolder holder, RegistryFriendlyByteBuf buf, @Nullable ExampleData previousValue) {
-        // Read the data from the buffer and return the new data attachment
-        // `previousValue` is `null` if there was no prior data on the client
-        // The result should return `null` if the data attachment should be removed
+        // 从缓冲区读取数据和返回新数据附件如果客户端上没有先前数据，则
+        // `previousValue` 为 `null`
+        // 如果应删除数据附件，结果应为返回 `null`
 
-        // Example:
+        // 示例：
         if (previousValue == null) {
-            // Read entire attachment
+            // 阅读整个附件
             return ExampleData.STREAM_CODEC.decode(buf);
         } else {
-            // Read update data and merge to previous value
+            // 读取更新数据并合并到之前的值
             return previousValue;
         }
     }
 
     @Override
     public boolean sendToPlayer(IAttachmentHolder holder, ServerPlayer to) {
-        // Return whether the holder data is synced to the given player client
-        // The players checked are different depending on the attachment holder:
-        // - Block entities: All players tracking the chunk the block entity is within
-        // - Chunk: All players tracking the chunk
-        // - Entity: All players tracking the current entity, includes the current player if they are the attachment holder
-        // - Level: All players in the current dimension / level
+        // 返回持有者数据是否同步到给定的玩家客户端
+        // 根据附件 Holder 的不同，检查的玩家也不同：
+        // - 方块实体：所有正在追踪该方块实体所在区块的玩家
+        // - 区块：所有正在追踪该区块的玩家
+        // - 实体：所有正在追踪当前实体的玩家；如果当前玩家是附件持有者，也包括该玩家
+        // - 世界：当前维度／世界中的所有玩家
 
-        // Example:
-        // Only send the attachment if they are the attachment holder
+        // 示例：
+        // 仅当附件持有者时才发送附件
         return holder == to;
     }
 }
@@ -150,9 +150,9 @@ public class ExampleSyncHandler implements AttachmentSyncHandler<ExampleData> {
 另两个委托给 `AttachmentSyncHandler` 的重载，会接收用于 `read` 和 `write` 的 [`StreamCodec`][streamcodec]，以及用于 `sendToPlayer` 的可选 predicate。
 
 ```java
-// Assume ExampleData has some stream codec STREAM_CODEC
+// 假设 ExampleData 有一些流编解码器 STREAM_CODEC
 
-// Sync handler
+// 同步处理器
 public static final Supplier<AttachmentType<ExampleData>> WITH_SYNC_HANDLER = ATTACHMENT_TYPES.register(
     "with_sync_handler", () -> AttachmentType.builder(() -> new ExampleData())
         .sync(new ExampleSyncHandler())
@@ -160,14 +160,14 @@ public static final Supplier<AttachmentType<ExampleData>> WITH_SYNC_HANDLER = AT
 );
 
 
-// Stream codec
+// 流编解码器
 public static final Supplier<AttachmentType<ExampleData>> WITH_STREAM_CODEC = ATTACHMENT_TYPES.register(
     "with_stream_codec", () -> AttachmentType.builder(() -> new ExampleData())
         .sync(ExampleData.STREAM_CODEC)
         .build()
 );
 
-// Stream codec with predicate
+// 带谓词的流编解码器
 public static final Supplier<AttachmentType<ExampleData>> WITH_PREDICATE = ATTACHMENT_TYPES.register(
     "with_predicate", () -> AttachmentType.builder(() -> new ExampleData())
         .sync((holder, to) -> holder == to, ExampleData.STREAM_CODEC)
@@ -188,7 +188,7 @@ public static final Supplier<AttachmentType<ExampleData>> WITH_PREDICATE = ATTAC
 例如：
 
 ```java
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void onClone(PlayerEvent.Clone event) {
     if (event.isWasDeath() && event.getOriginal().hasData(MY_DATA)) {
         event.getEntity().getData(MY_DATA).fieldToCopy = event.getOriginal().getData(MY_DATA).fieldToCopy;

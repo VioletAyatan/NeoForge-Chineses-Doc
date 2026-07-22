@@ -68,8 +68,8 @@ public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(
 
 public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem(
     "example_item",
-    Item::new, // The factory that the properties will be passed into.
-    props -> props // A unary operator of the properties to use.
+    Item::new, // property 将传递到的工厂。
+    props -> props // 要使用的 property 的一元运算符。
 );
 ```
 
@@ -80,7 +80,7 @@ public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem(
 ```java
 public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem(
     "example_item",
-    props -> props // A unary operator of the properties to use.
+    props -> props // 要使用的 property 的一元运算符。
 );
 ```
 
@@ -91,7 +91,7 @@ public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem(
 ```java
 public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerItem("example_item", Item::new);
 
-// Variant that also omits the Item::new parameter
+// 同样省略 Item::new 参数的变体
 public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item");
 ```
 
@@ -104,24 +104,24 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
     props -> props
 );
 
-// Variant that omits the properties parameter:
+// 省略 property 参数的变体：
 public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
     "example_block",
     ExampleBlocksClass.EXAMPLE_BLOCK
 );
 
-// Variant that omits the name parameter, instead using the block's registry name:
+// 省略名称参数的变体，而是使用方块的注册表名称：
 public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
-    // Must be an instance of `Holder<Block>`
-    // DeferredBlock<T> also works
+    // 必须是 `Holder<Block>` 的实例
+    // DeferredBlock<T> 同样适用
     ExampleBlocksClass.EXAMPLE_BLOCK,
     props -> props
 );
 
-// Variant that omits both the name and the properties:
+// 省略名称和 property 的变体：
 public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
-    // Must be an instance of `Holder<Block>`
-    // DeferredBlock<T> also works
+    // 必须是 `Holder<Block>` 的实例
+    // DeferredBlock<T> 同样适用
     ExampleBlocksClass.EXAMPLE_BLOCK
 );
 ```
@@ -181,11 +181,11 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ```json5
 {
-    // The item ID. Required.
+    // 物品 ID。必填。
     "id": "minecraft:dirt",
-    // The item stack count [1, 99]. Optional, defaults to 1.
+    // ItemStack计数 [1, 99]。 可选，默认为1。
     "count": 4,
-    // A map of data components. Optional, defaults to an empty map.
+    // 数据组件的映射。 可选，默认为空映射。
     "components": {
         "minecraft:enchantment_glint_override": true
     }
@@ -213,13 +213,13 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 可以通过 `BuildCreativeModeTabContentsEvent` 将 Item 添加到现有 `CreativeModeTab`；该事件仅在[逻辑客户端][sides]上的 [模组事件总线][modbus] 触发。通过调用 `event#accept` 添加 Item。
 
 ```java
-//MyItemsClass.MY_ITEM is a Supplier<? extends Item>, MyBlocksClass.MY_BLOCK is a Supplier<? extends Block>
-@SubscribeEvent // on the mod event bus
+//MyItemsClass.MY_ITEM 是 Supplier<? extends Item>，MyBlocksClass.MY_BLOCK 是 Supplier<? extends Block>
+@SubscribeEvent // 位于模组事件总线上
 public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-    // Is this the tab we want to add to?
+    // 这是我们要添加到的选项卡吗？
     if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
         event.accept(MyItemsClass.MY_ITEM.get());
-        // Accepts an ItemLike. This assumes that MY_BLOCK has a corresponding item.
+        // 接受 ItemLike。这假设 MY_BLOCK 有相应的物品。
         event.accept(MyBlocksClass.MY_BLOCK.get());
     }
 }
@@ -232,16 +232,16 @@ public static void buildContents(BuildCreativeModeTabContentsEvent event) {
 `CreativeModeTab` 是注册表对象，因此自定义 `CreativeModeTab` 必须[注册][registering]。创建创造模式标签页使用 builder 系统，可通过 `CreativeModeTab#builder` 获取 builder。Builder 提供设置标题、图标、默认 Item 及其他多种 property 的选项。此外，NeoForge 还提供额外方法，用于自定义标签页的图像、标签文字与槽位颜色、标签页排序位置等。
 
 ```java
-//CREATIVE_MODE_TABS is a DeferredRegister<CreativeModeTab>
+//CREATIVE_MODE_TABS 是 DeferredRegister<CreativeModeTab>
 public static final Supplier<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example", () -> CreativeModeTab.builder()
-    //Set the title of the tab. Don't forget to add a translation!
+    //设置选项卡的标题。不要忘记添加翻译！
     .title(Component.translatable("itemGroup." + MOD_ID + ".example"))
-    //Set the icon of the tab.
+    //设置选项卡的图标。
     .icon(() -> new ItemStack(MyItemsClass.EXAMPLE_ITEM.get()))
-    //Add your items to the tab.
+    //将你的物品添加到选项卡。
     .displayItems((params, output) -> {
         output.accept(MyItemsClass.MY_ITEM.get());
-        // Accepts an ItemLike. This assumes that MY_BLOCK has a corresponding item.
+        // 接受 ItemLike。这假设 MY_BLOCK 有相应的物品。
         output.accept(MyBlocksClass.MY_BLOCK.get());
     })
     .build()

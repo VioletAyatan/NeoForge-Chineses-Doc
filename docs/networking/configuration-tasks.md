@@ -9,7 +9,7 @@
 使用配置阶段的第一步，是注册一个配置任务。为此，可以在 `RegisterConfigurationTasksEvent` 事件中注册新的配置任务。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(final RegisterConfigurationTasksEvent event) {
     event.register(new MyConfigurationTask());
 }
@@ -69,7 +69,7 @@ public record MyConfigurationTask(ServerConfigurationPacketListener listener) im
 若要使用这样的配置任务，需要在 `RegisterConfigurationTasksEvent` 事件中捕获监听器。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(final RegisterConfigurationTasksEvent event) {
     event.register(new MyConfigurationTask(event.getListener()));
 }
@@ -85,7 +85,7 @@ public static void register(final RegisterConfigurationTasksEvent event) {
 public record AckPayload() implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<AckPayload> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("mymod", "ack"));
     
-    // Unit codec with no data to write
+    // 单元编解码器无数据可写入
     public static final StreamCodec<ByteBuf, AckPayload> STREAM_CODEC = StreamCodec.unit(new AckPayload());
 
     @Override
@@ -103,7 +103,7 @@ public void onMyData(MyData data, IPayloadContext context) {
         blah(data.name());
     })
     .exceptionally(e -> {
-        // Handle exception
+        // 处理异常
         context.disconnect(Component.translatable("my_mod.configuration.failed", e.getMessage()));
         return null;
     })

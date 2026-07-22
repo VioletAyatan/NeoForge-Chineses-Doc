@@ -68,11 +68,11 @@ double d = tag.getDoubleOr("IAmRunningOutOfIdeasForNamesHere", 1d);
 
 ```java
 ListTag newList = new ListTag();
-// Adds the tags to the list
+// 将标签添加到列表中
 newList.add(StringTag.valueOf("Value1"));
 newList.add(StringTag.valueOf("Value2"));
 
-// Getting the tag
+// 获取标签
 ListTag getList = tag.getListOrEmpty("SomeListHere");
 ```
 
@@ -81,7 +81,7 @@ ListTag getList = tag.getListOrEmpty("SomeListHere");
 ```java
 tag.put("Tag", new CompoundTag());
 
-// Can use regular `get` as well if you want to handle null case instead
+// 如果你想处理 null 情况，也可以使用常规 `get`
 tag.getCompoundOrEmpty("Tag");
 ```
 

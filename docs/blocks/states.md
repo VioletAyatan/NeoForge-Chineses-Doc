@@ -68,15 +68,15 @@ minecraft:end_portal_frame[facing=west,eye=true]
 
 ```java
 public class EndPortalFrameBlock extends Block {
-    // Note: It is possible to directly use the values in BlockStateProperties instead of referencing them here again.
-    // However, for the sake of simplicity and readability, it is recommended to add constants like this.
+    // 注意：可以直接使用 BlockStateProperties 中的值，而不用再次引用它们。
+    // 不过，为了简单和可读性，建议添加类似以下的常量。
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
     public static final BooleanProperty EYE = BlockStateProperties.EYE;
 
     public EndPortalFrameBlock(BlockBehaviour.Properties properties) {
         super(properties);
         // stateDefinition.any() returns a random BlockState from an internal set,
-        // we don't care because we're setting all values ourselves anyway
+        // 无需在意，因为无论如何我们都会自行设置所有值
         this.registerDefaultState(stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(EYE, false)
@@ -85,15 +85,15 @@ public class EndPortalFrameBlock extends Block {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        // this is where the properties are actually added to the state
+        // 这是 property 实际添加到状态的位置
         builder.add(FACING, EYE);
     }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        // code that determines which state will be used when
-        // placing down this block, depending on the BlockPlaceContext
+        // 代码，用于确定何时使用哪种状态
+        // 放置此方块，具体取决于 BlockPlaceContext
     }
 }
 ```
@@ -105,7 +105,7 @@ public class EndPortalFrameBlock extends Block {
 要获取属性值，请调用 `BlockState#getValue(Property<?>)`，并传入要读取的属性。继续使用末地传送门框架示例，代码大致如下：
 
 ```java
-// EndPortalFrameBlock.FACING is an EnumPropery<Direction> and thus can be used to obtain a Direction from the BlockState
+// EndPortalFrameBlock.FACING 是 EnumPropery<Direction>，因此可用于从 BlockState 获取 Direction
 Direction direction = endPortalFrameBlockState.getValue(EndPortalFrameBlock.FACING);
 ```
 

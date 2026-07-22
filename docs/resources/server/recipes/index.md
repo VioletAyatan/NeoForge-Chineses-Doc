@@ -28,9 +28,9 @@
 
 ```json5
 {
-    // The recipe type. This maps to an entry in the recipe serializer registry.
+    // 配方类型。这映射到配方序列化器注册表中的条目。
     "type": "minecraft:crafting_shaped",
-    // A list of data load conditions. Optional, NeoForge-added. See the article linked above for more information.
+    // 数据加载条件列表。添加了可选、NeoForge。请参阅上面链接的文章了解更多信息。
     "neoforge:conditions": [ /*...*/ ]
 }
 ```
@@ -45,12 +45,12 @@ Minecraft 提供的完整类型列表可在[内置配方类型][builtin]一文�
 
 ```java
 RecipeManager recipes = serverLevel.recipeAccess();
-// RecipeHolder<?> is a record of the resource key and the recipe itself.
+// RecipeHolder<?> 是资源键和配方本身的 record。
 Optional<RecipeHolder<?>> optional = recipes.byKey(
     ResourceKey.create(Registries.RECIPE, Identifier.withDefaultNamespace("diamond_block"))
 );
 optional.map(RecipeHolder::value).ifPresent(recipe -> {
-    // Do whatever you want to do with the recipe here. Be aware that the recipe may be of any type.
+    // 用这里的配方做任何你想做的事。请注意，配方可以是任何类型。
 });
 ```
 
@@ -58,22 +58,22 @@ optional.map(RecipeHolder::value).ifPresent(recipe -> {
 
 ```java
 RecipeManager recipes = serverLevel.recipeAccess();
-// Construct a RecipeInput, as required by the recipe. For example, construct a CraftingInput for a crafting recipe.
-// The parameters are width, height and items, respectively.
+// 根据配方的要求构造一个 RecipeInput。例如，为制作配方构建 CraftingInput。
+// 参数分别为宽度、高度和物品。
 CraftingInput input = CraftingInput.of(1, 1, List.of(new ItemStack(Items.DIAMOND_BLOCK)));
-// The generic wildcard on the recipe holder should then extend CraftingRecipe.
-// This allows for more type safety later on.
+// 配方持有者上的泛型通配符应扩展 CraftingRecipe。
+// 这允许稍后提供更多的类型安全性。
 Optional<RecipeHolder<? extends CraftingRecipe>> optional = recipes.getRecipeFor(
-        // The recipe type to get the recipe for. In our case, we use the crafting type.
+        // 要获取配方的配方类型。在我们的例子中，我们使用手工类型。
         RecipeType.CRAFTING,
-        // Our recipe input.
+        // 我们的配方输入。
         input,
-        // Our level context.
+        // 我们的关卡上下文。
         serverLevel
 );
 // This returns the diamond block -> 9 diamonds recipe (unless a datapack changes that recipe).
 optional.map(RecipeHolder::value).ifPresent(recipe -> {
-    // Do whatever you want here. Note that the recipe is now a CraftingRecipe instead of a Recipe<?>.
+    // 在此执行所需逻辑。请注意，配方现在是 CraftingRecipe，而不是 Recipe<?>。
 });
 ```
 
@@ -82,9 +82,9 @@ optional.map(RecipeHolder::value).ifPresent(recipe -> {
 ```java
 RecipeManager recipes = serverLevel.recipeAccess();
 CraftingInput input = CraftingInput.of(1, 1, List.of(new ItemStack(Items.DIAMOND_BLOCK)));
-// These are not Optionals, and can be used directly. However, the list may be empty, indicating no matching recipes.
+// 这些不是可选的，可以直接使用。但是，该列表可能为空，表示没有匹配的配方。
 Stream<RecipeHolder<? extends Recipe<CraftingInput>>> list = recipes.recipeMap().getRecipesFor(
-    // Same parameters as above.
+    // 参数同上。
     RecipeType.CRAFTING, input, serverLevel
 );
 ```
@@ -95,7 +95,7 @@ Stream<RecipeHolder<? extends Recipe<CraftingInput>>> list = recipes.recipeMap()
 RecipeManager recipes = serverLevel.recipeAccess();
 CraftingInput input = CraftingInput.of(...);
 Optional<RecipeHolder<? extends CraftingRecipe>> optional = recipes.getRecipeFor(...);
-// Use ItemStack.EMPTY as a fallback.
+// 使用 ItemStack.EMPTY 作为后备。
 ItemStack result = optional
         .map(RecipeHolder::value)
         .map(recipe -> recipe.assemble(input))
@@ -106,7 +106,7 @@ ItemStack result = optional
 
 ```java
 RecipeManager recipes = serverLevel.recipeAccess();
-// Like before, pass the desired recipe type.
+// 像以前一样，传递所需的配方类型。
 Collection<RecipeHolder<?>> list = recipes.recipeMap().byType(RecipeType.CRAFTING);
 ```
 
@@ -121,20 +121,20 @@ Collection<RecipeHolder<?>> list = recipes.recipeMap().byType(RecipeType.CRAFTIN
 
 ```json5
 {
-    // When true, clears out all previously loaded entries.
+    // 当 true 时，清除所有先前加载的条目。
     "replace": false,
-    // The map of recipe entries to their priority values.
-    // If a recipe does not have a priority, it defaults to 0.
+    // 配方条目与其优先级值的映射。
+    // 如果配方没有优先级，则默认为 0。
     "entries": {
-        // Points to 'data/examplemod/recipe/higher_priority.json'
-        // This recipe will be checked before any defaults.
+        // 指向 'data/examplemod/recipe/higher_priority.json'
+        // 在任何默认值之前都会检查此配方。
         "examplemod:higher_priority": 1,
-        // Points to 'data/examplemod/recipe/lower_priority.json'
-        // This recipe will be checked after any defaults.
+        // 指向 'data/examplemod/recipe/lower_priority.json'
+        // 此配方将在任何默认值后进行检查。
         "examplemod:lower_priority": -1,
-        // Points to 'data/examplemod/recipe/even_lower_priority.json'
-        // This recipe will be checked after any defaults and the
-        // 'lower_priority' recipe.
+        // 指向 'data/examplemod/recipe/even_lower_priority.json'
+        // 此配方将在任何默认值和
+        // 'lower_priority' 配方。
         "examplemod:even_lower_priority": -2
     }
 }
@@ -144,37 +144,37 @@ Collection<RecipeHolder<?>> list = recipes.recipeMap().byType(RecipeType.CRAFTIN
 <TabItem value="datagen" label="数据生成">
 
 ```java
-// Generates the recipe priorities
+// 生成配方优先级
 public class ExamplePrioritiesProvider extends RecipePrioritiesProvider {
 
     public ExamplePrioritiesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        // Replace 'examplemod' with your mod id.
+        // 将 'examplemod' 替换为你的模组 ID。
         super(output, registries, "examplemod");
     }
 
     @Override
     protected void start() {
-        // Registers a recipe entry to a priority value.
+        // 将配方条目注册到优先级值。
 
         this.add(
-            // Points to 'data/examplemod/recipe/higher_priority.json'
+            // 指向 'data/examplemod/recipe/higher_priority.json'
             ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath("examplemod", "higher_priority")),
-            // This recipe will be checked before any defaults.
+            // 在任何默认值之前都会检查此配方。
             1
         );
 
         this.add(
-            // Points to 'data/examplemod/recipe/lower_priority.json'
+            // 指向 'data/examplemod/recipe/lower_priority.json'
             Identifier.fromNamespaceAndPath("examplemod", "lower_priority"),
-            // This recipe will be checked after any defaults.
+            // 此配方将在任何默认值后进行检查。
             -1
         );
 
         this.add(
-            // Points to 'data/examplemod/recipe/even_lower_priority.json'
-            // The namespace is inferred from the mod id passed to the provider.
+            // 指向 'data/examplemod/recipe/even_lower_priority.json'
+            // 命名空间是从传递给提供器的模组 ID 推断出来的。
             "even_lower_priority",
-            // This recipe will be checked after any defaults and the 'lower_priority' recipe.
+            // 此配方将在任何默认值和 'lower_priority' 配方后进行检查。
             -2
         );
     }
@@ -197,8 +197,8 @@ public class ExamplePrioritiesProvider extends RecipePrioritiesProvider {
 铁砧有两个输入槽位与一个输出槽位。原版用例只有工具修复、合并和重命名；由于每种用例都需要特殊处理，因此未提供配方文件。不过，可以使用 `AnvilUpdateEvent` 扩展该系统。此[事件][event]允许获取输入（左侧输入槽位）和材料（右侧输入槽位），并可设置输出 ItemStack、经验花费及要消耗的材料数量。还可以通过[取消][cancel]事件完全阻止该过程。
 
 ```java
-// This example allows repairing a stone pickaxe with a full stack of dirt, consuming half the stack, for 3 levels.
-@SubscribeEvent // on the game event bus
+// 此示例允许用一整堆泥土修复石镐，消耗一半的泥土，持续 3 个级别。
+@SubscribeEvent // 位于游戏事件总线上
 public static void onAnvilUpdate(AnvilUpdateEvent event) {
     ItemStack left = event.getLeft();
     ItemStack right = event.getRight();
@@ -229,30 +229,30 @@ public static void onAnvilUpdate(AnvilUpdateEvent event) {
 必须在[游戏事件总线][events]上监听两个事件：`OnDatapackSyncEvent` 与 `RecipesReceivedEvent`。首先调用 `OnDatapackSyncEvent#sendRecipes`，指定要同步到客户端的 `RecipeType`。随后通过 `RecipesReceivedEvent#getRecipeMap`，从提供的 `RecipeMap` 访问配方。此外，玩家退出世界后，应通过 `ClientPlayerNetworkEvent.LoggingOut` 清除客户端存储的所有配方。
 
 ```java
-// Assume we have some custom RecipeType<ExampleRecipe> EXAMPLE_RECIPE_TYPE
+// 假设存在自定义 RecipeType<ExampleRecipe> EXAMPLE_RECIPE_TYPE
 
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void datapackSync(OnDatapackSyncEvent event) {
-    // Specify what recipe types to sync to the client
+    // 指定要同步到客户端的配方类型
     event.sendRecipes(EXAMPLE_RECIPE_TYPE);
 }
 
-// In some class only on the physical client
+// 在某些类中仅在物理客户端上
 
 private static final List<RecipeHolder<ExampleRecipe>> EXAMPLE_RECIPES = new ArrayList<>();
 
-@SubscribeEvent // on the game event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的游戏事件总线上
 public static void recipesReceived(RecipesReceivedEvent event) {
-    // First remove the previous recipes
+    // 首先去掉之前的菜谱
     EXAMPLE_RECIPES.clear();
 
-    // Then store the recipes you want
+    // 然后存储你想要的菜谱
     EXAMPLE_RECIPES.addAll(event.getRecipeMap().byType(EXAMPLE_RECIPE_TYPE));
 }
 
-@SubscribeEvent // on the game event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的游戏事件总线上
 public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
-    // Clear the stored recipes on world log out
+    // 退出世界时清除存储的配方
     EXAMPLE_RECIPES.clear();
 }
 ```
@@ -268,19 +268,19 @@ public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
 ```java
 public class MyRecipeProvider extends RecipeProvider {
 
-    // Construct the provider to run
+    // 构建provider运行
     protected MyRecipeProvider(HolderLookup.Provider provider, RecipeOutput output) {
         super(provider, output);
     }
  
     @Override
     protected void buildRecipes() {
-        // Add your recipes here.
+        // 在此添加你的配方。
     }
 
-    // The runner to add to the data generator
+    // 添加到数据生成器的运行程序
     public static class Runner extends RecipeProvider.Runner {
-        // Get the parameters from the `GatherDataEvent`s.
+        // 从`GatherDataEvent`中获取参数。
         public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
             super(output, lookupProvider);
         }
@@ -300,9 +300,9 @@ public class MyRecipeProvider extends RecipeProvider {
 与其他所有数据提供器一样，配方提供器必须注册到 `GatherDataEvent`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createProvider(MyRecipeProvider.Runner::new);
 }

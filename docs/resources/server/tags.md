@@ -20,27 +20,27 @@
 
 ```json5
 {
-    // The values of the tag.
+    // 标签的值。
     "values": [
-        // A value object. Must specify the id of the object to add, and whether it is required.
-        // If the entry is required, but the object is not present, the tag will not load. The "required" field
-        // is technically optional, but when removed, the entry is equivalent to the shorthand below.
+        // 值对象。必须指定要添加对象的 ID，以及该对象是否为必需项。
+        // 如果条目为必需项但对象不存在，该标签将无法加载。"required" 字段
+        // 实际上是可选的；省略时，该条目等同于下面的简写形式。
         {
             "id": "examplemod:example_ingot",
             "required": false
         }
-        // Shorthand for {"id": "minecraft:gold_ingot", "required": true}, i.e. a required entry.
+        // {"id": "minecraft:gold_ingot", "required": true} 的简写，即必需条目。
         "minecraft:gold_ingot",
-        // A tag object. Distinguished from regular entries by the leading #. In this case, all planks
-        // will be considered entries of the tag. Like normal entries, this can also have the "id"/"required" format.
-        // Warning: Circular tag dependencies will lead to a datapack not being loaded!
+        // 标签对象，以开头的 # 与普通条目区分。在此例中，所有木板
+        // 都会视为该标签的条目。与普通条目一样，也可以使用 "id"/"required" 格式。
+        // 警告：循环标签依赖关系将导致数据包无法加载！
         "#minecraft:planks"
     ],
-    // Whether to remove all pre-existing entries before adding your own (true) or just add your own (false).
-    // This should generally be false, the option to set this to true is primarily aimed at pack developers.
+    // 是先移除所有已有条目再添加自己的条目（true），还是仅追加自己的条目（false）。
+    // 通常应为 false；设为 true 的选项主要面向数据包开发者。
     "replace": false,
-    // A finer-grained way to remove entries from the tag again, if present. Optional, NeoForge-added.
-    // Entry syntax is the same as in the "values" array.
+    // （可选，NeoForge 新增）以更细粒度的方式从标签中移除已有条目。
+    // 条目语法与 "values" 数组相同。
     "remove": [
         "minecraft:iron_ingot"
     ]
@@ -72,9 +72,9 @@
 
 ```java
 public static final TagKey<Block> MY_TAG = TagKey.create(
-        // The registry key. The type of the registry must match the generic type of the tag.
+        // 注册表项。注册表的类型必须与标签的泛型类型相匹配。
         Registries.BLOCK,
-        // The location of the tag. This example will put our tag at data/examplemod/tags/blocks/example_tag.json.
+        // 标签的位置。此示例将把标签放在 data/examplemod/tags/blocks/example_tag.json。
         Identifier.fromNamespaceAndPath("examplemod", "example_tag")
 );
 ```
@@ -86,24 +86,24 @@ public static final TagKey<Block> MY_TAG = TagKey.create(
 随后可以使用标签执行各种操作。先从最直观的操作开始：检查对象是否位于标签中。以下示例使用 Block 标签，但除非另有说明，所有类型的标签都具有完全相同的功能：
 
 ```java
-// Check whether dirt is in our tag.
-// Assume access to Level level
+// 检查泥土是否位于我们的标签中。
+// 假设可访问 Level level
 boolean isInTag = level.registryAccess().lookupOrThrow(BuiltInRegistries.BLOCK).getOrThrow(MY_TAG).stream().anyMatch(holder -> holder.is(Items.DIRT));
 ```
 
 由于这一写法很冗长，尤其是在频繁使用时，因此标签系统最常见的两个使用者 `BlockState` 和 `ItemStack` 都定义了 `#is` 辅助方法，用法如下：
 
 ```java
-// Check whether the blockState's block is in our tag.
+// 检查 blockState 的方块是否在我们的标签中。
 boolean isInBlockTag = blockState.is(MY_TAG);
-// Check whether the itemStack's item is in our tag. Assumes the existence of MY_ITEM_TAG as a TagKey<Item>.
+// 检查 itemStack 的物品是否在标签中。这里假定 MY_ITEM_TAG 以 TagKey<Item> 形式存在。
 boolean isInItemTag = itemStack.is(MY_ITEM_TAG);
 ```
 
 如有需要，也可以获取一组标签条目并对其进行流式处理：
 
 ```java
-// Assume access to Level level
+// 假设可访问 Level level
 Stream<Holder<Block>> blocksInTag = level.registryAccess().lookupOrThrow(BuiltInRegistries.BLOCK).getOrThrow(MY_TAG).stream();
 ```
 
@@ -113,11 +113,11 @@ Stream<Holder<Block>> blocksInTag = level.registryAccess().lookupOrThrow(BuiltIn
 
 ```java
 Item.Properties props = new Item.Properties().delayedComponent(
-    // The component to initialize
+    // 要初始化的组件
     DataComponents.DAMAGE_RESISTANT,
-    // The initializer function, typically provides at least the registry lookup
+    // 初始化函数，通常至少提供注册表查找
     registries -> new DamageResistant(
-        // Get the HolderSet from the TagKey
+        // 从 TagKey 获取 HolderSet
         registries.getOrThrow(DamageTypeTags.IS_FIRE)
     )
 );
@@ -126,7 +126,7 @@ Item.Properties props = new Item.Properties().delayedComponent(
 在数据组件上下文之外，**仅对静态 Registry**，可以通过 `BuiltInRegistries#acquireBootstrapRegistrationLookup` 获取所需的 `HolderGetter`：
 
 ```java
-// Assume access to Level level
+// 假设可访问 Level level
 HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK).getOrThrow(MY_TAG);
 ```
 
@@ -166,39 +166,39 @@ HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup
 
 ```java
 public class MyBlockTagsProvider extends BlockTagsProvider {
-    // Get parameters from one of the `GatherDataEvent`s.
+    // 从 `GatherDataEvent` 之一获取参数。
     public MyBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider, ExampleMod.MOD_ID);
     }
 
-    // Add your tag entries here.
+    // 在此添加你的标签条目。
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
-        // Create a TagAppender of registry objects for our tag. This could also be e.g. a vanilla or NeoForge tag.
+        // 为我们的标签创建一个 TagAppender 注册表对象。这也可能是例如普通标签或 NeoForge 标签。
         this.tag(MY_TAG)
-            // Add entries. This is a vararg parameter.
-            // Key tag providers must provide ResourceKeys here instead of the actual objects.
+            // 添加条目。这是一个可变参数。
+            // 键标签提供器必须在此处提供 ResourceKeys 而不是实际对象。
             .add(Blocks.DIRT, Blocks.COBBLESTONE)
-            // Add optional entries that will be ignored if absent. This example uses Botania's Pure Daisy.
-            // This is not a vararg parameter.
+            // 添加可选条目，如果不存在则将被忽略。此示例使用 Botania 的 Pure Daisy。
+            // 这不是可变参数。
             .add(TagEntry.optionalElement(Identifier.fromNamespaceAndPath("botania", "pure_daisy")))
-            // Add a tag entry.
+            // 添加标签条目。
             .addTag(BlockTags.PLANKS)
-            // Add multiple tag entries. This is a vararg parameter.
-            // Can cause unchecked warnings that can safely be suppressed.
+            // 添加多个标签条目。这是一个可变参数。
+            // 可能导致未经检查的警告，但可以安全地抑制。
             .addTags(BlockTags.LOGS, BlockTags.WOODEN_SLABS)
-            // Add an optional tag entry that will be ignored if absent.
+            // 添加可选标签条目，如果不存在则将被忽略。
             .addOptionalTag(ItemTags.create(Identifier.fromNamespaceAndPath("c", "ingots/tin")))
-            // Add multiple optional tag entries. This is a vararg parameter.
-            // Can cause unchecked warnings that can safely be suppressed.
+            // 添加多个可选标签条目。这是一个可变参数。
+            // 可能导致未经检查的警告，但可以安全地抑制。
             .addOptionalTags(ItemTags.create(Identifier.fromNamespaceAndPath("c", "nuggets/tin")), ItemTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/tin")))
-            // Set the replace property to true.
+            // 设置将 property 替换为 true。
             .replace()
-            // Set the replace property back to false.
+            // 设置将 property 替换回 false。
             .replace(false)
-            // Remove entries. This is a vararg parameter.
-            // Key tag providers must provide ResourceKeys here instead of the actual objects.
-            // Can cause unchecked warnings that can safely be suppressed.
+            // 删除条目。这是一个可变参数。
+            // 键标签提供器必须在此处提供 ResourceKeys 而不是实际对象。
+            // 可能导致未经检查的警告，但可以安全地抑制。
             .remove(Blocks.CRIMSON_SLAB, Blocks.WARPED_SLAB);
     }
 }
@@ -241,9 +241,9 @@ public class MyBlockTagsProvider extends BlockTagsProvider {
 与所有数据提供器一样，请将每个标签提供器添加到 `GatherDataEvent`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createProvider(MyBlockTagsProvider::new);
 }
@@ -255,9 +255,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ```java
 public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
-    // Get parameters from the `GatherDataEvent`s.
+    // 从 `GatherDataEvent` 获取参数。
     public MyRecipeTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        // Second parameter is the registry key we are generating the tags for.
+        // 第二个参数是我们为其生成标签的注册表项。
         super(output, Registries.RECIPE_TYPE, lookupProvider, ExampleMod.MOD_ID);
     }
     
@@ -273,27 +273,27 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
     
     // ...
 
-    // Lets assume the following TagKey<RecipeType<?>> SMELTERS, CRAFTERS, SMITHERS
+    // 假设以下 TagKey<RecipeType<?>> SMELTERS、CRAFTERS、SMITHERS
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
-        // Create a TagBuilder for `Identifier`s.
+        // 为 `Identifier` 创建 TagBuilder。
         this.getOrCreateRawBuilder(MY_TAG)
-            // Add entries.
+            // 添加条目。
             .addElement(Identifier.fromNamespaceAndPath("minecraft", "crafting"))
             .addElement(Identifier.fromNamespaceAndPath("minecraft", "smelting"))
-            // Add optional entries that will be ignored if absent.
+            // 添加可选条目，如果不存在则将被忽略。
             .addOptionalElement(Identifier.fromNamespaceAndPath("minecraft", "blasting"))
-            // Add a tag entry.
+            // 添加标签条目。
             .addTag(SMELTERS.location())
-            // Add an optional tag entry that will be ignored if absent.
+            // 添加可选标签条目，如果不存在则将被忽略。
             .addOptionalTag(CRAFTERS.location())
-            // Set the replace property to true.
+            // 设置将 property 替换为 true。
             .setReplace(true)
-            // Set the replace property back to false.
+            // 设置将 property 替换回 false。
             .setReplace(false)
-            // Remove entries.
+            // 删除条目。
             .removeElement(Identifier.fromNamespaceAndPath("minecraft", "campfire_cooking"))
-            // Remove a tag entry.
+            // 删除标签条目。
             .removeTag(SMITHERS.location());
     }
 }
@@ -307,23 +307,23 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
     
     // ...
 
-    // Let's assume we have the TagKey<RecipeType<?>>s SMELTERS, CRAFTERS, SMITHERS
+    // 假设我们有 TagKey<RecipeType<?>> SMELTERS、CRAFTERS、SMITHERS
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
-        // Create the TagAppender for `Identifier`s.
+        // 为 `Identifier` 创建 TagAppender。
         this.tag(MY_TAG)
-            // Replace property info
+            // 替换 property 信息
             .replace()
-            // Handle any optional elements that may not be present
+            // 处理可能不存在的任何可选元素
             .addOptional(Identifier.fromNamespaceAndPath("examplemod", "example_type"))
-            // Can take in a TagKey
+            // 可以接收TagKey
             .addOptionalTag(CRAFTERS)
 
-            // Map to ResourceKey (KeyTagProvider)
+            // Map 至 ResourceKey (KeyTagProvider)
             .map((Function<ResourceKey<RecipeType<?>>, Identifier>) ResourceKey::location)
             .add(BuiltInRegistries.RECIPE_TYPE.getResourceKey(RecipeType.CRAFTING).orElseThrow())
 
-            // Map to direct object (IntrinsicHolderTagsProvider)
+            // Map 直接对象 (IntrinsicHolderTagsProvider)
             .map((Function<RecipeType<?>, ResourceKey<RecipeType<?>>) type -> BuiltInRegistries.RECIPE_TYPE.getResourceKey(type).orElseThrow())
             .add(RecipeType.SMELTING)
             .addTag(SMELTERS)
@@ -332,10 +332,10 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
     }
 
     private TagAppender<Identifier, RecipeType<?>> tag(TagKey<RecipeType<?>> tag) {
-        // Create the builder
+        // 创建 builder
         TagBuilder builder = this.getOrCreateRawBuilder(tag);
 
-        // Generate the appender (can use TagAppender#forBuilder) instead
+        // 生成 appender（可以使用 TagAppender#forBuilder）
         return new TagAppender<Identifier, T>() {
 
             @Override
@@ -362,7 +362,7 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
                 return this;
             }
 
-            // For situations where you cannot access the current entry object
+            // 适用于无法访问当前条目对象的情况
             @Override
             public TagAppender<Identifier, T> add(TagEntry entry) {
                 builder.add(entry);
@@ -401,17 +401,17 @@ public class ExampleBlockTagCopyingItemTagProvider extends BlockTagCopyingItemTa
     public ExampleBlockTagCopyingItemTagProvider(
         PackOutput output,
         CompletableFuture<HolderLookup.Provider> lookupProvider,
-        CompletableFuture<TagLookup<Block>> blockTags // Obtained from BlockTagsProvider#contentsGetter
+        CompletableFuture<TagLookup<Block>> blockTags // 从 BlockTagsProvider#contentsGetter 获取
     ) {
         super(output, lookupProvider, blockTags, ExampleMod.MOD_ID);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider lookupProvider) {
-        // Assuming types TagKey<Block> and TagKey<Item> for the two parameters
+        // 假定两个参数的类型分别为 TagKey<Block> 和 TagKey<Item>
         this.copy(EXAMPLE_BLOCK_TAG, EXAMPLE_ITEM_TAG);
 
-        // You can also add normal item tags here
+        // 你还可以在此处添加普通物品标签
     }
 
 }
@@ -420,9 +420,9 @@ public class ExampleBlockTagCopyingItemTagProvider extends BlockTagCopyingItemTa
 与所有数据提供器一样，复制标签提供器必须添加到 `GatherDataEvent`：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void gatherData(GatherDataEvent.Client event) {
-    // Call event.createDatapackRegistryObjects(...) first if adding datapack objects
+    // 添加数据包对象时，请先调用 event.createDatapackRegistryObjects(...)
 
     event.createBlockAndItemTags(MyBlockTagsProvider::new, ExampleBlockTagCopyingItemTagProvider::new);
 }

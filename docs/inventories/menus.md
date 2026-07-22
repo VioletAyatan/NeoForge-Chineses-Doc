@@ -13,10 +13,10 @@
 将 `MenuSupplier` 与 `FeatureFlagSet` 传入 `MenuType` 构造器，即可创建 `MenuType`。`MenuSupplier` 表示一个函数：接受 Container id 与查看菜单的玩家物品栏，返回新创建的 [`AbstractContainerMenu`][acm]。
 
 ```java
-// For some DeferredRegister<MenuType<?>> REGISTER
+// 对于某些 DeferredRegister<MenuType<?>> REGISTER
 public static final Supplier<MenuType<MyMenu>> MY_MENU = REGISTER.register("my_menu", () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
-// In MyMenu, an AbstractContainerMenu subclass
+// 在 MyMenu 中，AbstractContainerMenu 子类
 public MyMenu(int containerId, Inventory playerInv) {
     super(MY_MENU.get(), containerId);
     // ...
@@ -34,13 +34,13 @@ Container identifier 对单个玩家而言是唯一的。这意味着两个不�
 如果客户端需要额外信息（例如数据 holder 在世界中的位置），可以改用子类 `IContainerFactory`。除 Container id 与玩家物品栏外，它还提供 `RegistryFriendlyByteBuf`，可存储服务端发送的额外信息。可以通过 `IMenuTypeExtension#create` 使用 `IContainerFactory` 创建 `MenuType`。
 
 ```java
-// For some DeferredRegister<MenuType<?>> REGISTER
+// 对于某些 DeferredRegister<MenuType<?>> REGISTER
 public static final Supplier<MenuType<MyMenuExtra>> MY_MENU_EXTRA = REGISTER.register("my_menu_extra", () -> IMenuTypeExtension.create(MyMenu::new));
 
-// In MyMenuExtra, an AbstractContainerMenu subclass
+// 在 MyMenuExtra 中，AbstractContainerMenu 子类
 public MyMenuExtra(int containerId, Inventory playerInv, FriendlyByteBuf extraData) {
     super(MY_MENU_EXTRA.get(), containerId);
-    // Store extra data from buffer
+    // 存储缓冲区中的额外数据
     // ...
 }
 ```
@@ -56,13 +56,13 @@ public MyMenuExtra(int containerId, Inventory playerInv, FriendlyByteBuf extraDa
 每个菜单应包含两个构造器：一个用于在服务端初始化菜单，另一个用于在客户端初始化菜单。用于在客户端初始化菜单的构造器就是提供给 `MenuType` 的构造器。服务端菜单构造器包含的任何字段，都应在客户端菜单构造器中有某个默认值。
 
 ```java
-// Client menu constructor
-public MyMenu(int containerId, Inventory playerInventory) { // optional FriendlyByteBuf parameter if reading data from server
-    this(containerId, playerInventory, /* Any default parameters here */);
+// 客户端菜单构造器
+public MyMenu(int containerId, Inventory playerInventory) { // 如果从服务器读取数据则可选 FriendlyByteBuf 参数
+    this(containerId, playerInventory, /* 此处任何默认参数*/);
 }
 
-// Server menu constructor
-public MyMenu(int containerId, Inventory playerInventory, /* Any additional parameters here. */) {
+// 服务器菜单构造器
+public MyMenu(int containerId, Inventory playerInventory, /* 此处有任何其他参数。*/) {
     // ...
 }
 ```
@@ -80,17 +80,17 @@ public MyMenu(int containerId, Inventory playerInventory, /* Any additional para
 `ContainerLevelAccess` 在封闭 scope 内提供当前 Level 与 Block 位置。在服务端构造菜单时，可调用 `ContainerLevelAccess#create` 创建新的 access。客户端菜单构造器可以传入不会执行任何操作的 `ContainerLevelAccess#NULL`。
 
 ```java
-// Client menu constructor
+// 客户端菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory) {
     this(containerId, playerInventory, ContainerLevelAccess.NULL);
 }
 
-// Server menu constructor
+// 服务器菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
     // ...
 }
 
-// Assume this menu is attached to Supplier<Block> MY_BLOCK
+// 假设此菜单附加到 Supplier<Block> MY_BLOCK
 @Override
 public boolean stillValid(Player player) {
     return AbstractContainerMenu.stillValid(this.access, player, MY_BLOCK.get());
@@ -116,20 +116,20 @@ NeoForge 对 packet 进行了 patch，以向客户端提供完整整数。
 :::
 
 ```java
-// Assume we have a DataSlot constructed on each initialization of the server menu
+// 假设我们在服务器菜单的每次初始化时构造了一个 DataSlot
 
-// Client menu constructor
+// 客户端菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory) {
     this(
         containerId, playerInventory,
-        // Pass in a dummy slot to hold the server-synced values
+        // 传入一个虚拟槽位来保存服务器同步的值
         DataSlot.standalone()
     );
 }
 
-// Server menu constructor
+// 服务器菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory, DataSlot dataSingle) {
-    // Add data slots for handled integers
+    // 为处理的整数添加数据槽
     this.addDataSlot(dataSingle);
 
     // ...
@@ -141,19 +141,19 @@ public MyMenuAccess(int containerId, Inventory playerInventory, DataSlot dataSin
 如果需要向客户端同步多个整数，可以改用 `ContainerData` 引用这些整数。此接口的作用类似索引查找，每个索引表示不同的整数。如果通过 `#addDataSlots` 将 `ContainerData` 添加到菜单，也可以在数据对象本身中构造 `ContainerData`。该方法会按接口指定的数据数量创建新的 `DataSlot`。客户端菜单构造器应始终通过 `SimpleContainerData` 提供新实例。
 
 ```java
-// Assume we have a ContainerData of size 3
+// 假设我们有一个大小为 3 的 ContainerData
 
-// Client menu constructor
+// 客户端菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory) {
     this(containerId, playerInventory, new SimpleContainerData(3));
 }
 
-// Server menu constructor
+// 服务器菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory, ContainerData dataMultiple) {
-    // Check if the ContainerData size is some fixed value
+    // 检查 ContainerData 大小是否为某个固定值
     checkContainerDataCount(dataMultiple, 3);
 
-    // Add data slots for handled integers
+    // 为处理的整数添加数据槽
     this.addDataSlots(dataMultiple);
 
     // ...
@@ -171,61 +171,61 @@ public MyMenuAccess(int containerId, Inventory playerInventory, ContainerData da
 大多数情况下，先添加菜单包含的所有 Slot，再添加玩家物品栏，最后添加玩家快捷栏。要从菜单访问任何单独的 `Slot`，必须根据添加 Slot 的顺序计算索引。
 
 ```java
-// Assume we have an inventory from a data object of size 10
+// 假设我们有一个大小为 10 的数据对象的物品栏
 
-// Client menu constructor
+// 客户端菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory) {
     this(containerId, playerInventory, new ItemStacksResourceHandler(10));
 }
 
-// Server menu constructor
+// 服务器菜单构造器
 public MyMenuAccess(int containerId, Inventory playerInventory, StacksResourceHandler<ItemStack, ItemResource> dataInventory) {
-    // Check if the data inventory size is some fixed value
+    // 检查数据物品栏大小是否为某个固定值
     int dataSize = dataInventory.getSlots();
     if (dataSize < 10) {
         throw new IllegalArgumentException("Container size " + dataSize + " is smaller than expected " + 5);
     }
 
-    // Then, add slots for data inventory
-    // If you are using a subtype of slot, make sure any data
-    // used on the server is also available on the client.
+    // 然后，添加数据物品栏的槽位
+    // 如果使用 Slot 的子类型，请确保服务端使用的所有数据
+    // 在客户端也同样可用。
 
-    // Create the inventory by looping through the positions and
-    // adding the slots.
+    // 通过遍历各个位置并
+    // 添加槽位来创建物品栏。
 
-    // Two rows
+    // 两排
     for (int j = 0; j < 2; j++) {
-        // Five columns
+        // 五列
         for (int i = 0; i < 5; i++) {
-            // Add for each slot in the data inventory
+            // 为数据物品栏中的每个槽添加
             this.addSlot(new ResourceHandlerSlot(
-                // The inventory
+                // 物品栏
                 dataInventory,
-                // The index modifier to mutate the stored resources
+                // 改变存储资源的索引修饰符
                 dataInventory::set,
-                // The index of the data inventory this slot represents:
+                // 此槽位所表示的数据物品栏索引：
                 // rowIndex * columnCount + columnIndex
                 j * 5 + i,
-                // The x position relative to leftPos
-                // Vanilla slots are 18 units by default
+                // 相对于 leftPos 的 X 坐标
+                // 原版槽位默认为 18 个单位
                 // startX + columnIndex * slotRenderWidth
                 44 + i * 18,
-                // The y position relative to topPos
-                // Vanilla slots are 18 units by default
+                // 相对于 topPos 的 Y 坐标
+                // 原版槽位默认为 18 个单位
                 // startY + rowIndex * slotRenderHeight
                 20 + j * 18
             ))
         }
     }
 
-    // Add slots for player inventory (all 27 + 9 hotbar slots)
-    // If you want to customize the 9x3 + 9 grid to something else,
-    // loop through like above
+    // 为玩家物品栏添加槽位（所有 27 + 9 个热栏槽位）
+    // 如果你想将 9x3 + 9 网格自定义为其他内容，
+    // 像上面一样循环
     this.addStandardInventorySlots(
         playerInventory,
-        // The starting x position relative to leftPos
+        // 相对于 leftPos 的起始 X 坐标
         8,
-        // The starting y position relative to topPos
+        // 相对于 topPos 的起始 Y 坐标
         84
     );
 
@@ -242,82 +242,82 @@ ItemStack 通常通过 `#moveItemStackTo` 在 Slot 之间移动，它会把 Item
 在 Minecraft 各种实现中，此方法的逻辑相当一致：
 
 ```java
-// Assume we have a data inventory of size 5
-// The inventory has 4 inputs (index 1 - 4) which outputs to a result slot (index 0)
-// We also have the 27 player inventory slots and the 9 hotbar slots
-// As such, the actual slots are indexed like so:
-//   - Data Inventory: Result (0), Inputs (1 - 4)
+// 假设我们有大小为 5 的数据物品栏
+// 物品栏有 4 个输入槽位（索引 1–4），并输出到结果槽位（索引 0）
+// 我们还有 27 个玩家物品栏槽位和 9 个热栏槽位
+// 因此，实际槽位的索引如下：
+//   - 数据物品栏：结果（0），输入（1–4）
 //   - Player Inventory (5 - 31)
 //   - Player Hotbar (32 - 40)
 @Override
 public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
-    // The quick moved slot stack
+    // 被快速移动的槽位 ItemStack
     ItemStack quickMovedStack = ItemStack.EMPTY;
-    // The quick moved slot
+    // 被快速移动的槽位
     Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
   
-    // If the slot is in the valid range and the slot is not empty
+    // 如果槽位在有效范围内且槽位不为空
     if (quickMovedSlot != null && quickMovedSlot.hasItem()) {
-        // Get the raw stack to move
+        // 获取要移动的原始 ItemStack
         ItemStack rawStack = quickMovedSlot.getItem(); 
-        // Set the slot stack to a copy of the raw stack
+        // 将槽位 ItemStack 设为原始 ItemStack 的副本
         quickMovedStack = rawStack.copy();
 
         /*
-        The following quick move logic can be simplified to if in data inventory,
-        try to move to player inventory/hotbar and vice versa for containers
-        that cannot transform data (e.g. chests).
+        对于无法转换数据的 Container（例如箱子），以下快速移动逻辑可以简化为：如果位于数据物品栏，
+        则尝试移动到玩家物品栏／快捷栏；反之亦然
+        （例如箱子）。
         */
 
-        // If the quick move was performed on the data inventory result slot
+        // 如果快速移动发生在数据物品栏的结果槽位
         if (quickMovedSlotIndex == 0) {
-            // Try to move the result slot into the player inventory/hotbar
+            // 尝试把结果槽位内容移动到玩家物品栏／快捷栏
             if (!this.moveItemStackTo(rawStack, 5, 41, true)) {
-                // If cannot move, no longer quick move
+                // 如果无法移动，则停止快速移动
                 return ItemStack.EMPTY;
             }
 
-            // Perform logic on result slot quick move
+            // 执行结果槽位快速移动的相关逻辑
             quickMovedSlot.onQuickCraft(rawStack, quickMovedStack);
         }
-        // Else if the quick move was performed on the player inventory or hotbar slot
+        // 否则，如果快速移动发生在玩家物品栏或快捷栏槽位
         else if (quickMovedSlotIndex >= 5 && quickMovedSlotIndex < 41) {
-            // Try to move the inventory/hotbar slot into the data inventory input slots
+            // 尝试把物品栏／快捷栏槽位内容移动到数据物品栏的输入槽位
             if (!this.moveItemStackTo(rawStack, 1, 5, false)) {
-                // If cannot move and in player inventory slot, try to move to hotbar
+                // 如果无法移动且当前位于玩家物品栏槽位，则尝试移动到快捷栏
                 if (quickMovedSlotIndex < 32) {
                     if (!this.moveItemStackTo(rawStack, 32, 41, false)) {
-                        // If cannot move, no longer quick move
+                        // 如果无法移动，则停止快速移动
                         return ItemStack.EMPTY;
                     }
                 }
-                // Else try to move hotbar into player inventory slot
+                // 否则，尝试把快捷栏内容移动到玩家物品栏槽位
                 else if (!this.moveItemStackTo(rawStack, 5, 32, false)) {
-                    // If cannot move, no longer quick move
+                    // 如果无法移动，则停止快速移动
                     return ItemStack.EMPTY;
                 }
             }
         }
-        // Else if the quick move was performed on the data inventory input slots, try to move to player inventory/hotbar
+        // 否则，如果快速移动发生在数据物品栏的输入槽位，则尝试移动到玩家物品栏／快捷栏
         else if (!this.moveItemStackTo(rawStack, 5, 41, false)) {
-            // If cannot move, no longer quick move
+            // 如果无法移动，则停止快速移动
             return ItemStack.EMPTY;
         }
 
         if (rawStack.isEmpty()) {
-            // If the raw stack has completely moved out of the slot, set the slot to the empty stack
+            // 如果原始 ItemStack 已完全移出槽位，则把该槽位设为空 ItemStack
             quickMovedSlot.setByPlayer(ItemStack.EMPTY);
         } else {
-            // Otherwise, notify the slot that that the stack count has changed
+            // 否则，通知槽位 ItemStack 数量已经改变
             quickMovedSlot.setChanged();
         }
 
-        // Execute logic on what to do post move with the remaining stack
-        // This can be removed if there are no `Slot` subtypes that override `onTake`
+        // 对移动后剩余的 ItemStack 执行相应逻辑
+        // 如果没有覆盖 `onTake` 的 `Slot` 子类型，则可以将其删除
         quickMovedSlot.onTake(player, rawStack);
     }
 
-    return quickMovedStack; // Return the slot stack
+    return quickMovedStack; // 返回槽栈
 }
 ```
 
@@ -336,10 +336,10 @@ public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
 可以使用 `SimpleMenuProvider` 轻松创建 `MenuProvider`；它接受用于创建服务端菜单的方法引用与菜单标题。
 
 ```java
-// In some implementation with access to the Player on the logical server (e.g. ServerPlayer instance)
-// Assume we have ServerPlayer serverPlayer
+// 在某些实现中，可以访问逻辑服务端上的玩家（例如ServerPlayer 实例）
+// 假设我们有 ServerPlayer serverPlayer
 serverPlayer.openMenu(new SimpleMenuProvider(
-    (containerId, playerInventory, player) -> new MyMenu(containerId, playerInventory, /* server parameters */),
+    (containerId, playerInventory, player) -> new MyMenu(containerId, playerInventory, /* 服务器参数*/),
     Component.translatable("menu.title.examplemod.mymenu")
 ));
 ```
@@ -355,10 +355,10 @@ Block 通常通过覆盖 `BlockBehaviour#useWithoutItem` 来实现菜单，并�
 应通过覆盖 `BlockBehaviour#getMenuProvider` 来实现 `MenuProvider`。原版方法使用它在旁观者模式查看菜单。
 
 ```java
-// In some Block subclass
+// 在某些方块子类中
 @Override
 public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-    return new SimpleMenuProvider(/* ... */);
+    return new SimpleMenuProvider(/* ...*/);
 }
 
 @Override

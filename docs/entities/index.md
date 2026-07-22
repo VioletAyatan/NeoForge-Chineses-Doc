@@ -24,63 +24,63 @@ public static final DeferredRegister.Entities ENTITY_TYPES =
 
 public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register(
     "my_entity",
-    // The entity type, created using a builder.
+    // 使用 builder 创建的实体类型。
     () -> EntityType.Builder.of(
-        // An EntityType.EntityFactory<T>, where T is the entity class used - MyEntity in this case.
-        // You can think of it as a BiFunction<EntityType<T>, Level, T>.
-        // This is commonly a reference to the entity constructor.
+        // 一个 EntityType.EntityFactory<T>，其中 T 是所用的实体类——本例为 MyEntity。
+        // 可以将其视为 BiFunction<EntityType<T>, Level, T>。
+        // 这通常是对实体构造器的引用。
         MyEntity::new,
-        // The MobCategory our entity uses. This is mainly relevant for spawning.
-        // See below for more information.
+        // 我们实体使用的 MobCategory。这主要与产卵有关。
+        // 请参阅下文了解更多信息。
         MobCategory.MISC
     )
-    // The width and height, in blocks. The width is used in both horizontal directions.
-    // This also means that non-square footprints are not supported. Default is 0.6f and 1.8f.
+    // 宽度和高度，以方块为单位。宽度用于两个水平方向。
+    // 这也意味着不支持非方形封装。默认值为 0.6f 和 1.8f。
     .sized(1.0f, 1.0f)
-    // A multiplicative factor (scalar) used by mobs that spawn in varying sizes.
-    // In vanilla, these are only slimes and magma cubes, both of which use 4.0f.
+    // 乘法 factor（标量），用于生成不同大小的生物。
+    // 在原版中，这些只是史莱姆和岩浆立方体，两者都使用 4.0f。
     .spawnDimensionsScale(4.0f)
-    // The eye height, in blocks from the bottom of the size. Defaults to height * 0.85.
-    // This must be called after #sized to have an effect.
+    // 眼高，以距底部尺寸的方块为单位。默认为高度 * 0.85。
+    // 必须在 #sized之后调用才能生效。
     .eyeHeight(0.5f)
-    // Disables the entity being summonable via /summon.
+    // 禁用通过 /summon 召唤的实体。
     .noSummon()
-    // Prevents the entity from being saved to disk.
+    // 防止实体保存到磁盘。
     .noSave()
-    // Makes the entity fire immune.
+    // 使实体免疫火焰。
     .fireImmune()
-    // Makes the entity immune to damage from a certain block. Vanilla uses this to make
-    // foxes immune to sweet berry bushes, withers and wither skeletons immune to wither roses,
-    // and polar bears, snow golems and strays immune to powder snow.
+    // 使实体免受特定方块的伤害。 原版使用此来制作
+    // 狐狸对甜浆果灌木免疫，凋灵和凋灵骷髅对凋零玫瑰免疫，
+    // 和北极熊、雪傀儡和流浪动物对粉雪免疫。
     .immuneTo(Blocks.POWDER_SNOW)
-    // Disables a rule in the spawn handler that limits the distance at which entities can spawn.
-    // This means that no matter the distance to the player, this entity can spawn.
-    // Vanilla enables this for pillagers and shulkers.
+    // 禁用生成处理器中限制实体生成距离的规则。
+    // 这意味着无论与玩家的距离如何，此实体都可以生成。
+    // 原版为掠夺者和潜影贝启用此。
     .canSpawnFarFromPlayer()
-    // The range in which the entity is kept loaded by the client, in chunks.
-    // Vanilla values for this vary, but it's often something around 8 or 10. Defaults to 5.
-    // Be aware that if this is greater than the client's chunk view distance,
-    // then that chunk view distance is effectively used here instead.
+    // 客户端保持加载实体的范围（以区块为单位）。
+    // 其原版值有所不同，但通常约为 8 或 10。默认为 5。
+    // 请注意，如果此大于客户端的区块视图距离，
+    // 那么该区块视图距离在这里被有效地使用。
     .clientTrackingRange(8)
-    // How often update packets are sent for this entity, in once every x ticks. This is set to higher values
-    // for entities that have predictable movement patterns, for example projectiles. Defaults to 3.
+    // 为此实体发送更新数据包的频率，每 x 个周期一次。这被设置为更高的值
+    // 适用于具有可预测运动模式的实体，例如射弹。默认为 3。
     .updateInterval(10)
-    // Build the entity type using a resource key. The second parameter should be the same as the entity id.
+    // 使用资源键构建实体类型。第二个参数应该与实体ID相同。
     .build(ResourceKey.create(
         Registries.ENTITY_TYPE,
         Identifier.fromNamespaceAndPath("examplemod", "my_entity")
     ))
 );
 
-// Shorthand version to avoid boilerplate. The following call is the same as
+// 速记版本以避免样板。以下调用与以下相同
 // ENTITY_TYPES.register("my_entity", () -> EntityType.Builder.of(MyEntity::new, MobCategory.MISC).build(
 //     ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("examplemod", "my_entity"))
 // );
 public static final Supplier<EntityType<MyEntity>> MY_ENTITY =
     ENTITY_TYPES.registerEntityType("my_entity", MyEntity::new, MobCategory.MISC);
 
-// Shorthand version that still allows calling additional builder methods
-// by supplying a UnaryOperator<EntityType.Builder> parameter.
+// 仍允许调用其他 builder 方法的简写版本
+// 方式是提供一个 UnaryOperator<EntityType.Builder> 参数。
 public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.registerEntityType(
     "my_entity", MyEntity::new, MobCategory.MISC,
     builder -> builder.sized(2.0f, 2.0f).eyeHeight(1.5f).updateInterval(5));
@@ -119,13 +119,13 @@ Entity 的 `MobCategory` 决定该 Entity 与[生成及消失][mobspawn]有关�
 
 ```java
 public class MyEntity extends Entity {
-    // We inherit this constructor without the bound on the generic wildcard.
-    // The bound is needed for registration below, so we add it here.
+    // 我们继承了此构造器，没有泛型通配符的绑定。
+    // 下面注册需要绑定，所以在这里添加。
     public MyEntity(EntityType<? extends MyEntity> type, Level level) {
         super(type, level);
     }
 
-    // See the Data and Networking article for information about these methods.
+    // 有关这些方法的信息，请参阅数据和网络文章。
     @Override
     protected void readAdditionalSaveData(ValueInput input) {}
 
@@ -150,7 +150,7 @@ public class MyEntity extends Entity {
 
 ```java
 public MyEntity(EntityType<? extends MyEntity> type, Level level, double x, double y, double z) {
-    // Delegates to the factory constructor, using the EntityType we registered before.
+    // 委托给工厂构造器，使用我们之前注册的EntityType。
     this(type, level);
     this.setPos(x, y, z);
 }
@@ -177,7 +177,7 @@ _参见 [Entity／EntityRenderer][renderer]。_
 显然，我们希望以其他方式添加 Entity。最简单的方法是使用 `LevelWriter#addFreshEntity`。此方法只接受一个 `Entity` 实例并将其添加到世界：
 
 ```java
-// In some method that has a level available, only on the server
+// 在某些具有可用级别的方法中，仅在服务器上
 if (!level.isClientSide()) {
     MyEntity entity = new MyEntity(level, 100.0, 200.0, 300.0);
     level.addFreshEntity(entity);
@@ -200,12 +200,12 @@ _另请参阅[左键点击 Item][leftclick]。_
 
 ```java
 @Override
-// The boolean return value determines whether the entity was actually damaged or not.
+// boolean 返回值确定实体是否实际伤害。
 public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
     if (damageSource.is(DamageTypeTags.IS_FIRE)) {
-        // This assumes that super#hurtServer() is implemented. Common other ways to do this
-        // are to set some field yourself. Vanilla implementations vary greatly across different entities.
-        // Notably, living entities usually call #actuallyHurt, which in turn calls #setHealth.
+        // 这假设实现了 super#hurtServer()。常见其他方式做此
+        // 是自己设置一些字段。不同实体的普通实现差异很大。
+        // 值得注意的是，生物体通常调用 #actuallyHurt，而 #actuallyHurt又调用 #setHealth。
         return super.hurtServer(level, damageSource, amount * 2);
     } else {
         return false;
@@ -233,9 +233,9 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 ```java
 @Override
 public void tick() {
-    // Always call super unless you have a good reason not to.
+    // 始终致电 super，除非你有充分的理由不这样做。
     super.tick();
-    // Run this code once every 5 ticks.
+    // 每 5 个周期运行一次此代码。
     if (this.tickCount % 5 == 0) {
         this.level().addParticle(...);
     }
@@ -252,8 +252,8 @@ _另请参阅[中键点击][middleclick]。_
 @Override
 @Nullable
 public ItemStack getPickResult() {
-    // Assumes that MY_CUSTOM_ITEM is a DeferredItem<?>, see the Items article for more information.
-    // If the entity should not be pickable, it is advised to return null here.
+    // 假设 MY_CUSTOM_ITEM 是 DeferredItem<?>，有关详细信息，请参阅 Items 文章。
+    // 如果实体不可选取，建议此处为返回 null。
     return new ItemStack(MY_CUSTOM_ITEM.get());
 }
 ```
@@ -265,7 +265,7 @@ public ItemStack getPickResult() {
 ```java
 @Override
 public boolean isPickable() {
-    // Additional checks may be performed here if needed.
+    // 如果需要，可以在此处执行附加检查。
     return false;
 }
 ```
@@ -307,10 +307,10 @@ Entity attachment 用于定义 Entity 的可视附着点。利用此系统，可
 作为替代，也可以调用 `EntityAttachments#builder()`，再对该 builder 调用 `#attach()` 来自行定义 attachment：
 
 ```java
-// In some EntityType<?> creation
+// 在一些 EntityType<?> 创建中
 EntityType.Builder.of(...)
-    // This EntityAttachment will make name tags float half a block above the ground.
-    // If this is not set, it will default to the entity's hitbox height.
+    // 这个 EntityAttachment 将使姓名标签 float 距地面半个街区。
+    // 如果未设置此，则默认为实体的碰撞箱高度。
     .attach(EntityAttachment.NAME_TAG, 0, 0.5f, 0)
     .build();
 ```

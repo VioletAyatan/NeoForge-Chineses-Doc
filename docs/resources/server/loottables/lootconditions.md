@@ -10,7 +10,7 @@
 {
     "condition": "minecraft:inverted",
     "term": {
-        // Some other loot condition.
+        // 其他一些战利品条件。
     }
 }
 ```
@@ -26,13 +26,13 @@
     "condition": "minecraft:all_of",
     "terms": [
         {
-            // A loot condition.
+            // 战利品条件。
         },
         {
-            // Another loot condition.
+            // 另一个战利品条件。
         },
         {
-            // Yet another loot condition.
+            // 又一个战利品条件。
         }
     ]
 }
@@ -49,13 +49,13 @@
     "condition": "minecraft:any_of",
     "terms": [
         {
-            // A loot condition.
+            // 战利品条件。
         },
         {
-            // Another loot condition.
+            // 另一个战利品条件。
         },
         {
-            // Yet another loot condition.
+            // 又一个战利品条件。
         }
     ]
 }
@@ -70,7 +70,7 @@
 ```json5
 {
     "condition": "minecraft:random_chance",
-    // A constant 50% chance for the condition to apply. 
+    // 条件应用的恒定概率为 50%。
     "chance": 0.5
 }
 ```
@@ -84,14 +84,14 @@
 ```json5
 {
     "condition": "minecraft:random_chance_with_enchanted_bonus",
-    // Add a 20% chance per looting level to succeed.
+    // 每个抢劫等级增加 20% 的成功几率。
     "enchantment": "minecraft:looting",
     "enchanted_chance": {
         "type": "linear",
         "base": 0.2,
         "per_level_above_first": 0.2
     },
-    // Always fail if the looting enchantment is not present.
+    // 如果掠夺附魔不存在，则总是失败。
     "unenchanted_chance": 0.0
 }
 ```
@@ -105,13 +105,13 @@
 ```json5
 {
     "condition": "minecraft:value_check",
-    // May be any number provider.
+    // 可以是任何数值提供器。
     "value": {
         "type": "minecraft:uniform",
         "min": 0.0,
         "max": 10.0
     },
-    // A range with min/max values.
+    // 具有 min/max 值的范围。
     "range": {
         "min": 2.0,
         "max": 5.0
@@ -128,14 +128,14 @@
 ```json5
 {
     "condition": "minecraft:time_check",
-    // The clock instance to check the time of.
-    // Points to a registered clock at `data/<namespace>/world_clock/<path>.json`.
+    // 要检查时间的时钟实例。
+    // 指向在 `data/<namespace>/world_clock/<path>.json` 注册的时钟。
     "clock": "minecraft:overworld",
-    // Optional, can be omitted. If omitted, no modulo operation will take place.
-    // We use 24000 here, which is the length of one in-game day/night cycle.
+    // 可选，可省略。如果省略，则不会发生模运算。
+    // 这里我们使用24000，这是游戏中day/night一个周期的长度。
     "period": 24000,
-    // A range with min/max values. This example checks if the time is between 0 and 12000.
-    // Combined with the modulo operand of 24000 specified above, this example checks if it is currently daytime.
+    // 具有 min/max 值的范围。此示例检查时间是否在 0 到 12000 之间。
+    // 结合上面指定的模操作数 24000，此示例检查当前是否为白天。
     "value": {
         "min": 0,
         "max": 12000
@@ -152,11 +152,11 @@
 ```json5
 {
     "condition": "minecraft:weather_check",
-    // Optional. If unspecified, the rain state will not be checked.
+    // 可选。如果未指定，则不会检查下雨状态。
     "raining": true,
-    // Optional. If unspecified, the thundering state will not be checked.
-    // Specifying "raining": true and "thundering": true is functionally equivalent to just specifying
-    // "thundering": true, since it is always raining when a thunderstorm occurs.
+    // 可选。如果不指定，则不检查雷电状态。
+    // 指定 "raining": true 和 "thundering": true 在功能上等同于仅指定
+    // "thundering"：true，因为雷雨天气时总是下雨。
     "thundering": false
 }
 ```
@@ -171,11 +171,11 @@
 {
     "condition": "minecraft:location_check",
     "predicate": {
-        // Succeed if our target is anywhere in the nether.
+        // 如果我们的目标在下界的任何地方就成功。
         "dimension": "the_nether"
     },
-    // Optional position offset values. Only relevant if you are checking the position in some way.
-    // Must either be provided all at once, or not at all.
+    // 可选的位置偏移值。仅在以某种方式检查位置时有关。
+    // 必须一次性全部提供，或者根本不提供。
     "offsetX": 10,
     "offsetY": 10,
     "offsetZ": 10
@@ -191,11 +191,11 @@
 ```json5
 {
     "condition": "minecraft:block_state_property",
-    // The expected block. If this does not match the block that is actually broken, the condition fails.
+    // 预期的方块。如果与实际被破坏的方块不匹配，条件就会失败。
     "block": "minecraft:oak_slab",
-    // The block state properties to match. Unspecified properties can have either value.
-    // In this example, we want to only succeed if a top slab - waterlogged or not - is broken.
-    // If this specifies properties not present on the block, a log warning will be printed.
+    // 要匹配的方块状态 property。未指定的 property 可以具有任一值。
+    // 本例只希望在上半台阶被破坏时成功，无论其是否含水。
+    // 如果此指定方块上不存在的 property，则会打印日志警告。
     "properties": {
         "type": "top"
     }
@@ -223,7 +223,7 @@
 ```json5
 {
     "condition": "minecraft:match_tool",
-    // Match a netherite pickaxe or axe.
+    // 匹配下界合金镐或斧头。
     "predicate": {
         "items": [
             "minecraft:netherite_pickaxe",
@@ -242,7 +242,7 @@
 ```json5
 {
     "condition": "minecraft:enchantment_active",
-    // Whether the enchantment should be active (true) or not (false).
+    // 附魔是否应为 active (true) 或 not (false)。
     "active": true
 }
 ```
@@ -256,10 +256,10 @@
 ```json5
 {
     "condition": "minecraft:table_bonus",
-    // Apply the bonus if the fortune enchantment is present.
+    // 如果存在幸运附魔，则应用奖金。
     "enchantment": "minecraft:fortune",
-    // The chances to use per level. This example has a 20% chance of succeeding if unenchanted,
-    // 30% if enchanted at level 1, and 60% if enchanted at level 2 or above.
+    // 每个级别的使用机会。如果未附魔，此示例有 20% 的成功机会，
+    // 如果在 1 级附魔，则为 30%；如果在 2 级或以上附魔，则为 60%。
     "chances": [0.2, 0.3, 0.6]
 }
 ```
@@ -273,12 +273,12 @@
 ```json5
 {
     "condition": "minecraft:entity_properties",
-    // The entity target to use. Valid values are "this", "attacker", "direct_attacker" or "attacking_player".
-    // These correspond to the "this_entity", "attacking_entity", "direct_attacking_entity" and
-    // "last_damage_player" loot parameters, respectively.
+    // 要使用的实体目标。有效值为 "this"、"attacker"、"direct_attacker" 或 "attacking_player"。
+    // 这些对应于 "this_entity"、"attacking_entity"、"direct_attacking_entity" 和分别为
+    // "last_damage_player" 战利品参数。
     "entity": "attacker",
-    // Only succeed if the target is a pig. The predicate may also be empty, this can be used
-    // to check whether the specified entity target is set at all.
+    // 仅当目标是猪时才成功。谓词也可以为空，可以使用此
+    // 检查指定的实体目标是否已设置。
     "predicate": {
         "type": "minecraft:pig"
     }
@@ -295,7 +295,7 @@
 {
     "condition": "minecraft:damage_source_properties",
     "predicate": {
-        // Check whether the source entity is a zombie.
+        // 检查源实体是否为僵尸实体。
         "source_entity": {
             "type": "zombie"
         }
@@ -324,11 +324,11 @@
 ```json5
 {
     "condition": "minecraft:entity_scores"
-    // The entity target to use. Valid values are "this", "attacker", "direct_attacker" or "attacking_player".
-    // These correspond to the "this_entity", "attacking_entity", "direct_attacking_entity" and
-    // "last_damage_player" loot parameters, respectively.
+    // 要使用的实体目标。有效值为 "this"、"attacker"、"direct_attacker" 或 "attacking_player"。
+    // 这些对应于 "this_entity"、"attacking_entity"、"direct_attacking_entity" 和分别为
+    // "last_damage_player" 战利品参数。
     "entity": "attacker",
-    // A list of scoreboard values that must be in the given ranges.
+    // 必须在给定范围内的记分板值列表。
     "scores": {
         "score1": {
             "min": 0,
@@ -351,7 +351,7 @@
 ```json5
 {
     "condition": "minecraft:reference",
-    // Refers to the predicate file at data/examplemod/predicate/example_predicate.json.
+    // 指 data/examplemod/predicate/example_predicate.json 处的谓词文件。
     "name": "examplemod:example_predicate"
 }
 ```
@@ -365,9 +365,9 @@
 ```json5
 {
     "condition": "minecraft:environment_attribute_check",
-    // The environment attribute to check the value of.
+    // 要检查其值的环境属性。
     "attribute": "minecraft:gameplay/water_evaporates",
-    // The value the environment attribute must be.
+    // 环境属性必须为的值。
     "value": false
 }
 ```
@@ -381,7 +381,7 @@
 ```json5
 {
     "condition": "neoforge:loot_table_id",
-    // Will only apply when the loot table is for dirt
+    // 仅当战利品表为污垢时适用
     "loot_table_id": "minecraft:blocks/dirt"
 }
 ```
@@ -395,7 +395,7 @@
 ```json5
 {
     "condition": "neoforge:can_item_perform_ability",
-    // Will only apply if the tool can strip a log like an axe
+    // 仅当该工具可以像斧头一样剥离原木时才适用
     "ability": "axe_strip"
 }
 ```

@@ -9,50 +9,50 @@
 要创建自定义战利品条目，请扩展 `LootPoolEntryContainer`，或扩展它的两个直接子类之一：`LootPoolSingletonContainer` 或 `CompositeEntryBase`。作为示例，我们要创建一个能够返回某个 [Entity][entity] 掉落物的战利品条目——这纯粹用于演示，实践中更理想的做法是直接引用另一个战利品表。首先创建战利品条目类：
 
 ```java
-// We extend LootPoolSingletonContainer since we have a "finite" set of drops.
-// Some of this code is adapted from NestedLootTable.
+// 我们扩展了 LootPoolSingletonContainer，因为我们有 "finite" 的 drop 集。
+// 此代码的部分内容改编自 NestedLootTable。
 public class EntityLootEntry extends LootPoolSingletonContainer {
     public static final MapCodec<EntityLootEntry> CODEC = RecordCodecBuilder.mapCodec(inst ->
-        // Add our own fields.
+        // 添加我们自己的字段。
         inst.group(
-                        // A value referencing an entity type id.
+                        // 引用实体类型 ID 的值。
                         BuiltInRegistries.ENTITY_TYPE.holderByNameCodec().fieldOf("entity").forGetter(e -> e.entity)
                 )
-                // Add common fields: weight, display, conditions, and functions.
+                // 添加常用字段：重量、显示、条件、功能。
                 .and(singletonFields(inst))
                 .apply(inst, EntityLootEntry::new)
     );
 
-    // A Holder for the entity type we want to roll the other table for.
+    // 要用于抽取另一张战利品表的实体类型 Holder。
     private final Holder<EntityType<?>> entity;
 
-    // It is common practice to have a private constructor and have a static factory method.
-    // This is because weight, quality, conditions, and functions are supplied by a lambda below.
+    // 通常的做法是拥有一个 private 构造器和一个 static 工厂方法。
+    // 这是因为重量、质量、条件和函数由下面的 lambda 提供。
     private EntityLootEntry(Holder<EntityType<?>> entity, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
-        // Pass lambda-provided parameters to super.
+        // 将 lambda 提供的参数传递给 super。
         super(weight, quality, conditions, functions);
-        // Set our values.
+        // 设置我们的价值观。
         this.entity = entity;
     }
 
-    // Static builder method, accepting our custom parameters and combining them with a lambda that supplies the values common to all entries.
+    // 静态 builder 方法，接受我们的自定义参数并将它们与提供所有条目通用值的 lambda 组合。
     public static LootPoolSingletonContainer.Builder<?> entityLoot(Holder<EntityType<?>> entity) {
-        // Use the static simpleBuilder() method defined in LootPoolSingletonContainer.
+        // 使用 LootPoolSingletonContainer 中定义的 static simpleBuilder() 方法。
         return simpleBuilder((weight, quality, conditions, functions) -> new EntityLootEntry(entity, weight, quality, conditions, functions));
     }
 
-    // This is where the magic happens. To add an item stack, we generally call #accept on the consumer.
-    // However, in this case, we let #getRandomItems do that for us.
+    // 这就是奇迹发生的地方。要添加ItemStack，我们通常对消费者调用 #accept。
+    // 但是，在此情况下，我们让 #getRandomItems 为我们做这件事。
     @Override
     public void createItemStack(Consumer<ItemStack> consumer, LootContext context) {
-        // Get the entity's loot table. If it doesn't exist, an empty loot table will be returned, so null-checking is not necessary.
+        // 获取实体的战利品表。如果该表不存在，则返回空战利品表，因此无需执行 null 检查。
         LootTable table = context.getLevel().reloadableRegistries().getLootTable(entity.value().getDefaultLootTable());
-        // Use the raw version here, because vanilla does it too. :P
-        // #getRandomItemsRaw calls consumer#accept for us on the results of the roll.
+        // 在这里使用原始版本，因为原版也这样做。：P
+        // #getRandomItemsRaw 会为抽取结果调用 consumer#accept。
         table.getRandomItemsRaw(context, consumer);
     }
 
-    // Tells the entry what to use for serialization.
+    // 告诉条目使用什么进行序列化。
     @Override
     public MapCodec<EntityLootEntry> codec() {
         return CODEC;
@@ -75,33 +75,33 @@ public static final Supplier<MapCodec<EntityLootEntry>> ENTITY_LOOT =
 要创建自定义数值提供器，请实现 `NumberProvider` 接口。作为示例，假设我们要创建一个能够反转给定数值正负号的数值提供器：
 
 ```java
-// We accept another number provider as our base.
+// 我们接受另一个数值提供器作为我们的基础。
 public record InvertedSignProvider(NumberProvider base) implements NumberProvider {
     public static final MapCodec<InvertedSignProvider> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             NumberProviders.CODEC.fieldOf("base").forGetter(InvertedSignProvider::base)
     ).apply(inst, InvertedSignProvider::new));
 
-    // Return a float value. Use the context and the record parameters as needed.
+    // 返回 float 值。根据需要使用上下文和 record 参数。
     @Override
     public float getFloat(LootContext context) {
         return -this.base.getFloat(context);
     }
 
-    // Return an int value. Use the context and the record parameters as needed.
-    // Overriding this is optional, the default implementation will round the result of #getFloat.
+    // 返回 int 值。根据需要使用上下文和 record 参数。
+    // 覆盖这是可选的，默认实现将舍入 #getFloat 的结果。
     @Override
     public int getInt(LootContext context) {
         return -this.base.getInt(context);
     }
 
-    // Return a set of the loot context params used by this provider. See below for more information.
-    // Since we have a base value, we just defer to the base.
+    // 返回此提供器使用的一组战利品上下文参数。请参阅下文了解更多信息。
+    // 因为我们有一个基值，所以我们只是遵循基值。
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return this.base.getReferencedContextParams();
     }
 
-    // Tells the provider what to use for serialization.
+    // 告诉提供器使用什么进行序列化。
     @Override
     public MapCodec<InvertedSignProvider> codec() {
         return CODEC;
@@ -129,13 +129,13 @@ public record InvertedSignLevelBasedValue(LevelBasedValue base) implements Level
             LevelBasedValue.CODEC.fieldOf("base").forGetter(InvertedLevelBasedValue::base)
     ).apply(inst, InvertedLevelBasedValue::new));
 
-    // Perform our operation.
+    // 执行我们的操作。
     @Override
     public float calculate(int level) {
         return -this.base.calculate(level);
     }
 
-    // Tells the value what to use for serialization.
+    // 告诉值用于序列化的内容。
     @Override
     public MapCodec<InvertedLevelBasedValue> codec() {
         return CODEC;
@@ -159,13 +159,13 @@ public static final Supplier<MapCodec<InvertedSignLevelBasedValue>> INVERTED_SIG
 
 ```java
 public record HasXpLevelCondition(int level) implements LootItemCondition {
-    // Add the context we need for this condition. In our case, this will be the xp level the player must have.
+    // 添加此条件所需的上下文。在我们的例子中，此将是玩家必须拥有的 XP 等级。
     public static final MapCodec<HasXpLevelCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.INT.fieldOf("level").forGetter(HasXpLevelCondition::level)
     ).apply(inst, HasXpLevelCondition::new));
     
-    // Evaluates the condition here. Get the required loot context parameters from the provided LootContext.
-    // In our case, we want the KILLER_ENTITY to have at least our required level.
+    // 评估此处的条件。从提供的 LootContext 获取所需的战利品上下文参数。
+    // 在我们的例子中，我们希望 KILLER_ENTITY 至少具有我们所需的级别。
     @Override
     public boolean test(LootContext context) {
         @Nullable
@@ -173,13 +173,13 @@ public record HasXpLevelCondition(int level) implements LootItemCondition {
         return entity instanceof Player player && player.experienceLevel >= level; 
     }
     
-    // Tell the game what parameters we expect from the loot context. Used in validation.
+    // 告诉游戏我们期望从战利品上下文中获得哪些参数。用于验证。
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return ImmutableSet.of(LootContextParams.KILLER_ENTITY);
     }
 
-    // Tells the condition what to use for serialization.
+    // 告诉条件使用什么进行序列化。
     @Override
     public MapCodec<HasXpLevelCondition> codec() {
         return CODEC;
@@ -202,15 +202,15 @@ public static final Supplier<MapCodec<HasXpLevelCondition>> MIN_XP_LEVEL =
 首先创建一个扩展 `LootItemFunction` 的自定义类。`LootItemFunction` 扩展了 `BiFunction<ItemStack, LootContext, ItemStack>`，因此我们的目标是使用现有 ItemStack 与战利品上下文，返回一个经过修改的新 ItemStack。不过，几乎所有战利品函数都不会直接扩展 `LootItemFunction`，而是改为扩展 `LootItemConditionalFunction`。该类内置了将战利品条件应用到函数的功能——只有战利品条件成立时才会应用函数。作为示例，我们为 Item 应用一个具有指定等级的随机附魔：
 
 ```java
-// Code adapted from vanilla's EnchantRandomlyFunction class.
-// LootItemConditionalFunction is an abstract class, not an interface, so we cannot use a record here.
+// 代码改编自原版 EnchantRandomlyFunction 类。
+// LootItemConditionalFunction 是一个 abstract 类，而不是接口，因此我们不能在这里使用 record。
 public class RandomEnchantmentWithLevelFunction extends LootItemConditionalFunction {
-    // Our context: an optional list of enchantments, and a level.
+    // 我们的上下文：可选的附魔列表和一个级别。
     private final Optional<HolderSet<Enchantment>> enchantments;
     private final int level;
-    // Our codec.
+    // 我们的编解码器。
     public static final MapCodec<RandomEnchantmentWithLevelFunction> CODEC =
-            // #commonFields adds the conditions field.
+            // #commonFields 添加条件字段。
             RecordCodecBuilder.mapCodec(inst -> commonFields(inst).and(inst.group(
                     RegistryCodecs.homogeneousList(Registries.ENCHANTMENT).optionalFieldOf("enchantments").forGetter(e -> e.enchantments),
                     Codec.INT.fieldOf("level").forGetter(e -> e.level)
@@ -222,7 +222,7 @@ public class RandomEnchantmentWithLevelFunction extends LootItemConditionalFunct
         this.level = level;
     }
     
-    // Run our enchantment application logic. Most of this is copied from EnchantRandomlyFunction#run.
+    // 运行我们的附魔应用程序逻辑。 其大部分内容是从 EnchantRandomlyFunction#run 复制而来的。
     @Override
     public ItemStack run(ItemStack stack, LootContext context) {
         RandomSource random = context.getRandom();
@@ -244,7 +244,7 @@ public class RandomEnchantmentWithLevelFunction extends LootItemConditionalFunct
         return stack;
     }
 
-    // Tells the function what to use for serialization.
+    // 告诉函数使用什么进行序列化。
     @Override
     public MapCodec<RandomEnchantmentWithLevelFunction> codec() {
         return CODEC;

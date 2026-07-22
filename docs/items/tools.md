@@ -26,23 +26,23 @@
 要创建一套标准工具，必须先定义 `ToolMaterial`。参考值可在 `ToolMaterial` 的常量中找到。此示例使用铜制工具，你可以使用自己的材料并按需要调整这些值。
 
 ```java
-// We place copper somewhere between stone and iron.
+// 我们将铜放置在石头和铁之间。
 public static final ToolMaterial COPPER_MATERIAL = new ToolMaterial(
-        // The tag that determines what blocks this material cannot break. See below for more information.
+        // 确定阻止此材料不能破坏的标签。请参阅下文了解更多信息。
         MyBlockTags.INCORRECT_FOR_COPPER_TOOL,
-        // Determines the durability of the material.
-        // Stone is 131, iron is 250.
+        // 确定材料的耐久性。
+        // 石头为131，铁为250。
         200,
-        // Determines the mining speed of the material. Unused by swords.
-        // Stone uses 4, iron uses 6.
+        // 决定材料的开采速度。不为剑所用。
+        // 石头用4个，铁用6个。
         5f,
-        // Determines the attack damage bonus. Different tools use this differently. For example, swords do (getAttackDamageBonus() + 4) damage.
-        // Stone uses 1, iron uses 2, corresponding to 5 and 6 attack damage for swords, respectively; our sword does 5.5 damage now.
+        // 确定攻击力加值。不同的工具使用其方式不同。例如，剑 do (getAttackDamageBonus() + 4) 伤害。
+        // 石用1，铁用2，分别对应剑的5点和6点攻击力；我们的剑现在造成 5.5 伤害。
         1.5f,
-        // Determines the enchantability of the material. This represents how good the enchantments on this tool will be.
-        // Gold uses 22, we put copper slightly below that.
+        // 确定材料的附魔能力。这代表了此工具上的附魔会有多好。
+        // 黄金使用 22，我们将铜放在略低于该值的位置。
         20,
-        // The tag that determines what items can repair this material.
+        // 确定哪些物品可以修复此材料的标签。
         Tags.Items.INGOTS_COPPER
 );
 ```
@@ -50,18 +50,18 @@ public static final ToolMaterial COPPER_MATERIAL = new ToolMaterial(
 有了 `ToolMaterial` 后，就可以用它[注册][registering]工具。所有 `tool` 委托方法都有相同的三个参数：
 
 ```java
-// ITEMS is a DeferredRegister.Items
+// ITEMS 是 DeferredRegister.Items
 public static final DeferredItem<Item> COPPER_SWORD = ITEMS.registerItem(
     "copper_sword",
     props -> new Item(
-        // The item properties.
+        // 物品 property。
         props.sword(
-            // The material to use.
+            // 要使用的材料。
             COPPER_MATERIAL,
-            // The type-specific attack damage bonus. 3 for swords, 1.5 for shovels, 1 for pickaxes, varying for axes and hoes.
+            // 特定类型的攻击力加成。剑为 3，铲子为 1.5，镐为 1，斧子和锄头各不相同。
             3,
-            // The type-specific attack speed modifier. The player has a default attack speed of 4, so to get to the desired
-            // value of 1.6f, we use -2.4f. -2.4f for swords, -3f for shovels, -2.8f for pickaxes, varying for axes and hoes.
+            // 特定于类型的攻击速度调节器。玩家的默认攻击速度为 4，因此要达到所需的攻击速度
+            // 值为1.6f，我们使用-2.4f。 -2.4f 表示剑，-3f 表示铲子，-2.8f 表示镐，斧头和锄头各不相同。
             -2.4f,
         )
     )
@@ -76,27 +76,27 @@ public static final DeferredItem<Item> COPPER_SPEAR = ITEMS.registerItem(
     "copper_spear",
     props -> new Item(
         props.spear(
-            // The material to use.
+            // 要使用的材料。
             COPPER_MATERIAL,
-            // The type-specific attack speed modifier. This value is scaled by performing the reciprocal of this value, then
-            // subtracting 4.
+            // 特定于类型的攻击速度调节器。通过执行此值的倒数来缩放该值，然后
+            // 减去 4。
             0.85f,
-            // The damage multiplier applied when using the spear as a kinetic weapon, assuming one of the conditions are met.
+            // 使用长矛作为动能武器时应用的伤害倍数，假设满足其中一个条件。
             0.82f,
-            // The number of seconds that must pass before the spear can be used as a kinetic weapon.
+            // 长矛可以用作动能武器之前必须经过的秒数。
             0.65f,
-            // The maximum number of seconds that can pass while using the kinetic weapon to dismount a hit entity.
+            // 使用动能武器卸下击中实体时可以经过的最大秒数。
             4.0f,
-            // The minimum speed, in blocks, of the attacker using the kinetic weapon to dismount a hit entity.
+            // 攻击者使用动能武器卸下被击中实体的最小速度（以格为单位）。
             9.0f,
-            // The maximum number of seconds that can pass while using the kinetic weapon to knockback a hit entity.
+            // 使用动能武器击退击中实体时可以经过的最大秒数。
             8.25f,
-            // The minimum speed, in blocks, of the attacker using the kinetic weapon to knockack a hit entity.
+            // 攻击者使用动能武器击倒被击中实体的最小速度（以格为单位）。
             5.1f,
-            // The maximum number of seconds that can pass while using the kinetic weapon to damage a hit entity.
+            // 使用动能武器对击中实体造成伤害时可以经过的最大秒数。
             12.5f,
-            // The minimum speed, in blocks, of the attacker using the kinetic weapon to damage a hit entity. This is relative
-            // to the attacked entity's speed.
+            // 攻击者使用动能武器伤害命中实体的最小速度（以格为单位）。这是相对的
+            // 为被攻击实体的速度。
             4.6f
         )
     )
@@ -116,10 +116,10 @@ public static final DeferredItem<Item> COPPER_SPEAR = ITEMS.registerItem(
 也可以创建自己的 tag：
 
 ```java
-// This tag will allow us to add these blocks to the incorrect tags that cannot mine them
+// 这个标签将允许我们将这些方块添加到无法挖掘它们的错误标签中
 public static final TagKey<Block> NEEDS_COPPER_TOOL = TagKey.create(BuiltInRegistries.BLOCK.key(), Identifier.fromNamespaceAndPath(MOD_ID, "needs_copper_tool"));
 
-// This tag will be passed into our material
+// 该标签将传递到我们的材料中
 public static final TagKey<Block> INCORRECT_FOR_COPPER_TOOL = TagKey.create(BuiltInRegistries.BLOCK.key(), Identifier.fromNamespaceAndPath(MOD_ID, "incorrect_for_cooper_tool"));
 ```
 

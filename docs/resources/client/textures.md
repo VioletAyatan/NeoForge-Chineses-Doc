@@ -10,34 +10,34 @@ Minecraft 中的所有纹理都是 PNG 文件，位于某个命名空间的 `tex
 
 ```json5
 {
-    // Metadata for a general texture
+    // 通用纹理的元数据
     "texture": {
-        // Whether the texture will be blurred if needed. Defaults to false.
-        // Currently specified by the codec, but unused otherwise both in the files and in code.
+        // 如果需要，是否对纹理进行模糊处理。默认为 false。
+        // 当前由编解码器指定，但在文件和代码中均未使用。
         "blur": true,
-        // Whether the texture will be clamped if needed. Defaults to false.
-        // Currently specified by the codec, but unused otherwise both in the files and in code.
+        // 如果需要，是否会夹紧纹理。默认为 false。
+        // 当前由编解码器指定，但在文件和代码中均未使用。
         "clamp": true,
-        // Sets the strategy used when generating mipmaps (lower resolutions of textures used at
-        // a distance).
-        // Can either be:
-        // - `mean`: The default that averages the color between four pixels.
-        // - `cutout`: 'mean', except that all levels are generated from the original texture
-        // rather than the close mipmap, with alpha value snapped to 0 or 1 using a threshold
-        // of 0.2.
-        // - `strict_cutout`: 'cutout', except the alpha value snaps using a threshold of 0.6.
-        // - `dark_cutout`: 'mean', except that the surrounding pixels are only included in the
-        // average if their alpha is not 0.
+        // 设置生成 mipmaps 时使用的策略（使用较低分辨率的纹理）
+        // 距离）。
+        // 可以是：
+        // - `mean`：默认值，平均四个像素之间的颜色。
+        // - `cutout`：'mean'，除了所有级别都是从原始纹理生成的
+        // 而不是接近的 mipmap，使用阈值将 alpha 值捕捉到 0 或 1
+        // 为 0.2。
+        // - `strict_cutout`：'cutout'，但 alpha 值使用阈值 0.6 捕捉。
+        // - `dark_cutout`：'mean'，只不过周围的像素只包含在
+        // 平均值（如果其 alpha 不为 0）。
         "mipmap_strategy": "mean",
-        // Offsets the cutoff alpha when determining whether a pixel should be made either fully
-        // opaque or transparent for mipmaps. For example, setting to 0.3 with the 'cutout' strategy
-        // changes the alpha value snap to 0.2 + 0.3 = 0.5.
+        // 在确定像素是否应完全生成时偏移截止 alpha
+        // 对于 mipmap 不透明或透明。例如，使用 'cutout' 策略设置为 0.3
+        // 将 alpha 值捕捉更改为 0.2 + 0.3 = 0.5。
         "alpha_cutoff_bias": 0.3
     },
 
-    // Metadata for a texture used as a gui sprite
+    // 用作 GUI sprite的纹理的元数据
     "gui": {
-        // Specifies how the texture will be scaled if needed. Can be one of these three:
+        // 指定纹理在需要时如何缩放。可以是以下三个之一：
         "scaling": {
             "type": "stretch" // default
         },
@@ -47,25 +47,25 @@ Minecraft 中的所有纹理都是 PNG 文件，位于某个命名空间的 `tex
             "height": 16
         },
         "scaling": {
-            // Like "tile", but allows specifying the border offsets.
+            // 与 "tile" 类似，但允许指定边界偏移。
             "type": "nine_slice",
             "width": 16,
             "height": 16,
-            // May also be a single int that is used as the value for all four sides.
+            // 也可能是用作所有四个边的值的单个 int。
             "border": {
                 "left": 0,
                 "top": 0,
                 "right": 0,
                 "bottom": 0
             },
-            // When true the center part of the texture will be applied like
-            // the stretch type instead of a nine slice tiling.
+            // 当 true 时，纹理的中心部分将像这样应用
+            // 拉伸类型而不是九片平铺。
             "stretch_inner": true
         }
     },
 
-    // Metadata for an animated texture
-    // See below
+    // 动画纹理的元数据
+    // 见下文
     "animation": {}
 }
 ```
@@ -79,13 +79,13 @@ Minecraft 原生支持 Block 和 Item 的动画纹理。动画纹理由一个纹
 ```json5
 {
     "animation": {
-        // A custom order in which the frames are played. If omitted, the frames are played top to bottom.
+        // 播放帧的自定义顺序。如果省略，则从上到下播放帧。
         "frames": [1, 0],
-        // How long one frame stays before switching to the next animation stage, in frames. Defaults to 1.
+        // 切换到下一动画阶段前，每帧持续的帧数。默认为 1。
         "frametime": 5,
-        // Whether to interpolate between animation stages. Defaults to false.
+        // 是否在动画阶段之间进行插值。默认为 false。
         "interpolate": true,
-        // Width and height of one animation stage. If omitted, uses the texture width for both of these.
+        // 一个动画舞台的宽度和高度。如果省略，则对这两者使用纹理宽度。
         "width": 12,
         "height": 12
     }
