@@ -1,8 +1,8 @@
 # 数据与网络（Data and Networking）
 
-没有数据的 Entity 用处不大，因此在 Entity 上存储数据至关重要。所有 Entity 都存储一些默认数据，例如其类型与位置。本文将说明如何添加自己的数据，以及如何同步这些数据。
+没有数据的实体用处不大，因此在实体上存储数据至关重要。所有实体都存储一些默认数据，例如其类型与位置。本文将说明如何添加自己的数据，以及如何同步这些数据。
 
-添加数据最简单的方式，是在 `Entity` 类中添加字段。之后可以按任意方式与这些数据交互。然而，一旦必须同步数据，这种方式很快就会变得麻烦。原因在于，大多数 Entity 逻辑只在服务端运行，而更新只会偶尔（取决于 [`EntityType`][entitytype] 的 `clientUpdateInterval` 值）发送到客户端；当服务端 tick 速度过慢时，容易观察到 Entity “卡顿”，这也是原因所在。
+添加数据最简单的方式，是在 `Entity` 类中添加字段。之后可以按任意方式与这些数据交互。然而，一旦必须同步数据，这种方式很快就会变得麻烦。原因在于，大多数实体逻辑只在服务端运行，而更新只会偶尔（取决于 [`EntityType`][entitytype] 的 `clientUpdateInterval` 值）发送到客户端；当服务端 tick 速度过慢时，容易观察到实体 “卡顿”，这也是原因所在。
 
 因此，原版引入了几个辅助系统，每个系统都有特定用途。必要时，也始终可以选择[发送自定义数据][custom]。
 
@@ -13,10 +13,10 @@
 - `EntityDataSerializer` 基本上是对 [`StreamCodec`][streamcodec] 的封装。
   - Minecraft 使用硬编码的 serializer map。NeoForge 将这个 map 转换为 registry，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
   - Minecraft 在 `EntityDataSerializers` 类中定义了多种默认 `EntityDataSerializer`。
-- `EntityDataAccessor` 由 Entity 持有，用于获取与设置数据值。
-- `SynchedEntityData` 本身持有某个 Entity 的所有 `EntityDataAccessor`，并根据需要自动调用 `EntityDataSerializer` 来同步值。
+- `EntityDataAccessor` 由实体持有，用于获取与设置数据值。
+- `SynchedEntityData` 本身持有某个实体的所有 `EntityDataAccessor`，并根据需要自动调用 `EntityDataSerializer` 来同步值。
 
-首先在 Entity 类中创建 `EntityDataAccessor`：
+首先在实体类中创建 `EntityDataAccessor`：
 
 ```java
 public class MyEntity extends Entity {
@@ -49,7 +49,7 @@ public class MyEntity extends Entity {
 }
 ```
 
-最后，可以按如下方式获取与设置 Entity 数据（假设代码位于 `MyEntity` 内的方法中）：
+最后，可以按如下方式获取与设置实体数据（假设代码位于 `MyEntity` 内的方法中）：
 
 ```java
 int data = this.getEntityData().get(MY_DATA);
@@ -75,7 +75,7 @@ protected void addAdditionalSaveData(ValueOutput output) {
 
 ## 自定义生成数据
 
-有时，Entity 在客户端生成时需要一些自定义数据，但这些数据之后不会随时间变化。遇到这种情况，可以让 Entity 实现 `IEntityWithComplexSpawn` 接口，并使用其 `#writeSpawnData` 与 `#readSpawnData` 两个方法向网络 buffer 写入数据及从中读取数据：
+有时，实体在客户端生成时需要一些自定义数据，但这些数据之后不会随时间变化。遇到这种情况，可以让实体实现 `IEntityWithComplexSpawn` 接口，并使用其 `#writeSpawnData` 与 `#readSpawnData` 两个方法向网络缓冲区写入数据及从中读取数据：
 
 ```java
 @Override
@@ -89,7 +89,7 @@ public void readSpawnData(RegistryFriendlyByteBuf buf) {
 }
 ```
 
-此外，还可以在生成时发送自己的 packet。为此，请覆盖 `IEntityExtension#sendPairingData`，并像发送其他 packet 一样在其中发送你的 packet：
+此外，还可以在生成时发送自己的数据包。为此，请覆盖 `IEntityExtension#sendPairingData`，并像发送其他数据包一样在其中发送你的数据包：
 
 ```java
 @Override
@@ -101,18 +101,18 @@ public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> p
 }
 ```
 
-有关自定义网络 packet 的更多信息，请参阅[网络文章][networking]。
+有关自定义网络数据包的更多信息，请参阅[网络文章][networking]。
 
 ## 数据附件
 
-Entity 已经过 patch，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的 Entity（即 Minecraft 或其他模组添加的 Entity）上定义自定义数据。更多信息请参阅所链接的文章。
+实体已经过 patch，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的实体（即 Minecraft 或其他模组添加的实体）上定义自定义数据。更多信息请参阅所链接的文章。
 
 ## 自定义网络消息
 
-进行同步时，也始终可以选择使用自定义 packet，在需要时发送额外信息。更多信息请参阅[网络文章][networking]。
+进行同步时，也始终可以选择使用自定义数据包，在需要时发送额外信息。更多信息请参阅[网络文章][networking]。
 
 [attachment]: ../datastorage/attachments.md
-[custom]: #custom-network-messages
+[custom]: #自定义网络消息
 [entitytype]: index.md#entitytype
 [networking]: ../networking/index.md
 [registration]: ../concepts/registries.md#methods-for-registering

@@ -1,20 +1,20 @@
 # 容器（Containers）
 
-[BlockEntity][blockentity] 的常见用途之一是存储某种 Item。Minecraft 中一些最重要的 [Block][block]，例如熔炉或箱子，都会为此使用 BlockEntity。要在某个对象上存储 Item，Minecraft 使用 `Container`。
+[方块实体][blockentity] 的常见用途之一是存储某种物品。Minecraft 中一些最重要的 [方块][block]，例如熔炉或箱子，都会为此使用方块实体。要在某个对象上存储物品，Minecraft 使用 `Container`。
 
-`Container` 接口定义 `#getItem`、`#setItem` 与 `#removeItem` 等方法，可用于查询和更新 Container。由于它是接口，因此实际上并不包含底层 list 或其他数据结构；这由实现系统决定。
+`Container` 接口定义 `#getItem`、`#setItem` 与 `#removeItem` 等方法，可用于查询和更新容器。由于它是接口，因此实际上并不包含底层 list 或其他数据结构；这由实现系统决定。
 
-因此，`Container` 不仅可以在 BlockEntity 上实现，也可以由任何其他类实现。典型示例包括 Entity 物品栏，以及背包等常见模组 [Item][item]。
+因此，`Container` 不仅可以在方块实体上实现，也可以由任何其他类实现。典型示例包括实体物品栏，以及背包等常见模组 [物品][item]。
 
 :::warning
 NeoForge 提供 `ItemStacksResourceHandler` 类，用于在许多位置替代 `Container`。只要可能，就应优先使用它而不是 `Container`，因为它能以更简洁的方式与其他 `Container`／`ItemStacksResourceHandler` 交互。
 
-本文存在的主要原因是为原版代码提供参考，或供你开发多 loader 模组时使用。在自己的代码中，只要可能，就始终使用 `ItemStacksResourceHandler`！相关文档仍在编写中。
+本文存在的主要原因是为原版代码提供参考，或供你开发多加载器模组时使用。在自己的代码中，只要可能，就始终使用 `ItemStacksResourceHandler`！相关文档仍在编写中。
 :::
 
-## 基础 Container 实现
+## 基础容器实现
 
-只要满足指定的方法（与 Java 中的其他接口相同），就可以按任意方式实现 Container。不过，通常会使用固定长度的 `NonNullList<ItemStack>` 作为底层结构。单槽位 Container 也可以只使用一个 `ItemStack` 字段。
+只要满足指定的方法（与 Java 中的其他接口相同），就可以按任意方式实现容器。不过，通常会使用固定长度的 `NonNullList<ItemStack>` 作为底层结构。单槽位容器也可以只使用一个 `ItemStack` 字段。
 
 例如，一个有 27 个槽位（一个箱子大小）的基础 `Container` 实现如下：
 
@@ -97,16 +97,16 @@ public class MyContainer implements Container {
 
 ### `SimpleContainer`
 
-`SimpleContainer` 类是一个附带少量额外功能的基础 Container 实现。如果需要没有特殊要求的 Container 实现，可以使用它。
+`SimpleContainer` 类是一个附带少量额外功能的基础容器实现。如果需要没有特殊要求的容器实现，可以使用它。
 
 ### `BaseContainerBlockEntity`
 
-`BaseContainerBlockEntity` 类是 Minecraft 中许多重要 BlockEntity 的基础类，例如箱子及类似箱子的 Block、各种类型的熔炉、漏斗、发射器、投掷器、酿造台及其他少数对象。
+`BaseContainerBlockEntity` 类是 Minecraft 中许多重要方块实体的基础类，例如箱子及类似箱子的方块、各种类型的熔炉、漏斗、发射器、投掷器、酿造台及其他少数对象。
 
 除 `Container` 外，它还实现 `MenuProvider` 与 `Nameable` 接口：
 
-- `Nameable` 定义几个与设置（自定义）名称有关的方法。除许多 BlockEntity 外，`Entity` 等类也会实现它。它使用 [`Component` 系统][component]。
-- 另一方面，`MenuProvider` 定义 `#createMenu` 方法，允许从 Container 构造 [`AbstractContainerMenu`][menu]。这意味着，如果想要一个没有关联 GUI 的 Container（例如唱片机），就不适合使用此类。
+- `Nameable` 定义几个与设置（自定义）名称有关的方法。除许多方块实体外，`Entity` 等类也会实现它。它使用 [`Component` 系统][component]。
+- 另一方面，`MenuProvider` 定义 `#createMenu` 方法，允许从容器构造 [`AbstractContainerMenu`][menu]。这意味着，如果想要一个没有关联 GUI 的容器（例如唱片机），就不适合使用此类。
 
 `BaseContainerBlockEntity` 通过 `#getItems` 与 `#setItems` 两个方法，封装通常会对 `NonNullList<ItemStack>` 执行的所有调用，从而大幅减少必须编写的样板代码。`BaseContainerBlockEntity` 的示例实现如下：
 
@@ -154,7 +154,7 @@ public class MyBlockEntity extends BaseContainerBlockEntity {
 }
 ```
 
-请记住，此类同时是 `BlockEntity` 与 `Container`。这意味着可以将其用作 BlockEntity 的 supertype，从而得到带有预实现 Container 的可用 BlockEntity。
+请记住，此类同时是 `BlockEntity` 与 `Container`。这意味着可以将其用作方块实体的超类，从而得到带有预实现容器的可用方块实体。
 
 :::info
 实现 `Container` 的 `BlockEntity` 默认会处理其内容的掉落。如果选择不实现 `Container`，则需要自行处理[移除逻辑][beremove]。
@@ -162,7 +162,7 @@ public class MyBlockEntity extends BaseContainerBlockEntity {
 
 ### `WorldlyContainer`
 
-`WorldlyContainer` 是 `Container` 的子接口，允许按 `Direction` 访问给定 `Container` 的槽位。它主要用于只向特定一侧暴露 Container 一部分的 BlockEntity。例如，可用于一侧输出、其他所有侧输入的机器，反之亦然。该接口的简单实现如下：
+`WorldlyContainer` 是 `Container` 的子接口，允许按 `Direction` 访问给定 `Container` 的槽位。它主要用于只向特定一侧暴露容器一部分的方块实体。例如，可用于一侧输出、其他所有侧输入的机器，反之亦然。该接口的简单实现如下：
 
 ```java
 // 请参阅上面的 BaseContainerBlockEntity 方法。你当然可以直接扩展 BlockEntity
@@ -197,11 +197,11 @@ public class MyBlockEntity extends BaseContainerBlockEntity implements WorldlyCo
 }
 ```
 
-## 使用 Container
+## 使用容器
 
-创建 Container 后，下面来使用它们。
+创建容器后，下面来使用它们。
 
-由于 `Container` 与 `BlockEntity` 有大量重叠，只要可能，最好通过把 BlockEntity cast 为 `Container` 来获取 Container：
+由于 `Container` 与 `BlockEntity` 有大量重叠。只要可能，最好通过把 `BlockEntity` 转换为 `Container` 来获取容器：
 
 ```java
 if (blockEntity instanceof Container container) {
@@ -223,14 +223,14 @@ container.removeItem(2, 16);
 ```
 
 :::warning
-如果尝试访问超过 Container 大小的槽位，Container 可能抛出 exception。也可能返回 `ItemStack.EMPTY`，例如 `SimpleContainer` 就是这样。
+如果尝试访问超过容器大小的槽位，容器可能抛出异常。也可能返回 `ItemStack.EMPTY`，例如 `SimpleContainer` 就是这样。
 :::
 
 ### `ContainerUser`
 
-能够访问 Container 的 LivingEntity 会实现 `ContainerUser`。每个 user 都会定义自己是否打开了 Container，以及该 Entity 能与 Container 交互的最大 Block 距离。与 Container 对象交互时（例如右键点击箱子），`Container` 会使用 `ContainerUser` 调用 `startOpen`；Container 对象关闭后（例如退出箱子菜单），调用 `stopOpen`。
+能够访问容器的生命实体会实现 `ContainerUser`。每个 user 都会定义自己是否打开了容器，以及该实体能与容器互动的最大方块距离。与容器对象互动时（例如右键点击箱子），`Container` 会使用 `ContainerUser` 调用 `startOpen`；容器对象关闭后（例如退出箱子菜单），调用 `stopOpen`。
 
-这些方法通常用于通过 `ContainerOpenersCounter` 追踪打开 Container 的 LivingEntity 数量；该计数器用于部分 Entity AI 与渲染。
+这些方法通常用于通过 `ContainerOpenersCounter` 追踪打开容器的生命实体数量；该计数器用于部分实体 AI 与渲染。
 
 ## `ItemStack` 上的 `Container`
 
@@ -266,17 +266,17 @@ public class MyBackpackContainer extends SimpleContainer {
 }
 ```
 
-这样就创建了由 Item 提供底层支持的 Container！调用 `new MyBackpackContainer(stack)` 即可为菜单或其他用例创建 Container。
+这样就创建了由物品提供底层支持的容器！调用 `new MyBackpackContainer(stack)` 即可为菜单或其他用例创建容器。
 
 :::warning
-请注意，直接与 `Container` 交互的菜单在修改 `ItemStack` 时必须对其调用 `#copy()`，否则会破坏数据组件的 immutable 约定。NeoForge 为此提供了 `StackCopySlot` 类。
+请注意，直接与 `Container` 交互的菜单在修改 `ItemStack` 时必须对其调用 `#copy()`，否则会破坏数据组件的不可变约定。NeoForge 为此提供了 `StackCopySlot` 类。
 :::
 
 ## `Entity` 上的 `Container`
 
-[`Entity`][entity] 上的 `Container` 处理起来很棘手：无法以通用方式判断 Entity 是否有 Container。这完全取决于正在处理的 Entity，因此可能需要大量特殊处理。
+[`Entity`][entity] 上的 `Container` 处理起来很棘手：无法以通用方式判断实体是否有容器。这完全取决于正在处理的实体，因此可能需要大量特殊处理。
 
-如果自行创建 Entity，可以直接让它实现 `Container`；但请注意，无法使用 `SimpleContainer` 等超类（因为 `Entity` 已经是超类）。
+如果自行创建实体，可以直接让它实现 `Container`；但请注意，无法使用 `SimpleContainer` 等超类（因为 `Entity` 已经是超类）。
 
 ### `Mob` 上的 `Container`
 
@@ -284,7 +284,7 @@ public class MyBackpackContainer extends SimpleContainer {
 
 与 `Container` 最显著的区别是，它没有类似 list 的顺序（尽管 `Mob` 在后台使用 `NonNullList<ItemStack>`）。访问不是通过槽位索引进行，而是通过七个 `EquipmentSlot` 枚举值：`MAINHAND`、`OFFHAND`、`FEET`、`LEGS`、`CHEST`、`HEAD` 和 `BODY`（其中 `BODY` 用于马和狗的盔甲）。
 
-与 Mob “槽位”交互的示例如下：
+与生物 “槽位”交互的示例如下：
 
 ```java
 // 获取HEAD（头盔）槽中的ItemStack。
@@ -299,16 +299,16 @@ mob.setDropChance(EquipmentSlot.FEET, 1f);
 
 ### `InventoryCarrier`
 
-`InventoryCarrier` 是村民等部分 LivingEntity 实现的接口。它声明 `#getInventory` 方法，返回 `SimpleContainer`。需要实际物品栏、而不只是 `EquipmentUser` 提供的装备槽位的非玩家 Entity 会使用此接口。
+`InventoryCarrier` 是村民等部分生命实体实现的接口。它声明 `#getInventory` 方法，返回 `SimpleContainer`。需要实际物品栏、而不只是 `EquipmentUser` 提供的装备槽位的非玩家实体会使用此接口。
 
 ### `Player` 上的 `Container`（玩家物品栏）
 
-玩家物品栏通过 `Inventory` 类实现；该类同时实现 `Container` 与之前提到的 `Nameable` 接口。随后，`Inventory` 实例作为名为 `inventory` 的字段存储在 `Player` 上，可通过 `Player#getInventory` 访问。可以像与其他 Container 一样与物品栏交互。
+玩家物品栏通过 `Inventory` 类实现；该类同时实现 `Container` 与之前提到的 `Nameable` 接口。随后，`Inventory` 实例作为名为 `inventory` 的字段存储在 `Player` 上，可通过 `Player#getInventory` 访问。可以像与其他容器一样与物品栏交互。
 
 物品栏内容存储在两个位置：
 
 - `NonNullList<ItemStack> items` list 包含 36 个主物品栏槽位，其中包括 9 个快捷栏槽位（索引 0–8）。
-- `EntityEquipment equipment` map 按顺序存储 `EquipmentSlot` ItemStack：盔甲槽位（`FEET`、`LEGS`、`CHEST`、`HEAD`）、`OFFHAND`、`BODY` 与 `SADDLE`。  
+- `EntityEquipment equipment` map 负责按顺序存储 `EquipmentSlot` 对应的物品栈：包括护甲槽（`FEET`, `LEGS`, `CHEST`, `HEAD`）, `OFFHAND`, `BODY` 以及 `SADDLE`。
 
 迭代物品栏内容时，建议先迭代 `items`，再使用 `Inventory#EQUIPMENT_SLOT_MAPPING` 作为索引迭代 `equipment`。
 
