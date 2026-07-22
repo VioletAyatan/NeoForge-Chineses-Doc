@@ -1,21 +1,21 @@
-# 属性（Attribute）
+# 实体属性（Attribute）
 
-Attribute 是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基本 property。所有 attribute 都以 double 值存储，并自动同步。原版提供了大量默认 attribute，你也可以添加自己的 attribute。
+实体属性是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基础数值。所有实体属性都以 double 值存储，并自动同步。原版提供了大量默认实体属性，你也可以添加自定义实体属性。
 
-由于历史实现原因，并非所有 attribute 都适用于所有 Entity。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
+由于历史实现原因，并非所有实体属性都适用于所有 Entity。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
 
-## 内置 Attribute
+## 内置实体属性（Attribute）
 
 ### Minecraft
 
-以下 attribute 位于 `minecraft` namespace，其代码内的值可在 `Attributes` 类中找到。
+以下实体属性位于 `minecraft` namespace，其代码内的值可在 `Attributes` 类中找到。
 
 | 名称                             | 代码中                           | 范围           | 默认值 | 用途                                                                                                                                                                  |
 |----------------------------------|----------------------------------|----------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `armor`                          | `ARMOR`                          | `[0,30]`       | 0      | Entity 的盔甲值。值 1 表示快捷栏上方半个胸甲图标。                                                                                                                     |
 | `armor_toughness`                | `ARMOR_TOUGHNESS`                | `[0,20]`       | 0      | Entity 的盔甲韧性值。更多信息参见 [Minecraft Wiki][wiki] 上的[盔甲韧性][toughness]。                                                                                    |
 | `attack_damage`                  | `ATTACK_DAMAGE`                  | `[0,2048]`     | 2      | Entity 不使用任何武器或类似 Item 时造成的基础攻击伤害。                                                                                                               |
-| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | Entity 造成的额外击退。击退还有一项不由此 attribute 表示的基础强度。                                                                                                   |
+| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | Entity 造成的额外击退。击退还有一项不由此实体属性表示的基础强度。                                                                                                   |
 | `attack_speed`                   | `ATTACK_SPEED`                   | `[0,1024]`     | 4      | Entity 的攻击冷却。数值越高，冷却越多；设置为 0 实际上会重新启用 1.9 之前的战斗方式。                                                                                   |
 | `block_break_speed`              | `BLOCK_BREAK_SPEED`              | `[0,1024]`     | 1      | Entity 挖掘 Block 的速度，作为乘法 modifier。更多信息参见[挖掘速度][miningspeed]。                                                                                      |
 | `block_interaction_range`        | `BLOCK_INTERACTION_RANGE`        | `[0,64]`       | 4.5    | Entity 能与 Block 交互的距离，以 Block 为单位。                                                                                                                        |
@@ -49,12 +49,12 @@ Attribute 是 [LivingEntity][livingentity] 的特殊字段，决定最大生命�
 | `waypoint_receive_range`         | `WAYPOINT_RECEIVE_RANGE`         | `[0,60000000]` | 0      | Entity 可接收另一个 transmitter 的距离。                                                                                                                               |
 
 :::warning
-Mojang 相当随意地设置了某些 attribute 上限，其中尤其明显的是上限为 30 的盔甲值。NeoForge 不会修改这些上限，但有模组可以更改它们。
+Mojang 相当随意地设置了某些实体属性的上限，其中尤其明显的是上限为 30 的盔甲值。NeoForge 不会修改这些上限，但有模组可以更改它们。
 :::
 
 ### NeoForge
 
-以下 attribute 位于 `neoforge` namespace，其代码内的值可在 `NeoForgeMod` 类中找到。
+以下实体属性位于 `neoforge` namespace，其代码内的值可在 `NeoForgeMod` 类中找到。
 
 | 名称               | 代码中             | 范围       | 默认值 | 用途                                                                                                                                                           |
 |--------------------|--------------------|------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -62,9 +62,9 @@ Mojang 相当随意地设置了某些 attribute 上限，其中尤其明显的�
 | `nametag_distance` | `NAMETAG_DISTANCE` | `[0,32]`   | 32     | Entity 名牌可见的最远距离，以 Block 为单位。                                                                                                                   |
 | `swim_speed`       | `SWIM_SPEED`       | `[0,1024]` | 1      | Entity 位于水下时应用的移动速度 multiplier。它独立于 `minecraft:water_movement_efficiency` 应用。                                                              |
 
-## 默认 Attribute
+## 默认实体属性
 
-创建 `LivingEntity` 时，必须为其注册一组默认 attribute。Entity [生成][spawning]时，会为其设置默认 attribute。默认 attribute 在 [`EntityAttributeCreationEvent`][event] 中注册：
+创建 `LivingEntity` 时，必须为其注册一组默认实体属性。Entity [生成][spawning]时，会为其设置默认实体属性。默认实体属性在 [`EntityAttributeCreationEvent`][event] 中注册：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -90,7 +90,7 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
 某些类有 `LivingEntity#createLivingAttributes` 的专用版本。例如，`Monster` 类提供了可改用的 `Monster#createMonsterAttributes` 方法。
 :::
 
-某些情况下，例如创建[自己的 attribute][custom] 时，需要向现有 Entity 的 `AttributeSupplier` 添加 attribute。这通过 `EntityAttributeModificationEvent` 完成：
+某些情况下，例如创建[自定义实体属性][custom]时，需要向现有 Entity 的 `AttributeSupplier` 添加实体属性。这通过 `EntityAttributeModificationEvent` 完成：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -112,11 +112,11 @@ public static void modifyDefaultAttributes(EntityAttributeModificationEvent even
 }
 ```
 
-请注意，与其他一些 registry 不同，自定义 attribute 的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` namespace 中的 attribute。
+请注意，与其他一些 registry 不同，自定义实体属性的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` namespace 中的实体属性。
 
-## 查询 Attribute
+## 查询实体属性
 
-Attribute 值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。Attribute 实例与 ItemStack 之于 Item 基本类似：attribute 是已注册的单例，而 attribute 实例是绑定到具体 Entity 的具体 attribute 对象。
+实体属性值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。实体属性实例与 ItemStack 之于 Item 基本类似：实体属性是已注册的单例，而实体属性实例是绑定到具体 Entity 的具体实体属性对象。
 
 可以调用 `LivingEntity#getAttributes` 获取 Entity 的 `AttributeMap`，随后按如下方式查询 map：
 
@@ -136,18 +136,18 @@ double value = livingEntity.getAttributeValue(Attributes.ARMOR);
 ```
 
 :::info
-处理 attribute 时，几乎始终使用 `Holder<Attribute>` 而不是 `Attribute`。这也是为什么对于自定义 attribute（见下文），我们会明确存储 `Holder<Attribute>`。
+处理实体属性时，几乎始终使用 `Holder<Attribute>` 而不是 `Attribute`。这也是为什么对于自定义实体属性（见下文），我们会明确存储 `Holder<Attribute>`。
 :::
 
-## Attribute Modifier
+## 实体属性修饰符（Attribute Modifier） {#attribute-modifiers}
 
-与查询不同，更改 attribute 值并不容易。主要原因在于，可能需要同时对一个 attribute 进行多项更改。
+与查询不同，更改实体属性值并不容易。主要原因在于，可能需要同时对一个实体属性进行多项更改。
 
-考虑以下情况：你是一名玩家，攻击伤害 attribute 为 1。你手持钻石剑，它额外造成 6 点攻击伤害，因此总攻击伤害为 7。然后你喝下力量药水，添加了伤害 multiplier。随后又装备了某种饰品，添加另一个 multiplier。
+考虑以下情况：你是一名玩家，攻击伤害实体属性为 1。你手持钻石剑，它额外造成 6 点攻击伤害，因此总攻击伤害为 7。然后你喝下力量药水，添加了伤害倍数。随后又装备了某种饰品，添加另一个倍数。
 
-为避免计算错误，并更清楚地表达 attribute 值如何修改，Minecraft 引入了 attribute modifier 系统。在该系统中，每个 attribute 都有一个**基础值**，通常来源于之前讨论的默认 attribute。随后可以添加任意数量的 **attribute modifier**，并可逐个移除，无需担心是否正确应用操作。
+为避免计算错误，并更清楚地表达实体属性值如何修改，Minecraft 引入了实体属性修饰符系统。在该系统中，每个实体属性都有一个**基础值**，通常来源于之前讨论的默认实体属性。随后可以添加任意数量的**实体属性修饰符**，并可逐个移除，无需担心是否正确应用操作。
 
-首先创建 attribute modifier：
+首先创建实体属性修饰符：
 
 ```java
 // 修改器的名称。稍后用于从属性映射中查询修饰符
@@ -195,7 +195,7 @@ attributes.getInstance(Attributes.ARMOR).removeModifier(id);
 attributes.getInstance(Attributes.ARMOR).removeModifiers();
 ```
 
-最后，还可以查询 attribute map 是否有某个 ID 的 modifier，并分别查询基础值与 modifier 值：
+最后，还可以查询实体属性映射中是否有某个 ID 的修饰符，并分别查询基础值与修饰符值：
 
 ```java
 // 检查修饰符是否存在。
@@ -206,22 +206,22 @@ double baseValue = attributes.getBaseValue(Attributes.ARMOR);
 double modifierValue = attributes.getModifierValue(Attributes.ARMOR, id);
 ```
 
-## 自定义 Attribute
+## 自定义实体属性 {#custom-attributes}
 
-如有需要，也可以添加自己的 attribute。与许多其他系统一样，attribute 是 [registry][registry]，可以向其中注册自己的对象。首先创建 `DeferredRegister<Attribute>`：
+如有需要，也可以添加自定义实体属性。与许多其他系统一样，实体属性本身也是[注册表对象][registry]，可以注册自定义实现。首先创建 `DeferredRegister<Attribute>`：
 
 ```java
 public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(
     BuiltInRegistries.ATTRIBUTE, "yourmodid");
 ```
 
-Attribute 本身可以从三个类中选择：
+实体属性本身可以从三个类中选择：
 
-- `RangedAttribute`：大多数 attribute 使用的类，定义 attribute 的下限、上限与默认值。
+- `RangedAttribute`：大多数实体属性使用的类，定义实体属性的下限、上限与默认值。
 - `PercentageAttribute`：与 `RangedAttribute` 类似，但以百分比而不是 float 值显示。由 NeoForge 添加。
-- `BooleanAttribute`：只具有语义上的 true（\> 0）与 false（\<\= 0）的 attribute，内部仍使用 double。由 NeoForge 添加。
+- `BooleanAttribute`：只具有语义上的 true（\> 0）与 false（\<\= 0）的实体属性，内部仍使用 double。由 NeoForge 添加。
 
-以 `RangedAttribute` 为例（另外两种的工作方式类似），注册 attribute 如下：
+以 `RangedAttribute` 为例（另外两种的工作方式类似），注册实体属性如下：
 
 ```java
 public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_attribute", () -> new RangedAttribute(

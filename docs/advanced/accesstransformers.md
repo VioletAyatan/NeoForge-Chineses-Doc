@@ -80,7 +80,7 @@ file="accesstransformer_additions.cfg"
 
 添加或修改任何 Access Transformer 后，都必须刷新 Gradle 项目，转换才能生效。
 
-## Access Transformer 规范
+## 访问转换器规范
 
 ### 注释
 
@@ -148,7 +148,7 @@ file="accesstransformer_additions.cfg"
 - `L<class name>;` - 表示引用类型
     - 示例：`Ljava/lang/String;` 表示 `java.lang.String` 引用类型（_注意这里使用斜杠而不是句点_）
 - `(` - 表示方法描述符；如果存在参数，应在此处提供，否则留空
-    - 示例：`<method>(I)Z` 表示一个接收 integer 参数并返回 boolean 的方法
+    - 示例：`<method>(I)Z` 表示一个接收整数参数并返回 `boolean` 的方法
 - `V` - 表示方法不返回值，只能用在方法描述符末尾
     - 示例：`<method>()V` 表示一个无参数且无返回值的方法
 

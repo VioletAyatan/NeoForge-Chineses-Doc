@@ -80,14 +80,14 @@ public class MyEnumParams {
 
 #### 构造器
 
-构造器必须以[方法描述符][jvmdescriptors]形式指定，并且只能包含源代码中可见的参数，省略隐藏的常量名称和 ordinal 参数。  
+构造器必须以[方法描述符][jvmdescriptors]形式指定，并且只能包含源代码中可见的参数，省略隐藏的常量名称和 `ordinal` 参数。  
 如果某个构造器带有 `@ReservedConstructor` 注解，则不能使用它构造模组枚举常量。
 
 #### 参数
 
 参数可以通过三种方式指定；每种方式会根据参数类型受到不同限制：
 
-- 直接以内联常量数组形式写入 JSON 文件（只允许 primitive 值、String，以及向任何引用类型传递 null）
+- 直接以内联常量数组形式写入 JSON 文件（只允许基本类型值、`String`，以及向任何引用类型传递 `null`）
 - 引用模组中某个类的 `EnumProxy<TheEnum>` 类型字段（参见上面的 `EnumProxy` 示例）
     - 第一个参数指定目标枚举，后续参数则会传给枚举构造器
 - 引用返回 `Object` 的方法，以其返回值作为所用参数值。该方法必须恰好拥有两个参数，类型分别为 `int`（参数索引）和 `Class<?>`（参数的预期类型）
@@ -99,7 +99,7 @@ public class MyEnumParams {
 
 某些参数还有附加规则：
 
-- 如果参数是与枚举上 `@IndexedEnum` 注解相关的 int ID 参数，则会忽略该参数，并以条目的 ordinal 替代。如果该参数以内联方式写在 JSON 中，就必须指定为 `-1`，否则会抛出异常。
+- 如果参数是与枚举上 `@IndexedEnum` 注解相关的 `int` ID 参数，则会忽略该参数，并以条目的 `ordinal` 替代。如果该参数以内联方式写在 JSON 中，就必须指定为 `-1`，否则会抛出异常。
 - 如果参数是与枚举上 `@NamedEnum` 注解相关的 String 名称参数，就必须按照 `Identifier` 所使用的 `namespace:path` 格式，以模组 ID 作为前缀，否则会抛出异常。
 
 #### 获取生成的常量
@@ -115,10 +115,10 @@ public class MyEnumParams {
 
 根据枚举的具体情况，还需要采取其他措施：
 
-- 如果枚举有一个应与条目 ordinal 相匹配的 int ID 参数，则应使用 `@IndexedEnum` 为枚举添加注解；如果 ID 不是第一个参数，还需以 ID 参数的索引作为注解值
-- 如果枚举有一个用于序列化、因此应带有命名空间的 String 名称参数，则应使用 `@NamedEnum` 为枚举添加注解；如果名称不是第一个参数，还需以名称参数的索引作为注解值
-- 如果枚举会通过网络发送，则应添加 `@NetworkedEnum` 注解，并通过注解参数指定允许在哪个方向发送值（clientbound、serverbound 或 bidirectional）
-- 如果枚举中存在模组无法使用的构造器（例如它们要求提供 Registry 对象，而该枚举可能在模组注册开始前就已初始化），就应为这些构造器添加 `@ReservedConstructor` 注解
+- 如果枚举有一个应与条目 `ordinal` 相匹配的 `int` ID 参数，则应使用 `@IndexedEnum` 为枚举添加注解；如果 ID 不是第一个参数，还需以 ID 参数的索引作为注解值
+- 如果枚举有一个用于序列化、因此应带有命名空间的 `String` 名称参数，则应使用 `@NamedEnum` 为枚举添加注解；如果名称不是第一个参数，还需以名称参数的索引作为注解值
+- 如果枚举会通过网络发送，则应添加 `@NetworkedEnum` 注解，并通过注解参数指定允许在哪个方向发送值（`clientbound`、`serverbound` 或 `bidirectional`）
+- 如果枚举中存在模组无法使用的构造器（例如它们要求提供 `Registry` 对象，而该枚举可能在模组注册开始前就已初始化），就应为这些构造器添加 `@ReservedConstructor` 注解
 
 :::info
 如果确实有任何条目被添加到枚举中，`getExtensionInfo` 方法会在运行时经过转换，提供动态生成的 `ExtensionInfo`。

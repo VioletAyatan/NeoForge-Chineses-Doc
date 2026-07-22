@@ -306,14 +306,13 @@ while (leftClickIsBeingHeld()) {
 挖掘速度根据方块硬度、所用[工具][tool]的速度以及若干[实体属性][attributes]，按以下规则计算：
 
 ```java
-// 返回工具的挖掘速度；如果手持物品为空、不是工具，
-// 或不适用于正在破坏的方块，则返回 1。
+// 返回工具的挖掘速度；如果手持物品为空、不是工具，或不适用于正在破坏的方块，则返回1。
 float destroySpeed = item.getDestroySpeed(blockState);
 // 如果我们有适用的工具，请添加 minecraft:mining_efficiency 属性作为附加修饰符。
 if (destroySpeed > 1) {
     destroySpeed += player.getAttributeValue(Attributes.MINING_EFFICIENCY);
 }
-// 应用急速或导管能量的效果。
+// 应用急速或潮涌能量的效果。
 if (player.hasEffect(MobEffects.HASTE) || player.hasEffect(MobEffects.CONDUIT_POWER)) {
     int haste = player.hasEffect(MobEffects.HASTE)
         ? player.getEffect(MobEffects.HASTE).getAmplifier()
@@ -355,7 +354,7 @@ return destroySpeed;
 
 #### 服务端游戏刻与刻调度
 
-`BlockBehaviour#tick` 通过计划刻（scheduled tick）调用。可以使用 `Level#scheduleTick(BlockPos, Block, int)` 创建计划刻，其中 `int` 表示延迟的游戏刻数。原版在许多地方使用这一系统，例如大型垂滴叶的倾斜机制就高度依赖计划刻，各种红石组件也是典型使用者。
+`BlockBehaviour#tick` 通过计划刻（scheduled tick）调用。计划刻可以通过使用 `Level#scheduleTick(BlockPos, Block, int)` 创建，其中 `int` 表示延迟的游戏刻数。原版在许多地方使用这一系统，例如大型垂滴叶的倾斜机制就高度依赖计划刻，各种红石组件也是典型使用者。
 
 #### 客户端游戏刻
 
@@ -367,29 +366,29 @@ return destroySpeed;
 
 #### 随机刻
 
-随机刻系统独立于常规游戏刻运行。必须通过方块的 `BlockBehaviour.Properties` 调用 `BlockBehaviour.Properties#randomTicks()` 方法来启用随机刻。这样会使该方块加入随机刻机制。
+随机刻系统独立于常规游戏刻运行。必须通过调用该方块的 `BlockBehaviour.Properties#randomTicks()` 方法来启用随机刻。这样会使该方块加入随机刻机制。
 
-每个游戏刻都会从区块中选取固定数量的方块进行随机刻。该数量由 `randomTickSpeed` 游戏规则定义。默认值为 3 时，每个游戏刻都会从区块中随机选择 3 个方块；如果这些方块已启用随机刻，就会调用各自的 `BlockBehaviour#randomTick` 方法。
+每个游戏刻都会从区块中选取固定数量的方块进行随机刻。该数量由游戏规则 `randomTickSpeed` 定义。默认值为3，每刻都会从区块中随机选择 3 个方块；如果这些方块已启用随机刻，就会调用各自的 `BlockBehaviour#randomTick` 方法。
 
 Minecraft 中有许多机制使用随机刻，例如植物生长、冰雪融化和铜氧化。
 
 [attributes]: ../entities/attributes.md
-[below]: #deferredregisterblocks-helpers
+[below]: #deferredregisterblocks-辅助方法
 [blockentities]: ../blockentities/index.md
 [blockstates]: states.md
-[bsfile]: ../resources/client/models/index.md#blockstate-files
+[bsfile]: ../resources/client/models/index.md#blockstate-文件
 [codec]: ../datastorage/codecs.md#records
 [datagen]: ../resources/index.md#data-generation
 [i18n]: ../resources/client/i18n.md
 [item]: ../items/index.md
-[leftclick]: ../items/interactions.md#left-clicking-an-item
+[leftclick]: ../items/interactions.md#左键点击-item
 [loottable]: ../resources/server/loottables/index.md
 [model]: ../resources/client/models/index.md
 [registration]: ../concepts/registries.md#methods-for-registering
-[rightclick]: ../items/interactions.md#right-clicking-an-item
+[rightclick]: ../items/interactions.md#右键点击-item
 [sounds]: ../resources/client/sounds.md
 [tags]: ../resources/server/tags.md
 [textures]: ../resources/client/textures.md
 [tool]: ../items/tools.md
-[usingblocks]: #using-blocks
+[usingblocks]: #使用方块
 [usingblockstates]: states.md#using-blockstates

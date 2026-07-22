@@ -11,6 +11,9 @@ export default defineConfig({
 		outline: {
 			label: '页面导航',
 		},
+		search: {
+			provider: 'local',
+		},
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
 			{ text: '首页', link: '/' },

@@ -13,6 +13,21 @@
 
 | 英文原词 | 推荐译名 | 避免使用 | 说明 |
 | --- | --- | --- | --- |
+| Item | 物品 | Item（普通说明文字中） | 指 Minecraft 中可存在于物品栏、容器或物品实体中的物品概念。Java 类型名 `Item`、`Items`、`Item.Properties` 及其他代码标识符保持原文。 |
+| item stack | 物品堆叠 | ItemStack（普通概念说明中） | 指由物品、堆叠数量和数据组件等信息组成的堆叠。Java 类型名 `ItemStack` 及其方法保持原文。 |
+| item entity | 物品实体 | Item Entity、ItemEntity（普通概念说明中） | 指掉落在世界中的物品实体。Java 类型名 `ItemEntity` 保持原文。 |
+| Block | 方块 | Block（普通说明文字中） | 指放置在世界中的 Minecraft 方块概念。Java 类型名 `Block`、`Blocks`、`BlockItem` 及其他代码标识符保持原文。 |
+| BlockState | 方块状态 | BlockState（普通说明文字中） | 指方块在世界中的具体状态。Java 类型名 `BlockState` 及其方法保持原文。 |
+| Entity | 实体 | Entity（普通说明文字中） | 指 Minecraft 世界中的实体概念。Java 类型名 `Entity`、以 `Entity` 结尾的类型名及其他代码标识符保持原文。 |
+| Block Entity | 方块实体 | Block Entity、BlockEntity（普通概念说明中） | 指附着于方块位置并保存额外数据或逻辑的方块实体。Java 类型名 `BlockEntity`、`BlockEntityType` 及其他代码标识符保持原文。 |
+| Living Entity | 生命实体 | Living Entity、LivingEntity（普通概念说明中） | 指具有生命值并继承生命实体行为的实体。Java 类型名 `LivingEntity` 及其方法保持原文。 |
+| Mob | 生物 | Mob（普通概念说明中） | 指由游戏逻辑控制的生物实体。Java 类型名 `Mob`、`MobCategory` 及其他代码标识符保持原文。 |
+| Projectile | 抛射物 | Projectile（普通概念说明中） | 指箭、火球等在世界中飞行的抛射物。Java 类型名 `Projectile` 及其子类保持原文。 |
+| Entity Renderer | 实体渲染器 | Entity Renderer、EntityRenderer（普通概念说明中） | 指负责渲染实体的客户端组件。Java 类型名 `EntityRenderer`、`EntityRenderers` 及其他代码标识符保持原文。 |
+| Model | 模型 | Model（普通说明文字中） | 泛指方块模型、物品模型和实体模型。Java 类型名、JSON 中的模型 ID、资源路径与文件名保持原文。 |
+| tag | 标签 | tag（普通说明文字中） | 指 Minecraft 用于归组注册项的标签机制。标签 ID、资源路径、JSON 键及代码类型名保持原文。 |
+| Ingredient | 原料 | Ingredient（普通概念说明中） | 指配方中用于匹配输入物品的原料概念。Java 类型名 `Ingredient`、JSON 键及序列化标识符保持原文。 |
+| swing | 挥手 | 挥臂、挥动手臂 | 指实体或玩家执行 `swing` 动作。方法名 `swing`、`LivingEntity#swing`、`SwingSource` 等代码标识符保持原文。 |
 | Advancement | 成就 | 进度、进阶 | 泛指 JSON 成就、成就界面中的条目及相关玩法机制。代码标识 `Advancement`、资源目录 `advancement`、翻译键 `advancements.*` 等保持原文。 |
 | advancement tree | 成就树 | 进度树 | 由根成就及其子成就构成的树状结构。 |
 | advancement tab | 成就选项卡 | 进度选项卡 | 成就界面中承载一棵或多棵成就树的选项卡。 |
@@ -24,7 +39,7 @@
 | advancement reward | 成就奖励 | 进度奖励 | 成就完成后发放的经验、配方、战利品或执行的函数。 |
 | `task` / `goal` / `challenge` | 任务型 / 目标型 / 挑战型 | 任务 / 目标 / 挑战（作为独立系统名称时） | 三者是 `frame` 的成就显示类型，不是三套不同的成就系统；JSON 值保持英文。 |
 
-## NeoForge 技术术语
+## Neo Forge 技术术语
 
 | 英文原词 | 推荐译名 | 避免使用 | 说明 |
 | --- | --- | --- | --- |
@@ -36,8 +51,13 @@
 | Damage Source | 伤害来源 | Damage Source（普通说明文字中） | 表示一次具体伤害及其上下文。Java 类型名 `DamageSource` 保持原文。 |
 | Biome Modifier | 生物群系修饰符 | Biome Modifier（普通说明文字中） | 指 NeoForge 的数据驱动生物群系修改机制。接口名 `BiomeModifier`、registry 和资源路径保持原文。 |
 | Stream Codec | 流编解码器 | Stream Codec（普通说明文字中） | 指用于网络流编码与解码的编解码器。类名 `StreamCodec` 及相关字段名保持原文。 |
+| Payload | 载荷 | payload、Payload（普通说明文字中） | 指通过网络连接发送的自定义数据内容。`CustomPacketPayload`、各类 Payload 注册器与数据包类名保持原文。 |
 | Loot Table | 战利品表 | Loot Table（普通说明文字中） | 指用于生成战利品的数据文件与机制。类名 `LootTable`、JSON 键和资源路径保持原文。 |
 | Armor | 盔甲 | Armor（普通说明文字中） | 泛指角色穿戴的盔甲及其模型、槽位等概念。`ArmorItem`、`ArmorMaterial` 等类名和代码标识符保持原文。 |
+| Attribute | 实体属性 | Attribute、属性（指实体数值系统时） | 指注册到 Attribute Registry、由 `LivingEntity` 的 `AttributeMap` 保存并参与生命值、速度、盔甲值等计算的实体数值。`Attribute`、`Attributes`、`AttributeInstance` 等代码标识符保持原文；`EnvironmentAttribute` 不属于此概念。 |
+| Attribute Modifier | 实体属性修饰符 | Attribute Modifier、属性修饰符（指实体数值系统时） | 指通过 `AttributeModifier` 修改实体属性基础值或最终值的机制。类名、操作枚举和资源标识符保持原文。 |
+| BlockState property / Property | 方块状态属性 | Property、方块属性 | 指 `BlockState` 中由 `Property<?>` 表示的有限取值维度，例如朝向、含水状态和生长阶段。`Property`、`BooleanProperty`、`BlockStateProperties` 等代码标识符保持原文。 |
+| item model property | 物品模型属性 | Property、方块属性 | 指 Item Model 根据 `ItemStack` 状态选择 Model 时使用的属性，例如 `RangeSelectItemModelProperty`、`SelectItemModelProperty` 和条件属性；具体类型名与 JSON 键保持原文。 |
 | registry | 注册表 | registry（普通说明文字中） | 一般概念使用"注册表"；代码中的 `Registry` 类名和 `BuiltInRegistries` 等标识符保持原文。 |
 | registry name | 注册名 | registry name（普通说明文字中） | 每个注册项对应的唯一名称。代码键 `registryName` 等保持原文。 |
 | registry entry | 注册项 | registry entry（普通说明文字中） | registry 中存储的已注册对象。 |
@@ -49,6 +69,7 @@
 | data pack | 数据包 | data pack（普通说明文字中） | 存放服务端数据文件的包。`Datapack` 等代码标识符保持原文。 |
 | data generation / datagen | 数据生成（datagen） | 数据生成器 | NeoForge 的数据文件自动生成系统。代码中 `GatherDataEvent`、`datagen` 保持原文。 |
 | data provider | 数据提供器 | data provider（普通说明文字中） | 数据生成系统中负责为特定数据类型生成文件的类。`DataProvider` 类名保持原文。 |
+| capability | 能力 | capability（普通说明文字中） | 指 NeoForge 用于查询方块、实体、物品堆叠等对象所提供功能的能力系统。`BlockCapability`、`EntityCapability`、`ItemCapability` 等代码标识符保持原文。 |
 
 ## Java 语言术语
 
@@ -67,7 +88,7 @@
 | generic | 泛型 | generic | Java 泛型概念；类型参数和泛型签名保持原文。 |
 | instance / object | 实例 / 对象 | instance、object（普通说明文字中） | 普通 Java 概念；特定规范名称中的 `Object` 是否翻译需按上下文判断。 |
 | function / callback | 函数 / 回调 | function、callback | 普通说明文字中的可调用逻辑；`Function` 等接口名保持原文。 |
-| property | property | 属性（作为 Java 或 Minecraft Property 术语时） | Java property 以及 Minecraft 的 BlockState、Item Model 等 Property 概念均保留英文，避免与普通描述性属性混淆；`Property` 类及具体 property 名同样保持原文。 |
+| property（Java 语境） | property | 属性（作为 Java property 术语时） | Java property 暂保留英文，不纳入本轮 Minecraft 专门术语统一；类名、字段名和 `*.Properties` 类型保持原文。 |
 | builder | builder | 构建器 | 指 Builder 模式中的构建对象，普通说明文字也保留英文；`Builder` 类名及具体方法名保持原文。 |
 | handler / listener | 处理器 / 监听器 | handler、listener | 普通说明文字中的处理或监听对象；具体类型名保持原文。 |
 | getter / setter | getter / setter | 取值方法 / 设值方法（作为 Java 术语时） | 分别指读取和设置值的方法，普通说明文字保留英文；具体方法名保持原文。 |

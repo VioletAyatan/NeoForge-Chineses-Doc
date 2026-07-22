@@ -1,8 +1,8 @@
 # 方块实体渲染器（BlockEntityRenderer）
 
-`BlockEntityRenderer` 通常缩写为 BER，用于以[静态 baked model][model]（JSON、OBJ 等）无法表示的方式“渲染”[Block][block]。例如，它可用于动态渲染类似箱子的 Block 中的容器内容。Block entity renderer 要求 Block 拥有 [`BlockEntity`][blockentity]，即使该 Block 除此之外不存储任何数据。
+`BlockEntityRenderer` 通常缩写为 BER，用于以[静态已烘焙模型][model]（JSON、OBJ 等）无法表示的方式“渲染”[方块][block]。例如，它可用于动态渲染类似箱子的方块中的容器内容。方块实体渲染器要求方块拥有 [`BlockEntity`][blockentity]，即使该方块除此之外不存储任何数据。
 
-BER 直接实现 `BlockEntityRenderer`，由它提交要渲染的 [feature]：
+BER 直接实现 `BlockEntityRenderer`，由它提交要渲染的[渲染特征]：
 
 ```java
 // 接口中的泛型类型应该设置为什么方块实体
@@ -40,7 +40,7 @@ public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity,
 }
 ```
 
-有了 BER 后，还需要注册它并将其连接到所属 BlockEntity。这可在 [`EntityRenderersEvent.RegisterRenderers`][event] 中完成：
+有了 BER 后，还需要注册它并将其连接到所属方块实体。这可在 [`EntityRenderersEvent.RegisterRenderers`][event] 中完成：
 
 ```java
 @SubscribeEvent // 仅在物理客户端上的模组事件总线上
@@ -56,7 +56,7 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 
 :::info
 
-如果 BER 中不需要 provider context，也可以移除构造器：
+如果 BER 中不需要提供器上下文，也可以移除构造器：
 
 ```java
 public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity, MyBlockEntityRenderState> {
@@ -76,9 +76,9 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 
 :::
 
-## Block Entity Render State
+## 方块实体渲染状态
 
-如上例所述，block entity render state 用于从实际 BlockEntity 的值中提取渲染所需的值。它们本质上是继承自 `BlockEntityRenderState` 的可变数据存储对象：
+如上例所述，方块实体渲染状态用于从实际方块实体的值中提取渲染所需的值。它们本质上是继承自 `BlockEntityRenderState` 的可变数据存储对象：
 
 ```java
 public class MyBlockEntityRenderState extends BlockEntityRenderState {
@@ -88,11 +88,11 @@ public class MyBlockEntityRenderState extends BlockEntityRenderState {
 
 随后应在 `BlockEntityRenderer#extractRenderState` 中使用 `BlockEntity` 子类填充这些值。
 
-## Item Block 渲染
+## 物品方块渲染
 
-由于并非所有带 renderer 的 BlockEntity 都能通过静态 Item model 表示，可以创建一种特殊 renderer，以便更动态地控制该过程。具体使用 [`SpecialModelRenderer`][special] 完成。在这些情况下，既必须创建一个 special model renderer 来提交所需 [feature]，也必须注册对应的 special block model renderer，以处理提交 Block 本身而非其 Item 变体进行渲染的场景（例如末影人携带 Block）。
+由于并非所有带渲染器的方块实体都能通过静态物品模型表示，可以创建一种特殊渲染器，以便更动态地控制该过程。具体使用 [`SpecialModelRenderer`][special] 完成。在这些情况下，既必须创建一个特殊模型渲染器来提交所需[渲染特征]，也必须注册对应的特殊方块模型渲染器，以处理提交方块本身而非其物品变体进行渲染的场景（例如末影人携带方块）。
 
-更多信息请参阅[客户端 Item 文档][special]。
+更多信息请参阅[客户端物品文档][special]。
 
 [block]: ../blocks/index.md
 [blockentity]: index.md
