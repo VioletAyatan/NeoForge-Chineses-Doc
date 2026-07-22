@@ -35,7 +35,6 @@
 - 类名、接口名、方法名、字段名、包名和注解；
 - Registry Key、Resource Location、命名空间、资源路径、文件名和翻译键；
 - 命令、配置键、JSON 键、枚举值及其他程序实际读取的字面量；
-- `Block`、`Item`、`ItemStack`、`Entity`、`Level`、`Registry`、`Codec`、`Holder` 等作为编程对象使用的名称。
 
 因此，术语校正不得使用不区分上下文的全局替换。修改前后都应检查代码块、行内代码、路径和链接目标是否保持不变。
 

@@ -192,7 +192,7 @@ export default defineConfig({
 				items: [
 					{ text: '命名二进制标签（Named Binary Tag (NBT)）', link: '/docs/datastorage/nbt' },
 					{ text: '编解码器（Codecs）', link: '/docs/datastorage/codecs' },
-					{ text: '值输入输出（Value I/O）', link: '/docs/datastorage/valueio' },
+					{ text: 'Value I/O', link: '/docs/datastorage/valueio' },
 					{ text: '数据附件（Data Attachments）', link: '/docs/datastorage/attachments' },
 					{ text: '数据存档（Saved Data）', link: '/docs/datastorage/saveddata' },
 				],
