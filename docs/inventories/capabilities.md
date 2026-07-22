@@ -31,10 +31,10 @@ NeoForge 为以下三种 [ResourceHandler][resourcehandler] 提供 capability：
 
 `ResourceHandler<ItemResource>` 暴露管理物品栏槽位的接口。`ResourceHandler<ItemResource>` 类型的 capability 包括：
 
-- `Capabilities.Item.BLOCK`：自动化系统可访问的 Block 物品栏（用于箱子、机器等）。
-- `Capabilities.Item.ENTITY`：Entity 的物品栏内容（额外玩家槽位、Mob／Creature 物品栏／背包）。
-- `Capabilities.Item.ENTITY_AUTOMATION`：自动化系统可访问的 Entity 物品栏（船、矿车等）。
-- `Capabilities.Item.ITEM`：ItemStack 的内容（便携背包等）。
+- `Capabilities.Item.BLOCK`：自动化系统可访问的方块物品栏（用于箱子、机器等）。
+- `Capabilities.Item.ENTITY`：实体的物品栏内容（额外玩家槽位、生物物品栏／背包）。
+- `Capabilities.Item.ENTITY_AUTOMATION`：自动化系统可访问的实体物品栏（船、矿车等）。
+- `Capabilities.Item.ITEM`：物品堆叠的内容（便携背包等）。
 
 `ResourceHandler<FluidResource>` 暴露管理 Fluid 物品栏的接口。`ResourceHandler<FluidResource>` 类型的 capability 包括：
 

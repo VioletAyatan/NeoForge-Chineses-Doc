@@ -2,17 +2,17 @@
 
 事务是 NeoForge 添加的系统，用于管理不同物品栏之间传输内容时的通信。每次传输通过三个基本概念进行管理：被传输的 `Resource`、表示物品栏的 `ResourceHandler`，以及促成通信的 `Transaction`。
 
-## Resource
+## 资源（Resource）
 
-`Resource` 表示执行事务的底层对象。每个 `Resource` 都应当是 immutable 的，只包含所使用的对象类型，而不包含传输对象的数量。例如，事务“五个苹果换一个绿宝石”包含 `Resource`“苹果”与“绿宝石”，而不是“五个苹果”与“一个绿宝石”。
+`Resource` 表示执行事务的底层对象。每个 `Resource` 都应当是不可变的，只包含所使用的对象类型，而不包含传输对象的数量。例如，事务“五个苹果换一个绿宝石”包含 `Resource`“苹果”与“绿宝石”，而不是“五个苹果”与“一个绿宝石”。
 
 因此，每个 `Resource` 都具有以下三项 property：
 
-* **Immutable**：`Resource` 对象中存储的任何内容都不应发生变化。
+* **不可变**：`Resource` 对象中存储的任何内容都不应发生变化。
 * **与数量无关**：`Resource` 不包含对象数量的任何信息。
 * **相等性**：无论 `Resource` 如何构造，只要它们表示同一个对象，就必须相等。
 
-NeoForge 通过表示对象及其唯一 [数据组件][datacomponent]，为 [Item][items]（通过 `ItemResource`）与 Fluid（通过 `FluidResource`）提供 Resource。
+NeoForge 通过表示对象及其唯一 [数据组件][datacomponent]，为 [物品][items]（通过 `ItemResource`）与流体（通过 `FluidResource`）提供资源。
 
 ```java
 // 从其支持对象创建资源
@@ -125,10 +125,10 @@ public final class ExampleResource implements Resource {
 ```
 
 :::info
-尽管 `Resource` 可用于 primitive，但并非严格必需（例如 energy 没有 `Resource`，因为它由 `long` 提供底层支持）。不过，这确实需要自行重新实现部分 Resource 行为，因为[下文所述的处理器系统][handler]要求使用 `Resource`。
+尽管 `Resource` 可用于基本类型，但并非严格必需（例如能量没有 `Resource`，因为它由 `long` 提供底层支持）。不过，这确实需要自行重新实现部分资源行为，因为[下文所述的处理器系统][handler]要求使用 `Resource`。
 :::
 
-## ResourceHandler
+## 资源处理器（ResourceHandler）
 
 `ResourceHandler<T>` 表示事务中的底层物品栏，其中 `T` 是为对象提供底层支持的 `Resource` 类型。每个处理器使用索引映射到关联内容（例如索引 `0` 映射到第一个槽位，索引 `1` 映射到第二个槽位，依此类推）。对于每个索引，可以检查该位置能否容纳某个 `Resource`（`isValid`），或已存储了什么 `Resource`（`getResource`）。还可以检查该位置最多可存储多少个 `Resource`（`getCapacityAsLong`／`getCapacityAsInt`），以及其中已存储多少个 `Resource`（`getAmountAsLong`／`getAmountAsInt`）。处理器可访问的索引数量表示其 `size`。
 
@@ -147,7 +147,7 @@ int indexCapacity = handler.getCapacityAsInt(0);
 boolean canAcceptApples = handler.isValid(0, ItemResource.of(Items.APPLE));
 ```
 
-根据底层物品栏的不同，有许多不同类型的 `ResourceHandler`。有些处理器会封装现有原版物品栏（例如用于 [`Container`][container] 的 `VanillaContainerWrapper`、用于[玩家 `Inventory`][playerinv] 的 `PlayerInventoryWrapper`、用于 [LivingEntity][livingentity] 装备槽位的 `LivingEntityEquipmentWrapper`）。
+根据底层物品栏的不同，有许多不同类型的 `ResourceHandler`。有些处理器会封装现有原版物品栏（例如用于 [`Container`][container] 的 `VanillaContainerWrapper`、用于[玩家 `Inventory`][playerinv] 的 `PlayerInventoryWrapper`、用于 [生命实体][livingentity] 装备槽位的 `LivingEntityEquipmentWrapper`）。
 
 ```java
 // 环绕现有容器。
@@ -161,7 +161,7 @@ ResourceHandler<ItemResource> playerInv = PlayerInventoryWrapper.of(player);
 ResourceHandler<ItemResource> head = LivingEntityEquipmentWrapper.of(entity, EquipmentSlot.HEAD);
 ```
 
-另一些处理器本身就是物品栏，为希望直接使用该系统而不想进行大量实现的人提供便利（例如由 [`ItemStack`][itemstack] list 构成的 `ItemStacksResourceHandler`，以及由 `FluidStack` list 构成的 `FluidStacksResourceHandler`）。
+另一些处理器本身就是物品栏，为希望直接使用该系统而不想进行大量实现的人提供便利（例如由 [`ItemStack`][itemstack] 列表构成的 `ItemStacksResourceHandler`，以及由 `FluidStack` 列表构成的 `FluidStacksResourceHandler`）。
 
 ```java
 // 创建 `ItemStack` 存储。
@@ -365,9 +365,9 @@ public class ExampleStacksResourceHandler extends StacksResourceHandler<ExampleO
 NeoForge 还提供 `ResourceStacksResourceHandler`。对于本身就是物品栏中实际对象的 `Resource` 实现，它使用 `ResourceStack` 作为存储内容。
 :::
 
-### EnergyHandler
+### 能量处理器（EnergyHandler）
 
-`EnergyHandler` 是 `ResourceHandler` 的精简版本，只包含一个存储 `long` 的索引。因此，它只检查可存储多少单位（`getCapacityAsLong`／`getCapacityAsInt`），以及已经存储多少单位（`getAmountAsLong`／`getAmountAsInt`）。此外，由于只有一个索引，`insert` 与 `extract` 不再接受索引；它们也不再需要 `Resource`，因为底层对象是 primitive。
+`EnergyHandler` 是 `ResourceHandler` 的精简版本，只包含一个存储 `long` 的索引。因此，它只检查可存储多少单位（`getCapacityAsLong`／`getCapacityAsInt`），以及已经存储多少单位（`getAmountAsLong`／`getAmountAsInt`）。此外，由于只有一个索引，`insert` 与 `extract` 不再接受索引；它们也不再需要 `Resource`，因为底层对象是基本类型。
 
 与 `ResourceHandler` 一样，根据用例不同，也有不同类型的 `EnergyHandler`。最常见的是 `SimpleEnergyHandler`，它提供基础实现，以及 insert／extract 限制。
 
@@ -376,9 +376,9 @@ NeoForge 还提供 `ResourceStacksResourceHandler`。对于本身就是物品栏
 EnergyHandler energy = new SimpleEnergyHandler(1000);
 ```
 
-### ItemAccess
+### 物品访问（ItemAccess）
 
-`ItemAccess` 也是 `ResourceHandler` 的精简版本，用于访问特定存储位置中的单个 Item。通常在 [Item capability][capabilities] 中使用它，以修改 capability 附加到的 Item。因此，它只提供 Resource（`getResource`）与当前存在的 Item 数量（`getAmount`）。此外，由于只有一个索引，`insert` 与 `extract` 不再接受索引。不过，由于 Item 还可以存储数据，`ItemAccess` 提供了通过 [capability][capabilities] 内的 `getCapability` 访问所存数据的方法，前提是它是以 `ItemAccess` 为 context 的 `ItemCapability`。
+`ItemAccess` 也是 `ResourceHandler` 的精简版本，用于访问特定存储位置中的单个物品。通常在 [Item capability][capabilities] 中使用它，以修改 capability 附加到的物品。因此，它只提供资源（`getResource`）与当前存在的物品数量（`getAmount`）。此外，由于只有一个索引，`insert` 与 `extract` 不再接受索引。不过，由于物品还可以存储数据，`ItemAccess` 提供了通过 [capability][capabilities] 内的 `getCapability` 访问所存数据的方法，前提是它是以 `ItemAccess` 为上下文的 `ItemCapability`。
 
 与 `ResourceHandler` 一样，根据用例不同，也有不同类型的 `ItemAccess`。最常见的两个是：封装玩家物品栏中特定槽位的 `PlayerItemAccess`，以及封装 `ResourceHandler` 中特定索引的 `HandlerItemAccess`。
 
@@ -396,16 +396,16 @@ int count = access.getAmount();
 ResourceHandler<FluidResource> fluidContainer = access.getCapability(Capabilities.Fluid.ITEM);
 ```
 
-## 在处理器之间传输
+## 在处理器之间传输（Transferring Between Handlers）
 
-`Transaction` 促成 `Resource` 在 `ResourceHandler` 之间传输。Resource 会从其 `ResourceHandler` 中被 `insert` 与 `extract`。执行插入与提取后，一旦调用 `Transaction#commit`，传输即视为有效或完成。
+`Transaction` 促成 `Resource` 在 `ResourceHandler` 之间传输。资源会从其 `ResourceHandler` 中被 `insert` 与 `extract`。执行插入与提取后，一旦调用 `Transaction#commit`，传输即视为有效或完成。
 
-`Transaction` 是 `AutoCloseable`，因此启动事务的标准方式是使用 `Transaction#openRoot` 的 try-with-resources block：
+`Transaction` 是 `AutoCloseable`，因此启动事务的标准方式是对 `Transaction#openRoot` 使用 try-with-resources 语句：
 
 ```java
 // 假设有两个 `ResourceHandler<ItemResource>`：apples 和 emeralds。
 
-// 开启交易。
+// 开启Transaction
 try (Transaction tx = Transaction.openRoot()) {
     // 从资源处理器中插入和提取。
     ItemResource appleResource = ItemResource.of(Items.APPLE);
@@ -434,7 +434,7 @@ try (Transaction tx = Transaction.openRoot()) {
 ```java
 // 假设有两个 `ResourceHandler<ItemResource>`：apples 和 emeralds。
 
-// 开启交易。
+// 开启事务
 try (Transaction tx = Transaction.openRoot()) {
     // 从资源处理器中插入和提取。
     ItemResource appleResource = ItemResource.of(Items.APPLE);
@@ -467,7 +467,7 @@ try (Transaction tx = Transaction.openRoot()) {
 如果同时发生多个事务，`Transaction` 还可以通过 `Transation#open` 在自身内部包含 `Transaction`。
 
 ```java
-// 开启交易。
+// 开启事务。
 try (Transaction tx = Transaction.openRoot()) {
     // Transaction A
     try (Transaction atx = Transaction.open(tx)) {
@@ -489,16 +489,16 @@ try (Transaction tx = Transaction.openRoot()) {
     }
 
     // 将根事务标记为成功，以便成功
-    // 内部交易完成。
+    // 内部事务。完成。
     tx.commit();
 }
 ```
 
-### 获取 Snapshot
+### 获取快照（Snapshot）
 
 `Transaction#commit` 本身不会执行任何操作。因此，无论传输是否成功，所执行的插入与提取都是永久性的。我们希望的是：对于任意 `Transaction`，只有在 `commit` 后才发生传输，否则应回滚传输。
 
-这正是 `SnapshotJournal<T>` 发挥作用的地方。顾名思义，它可以在修改内容前为处理器当前状态获取一个 `T` “snapshot”。随后，如果事务成功，可以释放 snapshot；如果失败，则可把处理器恢复到先前状态。每个 `SnapshotJournal` 至少必须实现两个方法：`createSnapshot` 用于实际创建保存状态，`revertToSnapshot` 用于把处理器恢复到指定状态。如果由于处理器中的变化而需要通知或更新某些底层对象，journal 还可以覆盖 `onRootCommit` 来处理这些变化。
+这正是 `SnapshotJournal<T>` 发挥作用的地方。顾名思义，它可以在修改内容前为处理器的当前状态获取一个 `T` 类型的 `Snapshot`。随后，如果事务成功，可以释放快照；如果失败，则可把处理器恢复到先前状态。每个 `SnapshotJournal` 至少必须实现两个方法：`createSnapshot` 用于实际创建保存状态，`revertToSnapshot` 用于把处理器恢复到指定状态。如果由于处理器中的变化而需要通知或更新某些底层对象，journal 还可以重写 `onRootCommit` 来处理这些变化。
 
 所有 NeoForge `ResourceHandler` 实现都以某种方式使用 `SnapshotJournal`，要么由处理器本身直接使用，要么作为内部字段。只有创建新的 `ResourceHandler` 时，才需要实现 `SnapshotJournal`。
 
@@ -608,7 +608,7 @@ public class ExampleResourceHandler extends SnapshotJournal<ExampleObject> imple
 ```java
 // 假设有两个 `ResourceHandler<ExampleResource>`：exampleA 和 exampleB。
 
-// 开启交易。
+// 开启事务。
 try (Transaction tx = Transaction.openRoot()) {
     // 从资源处理器中插入和提取
     ExampleResource resource = new ExampleResource(new ExampleObject(0, 1, Map.of()));
@@ -627,9 +627,9 @@ try (Transaction tx = Transaction.openRoot()) {
 [capabilities]: capabilities.md
 [container]: container.md
 [datacomponent]: ../items/datacomponents.md
-[handler]: #resource-handlers
+[handler]: #资源处理器resourcehandler
 [items]: ../items/index.md
 [itemstack]: ../items/index.md#itemstacks
 [livingentity]: ../entities/livingentity.md
 [playerinv]: container.md#containers-on-players-player-inventory
-[transaction]: #在处理器之间传输
+[transaction]: #在处理器之间传输transferring-between-handlers

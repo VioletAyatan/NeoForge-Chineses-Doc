@@ -4,13 +4,13 @@
 
 ## `MenuType`
 
-菜单会动态创建和移除，因此不是 registry 对象。取而代之的是注册另一个 factory 对象，以便轻松创建并引用菜单的*类型*。对于菜单，这种对象就是 `MenuType`。
+菜单会动态创建和移除，因此不是注册表对象。取而代之的是注册另一个工厂对象，以便轻松创建并引用菜单的*类型*。对于菜单，这种对象就是 `MenuType`。
 
 `MenuType` 必须[注册][registered]。
 
 ### `MenuSupplier`
 
-将 `MenuSupplier` 与 `FeatureFlagSet` 传入 `MenuType` 构造器，即可创建 `MenuType`。`MenuSupplier` 表示一个函数：接受 Container id 与查看菜单的玩家物品栏，返回新创建的 [`AbstractContainerMenu`][acm]。
+将 `MenuSupplier` 与 `FeatureFlagSet` 传入 `MenuType` 构造器，即可创建 `MenuType`。`MenuSupplier` 表示一个函数：接受容器 id 与查看菜单的玩家物品栏，返回新创建的 [`AbstractContainerMenu`][acm]。
 
 ```java
 // 对于某些 DeferredRegister<MenuType<?>> REGISTER
@@ -24,14 +24,14 @@ public MyMenu(int containerId, Inventory playerInv) {
 ```
 
 :::info
-Container identifier 对单个玩家而言是唯一的。这意味着两个不同玩家上的相同 Container id 表示两个不同菜单，即使他们查看的是同一个数据 holder。
+容器标识符对单个玩家而言是唯一的。这意味着两个不同玩家上的相同容器 ID 表示两个不同菜单，即使他们查看的是同一个数据持有者。
 :::
 
-`MenuSupplier` 通常负责在客户端创建菜单，并使用虚拟数据引用来存储服务端数据 holder 同步而来的信息并与之交互。
+`MenuSupplier` 通常负责在客户端创建菜单，并使用虚拟数据引用来存储服务端数据持有者同步而来的信息并与之交互。
 
 ### `IContainerFactory`
 
-如果客户端需要额外信息（例如数据 holder 在世界中的位置），可以改用子类 `IContainerFactory`。除 Container id 与玩家物品栏外，它还提供 `RegistryFriendlyByteBuf`，可存储服务端发送的额外信息。可以通过 `IMenuTypeExtension#create` 使用 `IContainerFactory` 创建 `MenuType`。
+如果客户端需要额外信息（例如数据 holder 在世界中的位置），可以改用子类 `IContainerFactory`。除容器 ID 与玩家物品栏外，它还提供 `RegistryFriendlyByteBuf`，可存储服务端发送的额外信息。可以通过 `IMenuTypeExtension#create` 使用 `IContainerFactory` 创建 `MenuType`。
 
 ```java
 // 对于某些 DeferredRegister<MenuType<?>> REGISTER
@@ -75,9 +75,9 @@ public MyMenu(int containerId, Inventory playerInventory, /* 此处有任何其�
 
 ### `#stillValid` 与 `ContainerLevelAccess`
 
-`#stillValid` 判断给定玩家是否应继续打开菜单。它通常会转发到 static `#stillValid`，后者接受 `ContainerLevelAccess`、玩家，以及此菜单附加到的 `Block`。客户端菜单必须始终为此方法返回 `true`，static `#stillValid` 默认就是如此。此实现会检查玩家是否位于数据存储对象所在位置的八个 Block 范围内。
+`#stillValid` 判断给定玩家是否应继续打开菜单。它通常会转发到静态 `#stillValid`，后者接受 `ContainerLevelAccess`、玩家，以及此菜单附加到的 `Block`。客户端菜单必须始终为此方法返回 `true`，静态 `#stillValid` 默认就是如此。此实现会检查玩家是否位于数据存储对象所在位置的八个方块范围内。
 
-`ContainerLevelAccess` 在封闭 scope 内提供当前 Level 与 Block 位置。在服务端构造菜单时，可调用 `ContainerLevelAccess#create` 创建新的 access。客户端菜单构造器可以传入不会执行任何操作的 `ContainerLevelAccess#NULL`。
+`ContainerLevelAccess` 在封闭作用域内提供当前 Level 与方块位置。在服务端构造菜单时，可调用 `ContainerLevelAccess#create` 创建新的访问对象。客户端菜单构造器可以传入不会执行任何操作的 `ContainerLevelAccess#NULL`。
 
 ```java
 // 客户端菜单构造器
@@ -112,7 +112,7 @@ Minecraft 默认支持两种数据同步形式：通过 `Slot` 同步 [`ItemStac
 :::info
 尽管 `DataSlot` 存储整数，但由于通过网络发送值的方式，它实际上被限制为 **short**（-32768 到 32767）。整数的高 16 bit 会被忽略。
 
-NeoForge 对 packet 进行了 patch，以向客户端提供完整整数。
+NeoForge 对数据包进行了 patch，以向客户端提供完整整数。
 :::
 
 ```java
@@ -346,11 +346,11 @@ serverPlayer.openMenu(new SimpleMenuProvider(
 
 ### 常见实现
 
-菜单通常在某种玩家交互时打开（例如右键点击 Block 或 Entity）。
+菜单通常在某种玩家交互时打开（例如右键点击方块或实体）。
 
 #### Block 实现
 
-Block 通常通过覆盖 `BlockBehaviour#useWithoutItem` 来实现菜单，并为该[交互][interaction]返回 `InteractionResult#SUCCESS`。
+方块通常通过覆盖 `BlockBehaviour#useWithoutItem` 来实现菜单，并为该[交互][interaction]返回 `InteractionResult#SUCCESS`。
 
 应通过覆盖 `BlockBehaviour#getMenuProvider` 来实现 `MenuProvider`。原版方法使用它在旁观者模式查看菜单。
 
@@ -372,12 +372,12 @@ public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos 
 ```
 
 :::info
-这是实现逻辑最简单的方式，并不是唯一方式。如果只希望 Block 在特定条件下打开菜单，就需要事先将一些数据同步到客户端，以便条件不满足时返回 `InteractionResult#PASS` 或 `#FAIL`。
+这是实现逻辑最简单的方式，并不是唯一方式。如果只希望方块在特定条件下打开菜单，就需要事先将一些数据同步到客户端，以便条件不满足时返回 `InteractionResult#PASS` 或 `#FAIL`。
 :::
 
-#### Mob 实现
+#### 生物实现
 
-Mob 通常通过覆盖 `Mob#mobInteract` 来实现菜单。其做法与 Block 实现类似，唯一区别是 `Mob` 本身应实现 `MenuProvider`，以支持在旁观者模式查看。
+生物通常通过覆盖 `Mob#mobInteract` 来实现菜单。其做法与方块实现类似，唯一区别是 `Mob` 本身应实现 `MenuProvider`，以支持在旁观者模式查看。
 
 ```java
 public class MyMob extends Mob implements MenuProvider {
@@ -406,6 +406,6 @@ public class MyMob extends Mob implements MenuProvider {
 [container]: container.md
 [screen]: ../rendering/screens.md
 [icf]: #icontainerfactory
-[side]: ../concepts/sides.md#the-logical-side
+[side]: ../concepts/sides.md#逻辑端
 [interaction]: ../items/interactions.md#right-clicking-an-item
 [itemstack]: ../items/index.md#itemstacks

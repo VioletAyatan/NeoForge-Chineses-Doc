@@ -1,19 +1,19 @@
 # 盔甲（Armor）
 
-盔甲是主要通过各种抗性与效果保护 [`LivingEntity`][livingentity] 免受伤害的 [Item][item]。许多模组会添加新的盔甲套装（例如铜制盔甲）。
+盔甲是主要通过各种抗性与效果保护 [`LivingEntity`][livingentity] 免受伤害的 [物品][item]。许多模组会添加新的盔甲套装（例如铜制盔甲）。
 
-## 自定义盔甲套装
+## 自定义盔甲套装（Custom Armor Sets）
 
-人形 Entity 的一套盔甲通常由四种 Item 组成：头部的头盔、胸部的胸甲、腿部的护腿与脚部的靴子。此外，狼、马和羊驼也有装备到专为动物设置的“身体”盔甲槽位的盔甲。所有这些 Item 通常通过七种 [数据组件][datacomponents] 实现：
+人形实体的一套盔甲通常由四种物品组成：头部的头盔、胸部的胸甲、腿部的护腿与脚部的靴子。此外，狼、马和羊驼也有装备到专为动物设置的“身体”盔甲槽位的盔甲。所有这些物品通常通过七种 [数据组件][datacomponents] 实现：
 
 - `DataComponents#MAX_DAMAGE` 与 `#DAMAGE`：耐久度
 - `#MAX_STACK_SIZE`：将堆叠数量设置为 `1`
 - `#REPAIRABLE`：在铁砧中修复盔甲部件
 - `#ENCHANTABLE`：最大[附魔][enchantment]值
 - `#ATTRIBUTE_MODIFIERS`：盔甲值、盔甲韧性与击退抗性
-- `#EQUIPPABLE`：Entity 如何装备 Item
+- `#EQUIPPABLE`：实体如何装备物品
 
-通常，人形 Entity 的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都使用 `ArmorMaterial`，人形盔甲还会结合 `ArmorType` 来设置组件。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
+通常，人形实体的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都使用 `ArmorMaterial`，人形盔甲还会结合 `ArmorType` 来设置组件。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
 
 ```java
 // 用于链接下文所述装备资源的 ResourceKey，
@@ -100,18 +100,18 @@ public static final DeferredItem<Item> COPPER_NAUTILUS_ARMOR =
     ITEMS.registerItem("copper_nautilus_armor", props -> new Item(props.nautilusArmor(...)));
 ```
 
-如果想从头创建盔甲或类似盔甲的 Item，可以使用以下部分的组合实现：
+如果想从头创建盔甲或类似盔甲的物品，可以使用以下部分的组合实现：
 
 - 通过 `Item.Properties#component` 设置 `DataComponents#EQUIPPABLE`，添加带有自定义要求的 `Equippable`。
-- 通过 `Item.Properties#attributes` 向 Item 添加 attribute（例如盔甲值、韧性、击退抗性）。
-- 通过 `Item.Properties#durability` 添加 Item 耐久度。
-- 通过 `Item.Properties#repariable` 允许修复 Item。
-- 通过 `Item.Properties#enchantable` 允许为 Item 附魔。
+- 通过 `Item.Properties#attributes` 向物品添加实体属性修饰符（例如盔甲值、韧性、击退抗性）。
+- 通过 `Item.Properties#durability` 添加物品耐久度。
+- 通过 `Item.Properties#repariable` 允许修复物品。
+- 通过 `Item.Properties#enchantable` 允许为物品附魔。
 - 将盔甲添加到某些 `minecraft:enchantable/*` `ItemTags`，使其可应用特定附魔。
 
 ### `Equippable`
 
-`Equippable` 是一种数据组件，包含 Entity 如何装备该 Item，以及游戏中由什么来处理其渲染。只要有此组件，任何 Item 都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的 Item 只能装备到单个 `EquipmentSlot`。
+`Equippable` 是一种数据组件，包含实体如何装备该物品，以及游戏中由什么来处理其渲染。只要有此组件，任何物品都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的物品只能装备到单个 `EquipmentSlot`。
 
 可以直接调用 record 构造器创建 `Equippable`，也可以通过 `Equippable#builder` 创建；后者会为每个字段设置默认值，完成后再调用 `build`：
 
@@ -167,20 +167,20 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 );
 ```
 
-## Equipment Assets {#equipment-assets}
+## 装备资源（Equipment Assets）
 
 现在游戏中已经有了盔甲，但如果尝试穿戴，什么都不会渲染，因为我们从未指定如何渲染装备。为此，需要在 `Equippable#assetId` 指定的位置创建 `EquipmentClientInfo` JSON；该位置相对于[资源包][respack]（`assets` 文件夹）的 `equipment` 文件夹。`EquipmentClientInfo` 指定每个待渲染层使用的关联纹理。
 
 `EquipmentClientInfo` 在功能上是从 `EquipmentClientInfo.LayerType` 到待应用 `EquipmentClientInfo.Layer` 列表的映射。
 
-可以将 `LayerType` 理解为针对某个实例渲染的一组纹理。例如，`LayerType#HUMANOID` 由 `HumanoidArmorLayer` 用于渲染人形 Entity 的头部、胸部与脚部；`LayerType#WOLF_BODY` 由 `WolfArmorLayer` 用于渲染身体盔甲。如果属于同一类可装备物（例如铜制盔甲），这些内容可以合并到同一个装备信息 JSON 中。
+可以将 `LayerType` 理解为针对某个实例渲染的一组纹理。例如，`LayerType#HUMANOID` 由 `HumanoidArmorLayer` 用于渲染人形实体的头部、胸部与脚部；`LayerType#WOLF_BODY` 由 `WolfArmorLayer` 用于渲染身体盔甲。如果属于同一类可装备物（例如铜制盔甲），这些内容可以合并到同一个装备信息 JSON 中。
 
 `LayerType` 映射到某个待应用的 `Layer` 列表，并按给定顺序渲染纹理。一个 `Layer` 实际上表示单个待渲染纹理。第一个参数表示纹理相对于 `textures/entity/equipment` 的位置。
 
 第二个参数是 `Optional`，表示是否可以使用 `EquipmentClientInfo.Dyeable` [为纹理着色][tinting]。`Dyeable` 对象持有一个整数；如果该整数存在，就表示纹理默认着色所用的 RGB 颜色。如果此 `Optional` 为空，则使用纯白色。
 
 :::warning
-要向 Item 应用未染色颜色以外的着色值，该 Item 必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` 组件设置为某个 RGB 值。
+要向物品应用未染色颜色以外的着色值，该物品必须位于 [`ItemTags#DYEABLE`][tag] 中，并将 `DataComponents#DYED_COLOR` 组件设置为某个 RGB 值。
 :::
 
 第三个参数是布尔值，表示是否应使用渲染期间提供的纹理来替代 `Layer` 中定义的纹理。玩家的自定义披风或鞘翅纹理就是一个示例。
@@ -364,7 +364,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 </TabItem>
 </Tabs>
 
-## 装备渲染
+## 装备渲染（Equipment Rendering）
 
 装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染函数中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为渲染上下文的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
 
@@ -372,10 +372,10 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 | `LayerType`             | `RenderLayer`          | 使用者                                                         |
 |:-----------------------:|:----------------------:|:---------------------------------------------------------------|
-| `HUMANOID`              | `HumanoidArmorLayer`   | 玩家、人形 Mob（如僵尸、骷髅）、盔甲架                          |
-| `HUMANOID_LEGGINGS`     | `HumanoidArmorLayer`   | 玩家、人形 Mob（如僵尸、骷髅）、盔甲架                          |
-| `HUMANOID_BABY`         | `HumanoidArmorLayer`   | 玩家、幼年人形 Mob（如幼年僵尸）                                |
-| `WINGS`                 | `WingsLayer`           | 玩家、人形 Mob（如僵尸、骷髅）、盔甲架                          |
+| `HUMANOID`              | `HumanoidArmorLayer`   | 玩家、人形生物（如僵尸、骷髅）、盔甲架                          |
+| `HUMANOID_LEGGINGS`     | `HumanoidArmorLayer`   | 玩家、人形生物（如僵尸、骷髅）、盔甲架                          |
+| `HUMANOID_BABY`         | `HumanoidArmorLayer`   | 玩家、幼年人形生物（如幼年僵尸）                                |
+| `WINGS`                 | `WingsLayer`           | 玩家、人形生物（如僵尸、骷髅）、盔甲架                          |
 | `WOLF_BODY`             | `WolfArmorLayer`       | 狼                                                             |
 | `HORSE_BODY`            | `HorseArmorLayer`      | 马                                                             |
 | `LLAMA_BODY`            | `LlamaDecorLayer`      | 羊驼、行商羊驼                                                 |
@@ -432,7 +432,7 @@ this.equipmentLayerRenderer.renderLayers(
 [enchantment]: ../resources/server/enchantments/index.md#enchantment-costs-and-levels
 [livingentity]: ../entities/livingentity.md
 [registering]: ../concepts/registries.md#methods-for-registering
-[rendering]: #equipment-rendering
+[rendering]: #装备渲染equipment-rendering
 [respack]: ../resources/index.md#assets
 [tag]: ../resources/server/tags.md
 [tinting]: ../resources/client/models/index.md#tinting
