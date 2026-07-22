@@ -1,6 +1,6 @@
 # 事件机制（Events）
 
-NeoForge 的主要功能之一是事件系统。游戏中发生各种事情时都会触发事件。例如，玩家右键点击、玩家或其他 Entity 跳跃、Block 渲染、游戏加载等情况都有对应的事件。模组开发者可以为这些事件订阅事件处理器，然后在处理器内执行所需行为。
+NeoForge 的主要功能之一是事件系统。游戏中发生各种事情时都会触发事件。例如，玩家右键点击、玩家或其他实体跳跃、方块被渲染、游戏加载等情况都有对应的事件。模组开发者可以为这些事件订阅事件处理器，然后在事件处理器内执行所需行为。
 
 事件会在各自对应的事件总线上触发。最重要的是 `NeoForge.EVENT_BUS`，也称为**游戏事件总线**。除此之外，在启动期间，每个已加载的模组都会生成一个模组事件总线，并将其传入模组的构造器。许多模组事件总线上的事件会并行触发（相比之下，游戏事件总线上的事件始终在同一线程运行），从而显著提升启动速度。详情参见[下文][modbus]。
 
@@ -53,7 +53,7 @@ public class YourMod {
 }
 ```
 
-也可以采用 static 方式。只需将所有事件处理器声明为 static，并传入类本身而非类实例：
+也可以采用 `static` 方式。只需将所有事件处理器声明为 `static`，并传入类本身而非类实例：
 
 ```java
 public class EventHandler {
@@ -76,7 +76,7 @@ public class YourMod {
 
 ### `@EventBusSubscriber`
 
-还可以更进一步，在事件处理器类上同时添加 `@EventBusSubscriber`。NeoForge 会自动发现这个注解，因此可以从 mod 构造器中移除所有事件相关代码。实质上，这等价于在 mod 构造器末尾调用 `NeoForge.EVENT_BUS.register(EventHandler.class)` 和 `modBus.register(EventHandler.class)`。这也意味着所有事件处理器都必须是 static。
+还可以更进一步，在事件处理器类上同时添加 `@EventBusSubscriber`。NeoForge 会自动发现这个注解，因此可以从模组构造器中移除所有事件相关代码。实质上，这等价于在模组构造器末尾调用 `NeoForge.EVENT_BUS.register(EventHandler.class)` 和 `modBus.register(EventHandler.class)`。这也意味着所有事件处理器都必须是 `static`。
 
 虽然不是强制要求，但强烈建议在注解中指定 `modid` 参数，以便更容易调试（特别是在发生模组冲突时）。
 
@@ -97,11 +97,11 @@ public class EventHandler {
 
 ### 字段与方法
 
-字段与方法可能是事件中最直观的部分。大多数事件都包含供事件处理器使用的上下文，例如导致事件的 Entity，或事件所发生的 Level。
+字段与方法可能是事件中最直观的部分。大多数事件都包含供事件处理器使用的上下文，例如导致事件的实体，或事件发生所在的世界。
 
 ### 层次结构
 
-为了利用继承的优势，有些事件并不直接扩展 `Event`，而是扩展其某个子类，例如 `BlockEvent`（为 Block 相关事件提供 Block 上下文）或 `EntityEvent`（类似地提供 Entity 上下文），以及后者的子类 `LivingEvent`（提供 `LivingEntity` 特定上下文）和 `PlayerEvent`（提供 `Player` 特定上下文）。这些负责提供上下文的上层事件是 `abstract` 的，不能被监听。
+为了利用继承的优势，有些事件并不直接扩展 `Event`，而是扩展其某个子类，例如 `BlockEvent`（为方块相关事件提供方块上下文）或 `EntityEvent`（类似地提供实体上下文），以及后者的子类 `LivingEvent`（提供 `LivingEntity` 特定上下文）和 `PlayerEvent`（提供 `Player` 特定上下文）。这些负责提供上下文的上层事件是 `abstract` 的，不能被监听。
 
 :::danger
 如果监听一个 `abstract` 事件，游戏会崩溃，因为这绝不是你想要的。你应始终改为监听它的某个子事件。
@@ -122,9 +122,9 @@ graph TD;
 
 ### 可取消事件
 
-有些事件实现了 `ICancellableEvent` 接口。可以使用 `#setCanceled(boolean canceled)` 取消这些事件，也可以使用 `#isCanceled()` 检查取消状态。如果某个事件被取消，该事件的其他事件处理器将不会运行，并会启用与“取消”相关联的某种行为。例如，取消 `LivingChangeTargetEvent` 会阻止 Entity 的目标 Entity 发生变化。
+有些事件实现了 `ICancellableEvent` 接口。可以使用 `#setCanceled(boolean canceled)` 取消这些事件，也可以使用 `#isCanceled()` 检查取消状态。如果某个事件被取消，该事件的其他事件处理器将不会运行，并会启用与“取消”相关联的某种行为。例如，取消 `LivingChangeTargetEvent` 会阻止实体的目标实体发生变化。
 
-事件处理器可以选择明确接收已取消的事件。具体做法是将 `IEventBus#addListener`（或 `@SubscribeEvent`，取决于你挂接事件处理器的方式）中的 `receiveCanceled` boolean 参数设置为 true。
+事件处理器可以明确选择接收已取消的事件。具体做法是将 `IEventBus#addListener`（或 `@SubscribeEvent`，取决于挂接事件处理器的方式）中的 `receiveCanceled` `boolean` 参数设置为 `true`。
 
 ### TriState 与 Result
 
@@ -158,26 +158,26 @@ public static void mobDespawn(MobDespawnEvent event) {
 
 有些事件只在某个[端][side]触发。常见示例包括各种渲染事件，它们只在客户端触发。由于仅客户端事件通常需要访问 Minecraft 代码库中其他仅客户端部分，因此必须按相应方式注册。
 
-使用 `IEventBus#addListener` 的事件处理器应通过 `FMLEnvironment#getDist` 或主 mod 构造器中的 `Dist` 参数检查当前物理端，并按照[端][side]一文所述，在独立的仅客户端类中添加监听器。
+使用 `IEventBus#addListener` 的事件处理器应通过 `FMLEnvironment#getDist` 或主模组构造器中的 `Dist` 参数检查当前物理端，并按照[端][side]一文所述，在独立的仅客户端类中添加监听器。
 
 使用 `@EventBusSubscriber` 的事件处理器可以把端指定为注解的 `value` 参数，例如 `@EventBusSubscriber(value = Dist.CLIENT, modid = "yourmodid")`。
 
 ## 事件总线
 
-大多数事件发布在 `NeoForge.EVENT_BUS` 上，但有些事件会改为发布在模组事件总线上。这些通常称为模组总线事件。通过其 superinterface `IModBusEvent` 可以将模组总线事件与常规事件区分开来。
+大多数事件发布在 `NeoForge.EVENT_BUS` 上，但有些事件会改为发布在模组事件总线上。这些通常称为模组总线事件。通过其超接口 `IModBusEvent` 可以将模组总线事件与常规事件区分开来。
 
-模组事件总线会作为参数传入 mod 构造器，之后你便可以向其订阅模组总线事件。如果使用 `@EventBusSubscriber`，事件会自动订阅到正确的事件总线。
+模组事件总线会作为参数传入模组构造器，之后你便可以在其中订阅模组总线事件。如果使用 `@EventBusSubscriber`，事件会自动订阅到正确的事件总线。
 
-### Mod 生命周期
+### 模组生命周期
 
 大多数模组总线事件都属于所谓的生命周期事件。生命周期事件在启动期间、每个模组的生命周期中运行一次。其中许多通过继承 `ParallelDispatchEvent` 并行触发；如果希望其中某个事件的代码在主线程上运行，请使用 `#enqueueWork(Runnable runnable)` 将其加入队列。
 
 生命周期通常遵循以下顺序：
 
-- 调用 mod 构造器。在这里注册事件处理器，或在下一步注册。
+- 调用模组构造器。在这里注册事件处理器，或在下一步注册。
 - 调用所有 `@EventBusSubscriber`。
 - 触发 `FMLConstructModEvent`。
-- 触发 registry 事件，其中包括 [`NewRegistryEvent`][newregistry]、[`DataPackRegistryEvent.NewRegistry`][newdatapackregistry]，以及各个 registry 对应的 [`RegisterEvent`][registerevent]。
+- 触发注册表事件，其中包括 [`NewRegistryEvent`][newregistry]、[`DataPackRegistryEvent.NewRegistry`][newdatapackregistry]，以及各个注册表对应的 [`RegisterEvent`][registerevent]。
 - 触发 `FMLCommonSetupEvent`。各种杂项设置在这里进行。
 - 触发[特定端][side]设置：物理客户端上为 `FMLClientSetupEvent`，物理服务端上为 `FMLDedicatedServerSetupEvent`。
 - 处理 `InterModComms`（见下文）。
@@ -187,9 +187,9 @@ public static void mobDespawn(MobDespawnEvent event) {
 
 `InterModComms` 是一个允许模组开发者向其他模组发送消息、以实现兼容性功能的系统。该类保存发给各模组的消息，其所有方法都可安全地从多线程调用。该系统主要由两个事件驱动：`InterModEnqueueEvent` 与 `InterModProcessEvent`。
 
-在 `InterModEnqueueEvent` 期间，可以使用 `InterModComms#sendTo` 向其他模组发送消息。这些方法接受消息接收模组的 id、与消息数据关联的 key（用于区分不同消息），以及持有消息数据的 `Supplier`。还可以选择指定发送者。
+在 `InterModEnqueueEvent` 期间，可以使用 `InterModComms#sendTo` 向其他模组发送消息。这些方法接受消息接收模组的 ID、与消息数据关联的键（用于区分不同消息），以及持有消息数据的 `Supplier`。还可以选择指定发送者。
 
-随后，在 `InterModProcessEvent` 期间，可以使用 `InterModComms#getMessages` 获取由 `IMCMessage` 对象组成的、包含所有已接收消息的 stream。这些对象保存数据发送者、预期接收者、数据 key，以及实际数据的 supplier。
+随后，在 `InterModProcessEvent` 期间，可以使用 `InterModComms#getMessages` 获取由所有已接收消息组成的消息流，其中每条消息都是一个 `IMCMessage` 对象。这些对象保存数据发送者、预期接收者、数据键，以及提供实际数据的 `Supplier`。
 
 ### 其他模组总线事件
 

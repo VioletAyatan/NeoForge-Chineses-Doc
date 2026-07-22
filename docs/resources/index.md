@@ -249,7 +249,7 @@ runs {
 [gmt]: ../misc/gametest.md
 [itemmodifier]: https://minecraft.wiki/w/Item_modifier
 [langprovider]: client/i18n.md#datagen
-[lifecycle]: ../concepts/events.md#the-mod-lifecycle
+[lifecycle]: ../concepts/events.md#模组生命周期
 [logicalsides]: ../concepts/sides.md#the-logical-side
 [loottableprovider]: server/loottables/index.md#datagen
 [loottables]: server/loottables/index.md
