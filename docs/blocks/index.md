@@ -157,7 +157,7 @@ public static final Supplier<MapCodec<ComplexBlock>> COMPLEX_CODEC = REGISTRAR.r
 );
 ```
 
-:::note
+:::info
 尽管 Block Type 目前基本没有被使用，但随着 Mojang 继续转向以 Codec 为中心的结构，预计它在未来会变得更加重要。
 :::
 
@@ -213,11 +213,11 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 
 如果你注册了 Block 并将其放置在世界中，会发现它缺少纹理等内容。这是因为包括[纹理][textures]在内的内容由 Minecraft 的资源系统处理。在 Minecraft 中添加新 Block 时，应编写或[生成][datagen]以下文件：
 
-- 一个 [BlockState 文件][bsfile]
-- 一个 [Block Model][model]
-- 一个[翻译][i18n]
-- 一个 [Loot Table][loottable]
-- 一些 Block [Tag][tags]，例如用于挖掘的 Tag
+- [BlockState 文件][bsfile]
+- [方块模型][model]
+- [翻译][i18n]
+- [掉落表][loottable]
+- Block [Tag][tags]，例如用于挖掘的 Tag
 
 对于以上所有内容，也可以参考相似原版 Block 的文件和 Data Generator。
 
@@ -355,7 +355,7 @@ Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）�
 
 #### 服务端 Ticking 和 Tick 调度
 
-`BlockBehaviour#tick` 通过 scheduled tick 调用。可以通过 `Level#scheduleTick(BlockPos, Block, int)` 创建 scheduled tick，其中 `int` 表示延迟。这在原版的许多地方都有使用，例如大型垂滴叶的倾斜机制高度依赖该系统。其他常见使用者包括各种红石组件。
+`BlockBehaviour#tick` 通过 scheduled tick 调用。可以通过 `Level#scheduleTick(BlockPos, Block, int)` 创建 scheduled tick，其中 `int` 表示延迟。这在原版的许多地方都有使用。例如，大型垂滴叶的倾斜机制高度依赖该系统。其他常见使用者包括各种红石组件。
 
 #### 客户端 Ticking
 
@@ -374,10 +374,10 @@ Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）�
 Minecraft 中有许多机制使用随机 ticking，例如植物生长、冰和雪融化以及铜氧化。
 
 [attributes]: ../entities/attributes.md
-[below]: #deferredregisterblocks-helpers
+[below]: #deferredregisterblocks-辅助方法
 [blockentities]: ../blockentities/index.md
 [blockstates]: states.md
-[bsfile]: ../resources/client/models/index.md#blockstate-files
+[bsfile]: ../resources/client/models/index.md#blockstate-文件
 [codec]: ../datastorage/codecs.md#records
 [datagen]: ../resources/index.md#data-generation
 [i18n]: ../resources/client/i18n.md
