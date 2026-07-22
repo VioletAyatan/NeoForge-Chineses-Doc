@@ -57,21 +57,21 @@
 @Mod("examplemod")
 public class ExampleMod {
     public ExampleMod(IEventBus modBus) {
-        // Perform logic in that should be executed on both sides
+        // 执行应在两端运行的逻辑
     }
 }
 
 @Mod(value = "examplemod", dist = Dist.CLIENT) 
 public class ExampleModClient {
     public ExampleModClient(IEventBus modBus) {
-        // Perform logic in that should only be executed on the physical client
+        // 执行仅应在物理客户端运行的逻辑
     }
 }
 
 @Mod(value = "examplemod", dist = Dist.DEDICATED_SERVER) 
 public class ExampleModDedicatedServer {
     public ExampleModDedicatedServer(IEventBus modBus) {
-        // Perform logic in that should only be executed on the physical server
+        // 执行仅应在物理服务端运行的逻辑
     }
 }
 ```

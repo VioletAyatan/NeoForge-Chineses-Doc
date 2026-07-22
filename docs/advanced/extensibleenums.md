@@ -16,7 +16,7 @@
 要创建新的枚举条目，需要创建一个 JSON 文件，并在 `neoforge.mods.toml` 的 `[[mods]]` 块中通过 `enumExtensions` 条目引用它。指定路径必须相对于 `resources` 目录：
 
 ```toml
-# In neoforge.mods.toml:
+# 在 neoforge.mods.toml 中：
 [[mods]]
 ## The file is relative to the output directory of the resources, or the root path inside the jar when compiled
 ## The 'resources' directory represents the root output directory of the resources
@@ -29,20 +29,20 @@ enumExtensions="META-INF/enumextensions.json"
 {
     "entries": [
         {
-            // The enum class the entry should be added to
+    // 要向其中添加条目的枚举类
             "enum": "net/minecraft/world/item/ItemDisplayContext",
-            // The field name of the new entry, must be prefixed with the mod ID
+    // 新条目的字段名，必须以模组 ID 为前缀
             "name": "EXAMPLEMOD_STANDING",
-            // The constructor to be used
+    // 要使用的构造器
             "constructor": "(ILjava/lang/String;Ljava/lang/String;)V",
-            // Constant parameters provided directly.
+    // 直接提供的常量参数。
             "parameters": [ -1, "examplemod:standing", null ]
         },
         {
             "enum": "net/minecraft/world/item/Rarity",
             "name": "EXAMPLEMOD_CUSTOM",
             "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
-            // The parameters to be used, provided as a reference to an EnumProxy<Rarity> field in the given class
+    // 要使用的参数，以对指定类中 EnumProxy<Rarity> 字段的引用形式提供
             "parameters": {
                 "class": "example/examplemod/MyEnumParams",
                 "field": "CUSTOM_RARITY_ENUM_PROXY"
@@ -52,7 +52,7 @@ enumExtensions="META-INF/enumextensions.json"
             "enum": "net/minecraft/world/damagesource/DamageEffects",
             "name": "EXAMPLEMOD_TEST",
             "constructor": "(Ljava/lang/String;Ljava/util/function/Supplier;)V",
-            // The parameters to be used, provided as a reference to a method in the given class
+    // 要使用的参数，以对指定类中某个方法的引用形式提供
             "parameters": {
                 "class": "example/examplemod/MyEnumParams",
                 "method": "getTestDamageEffectsParameter"
@@ -125,16 +125,16 @@ public class MyEnumParams {
 :::
 
 ```java
-// This is an example, not an actual enum within Vanilla
+// 这是一个示例，并非原版中实际存在的枚举
 
-// The first argument must match the enum constant's ordinal
+    // 第一个参数必须与枚举常量的序号匹配
 @net.neoforged.fml.common.asm.enumextension.IndexedEnum
-// The second argument is a string that must be prefixed with the mod id
+    // 第二个参数是必须以模组 ID 为前缀的字符串
 @net.neoforged.fml.common.asm.enumextension.NamedEnum(1)
-// This enum is used in networking and must be checked for mismatches between the client and server
+    // 此枚举用于网络通信，必须检查客户端与服务端之间是否不匹配
 @net.neoforged.fml.common.asm.enumextension.NetworkedEnum(net.neoforged.fml.common.asm.enumextension.NetworkedEnum.NetworkCheck.BIDIRECTIONAL)
 public enum ExampleEnum implements net.neoforged.fml.common.asm.enumextension.IExtensibleEnum {
-    // VALUE_1 represents the name parameter here
+    // 此处 VALUE_1 表示 name 参数
     VALUE_1(0, "value_1", false),
     VALUE_2(1, "value_2", true),
     VALUE_3(2, "value_3");

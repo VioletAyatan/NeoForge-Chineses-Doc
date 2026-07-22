@@ -19,10 +19,10 @@ public class YourMod {
         NeoForge.EVENT_BUS.addListener(YourMod::onLivingJump);
     }
 
-    // Heals an entity by half a heart every time they jump.
+    // 每当实体跳跃时，为其恢复半颗心的生命值。
     private static void onLivingJump(LivingEvent.LivingJumpEvent event) {
         LivingEntity entity = event.getEntity();
-        // Only heal on the server side
+        // 仅在服务端恢复生命值
         if (!entity.level().isClientSide()) {
             entity.heal(1);
         }
@@ -133,17 +133,17 @@ graph TD;
 具有三种可能返回状态的事件会提供某个 `set*` 方法，用于设置期望结果。
 
 ```java
-// In some event handler class
+// 位于某个事件处理器类中
 
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void renderNameTag(RenderNameTagEvent.CanRender event) {
-    // Uses TriState to set the return state
+    // 使用 TriState 设置返回状态
     event.setCanRender(TriState.FALSE);
 }
 
-@SubscribeEvent // on the game event bus
+@SubscribeEvent // 位于游戏事件总线上
 public static void mobDespawn(MobDespawnEvent event) {
-    // Uses a Result enum to set the return state
+    // 使用 Result 枚举设置返回状态
     event.setResult(MobDespawnEvent.Result.DENY);
 }
 ```

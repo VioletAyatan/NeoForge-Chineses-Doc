@@ -26,11 +26,11 @@ NeoForge 提供两种对象注册方式：`DeferredRegister` 类与 `RegisterEve
 
 ```java
 public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
-        // The registry we want to use.
-        // Minecraft's registries can be found in BuiltInRegistries, NeoForge's registries can be found in NeoForgeRegistries.
-        // Mods may also add their own registries, refer to the individual mod's documentation or source code for where to find them.
+        // 要使用的注册表。
+        // Minecraft 的注册表可在 BuiltInRegistries 中找到，NeoForge 的注册表可在 NeoForgeRegistries 中找到。
+        // 模组也可以添加自己的注册表；请参阅相应模组的文档或源代码，了解在哪里可以找到这些注册表。
         BuiltInRegistries.BLOCK,
-        // Our mod id.
+        // 我们的模组 ID。
         ExampleMod.MOD_ID
 );
 ```
@@ -39,17 +39,17 @@ public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
 
 ```java
 public static final DeferredHolder<Block, Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
-        // Our registry name.
+        // 我们的注册名。
         "example_block",
-        // A supplier of the object we want to register.
+        // 要注册对象的 Supplier。
         () -> new Block(...)
 );
 
 public static final DeferredHolder<Block, SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.register(
-        // Our registry name.
+        // 我们的注册名。
         "example_block",
-        // A function creating the object we want to register
-        // given its registry name as a Identifier.
+        // 用于创建要注册对象的函数，
+        // 以其注册名（Identifier）作为参数。
         registryName -> new SlabBlock(...)
 );
 ```
@@ -60,17 +60,17 @@ public static final DeferredHolder<Block, SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.re
 
 ```java
 public static final Supplier<Block> EXAMPLE_BLOCK_1 = BLOCKS.register(
-        // Our registry name.
+        // 我们的注册名。
         "example_block",
-        // A supplier of the object we want to register.
+        // 要注册对象的 Supplier。
         () -> new Block(...)
 );
 
 public static final Supplier<SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.register(
-        // Our registry name.
+        // 我们的注册名。
         "example_block",
-        // A function creating the object we want to register
-        // given its registry name as a Identifier.
+        // 用于创建要注册对象的函数，
+        // 以其注册名（Identifier）作为参数。
         registryName -> new SlabBlock(...)
 );
 ```
@@ -82,11 +82,11 @@ public static final Supplier<SlabBlock> EXAMPLE_BLOCK_2 = BLOCKS.register(
 最后，由于整个系统是对注册表事件的封装，需要让 `DeferredRegister` 按需将自身挂接到这些注册表事件上：
 
 ```java
-//This is our mod constructor
+    //这是我们的模组构造器
 public ExampleMod(IEventBus modBus) {
     //highlight-next-line
     ExampleBlocksClass.BLOCKS.register(modBus);
-    //Other stuff here
+    //其他代码写在这里
 }
 ```
 
@@ -99,14 +99,14 @@ public ExampleMod(IEventBus modBus) {
 `RegisterEvent` 是注册对象的第二种方式。该[事件][event]会针对每个注册表触发，触发时间位于模组构造器执行之后、配置加载之前（这是因为 `DeferredRegister` 会在模组构造器中注册其内部事件处理器）。`RegisterEvent` 在模组事件总线上触发。
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void register(RegisterEvent event) {
     event.register(
-            // This is the registry key of the registry.
-            // Get these from BuiltInRegistries for vanilla registries,
-            // or from NeoForgeRegistries.Keys for NeoForge registries.
+        // 这是该注册表的注册表键。
+        // 原版注册表的键可从 BuiltInRegistries 获取，
+        // NeoForge 注册表的键可从 NeoForgeRegistries.Keys 获取。
             BuiltInRegistries.BLOCK,
-            // Register your objects here.
+            // 在此处注册对象。
             registry -> {
                 registry.register(Identifier.fromNamespaceAndPath(MODID, "example_block_1"), new Block(...));
                 registry.register(Identifier.fromNamespaceAndPath(MODID, "example_block_2"), new Block(...));
@@ -121,19 +121,19 @@ public static void register(RegisterEvent event) {
 有时需要根据给定 ID 获取注册项，或根据某个注册项查询其 ID。注册表本质上维护着从 ID（`Identifier`）到不同对象的映射，并支持反向查询，因此这两种操作都可以实现：
 
 ```java
-BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("minecraft", "dirt")); // returns the dirt block
-BuiltInRegistries.BLOCK.getKey(Blocks.DIRT); // returns the resource location "minecraft:dirt"
+BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("minecraft", "dirt")); // 返回泥土方块
+BuiltInRegistries.BLOCK.getKey(Blocks.DIRT); // 返回资源位置 "minecraft:dirt"
 
-// Assume that ExampleBlocksClass.EXAMPLE_BLOCK.get() is a Supplier<Block> with the id "yourmodid:example_block"
-BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("yourmodid", "example_block")); // returns the example block
-BuiltInRegistries.BLOCK.getKey(ExampleBlocksClass.EXAMPLE_BLOCK.get()); // returns the resource location "yourmodid:example_block"
+// 假设 ExampleBlocksClass.EXAMPLE_BLOCK.get() 是 ID 为 "yourmodid:example_block" 的 Supplier<Block>
+BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("yourmodid", "example_block")); // 返回示例方块
+BuiltInRegistries.BLOCK.getKey(ExampleBlocksClass.EXAMPLE_BLOCK.get()); // 返回资源位置 "yourmodid:example_block"
 ```
 
 如果只想检查某个注册项是否存在，也可以做到，不过只能通过键进行判断：
 
 ```java
 BuiltInRegistries.BLOCK.containsKey(Identifier.fromNamespaceAndPath("minecraft", "dirt")); // true
-BuiltInRegistries.BLOCK.containsKey(Identifier.fromNamespaceAndPath("create", "brass_ingot")); // true only if Create is installed
+BuiltInRegistries.BLOCK.containsKey(Identifier.fromNamespaceAndPath("create", "brass_ingot")); // 仅在安装 Create 时为 true
 ```
 
 正如最后一个示例所示，可以对任意模组 ID 执行此操作，因此这非常适合用于检查其他模组中的某个物品是否存在。
@@ -164,25 +164,25 @@ for (Map.Entry<ResourceKey<Block>, Block> entry : BuiltInRegistries.BLOCK.entryS
 首先创建[注册表键（registry key）][resourcekey]和注册表本身：
 
 ```java
-// We use spells as an example for the registry here, without any details about what a spell actually is (as it doesn't matter).
-// Of course, all mentions of spells can and should be replaced with whatever your registry actually is.
+// 此处以法术作为注册表示例，不涉及法术具体是什么（因为这并不重要）。
+// 当然，所有提及法术之处都可以且应当替换为注册表实际存储的内容。
 public static final ResourceKey<Registry<Spell>> SPELL_REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("yourmodid", "spells"));
 public static final Registry<YourRegistryContents> SPELL_REGISTRY = new RegistryBuilder<>(SPELL_REGISTRY_KEY)
-        // If you want to enable integer id syncing, for networking.
-        // These should only be used in networking contexts, for example in packets or purely networking-related NBT data.
+    // 如果要为网络通信启用整数 ID 同步。
+    // 这些 ID 只应在网络通信上下文中使用，例如数据包或纯网络通信相关的 NBT 数据。
         .sync(true)
-        // The default key. Similar to minecraft:air for blocks. This is optional.
+    // 默认键，类似于方块的 minecraft:air。此项可选。
         .defaultKey(Identifier.fromNamespaceAndPath("yourmodid", "empty"))
-        // Effectively limits the max count. Generally discouraged, but may make sense in settings such as networking.
+    // 实际上会限制最大数量。通常不建议设置，但在网络通信等场景中可能有意义。
         .maxId(256)
-        // Build the registry.
+    // 构建注册表。
         .create();
 ```
 
 然后在 `NewRegistryEvent` 中将该 Registry 注册到根 Registry，以告知游戏该注册表的存在：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerRegistries(NewRegistryEvent event) {
     event.register(SPELL_REGISTRY);
 }
@@ -194,8 +194,8 @@ public static void registerRegistries(NewRegistryEvent event) {
 public static final DeferredRegister<Spell> SPELLS = DeferredRegister.create(SPELL_REGISTRY, "yourmodid");
 public static final Supplier<Spell> EXAMPLE_SPELL = SPELLS.register("example_spell", () -> new Spell(...));
 
-// Alternatively:
-@SubscribeEvent // on the mod event bus
+// 或者：
+@SubscribeEvent // 位于模组事件总线上
 public static void register(RegisterEvent event) {
     event.register(SPELL_REGISTRY_KEY, registry -> {
         registry.register(Identifier.fromNamespaceAndPath("yourmodid", "example_spell"), () -> new Spell(...));
@@ -221,21 +221,21 @@ public static void register(RegisterEvent event) {
 ```java
 public static final ResourceKey<Registry<Spell>> SPELL_REGISTRY_KEY = ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("yourmodid", "spells"));
 
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
     event.dataPackRegistry(
-            // The registry key.
+            // 注册表键。
             SPELL_REGISTRY_KEY,
-            // The codec of the registry contents.
+            // 注册表内容的 Codec。
             Spell.CODEC,
-            // The network codec of the registry contents. Often identical to the normal codec.
-            // May be a reduced variant of the normal codec that omits data that is not needed on the client.
-            // May be null. If null, registry entries will not be synced to the client at all.
-            // May be omitted, which is functionally identical to passing null (a method overload
-            // with two parameters is called that passes null to the normal three parameter method).
+            // 注册表内容的网络 Codec，通常与常规 Codec 相同。
+            // 可以是常规 Codec 的精简版本，省略客户端不需要的数据。
+            // 可以为 null。若为 null，注册项将完全不同步到客户端。
+            // 可以省略；其功能与传入 null 相同（此时调用双参数方法重载，
+            // 该重载会向常规的三参数方法传入 null）。
             Spell.CODEC,
-            // A consumer which configures the constructed registry via the RegistryBuilder.
-            // May be omitted, which is functionally identical to passing builder -> {}.
+            // 通过 RegistryBuilder 配置所构造注册表的 Consumer。
+            // 可以省略；其功能与传入 builder -> {} 相同。
             builder -> builder.maxId(256)
     );
 }
@@ -250,17 +250,17 @@ public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry 
 ```java
 new RegistrySetBuilder()
     .add(Registries.CONFIGURED_FEATURE, bootstrap -> {
-        // Register configured features through the bootstrap context (see below)
+        // 通过 bootstrap 上下文注册配置特征（见下文）
     })
     .add(Registries.PLACED_FEATURE, bootstrap -> {
-        // Register placed features through the bootstrap context (see below)
+        // 通过 bootstrap 上下文注册放置特征（见下文）
     });
 ```
 
 实际注册对象时使用的是 `bootstrap` Lambda 参数，其类型为 `BootstrapContext`。要注册对象，可调用它的 `#register` 方法，如下所示：
 
 ```java
-// The resource key of our object.
+// 我们对象的资源键。
 public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEATURE = ResourceKey.create(
     Registries.CONFIGURED_FEATURE,
     Identifier.fromNamespaceAndPath(MOD_ID, "example_configured_feature")
@@ -269,9 +269,9 @@ public static final ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_CONFIGURED_FEAT
 new RegistrySetBuilder()
     .add(Registries.CONFIGURED_FEATURE, bootstrap -> {
         bootstrap.register(
-            // The resource key of our configured feature.
+            // 我们配置特征的资源键。
             EXAMPLE_CONFIGURED_FEATURE,
-            // The actual configured feature.
+            // 实际的配置特征。
             new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(...))
         );
     })
@@ -299,8 +299,8 @@ new RegistrySetBuilder()
     .add(Registries.PLACED_FEATURE, bootstrap -> {
         HolderGetter<ConfiguredFeature<?, ?>> otherRegistry = bootstrap.lookup(Registries.CONFIGURED_FEATURE);
         bootstrap.register(EXAMPLE_PLACED_FEATURE, new PlacedFeature(
-            otherRegistry.getOrThrow(EXAMPLE_CONFIGURED_FEATURE), // Get the configured feature
-            List.of() // No-op when placement happens - replace with whatever your placement parameters are
+        otherRegistry.getOrThrow(EXAMPLE_CONFIGURED_FEATURE), // 获取配置特征
+        List.of() // 放置时不执行任何操作——请替换为所需的放置参数
         ));
     });
 ```
@@ -308,25 +308,24 @@ new RegistrySetBuilder()
 最后，在实际的数据提供器中使用 `RegistrySetBuilder`，并将该数据提供器注册到事件：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void onGatherData(GatherDataEvent.Client event) {
-    // Adds the generated registry objects to the current lookup provider for use
-    // in other datagen.
+    // 将生成的注册表对象添加到当前查找提供器，
+    // 供其他数据生成使用。
     event.createDatapackRegistryObjects(
-        // Our registry set builder to generate the data from.
+        // 用于生成数据的注册表集合 builder。
         new RegistrySetBuilder().add(...),
-        // (Optional) A biconsumer that takes in any conditions to load the object
-        // associated with the resource key
+        // （可选）接收加载资源键所关联对象的任意条件的 BiConsumer
         conditions -> {
             conditions.accept(resourceKey, condition);
         },
-        // (Optional) A set of mod ids we are generating the entries for
-        // By default, supplies the mod id of the current mod container.
+        // （可选）要为其生成注册项的一组模组 ID
+        // 默认提供当前模组容器的模组 ID。
         Set.of("yourmodid")
     );
 
-    // You can use the lookup provider with your generated entries by either calling one
-    // of the `#create*` methods or grabbing the actual lookup via `#getLookupProvider`
+    // 可以调用任一 `#create*` 方法，或通过 `#getLookupProvider` 获取实际查找，
+    // 从而将查找提供器与生成的注册项配合使用
     // ...
 }
 ```

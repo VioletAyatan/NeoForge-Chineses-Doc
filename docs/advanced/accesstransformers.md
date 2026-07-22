@@ -19,7 +19,7 @@ Access Transformer 必须在 `build.gradle` 中声明。AT 文件可以放在任
 <TabItem value="ng" label="NeoGradle">
 
 ```gradle
-// In build.gradle:
+// 在 build.gradle 中：
 minecraft {
     accessTransformers {
         file 'src/main/resources/META-INF/accesstransformer.cfg'
@@ -33,7 +33,7 @@ minecraft {
 默认情况下，NeoForge 会查找 `META-INF/accesstransformer.cfg`。如果 `build.gradle` 指定了其他位置的 Access Transformer，就需要在 `neoforge.mods.toml` 中定义其位置：
 
 ```toml
-# In neoforge.mods.toml:
+# 在 neoforge.mods.toml 中：
 [[accessTransformers]]
 ## The file is relative to the output directory of the resources, or the root path inside the jar when compiled
 ## The 'resources' directory represents the root output directory of the resources
@@ -46,9 +46,9 @@ file="META-INF/accesstransformer.cfg"
 <TabItem value="mdg" label="ModDevGradle">
 
 ```gradle
-// In build.gradle:
+// 在 build.gradle 中：
 neoForge {
-    // ModDevGradle already tries to include 'src/main/resources/META-INF/accesstransformer.cfg' by default
+// ModDevGradle 默认已尝试包含 'src/main/resources/META-INF/accesstransformer.cfg'
     accessTransformers.from 'src/additions/resources/accesstransformer_additions.cfg'
 }
 ```
@@ -57,7 +57,7 @@ neoForge {
 <TabItem value="ng" label="NeoGradle">
 
 ```gradle
-// In build.gradle:
+// 在 build.gradle 中：
 minecraft {
     accessTransformers {
         file 'src/main/resources/META-INF/accesstransformer.cfg'
@@ -70,7 +70,7 @@ minecraft {
 </Tabs>
 
 ```toml
-# In neoforge.mods.toml
+# 在 neoforge.mods.toml 中
 [[accessTransformers]]
 file="accesstransformer.cfg"
 
@@ -155,18 +155,18 @@ file="accesstransformer_additions.cfg"
 ### 示例
 
 ```
-# Makes public the ByteArrayToKeyFunction interface in Crypt
+# 将 Crypt 中的 ByteArrayToKeyFunction 接口设为 public
 public net.minecraft.util.Crypt$ByteArrayToKeyFunction
 
-# Makes protected and removes the final modifier from 'random' in MinecraftServer
+# 将 MinecraftServer 中的 'random' 设为 protected，并移除 final 修饰符
 protected-f net.minecraft.server.MinecraftServer random
 
-# Makes public the 'makeExecutor' method in Util,
-# accepting a String and returns a TracingExecutor
+# 将 Util 中的 'makeExecutor' 方法设为 public，
+# 该方法接收 String 并返回 TracingExecutor
 public net.minecraft.Util makeExecutor(Ljava/lang/String;)Lnet/minecraft/TracingExecutor;
 
-# Makes public the 'leastMostToIntArray' method in UUIDUtil,
-# accepting two longs and returning an int[]
+# 将 UUIDUtil 中的 'leastMostToIntArray' 方法设为 public，
+# 该方法接收两个 long 并返回 int[]
 public net.minecraft.core.UUIDUtil leastMostToIntArray(JJ)[I
 ```
 
