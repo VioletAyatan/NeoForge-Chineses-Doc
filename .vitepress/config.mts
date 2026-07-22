@@ -40,9 +40,7 @@ export default defineConfig({
 				text: '方块（Blocks）',
 				link: '/docs/blocks/index',
 				collapsed: true,
-				items: [
-					{ text: '方块状态（Blockstates）', link: '/docs/blocks/states' },
-				],
+				items: [{ text: '方块状态（Blockstates）', link: '/docs/blocks/states' }],
 			},
 			{
 				text: '物品（Items）',
@@ -75,9 +73,7 @@ export default defineConfig({
 				text: '方块实体（Block Entities）',
 				link: '/docs/blockentities/index',
 				collapsed: true,
-				items: [
-					{ text: '方块实体渲染器（BlockEntityRenderer）', link: '/docs/blockentities/ber' },
-				],
+				items: [{ text: '方块实体渲染器（BlockEntityRenderer）', link: '/docs/blockentities/ber' }],
 			},
 			{
 				text: '资源（Resources）',
@@ -98,10 +94,22 @@ export default defineConfig({
 								link: '/docs/resources/client/models/index',
 								collapsed: true,
 								items: [
-									{ text: '模型数据生成（Model Datagen）', link: '/docs/resources/client/models/datagen' },
-									{ text: '客户端物品（Client Item）', link: '/docs/resources/client/models/items' },
-									{ text: '自定义模型加载器（Custom Model Loader）', link: '/docs/resources/client/models/modelloaders' },
-									{ text: '理解模型系统（Understanding the Model System）', link: '/docs/resources/client/models/modelsystem' },
+									{
+										text: '模型数据生成（Model Datagen）',
+										link: '/docs/resources/client/models/datagen',
+									},
+									{
+										text: '客户端物品（Client Item）',
+										link: '/docs/resources/client/models/items',
+									},
+									{
+										text: '自定义模型加载器（Custom Model Loader）',
+										link: '/docs/resources/client/models/modelloaders',
+									},
+									{
+										text: '理解模型系统（Understanding the Model System）',
+										link: '/docs/resources/client/models/modelsystem',
+									},
 								],
 							},
 							{
@@ -136,7 +144,10 @@ export default defineConfig({
 								link: '/docs/resources/server/datamaps/index',
 								collapsed: true,
 								items: [
-									{ text: '内置数据映射（Built-in Data Maps）', link: '/docs/resources/server/datamaps/builtin' },
+									{
+										text: '内置数据映射（Built-in Data Maps）',
+										link: '/docs/resources/server/datamaps/builtin',
+									},
 								],
 							},
 							{
@@ -144,7 +155,10 @@ export default defineConfig({
 								link: '/docs/resources/server/enchantments/index',
 								collapsed: true,
 								items: [
-									{ text: '内置附魔效果组件（Built-in Enchantment Effect Components）', link: '/docs/resources/server/enchantments/builtin' },
+									{
+										text: '内置附魔效果组件（Built-in Enchantment Effect Components）',
+										link: '/docs/resources/server/enchantments/builtin',
+									},
 								],
 							},
 							{
@@ -152,10 +166,22 @@ export default defineConfig({
 								link: '/docs/resources/server/loottables/index',
 								collapsed: true,
 								items: [
-									{ text: '自定义战利品对象（Custom Loot Objects）', link: '/docs/resources/server/loottables/custom' },
-									{ text: '全局战利品修改器（Global Loot Modifiers）', link: '/docs/resources/server/loottables/glm' },
-									{ text: '战利品条件（Loot Conditions）', link: '/docs/resources/server/loottables/lootconditions' },
-									{ text: '战利品函数（Loot Functions）', link: '/docs/resources/server/loottables/lootfunctions' },
+									{
+										text: '自定义战利品对象（Custom Loot Objects）',
+										link: '/docs/resources/server/loottables/custom',
+									},
+									{
+										text: '全局战利品修改器（Global Loot Modifiers）',
+										link: '/docs/resources/server/loottables/glm',
+									},
+									{
+										text: '战利品条件（Loot Conditions）',
+										link: '/docs/resources/server/loottables/lootconditions',
+									},
+									{
+										text: '战利品函数（Loot Functions）',
+										link: '/docs/resources/server/loottables/lootfunctions',
+									},
 								],
 							},
 							{
@@ -163,9 +189,18 @@ export default defineConfig({
 								link: '/docs/resources/server/recipes/index',
 								collapsed: true,
 								items: [
-									{ text: '内置配方类型（Built-in Recipe Types）', link: '/docs/resources/server/recipes/builtin' },
-									{ text: '自定义配方（Custom Recipes）', link: '/docs/resources/server/recipes/custom' },
-									{ text: '原料（Ingredient）', link: '/docs/resources/server/recipes/ingredients' },
+									{
+										text: '内置配方类型（Built-in Recipe Types）',
+										link: '/docs/resources/server/recipes/builtin',
+									},
+									{
+										text: '自定义配方（Custom Recipes）',
+										link: '/docs/resources/server/recipes/custom',
+									},
+									{
+										text: '原料（Ingredient）',
+										link: '/docs/resources/server/recipes/ingredients',
+									},
 								],
 							},
 							{
