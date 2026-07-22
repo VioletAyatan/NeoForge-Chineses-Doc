@@ -32,10 +32,8 @@ async function renderDiagram() {
 
 		mermaid.initialize({
 			startOnLoad: false,
-
 			// 跟随 VitePress 明暗主题
 			theme: isDark.value ? 'dark' : 'default',
-
 			// 文档内容可能来自外部时，建议保持 strict
 			securityLevel: 'strict',
 		});
