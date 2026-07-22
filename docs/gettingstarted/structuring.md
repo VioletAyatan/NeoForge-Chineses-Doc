@@ -14,7 +14,7 @@
 a.jar
     - com.example.ExampleClass
 b.jar
-    - com.example.ExampleClass // This class will not normally be loaded
+    - com.example.ExampleClass // 该类通常不会被加载
 ```
 
 加载模块时，这一点更为重要。如果不同模块中存在两个同名包并且其中含有类文件，模组加载器会在启动时崩溃，因为模组模块会导出给游戏和其他模组。
@@ -25,7 +25,7 @@ module A
         - class I
         - class J
 module B
-    - package X // This package will cause the mod loader to crash, as there already is a module with package X being exported
+    - package X // 该软件包将导致模组加载器崩溃，因为已经有一个包含 X 软件包的模块正在导出
         - class R
         - class S
         - class T

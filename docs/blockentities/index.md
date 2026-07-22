@@ -30,14 +30,13 @@ public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
 
 public static final Supplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
         "my_block_entity",
-        // The block entity type.
+        // 方块实体类型。
         () -> new BlockEntityType<>(
-                // The supplier to use for constructing the block entity instances.
+                // 用于构造方块实体实例的 Supplier。
                 MyBlockEntity::new,
-                // An optional value that, when true, only allows players with OP permissions
-                // to load NBT data (e.g. placing a block item)
+                // 一个可选值；为 true 时，仅允许具有 OP 权限的玩家加载 NBT 数据（例如放置方块物品）
                 false,
-                // A vararg of blocks that can have this block entity.
+                // 可拥有此方块实体的方块 varargs。
                 // This assumes the existence of the referenced blocks as DeferredBlock<Block>s.
                 MyBlocks.MY_BLOCK_1.get(), MyBlocks.MY_BLOCK_2.get()
         )
@@ -65,14 +64,14 @@ public class MyBlockEntity extends BlockEntity {
 最后，需要修改与 BlockEntity 关联的 Block 类。这意味着不能把 BlockEntity 附加到普通 `Block` 实例，而需要一个子类：
 
 ```java
-// The important part is implementing the EntityBlock interface and overriding the #newBlockEntity method.
+// 重要部分是实现 EntityBlock 接口并重写 #newBlockEntity 方法。
 public class MyEntityBlock extends Block implements EntityBlock {
-    // Constructor deferring to super.
+    // 委托给 super 的构造器。
     public MyEntityBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
-    // Return a new instance of our block entity here.
+    // 在此返回方块实体的新实例。
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MyBlockEntity(pos, state);
@@ -101,23 +100,23 @@ public static final DeferredBlock<MyEntityBlock> MY_BLOCK_2 =
 
 ```java
 public class MyBlockEntity extends BlockEntity {
-    // This can be any value of any type you want, so long as you can somehow serialize it to the value I/O.
-    // We will use an int for the sake of example.
+    // 只要能够通过Value I/O 序列化，就可以使用任意类型的任意值。
+    // 作为示例，我们将使用 int。
     private int value;
 
     public MyBlockEntity(BlockPos pos, BlockState state) {
         super(MY_BLOCK_ENTITY.get(), pos, state);
     }
 
-    // Read values from the passed ValueInput here.
+    // 从此处读取传递的 ValueInput 中的值。
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        // Will default to 0 if absent. See the ValueIO article for more information.
+        // 如果不存在则默认为 0。有关详细信息，请参阅 ValueIO 文章。
         this.value = input.getIntOr("value", 0);
     }
 
-    // Save values into the passed ValueOutput here.
+    // 将值保存到此处传递的 ValueOutput 中。
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
@@ -140,7 +139,7 @@ public class MyBlockEntity extends BlockEntity {
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
-        // Perform any remaining export logic on removal here.
+        // 在此处执行删除时的任何剩余导出逻辑。
     }
 }
 ```
@@ -156,7 +155,7 @@ public class MyEntityBlock extends Block implements EntityBlock {
 
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
-        // Handle whatever logic you want to execute on the surrounding neighbors
+        // 处理要对周围方块执行的任意逻辑
         Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 }
@@ -167,13 +166,13 @@ public class MyEntityBlock extends Block implements EntityBlock {
 BlockEntity 的另一个常见用途是 tick，通常会与所存储的数据配合使用。Tick 表示每个 game tick 都执行一些代码。具体方法是覆盖 `EntityBlock#getTicker` 并返回 `BlockEntityTicker`；后者基本上是一个带四个参数（Level、位置、BlockState 和 BlockEntity）的 consumer，如下所示：
 
 ```java
-// Note: The ticker is defined in the block, not the block entity. However, it is good practice to
-// keep the ticking logic in the block entity in some way, for example by defining a static #tick method.
+// 注意：ticker 定义在方块中，而不是方块实体中。不过，通常最好
+// 以某种方式把 tick 逻辑保留在方块实体中，例如定义 static #tick 方法。
 public class MyEntityBlock extends Block implements EntityBlock {
-    // other stuff here
+    // 在此处理其他内容
 
-    // We use a second method here due to generic conversions
-    // If extending `BaseEntityBlock`, this method is also available there as a protected static method
+    // 由于泛型转换，我们在这里使用第二种方法
+    // 如果继承 `BaseEntityBlock`，该方法也可作为 protected static 方法使用
     private static <E extends BlockEntity, A extends BlockEntity> @Nullable BlockEntityTicker<A> createTickerHelper(
         BlockEntityType<A> type, BlockEntityType<E> checkedType, BlockEntityTicker<? super E> ticker
     ) {
@@ -182,20 +181,20 @@ public class MyEntityBlock extends Block implements EntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        // You can return different tickers here, depending on whatever factors you want. A common use case would be
-        // to return different tickers on the client or server, only tick one side to begin with,
-        // or only return a ticker for some blockstates (e.g. when using a "my machine is working" blockstate property).
+        // 可以根据任意条件返回不同的 ticker。常见用法包括
+        // 在客户端和服务端返回不同的 ticker、从一开始就只在一端执行 tick，
+        // 或仅为某些方块状态返回 ticker（例如使用 "机器正在工作" 的方块状态 property 时）。
         return createTickerHelper(type, MY_BLOCK_ENTITY.get(), MyBlockEntity::tick);
     }
 }
 
 public class MyBlockEntity extends BlockEntity {
-    // other stuff here
+    // 在此处理其他内容
 
-    // The signature of this method matches the signature of the BlockEntityTicker functional interface.
+    // 此方法的签名与 BlockEntityTicker 函数式接口的签名一致。
     public static void tick(Level level, BlockPos pos, BlockState state, MyBlockEntity blockEntity) {
-        // Whatever you want to do during ticking.
-        // For example, you could change a crafting progress value or consume power here.
+        // 在此执行 tick 期间所需的任意逻辑。
+        // 例如，可以在此更改合成进度值或消耗能量。
     }
 }
 ```
@@ -214,14 +213,14 @@ BlockEntity 逻辑通常在服务端运行。因此，我们需要把正在进�
 public class MyBlockEntity extends BlockEntity {
     // ...
 
-    // Create an update tag here. For block entities with only a few fields, this can just call #saveWithoutMetadata.
+    // 此处创建更新标签。对于只有几个字段的方块实体，此可以直接调用#saveWithoutMetadata。
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 
-    // Handle a received update tag here. The default implementation calls #loadWithComponents here,
-    // so you do not need to override this method if you don't plan to do anything beyond that.
+    // 此处处理收到的更新标签。默认实现在这里调用#loadWithComponents，
+    // 因此，如果你不打算执行任何其他操作，则无需覆盖 此方法。
     @Override
     public void handleUpdateTag(ValueInput input) {
         super.handleUpdateTag(input);
@@ -237,26 +236,26 @@ public class MyBlockEntity extends BlockEntity {
 public class MyBlockEntity extends BlockEntity {
     // ...
 
-    // Create an update tag here, like above.
+    // 在这里创建一个更新标签，如上所示。
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 
-    // Return our packet here. This method returning a non-null result tells the game to use this packet for syncing.
+    // 在这里退回我们的数据包。此方法返回非 null 结果告诉游戏使用 此数据包进行同步。
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-        // The packet uses the CompoundTag returned by #getUpdateTag. An alternative overload of #create exists
-        // that allows you to specify a custom update tag, including the ability to omit data the client might not need.
+        // 该数据包使用#getUpdateTag返回的CompoundTag。存在 #create 的替代重载
+        // ，允许你指定自定义更新标记，包括省略客户端可能不需要的数据的能力。
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // Optionally: Run some custom logic when the packet is received.
-    // The super/default implementation forwards to #loadWithComponents.
+    // 可选：收到数据包时运行一些自定义逻辑。
+    // super/default 实现转发到#loadWithComponents。
     @Override
     public void onDataPacket(Connection connection, ValueInput input) {
         super.onDataPacket(connection, input);
-        // Do whatever you need to do here.
+        // 在这里做你需要做的任何事情。
     }
 }
 ```

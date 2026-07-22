@@ -42,7 +42,7 @@
 Group ID 应设置为你的顶级包。更多信息请参阅[包结构][packaging]。
 
 ```properties
-# In your gradle.properties file
+# 在你的 gradle.properties 文件中
 mod_group_id=com.example
 ```
 
@@ -91,11 +91,11 @@ com
 模组特定属性通过 `[[mods]]` 标头与指定模组绑定。这是一个[表数组][array]；直到下一个标头出现之前，所有键值属性都会附加到该模组。
 
 ```toml
-# Properties for examplemod1
+# examplemod1 的 property
 [[mods]]
 modId = "examplemod1"
 
-# Properties for examplemod2
+# examplemod2 的 property
 [[mods]]
 modId = "examplemod2"
 ```
@@ -130,7 +130,7 @@ Feature 系统允许模组要求加载系统时必须具备特定设置、软件
 模组属性系统是与特定模组关联的任意键值 Map。当一个模组文件定义多个提供不同 Metadata 的模组时，这些属性会很有用。之后，可以通过 `IModInfo#getModProperties` 从 Map 中获取对象值，从而取得某个键对应的具体属性值。这些配置使用[表数组][array] `[[modproperties.<modid>]]` 创建，其中 `modid` 是使用已定义属性的模组标识符。
 
 ```java
-// Assume we have two mods `mod1` and `mod2` with the following property configuration
+// 假设我们有两个模组 `mod1` 和 `mod2` 具有以下 property 配置
 // [[modproperties.mod1]]
 // key="value1"
 // [[modproperties.mod2]]
@@ -142,7 +142,7 @@ public class ModOne {
     private final String key;
 
     public ModOne(ModContainer container) {
-        // Will store 'value1' in key
+        // 将在key中存储 'value1'
         this.key = (String) container.getModInfo().getModProperties().get("key");
     }
 }
@@ -153,7 +153,7 @@ public class ModTwo {
     private final String key;
 
     public ModTwo(ModContainer container) {
-        // Will store 'value2' in key
+        // 将在key中存储 'value2'
         this.key = (String) container.getModInfo().getModProperties().get("key");
     }
 }
@@ -213,11 +213,11 @@ public class ModTwo {
 `Dist`            | 此模组正在加载的[物理端][sides]                                                        |
 
 ```java
-@Mod("examplemod") // Must match a mod id in the neoforge.mods.toml
+@Mod("examplemod") // 必须与 neoforge.mods.toml 中的模组 ID 匹配
 public class ExampleMod {
-    // Valid constructor, only uses two of the available argument types
+    // 有效的构造器，仅使用两种可用的参数类型
     public ExampleMod(IEventBus modBus, ModContainer container) {
-        // Initialize logic here
+        // 此处初始化逻辑
     }
 }
 ```
@@ -225,13 +225,13 @@ public class ExampleMod {
 默认情况下，`@Mod` 注解会在两个[端][sides]上加载。可以通过指定 `dist` 参数更改这一点：
 
 ```java
-// Must match a mod id in the neoforge.mods.toml
-// This mod class will only be loaded on the physical client
+// 必须与 neoforge.mods.toml 中的模组 ID 匹配
+// 该模组类只会在物理客户端上加载
 @Mod(value = "examplemod", dist = Dist.CLIENT) 
 public class ExampleModClient {
-    // Valid constructor
+    // 有效构造器
     public ExampleModClient(FMLModContainer container, IEventBus modBus, Dist dist) {
-        // Initialize client-only logic here
+        // 在此初始化仅客户端逻辑
     }
 }
 ```

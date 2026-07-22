@@ -78,11 +78,11 @@ Capability 允许使用某种分派逻辑查找某些 API 的实现。NeoForge �
 ```java
 public static final BlockCapability<ResourceHandler<ItemResource>, @Nullable Direction> ITEM_HANDLER_BLOCK =
     BlockCapability.create(
-        // Provide a name to uniquely identify the capability.
+        // 提供一个名称来唯一标识该capability。
         Identifier.fromNamespaceAndPath("mymod", "item_handler"),
-        // Provide the queried type. Here, we want to look up `ResourceHandler<ItemResource>` instances.
+        // 提供要查询的类型。此处要查找 `ResourceHandler<ItemResource>` 实例。
         ResourceHandler.asClass(),
-        // Provide the context type. We will allow the query to receive an extra `Direction side` parameter.
+        // 提供上下文类型。我们将允许查询接收额外的 `Direction side` 参数。
         Direction.class
     );
 ```
@@ -92,9 +92,9 @@ public static final BlockCapability<ResourceHandler<ItemResource>, @Nullable Dir
 ```java
 public static final BlockCapability<ResourceHandler<ItemResource>, @Nullable Direction> ITEM_HANDLER_BLOCK =
     BlockCapability.createSided(
-        // Provide a name to uniquely identify the capability.
+        // 提供一个名称来唯一标识该capability。
         Identifier.fromNamespaceAndPath("mymod", "item_handler"),
-        // Provide the queried type. Here, we want to look up `ResourceHandler<ItemResource>` instances.
+        // 提供要查询的类型。此处要查找 `ResourceHandler<ItemResource>` 实例。
         ResourceHandler.asClass()
     );
 ```
@@ -104,9 +104,9 @@ public static final BlockCapability<ResourceHandler<ItemResource>, @Nullable Dir
 ```java
 public static final BlockCapability<ResourceHandler<ItemResource>, Void> ITEM_HANDLER_NO_CONTEXT =
     BlockCapability.createVoid(
-        // Provide a name to uniquely identify the capability.
+        // 提供一个名称来唯一标识该capability。
         Identifier.fromNamespaceAndPath("mymod", "item_handler_no_context"),
-        // Provide the queried type. Here, we want to look up `ResourceHandler<ItemResource>` instances.
+        // 提供要查询的类型。此处要查找 `ResourceHandler<ItemResource>` 实例。
         ResourceHandler.asClass()
     );
 ```
@@ -124,14 +124,14 @@ public static final BlockCapability<ResourceHandler<ItemResource>, Void> ITEM_HA
 ```java
 var object = entity.getCapability(CAP, context);
 if (object != null) {
-    // Use object
+    // 使用object
 }
 ```
 
 ```java
 var object = stack.getCapability(CAP, context);
 if (object != null) {
-    // Use object
+    // 使用object
 }
 ```
 
@@ -140,7 +140,7 @@ Block capability 的用法略有不同，因为即使 Block 没有 BlockEntity�
 ```java
 var object = level.getCapability(CAP, pos, context);
 if (object != null) {
-    // Use object
+    // 使用object
 }
 ```
 
@@ -149,7 +149,7 @@ if (object != null) {
 ```java
 var object = level.getCapability(CAP, pos, blockState, blockEntity, context);
 if (object != null) {
-    // Use object
+    // 使用object
 }
 ```
 
@@ -158,7 +158,7 @@ if (object != null) {
 ```java
 ResourceHandler<ItemResource> handler = level.getCapability(Capabilities.Item.BLOCK, pos, Direction.NORTH);
 if (handler != null) {
-    // Use the handler for some item-related operation.
+    // 使用处理器进行一些与物品相关的操作。
 }
 ```
 
@@ -180,14 +180,14 @@ if (handler != null) {
 要创建 cache，调用 `BlockCapabilityCache.create`，传入要查询的 capability、Level、位置与查询 context。
 
 ```java
-// Declare the field:
+// 声明字段：
 private BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction> capCache;
 
-// Later, for example in `onLoad` for a block entity:
+// 稍后，例如在方块实体的 `onLoad` 中：
 this.capCache = BlockCapabilityCache.create(
-    Capabilities.Item.BLOCK, // capability to cache
+    Capabilities.Item.BLOCK, // 缓存capability
     level, // level
-    pos, // target position
+    pos, // 目标位置
     Direction.NORTH // context
 );
 ```
@@ -197,7 +197,7 @@ this.capCache = BlockCapabilityCache.create(
 ```java
 ResourceHandler<ItemResource> handler = this.capCache.getCapability();
 if (handler != null) {
-    // Use the handler for some item-related operation.
+    // 使用处理器进行一些与物品相关的操作。
 }
 ```
 
@@ -213,15 +213,15 @@ Capability 对象发生变化时，还可以接收通知！这包括 capability 
     - 可以在这里对 capability 的变化、移除或出现作出反应。
 
 ```java
-// In `onLoad` for a block entity:
-// With optional invalidation listener:
+// 在方块实体的 `onLoad` 中：
+// 使用可选的失效侦听器：
 this.capCache = BlockCapabilityCache.create(
-    Capabilities.Item.BLOCK, // capability to cache
+    Capabilities.Item.BLOCK, // 缓存capability
     level, // level
-    pos, // target position
+    pos, // 目标位置
     Direction.NORTH, // context
-    () -> !this.isRemoved(), // validity check (because the cache might outlive the object it belongs to)
-    () -> onCapInvalidate() // invalidation listener
+    () -> !this.isRemoved(), // 有效性 check（因为缓存可能比它所属的对象寿命更长）
+    () -> onCapInvalidate() // 失效监听器
 );
 ```
 
@@ -234,7 +234,7 @@ this.capCache = BlockCapabilityCache.create(
 为确保 cache 能正确更新其存储的 capability，**每当 capability 发生变化、出现或消失时，模组开发者都必须调用 `level.invalidateCapabilities(pos)`**。
 
 ```java
-// whenever a capability changes, appears, or disappears:
+// 每当capability变更、出现或消失时：
 level.invalidateCapabilities(pos);
 ```
 
@@ -260,12 +260,12 @@ Capability *provider* 是最终提供 capability 的对象。Capability provider
 Block provider 使用 `registerBlock` 注册。例如：
 
 ```java
-@SubscribeEvent // on the mod event bus
+@SubscribeEvent // 位于模组事件总线上
 public static void registerCapabilities(RegisterCapabilitiesEvent event) {
     event.registerBlock(
-        Capabilities.Item.BLOCK, // capability to register for
+        Capabilities.Item.BLOCK, // 注册Capabilities
         (level, pos, state, be, side) -> <return the ResourceHandler<ItemResource>>,
-        // blocks to register for
+        // 方块注册
         MY_ITEM_HANDLER_BLOCK,
         MY_OTHER_ITEM_HANDLER_BLOCK
     );
@@ -276,8 +276,8 @@ public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 
 ```java
 event.registerBlockEntity(
-    Capabilities.Item.BLOCK, // capability to register for
-    MY_BLOCK_ENTITY_TYPE, // block entity type to register for
+    Capabilities.Item.BLOCK, // 注册capability
+    MY_BLOCK_ENTITY_TYPE, // 要注册的方块实体类型
     (myBlockEntity, side) -> myBlockEntity.myResourceHandlerForTheGivenSide
 );
 ```
@@ -290,8 +290,8 @@ Entity 注册方式类似，使用 `registerEntity`：
 
 ```java
 event.registerEntity(
-    Capabilities.Item.ENTITY, // capability to register for
-    MY_ENTITY_TYPE, // entity type to register for
+    Capabilities.Item.ENTITY, // 注册capability
+    MY_ENTITY_TYPE, // 要注册的实体类型
     (myEntity, v) -> myEntity.myResourceHandlerForTheGivenContext
 );
 ```
@@ -300,9 +300,9 @@ Item 注册方式也类似。请注意，provider 会接收 ItemStack：
 
 ```java
 event.registerItem(
-    Capabilities.Item.ITEM, // capability to register for
+    Capabilities.Item.ITEM, // 注册capability
     (stack, itemAccess) -> <return the ResourceHandler<ItemResource> for the itemStack>,
-    // items to register for
+    // 注册物品
     MY_ITEM,
     MY_OTHER_ITEM
 );
@@ -315,7 +315,7 @@ event.registerItem(
 例如，NeoForge 使用此系统为所有 `BucketItem`（不包括子类）注册 Fluid resource 处理器 capability：
 
 ```java
-// For reference, you can find this code in the `CapabilityHooks` class.
+// 作为参考，你可以在 `CapabilityHooks` 类中找到此代码。
 for (Item item : BuiltInRegistries.ITEM) {
     if (item.getClass() == BucketItem.class) {
         event.registerItem(Capabilities.Fluid.ITEM, (stack, itemAccess) -> new BucketResourceHandler(itemAccess), item);
@@ -328,13 +328,13 @@ Provider 按注册顺序被询问是否提供 capability。如果希望在 NeoFo
 例如：
 
 ```java
-// use HIGH priority to register before NeoForge!
-@SubscribeEvent(priority = EventPriority.HIGH) // on the mod event bus
+// 使用HIGH优先在NeoForge之前注册！
+@SubscribeEvent(priority = EventPriority.HIGH) // 位于模组事件总线上
 public static void registerCapabilities(RegisterCapabilitiesEvent event) {
     event.registerItem(
         Capabilities.Fluid.ITEM,
         (stack, itemAccess) -> new BucketResourceHandler(itemAccess),
-        // Items to register for
+        // 要注册的 Item
         MY_CUSTOM_BUCKET
     );
 }

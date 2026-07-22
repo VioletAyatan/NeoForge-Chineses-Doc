@@ -17,14 +17,14 @@
 现在来注册方块：
 
 ```java
-//BLOCKS is a DeferredRegister.Blocks
+//BLOCKS 使用 DeferredRegister.Blocks
 public static final DeferredBlock<Block> MY_BLOCK = BLOCKS.register("my_block", registryName -> new Block(...));
 ```
 
 注册方块后，对新方块 `my_block` 的所有引用都应使用此常量。例如，如果想检查给定位置的方块是否为 `my_block`，代码大致如下：
 
 ```java
-level.getBlockState(position) // returns the blockstate placed in the given level (world) at the given position
+level.getBlockState(position) // 返回在给定位置放置在给定 level（世界）中的blockstate
     //highlight-next-line
     .is(MyBlockRegistrationClass.MY_BLOCK);
 ```
@@ -68,7 +68,7 @@ public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBloc
 例如，一个简单实现大致如下：
 
 ```java
-//BLOCKS is a DeferredRegister.Blocks
+//BLOCKS 使用 DeferredRegister.Blocks
 public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
     "my_better_block", 
     registryName -> new Block(BlockBehaviour.Properties.of()
@@ -103,7 +103,7 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
 如果 `Block` 子类只接受 `BlockBehaviour.Properties` 参数，可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
 
 ```java
-// For some block subclass
+// 对于某些方块子类
 public class SimpleBlock extends Block {
     public SimpleBlock(BlockBehavior.Properties properties) {
         // ...
@@ -115,7 +115,7 @@ public class SimpleBlock extends Block {
     }
 }
 
-// In some registration class
+// 在某些注册类中
 public static final DeferredRegister<MapCodec<? extends Block>> REGISTRAR = DeferredRegister.create(BuiltInRegistries.BLOCK_TYPE, "yourmodid");
 
 public static final Supplier<MapCodec<SimpleBlock>> SIMPLE_CODEC = REGISTRAR.register(
@@ -127,7 +127,7 @@ public static final Supplier<MapCodec<SimpleBlock>> SIMPLE_CODEC = REGISTRAR.reg
 如果 `Block` 子类还包含更多参数，则应使用 [`RecordCodecBuilder#mapCodec`][codec] 创建 `MapCodec`，并为 `BlockBehaviour.Properties` 参数传入 `BlockBehaviour#propertiesCodec`。
 
 ```java
-// For some block subclass
+// 对于某些方块子类
 public class ComplexBlock extends Block {
     public ComplexBlock(int value, BlockBehavior.Properties properties) {
         // ...
@@ -143,7 +143,7 @@ public class ComplexBlock extends Block {
     }
 }
 
-// In some registration class
+// 在某些注册类中
 public static final DeferredRegister<MapCodec<? extends Block>> REGISTRAR = DeferredRegister.create(BuiltInRegistries.BLOCK_TYPE, "yourmodid");
 
 public static final Supplier<MapCodec<ComplexBlock>> COMPLEX_CODEC = REGISTRAR.register(
@@ -151,7 +151,7 @@ public static final Supplier<MapCodec<ComplexBlock>> COMPLEX_CODEC = REGISTRAR.r
     () -> RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Codec.INT.fieldOf("value").forGetter(ComplexBlock::getValue),
-            BlockBehaviour.propertiesCodec() // represents the BlockBehavior.Properties parameter
+            BlockBehaviour.propertiesCodec() // 表示BlockBehavior.Properties参数
         ).apply(instance, ComplexBlock::new)
     )
 );
@@ -171,25 +171,25 @@ public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBloc
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.register(
     "example_block", registryName -> new Block(
         BlockBehaviour.Properties.of()
-            // The ID must be set on the block
+            // 必须在方块上设置 ID
             .setId(ResourceKey.create(Registries.BLOCK, registryName))
     )
 );
 
-// Same as above, except that the block properties are supplied separately.
-// setId is also called internally on the properties object.
+// 与上面相同，只是方块property是单独提供的。
+// setId 也在property对象上内部调用。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // The factory that the properties will be passed into.
-    () -> BlockBehaviour.Properties.of() // The supplied properties to use.
+    Block::new, // property将传递到的工厂。
+    () -> BlockBehaviour.Properties.of() // 提供的要使用的property。
 );
 
-// Same as above, except that the `Properties#of` is supplied and operated upon.
-// setId is also called internally on the properties object.
+// 与上面相同，但提供和操作的是 `Properties#of`。
+// setId 也在property对象上内部调用。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // The factory that the properties will be passed into.
-    props -> props // A unary operator of the properties to use.
+    Block::new, // property将传递到的工厂。
+    props -> props // 要使用的property的一元运算符。
 );
 ```
 
@@ -198,12 +198,12 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
 ```java
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    () -> BlockBehaviour.Properties.of() // The supplied properties to use.
+    () -> BlockBehaviour.Properties.of() // 提供的要使用的property。
 );
 
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    props -> props // A unary operator of the properties to use.
+    props -> props // 要使用的property的一元运算符。
 );
 ```
 
@@ -306,14 +306,13 @@ while (leftClickIsBeingHeld()) {
 挖掘速度根据方块硬度、所用[工具][tool]的速度以及若干[实体属性][attributes]，按以下规则计算：
 
 ```java
-// This will return the tool's mining speed, or 1 if the held item is either empty, not a tool,
-// or not applicable for the block being broken.
+// 这将返回工具的采矿速度，或者如果持有的物品是空的，不是工具，或不适用于被破坏的方块。则为1
 float destroySpeed = item.getDestroySpeed(blockState);
-// If we have an applicable tool, add the minecraft:mining_efficiency attribute as an additive modifier.
+// 如果我们有适用的工具，请添加 minecraft:mining_efficiency 属性作为附加修饰符。
 if (destroySpeed > 1) {
     destroySpeed += player.getAttributeValue(Attributes.MINING_EFFICIENCY);
 }
-// Apply effects from haste or conduit power.
+// 应用急速或导管能量的效果。
 if (player.hasEffect(MobEffects.HASTE) || player.hasEffect(MobEffects.CONDUIT_POWER)) {
     int haste = player.hasEffect(MobEffects.HASTE)
         ? player.getEffect(MobEffects.HASTE).getAmplifier()
@@ -324,7 +323,7 @@ if (player.hasEffect(MobEffects.HASTE) || player.hasEffect(MobEffects.CONDUIT_PO
     int amplifier = Math.max(haste, conduitPower);
     destroySpeed *= 1 + (amplifier + 1) * 0.2f;
 }
-// Apply slowness effect.
+// 应用缓慢效果。
 if (player.hasEffect(MobEffects.MINING_FATIGUE)) {
     destroySpeed *= switch (player.getEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
         case 0 -> 0.3F;
@@ -333,17 +332,17 @@ if (player.hasEffect(MobEffects.MINING_FATIGUE)) {
         default -> 8.1E-4F;
     };
 }
-// Add the minecraft:block_break_speed attribute as a multiplicative modifier.
+// 添加 minecraft:block_break_speed 属性作为乘法修饰符。
 destroySpeed *= player.getAttributeValue(Attributes.BLOCK_BREAK_SPEED);
-// If the player is underwater, apply the underwater mining speed penalty multiplicatively.
+// 如果玩家在水下，则乘以SUBMERGED_MINING_SPEED。
 if (player.isEyeInFluid(FluidTags.WATER)) {
     destroySpeed *= player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED);
 }
-// If the player is trying to break a block in mid-air, make the player mine 5 times slower.
+// 如果玩家试图打破半空中的方块，则让玩家挖矿速度减慢 5 倍。
 if (!player.onGround()) {
     destroySpeed /= 5;
 }
-destroySpeed = /* The PlayerEvent.BreakSpeed event is fired here, allowing modders to further modify this value. */;
+destroySpeed = /* 此处会触发 PlayerEvent.BreakSpeed 事件，允许模组开发者进一步修改该值。 */;
 return destroySpeed;
 ```
 

@@ -5,37 +5,37 @@
 BER 直接实现 `BlockEntityRenderer`，由它提交要渲染的 [feature]：
 
 ```java
-// The generic type in the superinterface should be set to what block entity
-// you are trying to render, along with its extracted render state. More on this below.
+// 接口中的泛型类型应该设置为什么方块实体
+// 你正在尝试渲染，及其提取的渲染状态。有关其更多信息请参见下文。
 public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity, MyBlockEntityRenderState> {
 
     public MyBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        // Get whatever is necessary from the context
+        // 从上下文中获取必要的内容
     }
 
-    // Tell the renderer how to create a new render state.
+    // 告诉渲染器如何创建新渲染状态。
     @Override
     public MyBlockEntityRenderState createRenderState() {
         return new MyBlockEntityRenderState();
     }
 
-    // Update the render state by copying the needed values from the passed block entity
-    // to the passed render state.
-    // The block entity and render state are the generic types passed to the renderer
+    // 通过从传递的方块实体复制所需的值来更新渲染状态
+    // 到传递的渲染状态。
+    // 方块实体和渲染状态是传递给渲染器的泛型类型
     @Override
     public void extractRenderState(MyBlockEntity blockEntity, MyBlockEntityRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
-        // Always call super or `BlockEntityRenderState#extractBase`
+        // 始终调用 super 或 `BlockEntityRenderState#extractBase`
         super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
 
-        // Extract and store any additional values in the state here.
+        // 提取任何附加值并将其存储在此处的状态中。
         renderState.value = blockEntity.getValue();
     }
 
-    // Actually submit the features of the block entity to render.
-    // The first parameter matches the render state's generic type.
+    // 实际提交方块实体的特征进行渲染。
+    // 第一个参数与渲染状态的泛型类型匹配。
     @Override
     public void submit(MyBlockEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
-        // Submit using the collector here.
+        // 在此处使用收集器提交。
     }
 }
 ```
@@ -43,12 +43,12 @@ public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity,
 有了 BER 后，还需要注册它并将其连接到所属 BlockEntity。这可在 [`EntityRenderersEvent.RegisterRenderers`][event] 中完成：
 
 ```java
-@SubscribeEvent // on the mod event bus only on the physical client
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     event.registerBlockEntityRenderer(
-            // The block entity type to register the renderer for.
+            // 要注册渲染器的方块实体类型。
             MyBlockEntities.MY_BLOCK_ENTITY.get(),
-            // A function of BlockEntityRendererProvider.Context to BlockEntityRenderer.
+            // 从 BlockEntityRendererProvider.Context 到 BlockEntityRenderer 的函数。
             MyBlockEntityRenderer::new
     );
 }
@@ -64,11 +64,11 @@ public class MyBlockEntityRenderer implements BlockEntityRenderer<MyBlockEntity,
     // ...
 }
 
-// In some event handler class
-@SubscribeEvent // on the mod event bus only on the physical client
+// 在某些事件处理器类中
+@SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     event.registerBlockEntityRenderer(MyBlockEntities.MY_BLOCK_ENTITY.get(),
-            // Pass the context to an empty (default) constructor call
+            // 将 context 传给空的（默认）构造器
             context -> new MyBlockEntityRenderer()
     );
 }

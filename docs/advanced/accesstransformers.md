@@ -35,8 +35,8 @@ minecraft {
 ```toml
 # 在 neoforge.mods.toml 中：
 [[accessTransformers]]
-## The file is relative to the output directory of the resources, or the root path inside the jar when compiled
-## The 'resources' directory represents the root output directory of the resources
+## 该文件相对于资源的输出目录，或者编译时jar内的根路径
+## 'resources' 目录代表资源的根输出目录
 file="META-INF/accesstransformer.cfg"
 ```
 
