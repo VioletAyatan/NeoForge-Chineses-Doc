@@ -10,7 +10,7 @@
 例如，在 `1.21.3` 中，如果你要扩充苍白橡木的木质方块集合，就只应在 `WINTER_DROP` 标志启用时显示它们。
 :::
 
-## 创建功能标志
+## 创建功能标志 {#creating-a-feature-flag}
 
 要创建新的功能标志，需要创建一个 JSON 文件，并在 `neoforge.mods.toml` 文件的 `[[mods]]` 块中通过 `featureFlags` 条目引用它。指定路径必须相对于 `resources` 目录：
 
@@ -33,7 +33,7 @@
 }
 ```
 
-## 获取功能标志
+## 获取功能标志 {#retrieving-the-feature-flag}
 
 可以通过 `FeatureFlagRegistry.getFlag(Identifier)` 获取已注册的功能标志。模组初始化期间随时都可以这样做。建议将结果保存到某处供以后使用，不要在每次需要标志时都查询注册表。
 
@@ -42,7 +42,7 @@
 public static final FeatureFlag EXPERIMENTAL = FeatureFlags.REGISTRY.getFlag(Identifier.fromNamespaceAndPath("examplemod", "experimental"));
 ```
 
-## 功能元素（Feature Element）
+## 功能元素（Feature Element） {#feature-elements}
 
 `FeatureElement` 是可指定一组必需标志的注册表值。只有当相应的必需标志与 `Level` 中启用的标志匹配时，玩家才能使用这些值。
 
@@ -58,7 +58,7 @@ public static final FeatureFlag EXPERIMENTAL = FeatureFlags.REGISTRY.getFlag(Ide
 - MobEffect
 - GameRule
 
-### 为元素设置标志
+### 为元素设置标志 {#flagging-elements}
 
 要把某个 `FeatureElement` 标记为需要你的功能标志，只需把它与其他所需标志一并传入相应的注册方法：
 
@@ -133,7 +133,7 @@ DeferredHolder<GameRule, GameRule> EXPERIMENTAL_GAME_RULE = GAME_RULES.register(
 ));
 ```
 
-### 验证启用状态
+### 验证启用状态 {#validating-enabled-status}
 
 要验证功能是否应启用，必须先取得已启用功能的集合。这可以通过多种方式完成，常用且推荐的方法是 `LevelReader#enabledFeatures`。  
 
@@ -160,7 +160,7 @@ featureElement.isEnabled(enabledFeatures);
 itemStack.isItemEnabled(enabledFeatures);
 ```
 
-## 功能包（Feature Pack）
+## 功能包（Feature Pack） {#feature-packs}
 
 _另请参阅：[资源包](../resources/index.md#assets)、[数据包](../resources/index.md#data) 和 [Pack.mcmeta](../resources/index.md#packmcmeta)_
 
@@ -185,7 +185,7 @@ _另请参阅：[资源包](../resources/index.md#assets)、[数据包](../resou
 
 用户可以通过几种方式获得功能包，例如从外部来源将其作为数据包安装，或者下载内置功能包的模组。随后，两者都需要依据[物理端](../concepts/sides.md)以不同方式安装。
 
-### 内置
+### 内置 {#built-in}
 
 内置包会随模组捆绑，并通过 `AddPackFindersEvent` 事件提供给游戏。
 
@@ -221,23 +221,23 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 }
 ```
 
-#### 在单人游戏中启用
+#### 在单人游戏中启用 {#enabling-in-singleplayer}
 
 1. 创建一个新世界。
 2. 前往实验功能界面。
 3. 开启所需的包。
 4. 单击 `Done` 确认更改。
 
-#### 在多人游戏中启用
+#### 在多人游戏中启用 {#enabling-in-multiplayer}
 
 1. 打开服务器的 `server.properties` 文件。
 2. 将功能包 ID 添加到 `initial-enabled-packs`，各包之间用 `,` 分隔。包 ID 在注册包查找器时定义，如上所示。
 
-### 外部
+### 外部 {#external}
 
 外部包以数据包形式提供给用户。
 
-#### 在单人游戏中安装
+#### 在单人游戏中安装 {#installation-in-singleplayer}
 
 1. 创建一个新世界。
 2. 前往数据包选择界面。
@@ -253,7 +253,7 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 如果要在启用后禁用外部功能包，请返回数据包界面，把外部包从 `Selected` 移回 `Available`。
 :::
 
-#### 在多人游戏中安装
+#### 在多人游戏中安装 {#installation-in-multiplayer}
 
 功能包只能在首次创建世界时启用，一旦启用便不能禁用。
 
@@ -263,7 +263,7 @@ public static void addFeaturePacks(final AddPackFindersEvent event) {
 4. 将数据包 ZIP 文件名（不含 `.zip`）添加到 `initial-enabled-packs`（各包之间用 `,` 分隔）
    - 示例：ZIP 文件 `examplemod-experimental.zip` 应按如下方式添加：`initial-enabled-packs=vanilla,examplemod-experimental`
 
-### 数据生成
+### 数据生成 {#data-generation}
 
 _另请参阅：[数据生成](../resources/index.md#data-generation)_
 

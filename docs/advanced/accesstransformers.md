@@ -4,7 +4,7 @@ Access Transformer（简称 AT）可以扩大类、方法和字段的可见性�
 
 可在 NeoForged GitHub 上查看[规范文档][specs]。
 
-## 添加 AT
+## 添加 AT {#adding-ats}
 
 要向模组项目添加 Access Transformer，只需在 `build.gradle` 中添加一行配置。
 
@@ -80,13 +80,13 @@ file="accesstransformer_additions.cfg"
 
 添加或修改任何 Access Transformer 后，都必须刷新 Gradle 项目，转换才能生效。
 
-## 访问转换器规范
+## 访问转换器规范 {#the-access-transformer-specification}
 
-### 注释
+### 注释 {#comments}
 
 从 `#` 开始到行尾的所有文本都会被视为注释，不会被解析。
 
-### 访问修饰符
+### 访问修饰符 {#access-modifiers}
 
 访问修饰符用于指定目标成员转换后的新可见性。按可见性从高到低排列如下：
 
@@ -103,9 +103,9 @@ file="accesstransformer_additions.cfg"
 可以安全转换的方法示例包括 `final` 方法（或 `final` 类中的方法）以及 `static` 方法。`private` 方法通常也很安全；不过，它们可能会在子类型中造成无意的重写，因此还应额外进行人工验证。
 :::
 
-### 目标和指令
+### 目标和指令 {#targets-and-directives}
 
-#### 类
+#### 类 {#classes}
 
 定位类的格式：
 
@@ -115,7 +115,7 @@ file="accesstransformer_additions.cfg"
 
 内部类使用外部类的完全限定名与内部类名称表示，并以 `$` 作为分隔符。
 
-#### 字段
+#### 字段 {#fields}
 
 定位字段的格式：
 
@@ -123,7 +123,7 @@ file="accesstransformer_additions.cfg"
 <access modifier> <fully qualified class name> <field name>
 ```
 
-#### 方法
+#### 方法 {#methods}
 
 定位方法需要使用特殊语法来表示方法参数和返回类型：
 
@@ -131,7 +131,7 @@ file="accesstransformer_additions.cfg"
 <access modifier> <fully qualified class name> <method name>(<parameter types>)<return type>
 ```
 
-##### 指定类型
+##### 指定类型 {#specifying-types}
 
 它们也称为“描述符”。更多技术细节请参阅 [Java 虚拟机规范 SE 21 的 4.3.2 和 4.3.3 节][jvmdescriptors]。
 
@@ -152,7 +152,7 @@ file="accesstransformer_additions.cfg"
 - `V` - 表示方法不返回值，只能用在方法描述符末尾
     - 示例：`<method>()V` 表示一个无参数且无返回值的方法
 
-### 示例
+### 示例 {#examples}
 
 ```
 # 将 Crypt 中的 ByteArrayToKeyFunction 接口设为 public

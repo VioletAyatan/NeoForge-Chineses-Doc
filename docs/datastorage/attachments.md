@@ -1,20 +1,20 @@
 # 数据附件（Data Attachments）
 
-数据附件系统允许模组把额外数据附加并存储到 BlockEntity、区块、Entity 和 Level 上。
+数据附件系统允许模组把额外数据附加并存储到方块实体、区块、实体和 `Level` 上。
 
-_若要存储额外的 Level 数据，也可以使用[数据存档][saveddata]。_
+_若要存储额外的 `Level` 数据，也可以使用[数据存档][saveddata]。_
 
 :::info
 用于 ItemStack 的数据附件已由原版[数据组件][datacomponents]取代。
 :::
 
-## 创建附件类型
+## 创建附件类型 {#creating-an-attachment-type}
 
 要使用该系统，需要注册一个 `AttachmentType`。附件类型包含以下配置：
 
 - 默认值 supplier，在首次访问数据时创建实例。
 - 如果附件需要持久化，则提供可选的 serializer。
-- 如果配置了 serializer，则可使用 `copyOnDeath` 标志，在 Entity 死亡时自动复制数据（见下文）。
+- 如果配置了 serializer，则可使用 `copyOnDeath` 标志，在实体死亡时自动复制数据（见下文）。
 
 :::tip
 如果不希望附件持久化，请不要提供 serializer。
@@ -45,7 +45,7 @@ private static final Supplier<AttachmentType<SomeCache>> SOME_CACHE = ATTACHMENT
 ATTACHMENT_TYPES.register(modBus);
 ```
 
-## 使用附件类型
+## 使用附件类型 {#using-the-attachment-type}
 
 附件类型注册后，可以用于任何 holder 对象。如果当前没有数据，调用 `getData` 会附加一个新的默认实例。
 
@@ -75,13 +75,13 @@ player.setData(MANA, player.getData(MANA) + 10);
 ```
 
 :::important
-通常，修改 BlockEntity 和区块后，需要通过 `setChanged` 和 `setUnsaved(true)` 将其标记为 dirty。调用 `setData` 时会自动完成这一步：
+通常，修改方块实体和区块后，需要通过 `setChanged` 和 `setUnsaved(true)` 将其标记为 dirty。调用 `setData` 时会自动完成这一步：
 
 ```java
 chunk.setData(MANA, chunk.getData(MANA) + 10); // 会自动调用setUnsaved
 ```
 
-但是，如果修改的是通过 `getData` 取得的数据（包括新创建的默认实例），则必须显式把 BlockEntity 和区块标记为 dirty：
+但是，如果修改的是通过 `getData` 取得的数据（包括新创建的默认实例），则必须显式把方块实体和区块标记为 dirty：
 
 ```java
 var mana = chunk.getData(MUTABLE_MANA);
@@ -90,9 +90,9 @@ chunk.setUnsaved(true); // 必须手动完成，因为我们没有使用setData
 ```
 :::
 
-## 与客户端共享数据
+## 与客户端共享数据 {#sharing-data-with-the-client}
 
-若要把 BlockEntity、区块、Level 或 Entity 的附件同步到客户端，可以在 builder 中实现 `sync`。当附件通过 `AttachmentHolder#getData` 默认创建、通过 `AttachmentHolder#setData` 更新，或通过 `AttachmentHolder#removeData` 移除时，都会发送给客户端。如果还要在其他时机发送数据，可以调用 `AttachmentHolder#syncData` 并传入 `AttachmentType` 进行同步。
+若要把方块实体、区块、`Level` 或实体的附件同步到客户端，可以在 builder 中实现 `sync`。当附件通过 `AttachmentHolder#getData` 默认创建、通过 `AttachmentHolder#setData` 更新，或通过 `AttachmentHolder#removeData` 移除时，都会发送给客户端。如果还要在其他时机发送数据，可以调用 `AttachmentHolder#syncData` 并传入 `AttachmentType` 进行同步。
 
 `AttachmentType.Builder#sync` 有三个重载，但它们最终都会创建一个 `AttachmentSyncHandler<T>`，其中 `T` 是数据附件的类型。处理器包含三个方法：两个方法负责从网络 `read` 和向网络 `write`；另一个方法 `sendToPlayer` 判断指定玩家是否可以看到 holder 广播的数据。移除数据附件时会忽略 sync 处理器。
 
@@ -179,11 +179,11 @@ public static final Supplier<AttachmentType<ExampleData>> WITH_PREDICATE = ATTAC
 使用 `StreamCodec` 重载意味着每次都会同步整个数据附件，并忽略客户端上已有的任何数据。
 :::
 
-## 玩家死亡时复制数据
+## 玩家死亡时复制数据 {#copying-data-on-player-death}
 
-默认情况下，玩家死亡时不会复制 [Entity][entity] 数据附件。若要在死亡时自动复制附件，请在附件 builder 中设置 `copyOnDeath`。
+默认情况下，玩家死亡时不会复制 [实体][entity] 数据附件。若要在死亡时自动复制附件，请在附件 builder 中设置 `copyOnDeath`。
 
-更复杂的处理可以通过 `PlayerEvent.Clone` 实现：从原 Entity 读取数据，再将其赋给新 Entity。在该事件中，可以使用 `#isWasDeath` 区分死亡后重生与从末地返回。这一点很重要，因为从末地返回时数据已经存在，必须小心避免重复写入值。
+更复杂的处理可以通过 `PlayerEvent.Clone` 实现：从原实体读取数据，再将其赋给新实体。在该事件中，可以使用 `#isWasDeath` 区分死亡后重生与从末地返回。这一点很重要，因为从末地返回时数据已经存在，必须小心避免重复写入值。
 
 例如：
 

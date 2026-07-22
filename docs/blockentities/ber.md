@@ -76,7 +76,7 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 
 :::
 
-## 方块实体渲染状态
+## 方块实体渲染状态 {#block-entity-render-states}
 
 如上例所述，方块实体渲染状态用于从实际方块实体的值中提取渲染所需的值。它们本质上是继承自 `BlockEntityRenderState` 的可变数据存储对象：
 
@@ -88,7 +88,7 @@ public class MyBlockEntityRenderState extends BlockEntityRenderState {
 
 随后应在 `BlockEntityRenderer#extractRenderState` 中使用 `BlockEntity` 子类填充这些值。
 
-## 物品方块渲染
+## 物品方块渲染 {#item-block-rendering}
 
 由于并非所有带渲染器的方块实体都能通过静态物品模型表示，可以创建一种特殊渲染器，以便更动态地控制该过程。具体使用 [`SpecialModelRenderer`][special] 完成。在这些情况下，既必须创建一个特殊模型渲染器来提交所需[渲染特征]，也必须注册对应的特殊方块模型渲染器，以处理提交方块本身而非其物品变体进行渲染的场景（例如末影人携带方块）。
 

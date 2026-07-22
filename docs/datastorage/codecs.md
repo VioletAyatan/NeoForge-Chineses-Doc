@@ -42,7 +42,7 @@ exampleCodec.encodeStart(NbtOps.INSTANCE, exampleObject);
 exampleCodec.parse(NbtOps.INSTANCE, exampleNbt);
 ```
 
-为了处理 registry 条目，Minecraft 提供了 `RegistryOps`，其中包含一个用于取得可用 registry 元素的查找 provider。可通过 `RegistryOps#create` 创建它：该方法接收用于指定数据存储类型的 `DynamicOps`，以及能够访问可用 registries 的查找 provider。NeoForge 扩展了 `RegistryOps` 并创建了 `ConditionalOps`，这是一种能够处理[条目加载条件][conditions]的 registry codec 查找机制。
+为了处理注册表条目，Minecraft 提供了 `RegistryOps`，其中包含一个用于取得可用注册表元素的查找 provider。可通过 `RegistryOps#create` 创建它：该方法接收用于指定数据存储类型的 `DynamicOps`，以及能够访问可用注册表的查找 provider。NeoForge 扩展了 `RegistryOps` 并创建了 `ConditionalOps`，这是一种能够处理[条目加载条件][conditions]的注册表 codec 查找机制。
 
 ```java
 // 令 lookupProvider 为 HolderLookup.Provider
@@ -126,7 +126,7 @@ Minecraft 和 NeoForge 为经常需要编码与解码的对象定义了许多 co
 `CompoundTag` 无法通过 `JsonOps` 解码 JSON 中的数字列表。`JsonOps` 在转换时会把数字设为能够容纳它的最窄类型，而 `ListTag` 会强制其数据使用某一种特定类型，因此类型不同的数字（例如 `64` 会是 `byte`，`384` 会是 `short`）将在转换时抛出错误。
 :::
 
-原版与 NeoForge registries 也为 registry 所包含的对象类型提供 codecs（例如 `BuiltInRegistries#BLOCK` 拥有一个 `Codec<Block>`）。`Registry#byNameCodec` 会把 registry 对象编码为其 registry 名称。原版 registries 还提供 `Registry#holderByNameCodec`，它编码为 registry 名称，并把该名称解码为包装在 `Holder` 中的 registry 对象。
+原版与 NeoForge 注册表也为注册表所包含的对象类型提供 codecs（例如 `BuiltInRegistries#BLOCK` 拥有一个 `Codec<Block>`）。`Registry#byNameCodec` 会把注册表对象编码为其注册表名称。原版注册表还提供 `Registry#holderByNameCodec`，它编码为注册表名称，并把该名称解码为包装在 `Holder` 中的注册表对象。
 
 ## 创建 Codecs
 
@@ -583,7 +583,7 @@ public static final Codec<ExampleObject> = DISPATCH.byNameCodec() // 获取 Code
 [DataFixerUpper]: https://github.com/Mojang/DataFixerUpper
 [gson]: https://github.com/google/gson
 [conditions]: ../resources/server/conditions.md
-[transformer]: #transformer-codecs
+[transformer]: #转换器
 [pair]: #pair
 [records]: #records
 [field]: #字段

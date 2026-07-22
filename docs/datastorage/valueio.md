@@ -295,9 +295,9 @@ public class ExampleObject implements ValueIOSerializable {
 
 ### NBT
 
-[NBT][nbt] 的 Value I/O 由 `TagValueOutput` 和 `TagValueInput` 处理。
+[NBT][nbt] 的值 I/O 由 `TagValueOutput` 和 `TagValueInput` 处理。
 
-可以通过 `createWithContext` 或 `createWithoutContext` 创建 `TagValueOutput`。`createWithContext` 表示 output 可以访问 `HolderLookup.Provider`，从而获得所有注册表条目（静态条目和数据包条目）；`createWithoutContext` 则不提供任何数据包访问能力。原版只使用 `createWithContext`。使用完 `ValueOutput` 后，可以通过 `TagValueOutput#buildResult` 取得 `CompoundTag`。另一方面，可以调用 `create` 并传入 `HolderLookup.Provider` 以及 input 所访问的 `CompoundTag`，创建 `TagValueInput`。
+可以通过 `createWithContext` 或 `createWithoutContext` 创建 `TagValueOutput`。`createWithContext` 表示输出可以访问 `HolderLookup.Provider`，从而获得所有注册表条目（静态条目和数据包条目）；`createWithoutContext` 则不提供任何数据包访问能力。原版只使用 `createWithContext`。使用完 `ValueOutput` 后，可以通过 `TagValueOutput#buildResult` 取得 `CompoundTag`。另一方面，可以调用 `create` 并传入 `HolderLookup.Provider` 以及输入所访问的 `CompoundTag`，创建 `TagValueInput`。
 
 两个 Value I/O 还都接收 `ProblemReporter`。`ProblemReporter` 用于收集读写过程中的所有内部错误；目前只跟踪 `Codec` 错误。错误如何处理由模组开发者决定。原版实现在 `ProblemReporter` 不为空时会抛出异常。
 

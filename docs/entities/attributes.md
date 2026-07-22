@@ -1,52 +1,52 @@
 # 实体属性（Attribute）
 
-实体属性是 [LivingEntity][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基础数值。所有实体属性都以 double 值存储，并自动同步。原版提供了大量默认实体属性，你也可以添加自定义实体属性。
+实体属性是 [生命实体][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基础数值。所有实体属性都以 double 值存储，并自动同步。原版提供了大量默认实体属性，你也可以添加自定义实体属性。
 
-由于历史实现原因，并非所有实体属性都适用于所有 Entity。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
+由于历史实现原因，并非所有实体属性都适用于所有实体。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
 
 ## 内置实体属性（Attribute）
 
 ### Minecraft
 
-以下实体属性位于 `minecraft` namespace，其代码内的值可在 `Attributes` 类中找到。
+以下实体属性位于 `minecraft` 命名空间，其代码内的值可在 `Attributes` 类中找到。
 
 | 名称                             | 代码中                           | 范围           | 默认值 | 用途                                                                                                                                                                  |
 |----------------------------------|----------------------------------|----------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `armor`                          | `ARMOR`                          | `[0,30]`       | 0      | Entity 的盔甲值。值 1 表示快捷栏上方半个胸甲图标。                                                                                                                     |
-| `armor_toughness`                | `ARMOR_TOUGHNESS`                | `[0,20]`       | 0      | Entity 的盔甲韧性值。更多信息参见 [Minecraft Wiki][wiki] 上的[盔甲韧性][toughness]。                                                                                    |
-| `attack_damage`                  | `ATTACK_DAMAGE`                  | `[0,2048]`     | 2      | Entity 不使用任何武器或类似 Item 时造成的基础攻击伤害。                                                                                                               |
-| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | Entity 造成的额外击退。击退还有一项不由此实体属性表示的基础强度。                                                                                                   |
-| `attack_speed`                   | `ATTACK_SPEED`                   | `[0,1024]`     | 4      | Entity 的攻击冷却。数值越高，冷却越多；设置为 0 实际上会重新启用 1.9 之前的战斗方式。                                                                                   |
-| `block_break_speed`              | `BLOCK_BREAK_SPEED`              | `[0,1024]`     | 1      | Entity 挖掘 Block 的速度，作为乘法 modifier。更多信息参见[挖掘速度][miningspeed]。                                                                                      |
-| `block_interaction_range`        | `BLOCK_INTERACTION_RANGE`        | `[0,64]`       | 4.5    | Entity 能与 Block 交互的距离，以 Block 为单位。                                                                                                                        |
-| `burning_time`                   | `BURNING_TIME`                   | `[0,1024]`     | 1      | Entity 被点燃后燃烧时长的 multiplier。                                                                                                                                 |
-| `camera_distance`                | `CAMERA_DISTANCE`                | `[0,32]`       | 4      | 第三人称时镜头与 Entity 的距离，包括旁观或骑乘其他 Entity 时。                                                                                                         |
-| `explosion_knockback_resistance` | `EXPLOSION_KNOCKBACK_RESISTANCE` | `[0,1]`        | 0      | Entity 的爆炸击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                    |
-| `entity_interaction_range`       | `ENTITY_INTERACTION_RANGE`       | `[0,64]`       | 3      | Entity 能与其他 Entity 交互的距离，以 Block 为单位。                                                                                                                   |
-| `fall_damage_multiplier`         | `FALL_DAMAGE_MULTIPLIER`         | `[0,100]`      | 1      | Entity 所受摔落伤害的 multiplier。                                                                                                                                     |
-| `flying_speed`                   | `FLYING_SPEED`                   | `[0,1024]`     | 0.4    | 飞行速度 multiplier。并非所有飞行 Entity 实际都会使用它，例如恶魂会忽略它。                                                                                           |
-| `follow_range`                   | `FOLLOW_RANGE`                   | `[0,2048]`     | 32     | Entity 以玩家为目标／跟随玩家的距离，以 Block 为单位。                                                                                                                |
-| `gravity`                        | `GRAVITY`                        | `[1,1]`        | 0.08   | 影响 Entity 的重力，以每 tick 的 Block 数平方表示。                                                                                                                    |
-| `jump_strength`                  | `JUMP_STRENGTH`                  | `[0,32]`       | 0.42   | Entity 的跳跃力度。值越高，跳得越高。                                                                                                                                  |
-| `knockback_resistance`           | `KNOCKBACK_RESISTANCE`           | `[0,1]`        | 0      | Entity 的击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                        |
-| `luck`                           | `LUCK`                           | `[-1024,1024]` | 0      | Entity 的幸运值。对 [战利品表][loottables] 进行随机判定时使用，用于提供额外抽取，或以其他方式修改结果 Item 的品质。                                                   |
-| `max_absorption`                 | `MAX_ABSORPTION`                 | `[0,2048]`     | 0      | Entity 的最大伤害吸收值（黄心）。值 1 表示半颗心。                                                                                                                     |
-| `max_health`                     | `MAX_HEALTH`                     | `[1,1024]`     | 20     | Entity 的最大生命值。值 1 表示半颗心。                                                                                                                                 |
-| `mining_efficiency`              | `MINING_EFFICIENCY`              | `[0,1024]`     | 0      | Entity 挖掘 Block 的速度，作为加法 modifier，仅在所用工具正确时生效。更多信息参见[挖掘速度][miningspeed]。                                                             |
-| `movement_efficiency`            | `MOVEMENT_EFFICIENCY`            | `[0,1]`        | 0      | Entity 在灵魂沙等具有减速效果的 Block 上行走时，以线性插值方式应用的移动速度加成。                                                                                     |
-| `movement_speed`                 | `MOVEMENT_SPEED`                 | `[0,1024]`     | 0.7    | Entity 的移动速度。值越高，速度越快。                                                                                                                                  |
-| `oxygen_bonus`                   | `OXYGEN_BONUS`                   | `[0,1024]`     | 0      | Entity 的氧气加成。值越高，Entity 开始溺水所需时间越长。                                                                                                              |
-| `safe_fall_distance`             | `SAFE_FALL_DISTANCE`             | `[-1024,1024]` | 3      | Entity 的安全摔落距离，即不会受到摔落伤害的距离。                                                                                                                      |
-| `scale`                          | `SCALE`                          | `[0.0625,16]`  | 1      | Entity 渲染时的缩放比例。                                                                                                                                              |
-| `sneaking_speed`                 | `SNEAKING_SPEED`                 | `[0,1]`        | 0.3    | Entity 潜行时应用的移动速度 multiplier。                                                                                                                               |
+| `armor`                          | `ARMOR`                          | `[0,30]`       | 0      | 实体的盔甲值。值 1 表示快捷栏上方半个胸甲图标。                                                                                                                     |
+| `armor_toughness`                | `ARMOR_TOUGHNESS`                | `[0,20]`       | 0      | 实体的盔甲韧性值。更多信息参见 [Minecraft Wiki][wiki] 上的[盔甲韧性][toughness]。                                                                                    |
+| `attack_damage`                  | `ATTACK_DAMAGE`                  | `[0,2048]`     | 2      | 实体不使用任何武器或类似物品时造成的基础攻击伤害。                                                                                                               |
+| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | 实体造成的额外击退。击退还有一项不由此实体属性表示的基础强度。                                                                                                   |
+| `attack_speed`                   | `ATTACK_SPEED`                   | `[0,1024]`     | 4      | 实体的攻击冷却。数值越高，冷却越多；设置为 0 实际上会重新启用 1.9 之前的战斗方式。                                                                                   |
+| `block_break_speed`              | `BLOCK_BREAK_SPEED`              | `[0,1024]`     | 1      | 实体挖掘方块的速度，作为乘法修饰符。更多信息参见[挖掘速度][miningspeed]。                                                                                      |
+| `block_interaction_range`        | `BLOCK_INTERACTION_RANGE`        | `[0,64]`       | 4.5    | 实体能与方块交互的距离，以方块为单位。                                                                                                                        |
+| `burning_time`                   | `BURNING_TIME`                   | `[0,1024]`     | 1      | 实体被点燃后燃烧时长的倍数。                                                                                                                                 |
+| `camera_distance`                | `CAMERA_DISTANCE`                | `[0,32]`       | 4      | 第三人称时镜头与实体的距离，包括旁观或骑乘其他实体时。                                                                                                         |
+| `explosion_knockback_resistance` | `EXPLOSION_KNOCKBACK_RESISTANCE` | `[0,1]`        | 0      | 实体的爆炸击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                    |
+| `entity_interaction_range`       | `ENTITY_INTERACTION_RANGE`       | `[0,64]`       | 3      | 实体能与其他实体交互的距离，以方块为单位。                                                                                                                   |
+| `fall_damage_multiplier`         | `FALL_DAMAGE_MULTIPLIER`         | `[0,100]`      | 1      | 实体所受摔落伤害的倍数。                                                                                                                                     |
+| `flying_speed`                   | `FLYING_SPEED`                   | `[0,1024]`     | 0.4    | 飞行速度倍数。并非所有飞行实体实际都会使用它，例如恶魂会忽略它。                                                                                           |
+| `follow_range`                   | `FOLLOW_RANGE`                   | `[0,2048]`     | 32     | 实体以玩家为目标／跟随玩家的距离，以方块为单位。                                                                                                                |
+| `gravity`                        | `GRAVITY`                        | `[1,1]`        | 0.08   | 影响实体的重力，以每游戏刻的方块数平方表示。                                                                                                                    |
+| `jump_strength`                  | `JUMP_STRENGTH`                  | `[0,32]`       | 0.42   | 实体的跳跃力度。值越高，跳得越高。                                                                                                                                  |
+| `knockback_resistance`           | `KNOCKBACK_RESISTANCE`           | `[0,1]`        | 0      | 实体的击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                        |
+| `luck`                           | `LUCK`                           | `[-1024,1024]` | 0      | 实体的幸运值。对 [战利品表][loottables] 进行随机判定时使用，用于提供额外抽取，或以其他方式修改结果物品的品质。                                                   |
+| `max_absorption`                 | `MAX_ABSORPTION`                 | `[0,2048]`     | 0      | 实体的最大伤害吸收值（黄心）。值 1 表示半颗心。                                                                                                                     |
+| `max_health`                     | `MAX_HEALTH`                     | `[1,1024]`     | 20     | 实体的最大生命值。值 1 表示半颗心。                                                                                                                                 |
+| `mining_efficiency`              | `MINING_EFFICIENCY`              | `[0,1024]`     | 0      | 实体挖掘方块的速度，作为加法修饰符，仅在所用工具正确时生效。更多信息参见[挖掘速度][miningspeed]。                                                             |
+| `movement_efficiency`            | `MOVEMENT_EFFICIENCY`            | `[0,1]`        | 0      | 实体在灵魂沙等具有减速效果的方块上行走时，以线性插值方式应用的移动速度加成。                                                                                     |
+| `movement_speed`                 | `MOVEMENT_SPEED`                 | `[0,1024]`     | 0.7    | 实体的移动速度。值越高，速度越快。                                                                                                                                  |
+| `oxygen_bonus`                   | `OXYGEN_BONUS`                   | `[0,1024]`     | 0      | 实体的氧气加成。值越高，实体开始溺水所需时间越长。                                                                                                              |
+| `safe_fall_distance`             | `SAFE_FALL_DISTANCE`             | `[-1024,1024]` | 3      | 实体的安全摔落距离，即不会受到摔落伤害的距离。                                                                                                                      |
+| `scale`                          | `SCALE`                          | `[0.0625,16]`  | 1      | 实体渲染时的缩放比例。                                                                                                                                              |
+| `sneaking_speed`                 | `SNEAKING_SPEED`                 | `[0,1]`        | 0.3    | 实体潜行时应用的移动速度倍数。                                                                                                                               |
 | `spawn_reinforcements`           | `SPAWN_REINFORCEMENTS_CHANCE`    | `[0,1]`        | 0      | 僵尸生成其他僵尸的概率。它只与困难难度有关，因为普通及更低难度不会出现僵尸增援。                                                                                       |
-| `step_height`                    | `STEP_HEIGHT`                    | `[0,10]`       | 0.6    | Entity 的步高，以 Block 为单位。如果为 1，玩家可像走上台阶一样直接走上 1 Block 高的边缘。                                                                             |
-| `submerged_mining_speed`         | `SUBMERGED_MINING_SPEED`         | `[0,20]`       | 0.2    | Entity 挖掘 Block 的速度，作为乘法 modifier，仅在 Entity 位于水下时生效。更多信息参见[挖掘速度][miningspeed]。                                                         |
+| `step_height`                    | `STEP_HEIGHT`                    | `[0,10]`       | 0.6    | 实体的步高，以方块为单位。如果为 1，玩家可像走上台阶一样直接走上 1 方块高的边缘。                                                                             |
+| `submerged_mining_speed`         | `SUBMERGED_MINING_SPEED`         | `[0,20]`       | 0.2    | 实体挖掘方块的速度，作为乘法修饰符，仅在实体位于水下时生效。更多信息参见[挖掘速度][miningspeed]。                                                         |
 | `sweeping_damage_ratio`          | `SWEEPING_DAMAGE_RATIO`          | `[0,1]`        | 0      | 横扫攻击造成的伤害，占主攻击伤害的比例：0 表示无伤害，0.5 表示一半伤害，1 表示完整伤害。                                                                              |
-| `tempt_range`                    | `TEMPT_RANGE`                    | `[0,2048]`     | 10     | 可使用 Item 引诱 Entity 的距离。主要用于牛或猪等被动动物。                                                                                                            |
-| `water_movement_efficiency`      | `WATER_MOVEMENT_EFFICIENCY`      | `[0,1]`        | 0      | Entity 位于水下时应用的移动速度 multiplier。                                                                                                                          |
-| `waypoint_transmit_range`        | `WAYPOINT_TRANSMIT_RANGE`        | `[0,60000000]` | 0      | Entity 可将自身位置发送到某个 waypoint tracker 的距离。                                                                                                               |
-| `waypoint_receive_range`         | `WAYPOINT_RECEIVE_RANGE`         | `[0,60000000]` | 0      | Entity 可接收另一个 transmitter 的距离。                                                                                                                               |
+| `tempt_range`                    | `TEMPT_RANGE`                    | `[0,2048]`     | 10     | 可使用物品引诱实体的距离。主要用于牛或猪等被动动物。                                                                                                            |
+| `water_movement_efficiency`      | `WATER_MOVEMENT_EFFICIENCY`      | `[0,1]`        | 0      | 实体位于水下时应用的移动速度倍数。                                                                                                                          |
+| `waypoint_transmit_range`        | `WAYPOINT_TRANSMIT_RANGE`        | `[0,60000000]` | 0      | 实体可将自身位置发送到某个路径点追踪器的距离。                                                                                                                   |
+| `waypoint_receive_range`         | `WAYPOINT_RECEIVE_RANGE`         | `[0,60000000]` | 0      | 实体可接收另一个 transmitter 的距离。                                                                                                                               |
 
 :::warning
 Mojang 相当随意地设置了某些实体属性的上限，其中尤其明显的是上限为 30 的盔甲值。NeoForge 不会修改这些上限，但有模组可以更改它们。
@@ -54,17 +54,17 @@ Mojang 相当随意地设置了某些实体属性的上限，其中尤其明显�
 
 ### NeoForge
 
-以下实体属性位于 `neoforge` namespace，其代码内的值可在 `NeoForgeMod` 类中找到。
+以下实体属性位于 `neoforge` 命名空间，其代码内的值可在 `NeoForgeMod` 类中找到。
 
 | 名称               | 代码中             | 范围       | 默认值 | 用途                                                                                                                                                           |
 |--------------------|--------------------|------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `creative_flight`  | `CREATIVE_FLIGHT`  | `[0,1]`    | 0      | 决定是否为 Entity 启用（\> 0）或禁用（\<\= 0）创造模式飞行。                                                                                               |
-| `nametag_distance` | `NAMETAG_DISTANCE` | `[0,32]`   | 32     | Entity 名牌可见的最远距离，以 Block 为单位。                                                                                                                   |
-| `swim_speed`       | `SWIM_SPEED`       | `[0,1024]` | 1      | Entity 位于水下时应用的移动速度 multiplier。它独立于 `minecraft:water_movement_efficiency` 应用。                                                              |
+| `creative_flight`  | `CREATIVE_FLIGHT`  | `[0,1]`    | 0      | 决定是否为实体启用（\> 0）或禁用（\<\= 0）创造模式飞行。                                                                                               |
+| `nametag_distance` | `NAMETAG_DISTANCE` | `[0,32]`   | 32     | 实体名牌可见的最远距离，以方块为单位。                                                                                                                   |
+| `swim_speed`       | `SWIM_SPEED`       | `[0,1024]` | 1      | 实体位于水下时应用的移动速度倍数。它独立于 `minecraft:water_movement_efficiency` 应用。                                                              |
 
 ## 默认实体属性
 
-创建 `LivingEntity` 时，必须为其注册一组默认实体属性。Entity [生成][spawning]时，会为其设置默认实体属性。默认实体属性在 [`EntityAttributeCreationEvent`][event] 中注册：
+创建 `LivingEntity` 时，必须为其注册一组默认实体属性。实体[生成][spawning]时，会为其设置默认实体属性。默认实体属性在 [`EntityAttributeCreationEvent`][event] 中注册：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -90,7 +90,7 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
 某些类有 `LivingEntity#createLivingAttributes` 的专用版本。例如，`Monster` 类提供了可改用的 `Monster#createMonsterAttributes` 方法。
 :::
 
-某些情况下，例如创建[自定义实体属性][custom]时，需要向现有 Entity 的 `AttributeSupplier` 添加实体属性。这通过 `EntityAttributeModificationEvent` 完成：
+某些情况下，例如创建[自定义实体属性][custom]时，需要向现有实体的 `AttributeSupplier` 添加实体属性。这通过 `EntityAttributeModificationEvent` 完成：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -112,13 +112,13 @@ public static void modifyDefaultAttributes(EntityAttributeModificationEvent even
 }
 ```
 
-请注意，与其他一些 registry 不同，自定义实体属性的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` namespace 中的实体属性。
+请注意，与其他一些注册表不同，自定义实体属性的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` 命名空间中的实体属性。
 
 ## 查询实体属性
 
-实体属性值存储在 Entity 的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。实体属性实例与 ItemStack 之于 Item 基本类似：实体属性是已注册的单例，而实体属性实例是绑定到具体 Entity 的具体实体属性对象。
+实体属性值存储在实体的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。实体属性实例与`物品堆叠（ItemStack）`之于`物品（Item）`基本类似：实体属性是已注册的单例，而实体属性实例是绑定到具体实体的具体实体属性对象。
 
-可以调用 `LivingEntity#getAttributes` 获取 Entity 的 `AttributeMap`，随后按如下方式查询 map：
+可以调用 `LivingEntity#getAttributes` 获取实体的 `AttributeMap`，随后按如下方式查询 map：
 
 ```java
 // 获取属性映射。
@@ -170,7 +170,7 @@ AttributeModifier modifier = new AttributeModifier(
 );
 ```
 
-要应用 modifier，有两个选项：作为 transient modifier 添加，或作为 permanent modifier 添加。Permanent modifier 会保存到磁盘，transient modifier 不会。Permanent modifier 用于永久属性加成（例如某种盔甲或生命值技能），transient modifier 则主要用于[装备][equipment]、[MobEffect][mobeffect]及依赖玩家当前状态的其他 modifier。
+要应用修饰符，有两个选项：作为`临时修饰符（transient modifier）`添加，或作为`永久修饰符（permanent modifier）`添加。永久修饰符会保存到磁盘，临时修饰符不会。永久修饰符用于永久属性加成（例如某种盔甲或生命值技能），临时修饰符则主要用于[装备][equipment]、[生物效果][mobeffect]及依赖玩家当前状态的其他修饰符。
 
 ```java
 AttributeMap attributes = livingEntity.getAttributes();
@@ -184,7 +184,7 @@ attributes.getInstance(Attributes.ARMOR).addPermanentModifier(modifier);
 attributes.getInstance(Attributes.ARMOR).addOrReplacePermanentModifier(modifier);
 ```
 
-也可以再次移除这些 modifier：
+也可以再次移除这些修饰符：
 
 ```java
 // 通过修饰符对象删除。
@@ -238,7 +238,7 @@ public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_att
 就是这样！只需别忘了把 `DeferredRegister` 注册到模组事件总线，之后即可使用。
 
 :::info
-这里使用 `Holder<Attribute>`，而不是像许多其他已注册对象一样使用 `Supplier<RangedAttribute>`，因为这样处理 Entity 容易得多（大多数 Entity 方法都需要 `Holder<Attribute>`）。
+这里使用 `Holder<Attribute>`，而不是像许多其他已注册对象一样使用 `Supplier<RangedAttribute>`，因为这样处理实体容易得多（大多数实体方法都需要 `Holder<Attribute>`）。
 
 如果出于某种原因需要 `Supplier<RangedAttribute>`（或任何其他 `Attribute` 子类的 supplier），应使用 `DeferredHolder<Attribute, RangedAttribute>` 作为类型。
 

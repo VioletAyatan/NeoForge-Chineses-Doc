@@ -11,7 +11,7 @@
 由于各转换器的执行顺序，没有经过补丁以实现该接口的枚举，无法通过 Mixin 或 Coremod 添加这个接口。
 :::
 
-### 创建枚举条目
+### 创建枚举条目 {#creating-an-enum-entry}
 
 要创建新的枚举条目，需要创建一个 JSON 文件，并在 `neoforge.mods.toml` 的 `[[mods]]` 块中通过 `enumExtensions` 条目引用它。指定路径必须相对于 `resources` 目录：
 
@@ -78,12 +78,12 @@ public class MyEnumParams {
 }
 ```
 
-#### 构造器
+#### 构造器 {#constructor}
 
 构造器必须以[方法描述符][jvmdescriptors]形式指定，并且只能包含源代码中可见的参数，省略隐藏的常量名称和 `ordinal` 参数。  
 如果某个构造器带有 `@ReservedConstructor` 注解，则不能使用它构造模组枚举常量。
 
-#### 参数
+#### 参数 {#parameters}
 
 参数可以通过三种方式指定；每种方式会根据参数类型受到不同限制：
 
@@ -102,11 +102,11 @@ public class MyEnumParams {
 - 如果参数是与枚举上 `@IndexedEnum` 注解相关的 `int` ID 参数，则会忽略该参数，并以条目的 `ordinal` 替代。如果该参数以内联方式写在 JSON 中，就必须指定为 `-1`，否则会抛出异常。
 - 如果参数是与枚举上 `@NamedEnum` 注解相关的 String 名称参数，就必须按照 `Identifier` 所使用的 `namespace:path` 格式，以模组 ID 作为前缀，否则会抛出异常。
 
-#### 获取生成的常量
+#### 获取生成的常量 {#retrieving-the-generated-constant}
 
 可以通过 `TheEnum.valueOf(String)` 获取生成的枚举常量。如果使用字段引用提供参数，也可以通过 `EnumProxy#getValue()` 从 `EnumProxy` 对象获取该常量。
 
-## 为 NeoForge 做贡献
+## 为 NeoForge 做贡献 {#contributing-to-neoforge}
 
 要向 NeoForge 添加新的可扩展枚举，至少需要完成以下两项工作：
 
