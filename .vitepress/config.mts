@@ -285,4 +285,26 @@ export default defineConfig({
 		],
 		socialLinks: [{ icon: 'github', link: 'https://github.com/VioletAyatan/MC-doc' }],
 	},
+	markdown: {
+		config(md) {
+			const defaultFence = md.renderer.rules.fence!;
+
+			md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+				const token = tokens[idx];
+
+				// ```mermaid 后面的 mermaid
+				const language = token.info.trim().split(/\s+/)[0];
+
+				// 普通代码块继续交给 VitePress / Shiki 处理
+				if (language !== 'mermaid') {
+					return defaultFence(tokens, idx, options, env, self);
+				}
+
+				// 防止 Mermaid 内容中的引号、换行破坏 Vue 属性
+				const code = encodeURIComponent(token.content);
+
+				return `<MermaidDiagram code="${code}" />`;
+			};
+		},
+	},
 });
