@@ -113,7 +113,7 @@ _另请参阅[自然生成][mobspawn]。_
 `MobCategory` 是[可扩展枚举][extenum]，因此可以向其添加自定义 entry。如果这样做，还必须为该自定义 `MobCategory` 的实体添加某种生成机制。
 :::
 
-## 实体类（Entity Class）
+## 实体类
 
 首先创建 `Entity` 子类。除构造器外，`Entity`（抽象类）还定义了四个必须实现的方法。为避免本章节过于臃肿，前三个方法将在[数据与网络][data]中解释；`#hurtServer` 则在 [实体受伤一节][damaging]中说明。
 
