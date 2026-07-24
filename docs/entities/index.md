@@ -380,9 +380,9 @@ graph LR;
 
 此图与列表不包括地图制作者使用的实体（`display`、`interaction` 与 `marker`）。
 
-### 投射物（Projectile）
+### 投射物
 
-投射物是实体的一个子群体。其共同点是沿一个方向飞行直到命中某物，并且会为其指定所有者（例如玩家或骷髅是箭的所有者，恶魂是火球的所有者）。
+**投射物（Projectile）**是实体的一个子群体。其共同点是沿一个方向飞行直到命中某物，并且会为其指定所有者（例如玩家或骷髅是箭的所有者，恶魂是火球的所有者）。
 
 投射物的类层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
@@ -445,7 +445,7 @@ graph LR;
 [event]: ../concepts/events.md
 [extenum]: ../advanced/extensibleenums.md
 [hierarchy]: #实体类层次结构
-[hitresult]: ../items/interactions.md#hitresults
+[hitresult]: ../items/interactions.md#hitresult
 [item]: ../items/index.md
 [itemstack]: ../items/index.md#itemstacks
 [leftclick]: ../items/interactions.md#左键点击物品
@@ -454,8 +454,8 @@ graph LR;
 [mobeffect]: ../items/mobeffects.md
 [mobspawn]: livingentity.md#spawning
 [particle]: ../resources/client/particles.md
-[projectile]: #投射物projectile
-[registration]: ../concepts/registries.md#methods-for-registering
+[projectile]: #投射物
+[registration]: ../concepts/registries.md#注册方法
 [renderer]: renderer.md
 [spawning]: #生成实体
 [summon]: https://minecraft.wiki/w/Commands/summon
