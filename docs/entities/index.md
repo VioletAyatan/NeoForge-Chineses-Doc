@@ -10,7 +10,7 @@
 - [`EntityType`][type]，它会被[注册][registration]并保存一些通用 property
 - [`EntityRenderer`][renderer]，负责在游戏中显示实体
 
-更复杂的实体可能需要更多部分。例如，许多更复杂的 `EntityRenderer` 会使用底层 `EntityModel` 实例。自然生成的实体则需要某种[生成机制][spawning]。
+更复杂的实体可能需要更多部分。例如，许多更复杂的 `EntityRenderer` 会使用底层的 `EntityModel` 实例。自然生成的实体则需要某种[生成机制][spawning]。
 
 ## `EntityType`
 
@@ -30,7 +30,7 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
         // 可以将其视为 BiFunction<EntityType<T>, Level, T>。
         // 这通常是对实体构造器的引用。
         MyEntity::new,
-        // 我们实体使用的 MobCategory。这主要与产卵有关。
+        // 我们实体使用的 MobCategory。这主要用于实体生成机制。
         // 请参阅下文了解更多信息。
         MobCategory.MISC
     )
@@ -62,8 +62,8 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
     // 请注意，如果此大于客户端的区块视图距离，
     // 那么该区块视图距离在这里被有效地使用。
     .clientTrackingRange(8)
-    // 为此实体发送更新数据包的频率，每 x 个周期一次。这被设置为更高的值
-    // 适用于具有可预测运动模式的实体，例如射弹。默认为 3。
+    // 为此实体发送更新数据包的频率，每 x tick 执行一次。这里被设置为更高的值
+    // 适用于具有可预测运动模式的实体，例如射弹。默认为 3
     .updateInterval(10)
     // 使用资源键构建实体类型。第二个参数应该与实体ID相同。
     .build(ResourceKey.create(
@@ -113,9 +113,9 @@ _另请参阅[自然生成][mobspawn]。_
 `MobCategory` 是[可扩展枚举][extenum]，因此可以向其添加自定义 entry。如果这样做，还必须为该自定义 `MobCategory` 的实体添加某种生成机制。
 :::
 
-## 实体类
+## 实体类（Entity Class）
 
-首先创建 `Entity` 子类。除构造器外，`Entity`（抽象类）还定义了四个必须实现的方法。为避免本文更加臃肿，前三个将在[数据与网络文章][data]中说明；`#hurtServer` 则在 [实体受伤一节][damaging]中说明。
+首先创建 `Entity` 子类。除构造器外，`Entity`（抽象类）还定义了四个必须实现的方法。为避免本章节过于臃肿，前三个方法将在[数据与网络][data]中解释；`#hurtServer` 则在 [实体受伤一节][damaging]中说明。
 
 ```java
 public class MyEntity extends Entity {
@@ -222,20 +222,20 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 你经常会希望实体每个 tick 都执行某些操作（例如移动）。此逻辑分布在多个方法中：
 
 - `#tick`：核心 tick 方法，99% 的情况下都应覆盖它。
-    - 默认转发到 `#baseTick`，但几乎每个子类都会覆盖它。
+  - 默认转发到 `#baseTick`，但几乎每个子类都会覆盖它。
 - `#baseTick`：处理所有实体共用的一些值的更新，包括“着火”状态、细雪冻结、游泳状态，以及穿过传送门。`LivingEntity` 还会在这里处理溺水、方块内伤害与伤害追踪器更新。想更改或补充这些逻辑时，请覆盖此方法。
-    - 默认情况下，`Entity#tick` 会转发到此方法。
+  - 默认情况下，`Entity#tick` 会转发到此方法。
 - `#rideTick`：为其他实体的乘客调用，例如骑马的玩家，或因使用 `/ride` 命令而骑乘其他实体的任意实体。
-    - 默认进行一些检查，然后调用 `#tick`。骷髅与玩家会覆盖此方法，以特殊处理骑乘实体。
+  - 默认进行一些检查，然后调用 `#tick`。骷髅与玩家会覆盖此方法，以特殊处理骑乘实体。
 
 此外，实体有一个名为 `tickCount` 的字段，表示实体在 `Level` 中已经存在的 tick 数；还有一个含义应当显而易见的 boolean 字段 `firstTick`。例如，如果想每 5 tick [生成粒子][particle]，可以使用以下代码：
 
 ```java
 @Override
 public void tick() {
-    // 始终致电 super，除非你有充分的理由不这样做。
+    // 应始终调用super，除非你有明确的理由不这样做
     super.tick();
-    // 每 5 个周期运行一次此代码。
+    // 每 5 tick 运行一次此代码。
     if (this.tickCount % 5 == 0) {
         this.level().addParticle(...);
     }
@@ -298,8 +298,8 @@ _不要与[数据附件][dataattachments]混淆。_
 `EntityType.Builder` 还提供一些与 `EntityAttachment` 相关的辅助方法：
 
 - `#passengerAttachment()`：用于定义 `PASSENGER` 附件，有两个变体。
-    - 一个变体接受由附件点组成的 `Vec3...`。
-    - 另一个变体接受 `float...`，它会把每个 float 转换为以该 float 作为 y 值、x 与 z 均设为 0 的 `Vec3`，再转发给 `Vec3...` 变体。
+  - 一个变体接受由附件点组成的 `Vec3...`。
+  - 另一个变体接受 `float...`，它会把每个 float 转换为以该 float 作为 y 值、x 与 z 均设为 0 的 `Vec3`，再转发给 `Vec3...` 变体。
 - `#vehicleAttachment()`：用于定义 `VEHICLE` 附件，接受 `Vec3`。
 - `#ridingOffset()`：用于定义 `VEHICLE` 附件。接受 float，并使用 x、z 设为 0，y 设为所传 float 负值的 `Vec3` 转发到 `#vehicleAttachment()`。
 - `#nameTagOffset()`：用于定义 `NAME_TAG` 附件。接受一个用作 y 值的 float，x 与 z 则使用 0。
@@ -426,8 +426,8 @@ graph LR;
 
 - `#shoot`：计算并设置抛射物的正确速度。
 - `#onHit`：命中某物时调用。
-    - `#onHitEntity`：命中的是 [实体][entity] 时调用。
-    - `#onHitBlock`：命中的是 [方块][block] 时调用。
+  - `#onHitEntity`：命中的是 [实体][entity] 时调用。
+  - `#onHitBlock`：命中的是 [方块][block] 时调用。
 - `#getOwner` 与 `#setOwner`，分别用于获取与设置所有者实体。
 - `#deflect`，根据传入的 `ProjectileDeflection` 枚举值弹开抛射物。
 - `#onDeflection`，由 `#deflect` 调用，用于任何弹开后的行为。
@@ -438,7 +438,7 @@ graph LR;
 [damaging]:#使实体受伤
 [data]: data.md
 [dataattachments]: ../datastorage/attachments.md
-[entity]: #实体类
+[entity]: #实体entity
 [event]: ../concepts/events.md
 [extenum]: ../advanced/extensibleenums.md
 [hierarchy]: #实体类层次结构

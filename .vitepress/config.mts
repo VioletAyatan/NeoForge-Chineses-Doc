@@ -37,7 +37,7 @@ export default defineConfig({
 				items: [
 					{ text: '注册表（Registries）', link: '/docs/concepts/registries' },
 					{ text: '端（Sides）', link: '/docs/concepts/sides' },
-					{ text: '事件机制（Events）', link: '/docs/concepts/events' },
+					{ text: '事件系统（Events）', link: '/docs/concepts/events' },
 				],
 			},
 			{

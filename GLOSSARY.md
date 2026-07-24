@@ -94,9 +94,3 @@
 | getter / setter | getter / setter | 取值方法 / 设值方法（作为 Java 术语时） | 分别指读取和设置值的方法，普通说明文字保留英文；具体方法名保持原文。 |
 | lambda expression | Lambda 表达式 | lambda expression | Java Lambda 表达式概念；示例代码保持原文。 |
 | package / variable / compiler | 包 / 变量 / 编译器 | package、variable、compiler | 普通说明文字中的 Java 基础概念；包名、变量名和代码关键字保持原文。 |
-
-## 易混概念
-
-- **成就条件与加载条件不同**：`criteria` 用于判定成就是否完成；`neoforge:conditions` 用于决定数据加载时是否加载该成就。
-- **触发条件不等于完成成就**：触发器使某个条件得到检查并可能满足；只有 `requirements` 定义的条件组合全部满足后，成就才算完成。
-- **显示类型不改变完成逻辑**：`task`、`goal` 和 `challenge` 主要决定成就的边框与展示方式，不改变条件触发和完成判定机制。
