@@ -112,7 +112,7 @@ Minecraft 默认支持两种数据同步形式：通过 `Slot` 同步 [`ItemStac
 :::info
 尽管 `DataSlot` 存储整数，但由于通过网络发送值的方式，它实际上被限制为 **short**（-32768 到 32767）。整数的高 16 bit 会被忽略。
 
-NeoForge 对数据包进行了 patch，以向客户端提供完整整数。
+NeoForge 对数据包进行了修改，以向客户端提供完整整数。
 :::
 
 ```java

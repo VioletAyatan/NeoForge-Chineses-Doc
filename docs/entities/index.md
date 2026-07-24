@@ -359,7 +359,7 @@ graph LR;
 - `Projectile`：各种抛射物的基础类，包括箭、火球、雪球、烟花及类似实体。更多信息参见[下文][projectile]。
 - `LivingEntity`：任何“活着”的对象所使用的基础类，即具有生命值、装备、[生物效果][mobeffect]及其他一些 property 的对象。包括怪物、动物、村民与玩家等。更多信息参见 [生命实体文章][livingentity]。
 - `BlockAttachedEntity`：无法移动且附着于方块的实体所使用的基础类，包括拴绳结、物品展示框与画。其子类主要用于复用通用代码。
-- `PartEntity`：NeoForge 添加的复合实体基础类，即由多个较小实体组成的实体。`EnderDragonPart` 经过 patch，会扩展 `PartEntity` 而不是 `Entity`。
+- `PartEntity`：NeoForge 添加的复合实体基础类，即由多个较小实体组成的实体。`EnderDragonPart` 经过修改，会扩展 `PartEntity` 而不是 `Entity`。
 - `VehicleEntity`：船与矿车的基础类。虽然这些实体与 `LivingEntity` 大致共用生命值概念，但不共用许多其他 property，因此彼此分离。其子类主要用于复用通用代码。
 
 还有多个实体是 `Entity` 的直接子类，仅仅因为没有其他合适的超类。其中大多数应当不言自明：
