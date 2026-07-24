@@ -1,6 +1,6 @@
 # 生命实体、生物、玩家（Living Entity、Mob & Player）
 
-生命实体（LivingEntity）是 [实体][entities] 的一个大型子群体，它们都继承了同样的 `LivingEntity` 超类。其中包括生物（继承 `Mob` 超类）、玩家（继承 `Player` 超类）与盔甲架（继承 `ArmorStand` 超类）。
+生命实体（LivingEntity）是 [实体][entities] 的一个大型子群体，它们都继承了同样的 `LivingEntity` 父类。其中包括生物（继承 `Mob`）、玩家（继承 `Player`）与盔甲架（继承 `ArmorStand`）。
 
 生命实体具有普通实体所没有的多种额外 property，包括[实体属性][attributes]、[生物效果][mobeffects]、伤害追踪等。
 
@@ -71,7 +71,7 @@ public static void decreaseArmor(LivingIncomingDamageEvent event) {
 
 #### `LivingShieldBlockEvent`
 
-此事件可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改原版盾牌格挡检查、更改盾牌或攻击物品所受伤害、更改盾牌视角弧度、允许抛射物但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
+此事件可用于完全自定义盾牌格挡，包括引入额外盾牌格挡、阻止盾牌格挡、修改原版盾牌格挡检查、更改盾牌或攻击物品所受伤害、更改盾牌视角弧度、允许投射物但阻挡近战攻击（或相反）、被动格挡攻击（即无需使用盾牌）、只格挡一定比例的伤害等。
 
 请注意，此事件并非为“类似盾牌”的物品范围以外的免疫或攻击取消而设计。
 

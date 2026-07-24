@@ -9,7 +9,7 @@
 最简单的实体渲染器直接扩展 `EntityRenderer`：
 
 ```java
-// 超类中的泛型类型应设置为要呈现的实体。
+// 父类中的泛型类型应设置为要呈现的实体。
 // 如果你想为任何实体启用渲染，你可以使用实体，就像我们在这里所做的那样。
 // 你还可以使用适合你的用例的 EntityRenderState。有关其更多信息如下。
 public class MyEntityRenderer extends EntityRenderer<Entity, EntityRenderState> {

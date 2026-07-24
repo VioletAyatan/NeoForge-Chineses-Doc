@@ -20,7 +20,7 @@ public class MyBlockEntity extends BlockEntity {
 }
 ```
 
-你可能已经注意到，我们向超类构造器传入了未定义变量 `type`。暂时保留这个未定义变量，先进行注册。
+你可能已经注意到，我们向父类构造器传入了未定义变量 `type`。暂时保留这个未定义变量，先进行注册。
 
 [注册][registration]方式与实体类似。创建关联单例类 `BlockEntityType<?>` 的实例，并将其注册到方块实体类型注册表，如下所示：
 

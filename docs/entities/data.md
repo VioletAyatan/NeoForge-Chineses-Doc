@@ -105,7 +105,7 @@ public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> p
 
 ## 数据附件
 
-实体已经过修改，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的实体（即 Minecraft 或其他模组添加的实体）上定义自定义数据。更多信息请参阅所链接的文章。
+实体类已经过修改，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的实体（即 Minecraft 或其他模组添加的实体）上定义自定义数据。更多信息请参阅所链接的文章。
 
 ## 自定义网络消息
 

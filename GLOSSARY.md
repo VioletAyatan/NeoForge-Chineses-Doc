@@ -22,7 +22,7 @@
 | Block Entity | 方块实体 | Block Entity、BlockEntity（普通概念说明中） | 指附着于方块位置并保存额外数据或逻辑的方块实体。Java 类型名 `BlockEntity`、`BlockEntityType` 及其他代码标识符保持原文。 |
 | Living Entity | 生命实体 | Living Entity、LivingEntity（普通概念说明中） | 指具有生命值并继承生命实体行为的实体。Java 类型名 `LivingEntity` 及其方法保持原文。 |
 | Mob | 生物 | Mob（普通概念说明中） | 指由游戏逻辑控制的生物实体。Java 类型名 `Mob`、`MobCategory` 及其他代码标识符保持原文。 |
-| Projectile | 抛射物 | Projectile（普通概念说明中） | 指箭、火球等在世界中飞行的抛射物。Java 类型名 `Projectile` 及其子类保持原文。 |
+| Projectile | 投射物 | Projectile（普通概念说明中） | 指箭、火球等在世界中飞行的投射物。Java 类型名 `Projectile` 及其子类保持原文。 |
 | Entity Renderer | 实体渲染器 | Entity Renderer、EntityRenderer（普通概念说明中） | 指负责渲染实体的客户端组件。Java 类型名 `EntityRenderer`、`EntityRenderers` 及其他代码标识符保持原文。 |
 | Model | 模型 | Model（普通说明文字中） | 泛指方块模型、物品模型和实体模型。Java 类型名、JSON 中的模型 ID、资源路径与文件名保持原文。 |
 | tag | 标签 | tag（普通说明文字中） | 指 Minecraft 用于归组注册项的标签机制。标签 ID、资源路径、JSON 键及代码类型名保持原文。 |
@@ -76,7 +76,7 @@
 | 英文原词 | 推荐译名 | 避免使用 | 说明 |
 | --- | --- | --- | --- |
 | class / abstract class | 类 / 抽象类 | class、abstract class（普通说明文字中） | Java 类及抽象类概念。类名、`.class` 文件名及代码中的 `class`、`abstract` 关键字保持原文。 |
-| superclass / subclass | 超类 / 子类 | superclass、subclass | 描述类的继承关系；类名和 `extends` 等代码保持原文。 |
+| superclass / subclass | 父类 / 子类 | superclass、subclass | 描述类的继承关系；类名和 `extends` 等代码保持原文。 |
 | interface / sub-interface | 接口 / 子接口 | interface、sub-interface | Java 接口概念；接口名和代码中的 `interface` 关键字保持原文。 |
 | record | record | 记录（作为 Java 类型术语时） | Java record 类型在普通说明文字中保留英文；record 类名和代码中的 `record` 关键字同样保持原文。 |
 | constructor | 构造器 | constructor | 创建类或 record 实例的特殊成员。具体构造器签名保持原文。 |

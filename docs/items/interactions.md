@@ -10,7 +10,7 @@
 
 每一帧，[物理客户端][physicalside]上的 `Minecraft` 类都会更新当前注视的 `HitResult`，并将其存储在 `hitResult` 字段中。随后可通过 `Minecraft.getInstance().hitResult` 访问此字段。
 
-## 左键点击 Item
+## 左键点击物品
 
 - 检查主手 [`ItemStack`][itemstack] 所需的全部[功能标志][featureflag]是否已启用。如果检查失败，流程结束。
 - 如果 `Player#cannotAttackWithItem`（检查攻击延迟与 `DataComponents#MINIMUM_ATTACK_CHARGE`）返回 false，流程结束。

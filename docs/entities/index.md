@@ -1,6 +1,6 @@
 # 实体（Entity）
 
-实体是可通过多种方式与世界交互的世界内对象。常见示例包括生物、抛射物、可骑乘对象，甚至玩家。每个实体都由多个系统构成，乍看之下可能难以理解。本节将拆解与构造实体并使其按模组开发者意图行动有关的一些关键组成部分。
+实体是可通过多种方式与世界交互的世界内对象。常见示例包括生物、投射物、可骑乘对象，甚至玩家。每个实体都由多个系统构成，乍看之下可能难以理解。本节将拆解与构造实体并使其按模组开发者意图行动有关的一些关键组成部分。
 
 ## 术语
 
@@ -30,40 +30,40 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
         // 可以将其视为 BiFunction<EntityType<T>, Level, T>。
         // 这通常是对实体构造器的引用。
         MyEntity::new,
-        // 我们实体使用的 MobCategory。这主要用于实体生成机制。
+        // 实体使用的 MobCategory 类型，这主要影响实体生成（spawn）逻辑。
         // 请参阅下文了解更多信息。
         MobCategory.MISC
     )
     // 宽度和高度，以方块为单位。宽度用于两个水平方向。
-    // 这也意味着不支持非方形封装。默认值为 0.6f 和 1.8f。
+    // 这也意味着不支持非方形碰撞。默认值为 0.6f 和 1.8f。
     .sized(1.0f, 1.0f)
-    // 乘法 factor（标量），用于生成不同大小的生物。
-    // 在原版中，这些只是史莱姆和岩浆立方体，两者都使用 4.0f。
+    // 用于调整可以以不同大小生成的生物的尺寸倍率（缩放因子）。
+    // 在原版中，只有史莱姆和岩浆怪使用这个参数，值都是 4.0f。
     .spawnDimensionsScale(4.0f)
-    // 眼高，以距底部尺寸的方块为单位。默认为高度 * 0.85。
-    // 必须在 #sized之后调用才能生效。
+    // 眼睛高度，单位为方块，表示从实体底部开始计算的高度，默认值为 height * 0.85。
+    // 必须在调用#sized方法之后才会生效。
     .eyeHeight(0.5f)
-    // 禁用通过 /summon 召唤的实体。
+    // 禁用通过 /summon 指令召唤此实体。
     .noSummon()
     // 防止实体保存到磁盘。
     .noSave()
     // 使实体免疫火焰。
     .fireImmune()
-    // 使实体免受特定方块的伤害。 原版使用此来制作
-    // 狐狸对甜浆果灌木免疫，凋灵和凋灵骷髅对凋零玫瑰免疫，
-    // 和北极熊、雪傀儡和流浪动物对粉雪免疫。
+    // 让实体免受特定方块的伤害，原版使用此机制来制作：
+    // 狐狸对甜浆果免疫，凋灵和凋灵骷髅对凋零玫瑰免疫
+    // 北极熊、雪傀儡和流浪动物对细雪免疫
     .immuneTo(Blocks.POWDER_SNOW)
-    // 禁用生成处理器中限制实体生成距离的规则。
-    // 这意味着无论与玩家的距离如何，此实体都可以生成。
-    // 原版为掠夺者和潜影贝启用此。
+    // 禁用实体生成器逻辑中的距离限制规则
+    // 这意味着无论距离玩家多远，该实体都可以生成
+    // 原版中掠夺者和潜影贝启用了此选项
     .canSpawnFarFromPlayer()
-    // 客户端保持加载实体的范围（以区块为单位）。
-    // 其原版值有所不同，但通常约为 8 或 10。默认为 5。
-    // 请注意，如果此大于客户端的区块视图距离，
-    // 那么该区块视图距离在这里被有效地使用。
+    // 客户端保持该实体加载的范围，单位为区块（chunk）
+    // 原版中的数值有所不同，但通常在8或10之间，默认值为5
+    // 注意：如果该值大于客户端设置的区块视距（view distance），
+    // 那么实际会使用客户端的区块视距距离
     .clientTrackingRange(8)
-    // 为此实体发送更新数据包的频率，每 x tick 执行一次。这里被设置为更高的值
-    // 适用于具有可预测运动模式的实体，例如射弹。默认为 3
+    // 实体更新包的发送频率，数值表示每隔多少tick发送一次更新数据包。
+    // 对于移动轨迹可预测的实体（例如投射物）通常会设置更高的值。默认值为3。
     .updateInterval(10)
     // 使用资源键构建实体类型。第二个参数应该与实体ID相同。
     .build(ResourceKey.create(
@@ -72,7 +72,7 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
     ))
 );
 
-// 速记版本以避免样板。以下调用与以下相同
+// 简写版本，避免冗余。以下方式等同于
 // ENTITY_TYPES.register("my_entity", () -> EntityType.Builder.of(MyEntity::new, MobCategory.MISC).build(
 //     ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("examplemod", "my_entity"))
 // );
@@ -101,7 +101,7 @@ _另请参阅[自然生成][mobspawn]。_
 | `UNDERGROUND_WATER_CREATURE` | 5        | 发光鱿鱼                                                                                                                       |
 | `WATER_CREATURE`             | 5        | 鱿鱼、海豚                                                                                                                     |
 | `WATER_AMBIENT`              | 20       | 鱼                                                                                                                             |
-| `MISC`                       | 不适用   | 所有非生命实体，例如抛射物；使用此 `MobCategory` 会使实体完全无法自然生成                                      |
+| `MISC`                       | 不适用   | 所有非生命实体，例如投射物；使用此 `MobCategory` 会使实体完全无法自然生成                                      |
 
 还有一些其他 property，各自只会在一两种 `MobCategory` 上设置：
 
@@ -186,26 +186,27 @@ if (!level.isClientSide()) {
 
 也可以调用 `EntityType#spawn`，在生成 [生命实体][livingentity] 时尤其推荐，因为它会进行一些额外设置，例如触发生成 [事件][event]。
 
-几乎所有非生命实体都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；原版 [抛射物][projectile] 也在 `Projectile` 类中提供静态生成辅助方法。
+几乎所有非生命实体都使用这种方式。显然不应自行生成玩家；`Mob` 有[自己的生成方式][mobspawn]（但也可以通过 `#addFreshEntity` 添加）；原版 [投射物][projectile] 也在 `Projectile` 类中提供静态生成辅助方法。
 
-### 使实体受伤
+### 伤害实体
 
 _另请参阅[左键点击物品][leftclick]。_
 
-虽然并非所有实体都有生命值概念，但所有实体都能受到伤害。这不仅用于生物与玩家：想想物品实体（掉落的物品），它们也会受到火或仙人掌等来源的伤害，在这种情况下通常会被立即删除。
+虽然并非所有实体都有生命值概念，但所有实体都能受到伤害。这不止适用于生物与玩家；想想物品实体（掉落的物品），它们也会受到火或仙人掌等来源的伤害，在这种情况下通常会被立即删除。
 
 可以调用 `Entity#hurt` 或 `Entity#hurtOrSimulate` 使实体受伤，两者之间的区别见下文。两个方法都接受两个参数：[`DamageSource`][damagesource]，以及以半颗心为单位的 float 伤害值。例如，调用 `entity.hurt(entity.damageSources().wither(), 4.25)` 会造成略高于两颗心的凋零伤害。
 
-反过来，实体也可以修改此行为。这并非通过覆盖 `#hurt` 完成，因为它是 `final` 方法。实际上，有 `#hurtServer` 与 `#hurtClient` 两个方法，分别处理相应端的伤害逻辑。`#hurtClient` 通常用于告诉客户端攻击已成功，即使情况并不总是如此；主要目的是无论如何都播放攻击声音与其他效果。要更改伤害行为，我们主要关注 `#hurtServer`，可按如下方式覆盖：
+反过来，实体也可以修改此行为。这并非通过覆盖 `#hurt` 完成，因为它是 `final` 方法。实际上，有 `#hurtServer` 与 `#hurtClient` 两个方法，分别处理相应端的伤害逻辑。`#hurtClient` 通常用于告诉客户端攻击已成功，即使情况并不总是如此；主要目的是无论如何都播放攻击声音与其他效果。要更改伤害行为，我们主要关注 `#hurtServer`，可按如下方式重写：
 
 ```java
 @Override
-// boolean 返回值确定实体是否实际伤害。
+// boolean 返回值用于确定实体是否实际受到伤害。
 public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
     if (damageSource.is(DamageTypeTags.IS_FIRE)) {
-        // 这假设实现了 super#hurtServer()。常见其他方式做此
-        // 是自己设置一些字段。不同实体的普通实现差异很大。
-        // 值得注意的是，生物体通常调用 #actuallyHurt，而 #actuallyHurt又调用 #setHealth。
+        // 这里假设已经实现 super#hurtServer() 方法，
+        // 其他常见的实现方式是自行设置某些字段，原版中不同实体的实现方式差异非常大。
+        // 注意，LivingEntity 通常会调用 #actuallyHurt
+        // 而 #actuallyHurt 又会进一步调用 #setHealth。
         return super.hurtServer(level, damageSource, amount * 2);
     } else {
         return false;
@@ -213,9 +214,11 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 }
 ```
 
-这种服务端／客户端分离也是 `Entity#hurt` 与 `Entity#hurtOrSimulate` 的区别：`Entity#hurt` 只在服务端运行（并调用 `Entity#hurtServer`），`Entity#hurtOrSimulate` 则在两个端运行，根据所在端调用 `Entity#hurtServer` 或 `Entity#hurtClient`。
+这种 **服务端/客户端** 分离也是 `Entity#hurt` 与 `Entity#hurtOrSimulate` 的区别。
 
-还可以通过事件修改不属于你的实体（即 Minecraft 或其他模组添加的实体）所受伤害。这些事件包含大量 `LivingEntity` 特定代码，因此其文档位于 [生命实体文章][livingentity]中的[伤害事件一节][damageevents]。
+`Entity#hurt` 只在服务端运行（并调用 `Entity#hurtServer`），`Entity#hurtOrSimulate` 则在两个端运行，根据所在端调用 `Entity#hurtServer` 或 `Entity#hurtClient`。
+
+还可以通过事件修改不属于你的实体（即 Minecraft 或其他模组添加的实体）所受伤害。这些事件包含大量 `LivingEntity` 特定代码，文档位于 [生命实体文章][livingentity] 中的 [伤害事件][damageevents]。
 
 ### 实体 Tick
 
@@ -356,7 +359,7 @@ graph LR;
 
 下面分别说明：
 
-- `Projectile`：各种抛射物的基础类，包括箭、火球、雪球、烟花及类似实体。更多信息参见[下文][projectile]。
+- `Projectile`：各种投射物的基础类，包括箭、火球、雪球、烟花及类似实体。更多信息参见[下文][projectile]。
 - `LivingEntity`：任何“活着”的对象所使用的基础类，即具有生命值、装备、[生物效果][mobeffect]及其他一些 property 的对象。包括怪物、动物、村民与玩家等。更多信息参见 [生命实体文章][livingentity]。
 - `BlockAttachedEntity`：无法移动且附着于方块的实体所使用的基础类，包括拴绳结、物品展示框与画。其子类主要用于复用通用代码。
 - `PartEntity`：NeoForge 添加的复合实体基础类，即由多个较小实体组成的实体。`EnderDragonPart` 经过修改，会扩展 `PartEntity` 而不是 `Entity`。
@@ -377,11 +380,11 @@ graph LR;
 
 此图与列表不包括地图制作者使用的实体（`display`、`interaction` 与 `marker`）。
 
-### 抛射物（Projectile）
+### 投射物（Projectile）
 
-抛射物是实体的一个子群体。其共同点是沿一个方向飞行直到命中某物，并且会为其指定所有者（例如玩家或骷髅是箭的所有者，恶魂是火球的所有者）。
+投射物是实体的一个子群体。其共同点是沿一个方向飞行直到命中某物，并且会为其指定所有者（例如玩家或骷髅是箭的所有者，恶魂是火球的所有者）。
 
-抛射物的类层次结构如下（红色类为 `abstract`，蓝色类不是）：
+投射物的类层次结构如下（红色类为 `abstract`，蓝色类不是）：
 
 ```mermaid
 graph LR;
@@ -419,23 +422,23 @@ graph LR;
 值得注意的是 `Projectile` 的三个直接抽象子类：
 
 - `AbstractArrow`：涵盖不同种类的箭，以及三叉戟。一个重要的共同 property 是它们不会直线飞行，而会受到重力影响。
-- `AbstractHurtingProjectile`：涵盖风弹、各种火球与凋零之首。它们是不受重力影响、会造成伤害的抛射物。
+- `AbstractHurtingProjectile`：涵盖风弹、各种火球与凋零之首。它们是不受重力影响、会造成伤害的投射物。
 - `ThrowableProjectile`：涵盖鸡蛋、雪球与末影珍珠等对象。与箭一样，它们受重力影响；但与箭不同，它们命中目标时不会造成伤害。它们也全都通过使用相应 [物品][item] 生成。
 
-可通过扩展 `Projectile` 或合适的子类创建新抛射物，然后覆盖添加功能所需的方法。常见的覆盖方法包括：
+可通过扩展 `Projectile` 或合适的子类创建新投射物，然后覆盖添加功能所需的方法。常见的覆盖方法包括：
 
-- `#shoot`：计算并设置抛射物的正确速度。
+- `#shoot`：计算并设置投射物的正确速度。
 - `#onHit`：命中某物时调用。
   - `#onHitEntity`：命中的是 [实体][entity] 时调用。
   - `#onHitBlock`：命中的是 [方块][block] 时调用。
 - `#getOwner` 与 `#setOwner`，分别用于获取与设置所有者实体。
-- `#deflect`，根据传入的 `ProjectileDeflection` 枚举值弹开抛射物。
+- `#deflect`，根据传入的 `ProjectileDeflection` 枚举值弹开投射物。
 - `#onDeflection`，由 `#deflect` 调用，用于任何弹开后的行为。
 
 [block]: ../blocks/index.md
 [damageevents]: livingentity.md#伤害事件
 [damagesource]: ../resources/server/damagetypes.md#创建和使用伤害来源
-[damaging]:#使实体受伤
+[damaging]:#伤害实体
 [data]: data.md
 [dataattachments]: ../datastorage/attachments.md
 [entity]: #实体entity
@@ -445,13 +448,13 @@ graph LR;
 [hitresult]: ../items/interactions.md#hitresults
 [item]: ../items/index.md
 [itemstack]: ../items/index.md#itemstacks
-[leftclick]: ../items/interactions.md#left-clicking-an-item
+[leftclick]: ../items/interactions.md#左键点击物品
 [livingentity]: livingentity.md
-[middleclick]: ../items/interactions.md#middle-clicking
+[middleclick]: ../items/interactions.md#中键点击
 [mobeffect]: ../items/mobeffects.md
 [mobspawn]: livingentity.md#spawning
 [particle]: ../resources/client/particles.md
-[projectile]: #抛射物projectile
+[projectile]: #投射物projectile
 [registration]: ../concepts/registries.md#methods-for-registering
 [renderer]: renderer.md
 [spawning]: #生成实体
