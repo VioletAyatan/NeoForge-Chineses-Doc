@@ -1,27 +1,27 @@
 # 方块（Block）
 
-Block 是 Minecraft 世界的重要组成部分。它们构成了所有地形、结构和机器。如果你有兴趣制作 Mod，那么你很可能会想添加一些 Block。本页面将引导你创建 Block，并介绍你可以使用它们完成的一些事情。
+方块（Block）是 Minecraft 世界的重要组成部分。它们构成了所有地形、结构和机器。如果你有兴趣制作 Mod，那么你很可能会想添加一些方块。本页面将引导你创建方块，并介绍你可以使用它们完成的一些事情。
 
-## 一个 Block 统御一切
+## 一个方块统御一切
 
-在开始之前，需要理解一点：游戏中的每种 Block 始终都只有一个实例。一个世界由位于不同位置、指向同一个 Block 的数千个引用组成。换句话说，同一个 Block 只是被显示了很多次。
+在开始之前，需要理解一点：游戏中的每种方块始终都只有一个实例。一个世界由位于不同位置、指向同一个方块的数千个引用组成。换句话说，同一个方块只是被显示了很多次。
 
-因此，一个 Block 只应该被实例化一次，并且应在[注册][registration]期间完成。Block 注册后，你就可以根据需要使用已注册的引用。
+因此，一个方块只应该被实例化一次，并且应在[注册][registration]期间完成。方块注册后，你就可以根据需要使用已注册的引用。
 
-与大多数其他注册表不同，Block 可以使用一种特殊版本的 `DeferredRegister`，称为 `DeferredRegister.Blocks`。`DeferredRegister.Blocks` 的作用基本类似于 `DeferredRegister<Block>`，但有一些细微差别：
+与大多数其他注册表不同，方块可以使用一种特殊版本的 `DeferredRegister`，称为 `DeferredRegister.Blocks`。`DeferredRegister.Blocks` 的作用基本类似于 `DeferredRegister<Block>`，但有一些细微差别：
 
 - 它通过 `DeferredRegister.createBlocks("yourmodid")` 创建，而不是常规的 `DeferredRegister.create(...)` 方法。
-- `#register` 返回一个 `DeferredBlock<T extends Block>`，它继承自 `DeferredHolder<Block, T>`。`T` 是我们正在注册的 Block 类的类型。
-- 它提供了一些用于注册 Block 的辅助方法。有关更多详细信息，请参见[下文][below]。
+- `#register` 返回一个 `DeferredBlock<T extends Block>`，它继承自 `DeferredHolder<Block, T>`。`T` 是我们正在注册的方块类的类型。
+- 它提供了一些用于注册方块的辅助方法。有关更多详细信息，请参见[下文][below]。
 
-现在，让我们注册 Block：
+现在，让我们注册方块：
 
 ```java
 //BLOCKS 是一个 DeferredRegister.Blocks
 public static final DeferredBlock<Block> MY_BLOCK = BLOCKS.register("my_block", registryName -> new Block(...));
 ```
 
-注册 Block 后，对新 `my_block` 的所有引用都应使用这个常量。例如，如果你想检查给定位置的 Block 是否为 `my_block`，代码大致如下：
+注册方块后，对新 `my_block` 的所有引用都应使用这个常量。例如，如果你想检查给定位置的方块是否为 `my_block`，代码大致如下：
 
 ```java
 level.getBlockState(position) // 返回给定 Level（世界）中给定位置放置的 BlockState
@@ -40,7 +40,7 @@ level.getBlockState(position) // 返回给定 Level（世界）中给定位置�
 
 :::
 
-## 创建 Block
+## 创建方块
 
 如前所述，我们首先创建 `DeferredRegister.Blocks`：
 
@@ -48,21 +48,21 @@ level.getBlockState(position) // 返回给定 Level（世界）中给定位置�
 public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks("yourmodid");
 ```
 
-### 基础 Block
+### 基础方块
 
-对于不需要特殊功能的简单 Block（例如圆石、木板等），可以直接使用 `Block` 类。为此，在注册期间，使用一个 `BlockBehaviour.Properties` 参数实例化 `Block`。可以使用 `BlockBehaviour.Properties#of` 创建这个 `BlockBehaviour.Properties` 参数，并通过调用其方法进行自定义。其中最重要的方法包括：
+对于不需要特殊功能的简单方块（例如圆石、木板等），可以直接使用 `Block` 类。为此，在注册期间，使用一个 `BlockBehaviour.Properties` 参数实例化 `Block`。可以使用 `BlockBehaviour.Properties#of` 创建这个 `BlockBehaviour.Properties` 参数，并通过调用其方法进行自定义。其中最重要的方法包括：
 
-- `setId` - 设置 Block 的 ResourceKey。
-  - 每个 Block 都**必须**设置此项，否则将抛出异常。
-- `destroyTime` - 决定破坏 Block 所需的时间。
+- `setId` - 设置方块的 ResourceKey。
+  - 每个方块都**必须**设置此项，否则将抛出异常。
+- `destroyTime` - 决定破坏方块所需的时间。
   - 石头的破坏时间为 1.5，泥土为 0.5，黑曜石为 50，基岩为 -1（不可破坏）。
-- `explosionResistance` - 决定 Block 的爆炸抗性。
+- `explosionResistance` - 决定方块的爆炸抗性。
   - 石头的爆炸抗性为 6.0，泥土为 0.5，黑曜石为 1,200，基岩为 3,600,000。
-- `sound` - 设置敲击、破坏或放置 Block 时发出的声音。
+- `sound` - 设置敲击、破坏或放置方块时发出的声音。
   - 默认值为 `SoundType.STONE`。有关更多详细信息，请参见[声音页面][sounds]。
-- `lightLevel` - 设置 Block 发出的亮度。接收一个带有 `BlockState` 参数的函数，该函数返回 0 到 15 之间的值。
+- `lightLevel` - 设置方块发出的亮度。接收一个带有 `BlockState` 参数的函数，该函数返回 0 到 15 之间的值。
   - 例如，萤石使用 `state -> 15`，火把使用 `state -> 14`。
-- `friction` - 设置 Block 的摩擦力（光滑程度）。
+- `friction` - 设置方块的摩擦力（光滑程度）。
   - 默认值为 0.6。冰使用 0.98。
 
 例如，一个简单的实现大致如下：
@@ -85,20 +85,20 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
 有关进一步说明，请查看 `BlockBehaviour.Properties` 的源代码。有关更多示例，或要查看 Minecraft 使用的值，请查看 `Blocks` 类。
 
 :::info
-需要理解，世界中的 Block 与物品栏中的 Block 并不是同一种东西。物品栏中看起来像 Block 的东西实际上是一个 `BlockItem`，它是一种特殊的 [Item][item]，使用时会放置一个 Block。这也意味着 Creative Tab 或最大堆叠数量等内容由相应的 `BlockItem` 处理。
+需要理解，世界中的 `Block` 与物品栏中的 `Block` 并不是同一种东西。物品栏中看起来像 `Block` 的东西实际上是一个 `BlockItem`，它是一种特殊的 [`Item`][item]，使用时会放置一个方块。这也意味着创造模式菜单或最大堆叠数量等内容由相应的 `BlockItem` 处理。
 
-`BlockItem` 必须与 Block 分开注册。这是因为 Block 不一定需要对应的 Item，例如它本来就不应该被收集（火就是一个例子）。
+`BlockItem` 必须与 `Block` 分开注册。这是因为 `Block` 不一定需要对应的 `Item`，例如它本来就不应该被收集（火就是一个例子）。
 :::
 
 ### 更多功能
 
-直接使用 `Block` 只能创建非常基础的 Block。如果你想添加玩家交互或不同的碰撞箱等功能，则需要创建一个继承 `Block` 的自定义类。`Block` 类有许多可以被重写以实现不同功能的方法；有关更多信息，请参见 `Block`、`BlockBehaviour` 和 `IBlockExtension` 类。另请参见下方的[使用 Block][usingblocks]一节，了解 Block 最常见的一些使用场景。
+直接使用 `Block` 只能创建非常基础的方块。如果你想添加玩家交互或不同的碰撞箱等功能，则需要创建一个继承 `Block` 的自定义类。`Block` 类有许多可以被重写以实现不同功能的方法；有关更多信息，请参见 `Block`、`BlockBehaviour` 和 `IBlockExtension` 类。另请参见下方的[使用方块][usingblocks]一节，了解方块的一些最常见的使用场景。
 
 如果你想创建具有不同变体的 Block（例如具有下半、上半和双层变体的台阶），应使用 [BlockState][blockstates]。最后，如果你想让 Block 存储额外数据（例如箱子存储其物品栏），应使用 [Block Entity][blockentities]。这里的经验法则是：如果状态数量有限且相对较少（最多几百种状态），使用 BlockState；如果状态数量无限或接近无限，则使用 Block Entity。
 
-#### Block Type
+#### `Block Type`
 
-Block Type 是用于序列化和反序列化 Block 对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 设置，并[注册][registration]到 Block Type 注册表。目前，它只在生成 Block 列表报告时使用。每个 `Block` 子类都应创建一个 Block Type。例如，`FlowerBlock#CODEC` 表示大多数花使用的 Block Type，而其子类 `WitherRoseBlock` 则拥有单独的 Block Type。
+Block Type 是用于序列化和反序列化 Block 对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 设置，并[注册][registration]到 Block Type 注册表。目前，它只在生成方块列表报告时使用。每个 `Block` 子类都应创建一个 Block Type。例如，`FlowerBlock#CODEC` 表示大多数花使用的 Block Type，而其子类 `WitherRoseBlock` 则拥有单独的 Block Type。
 
 如果 Block 子类只接收 `BlockBehaviour.Properties`，则可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
 

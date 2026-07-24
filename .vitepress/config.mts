@@ -19,6 +19,10 @@ export default defineConfig({
 		nav: [
 			{ text: '首页', link: '/' },
 			{ text: '文档', link: '/docs/gettingstarted/index' },
+			{
+				text: '版本',
+				items: [{ text: '26.1', link: '/docs/gettingstarted/index' }],
+			},
 		],
 		sidebar: [
 			{
