@@ -94,13 +94,17 @@ public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
 
 直接使用 `Block` 只能创建非常基础的方块。如果你想添加玩家交互或不同的碰撞箱等功能，则需要创建一个继承 `Block` 的自定义类。`Block` 类有许多可以被重写以实现不同功能的方法；有关更多信息，请参见 `Block`、`BlockBehaviour` 和 `IBlockExtension` 类。另请参见下方的[使用方块][usingblocks]一节，了解方块的一些最常见的使用场景。
 
-如果你想创建具有不同变体的 Block（例如具有下半、上半和双层变体的台阶），应使用 [BlockState][blockstates]。最后，如果你想让 Block 存储额外数据（例如箱子存储其物品栏），应使用 [Block Entity][blockentities]。这里的经验法则是：如果状态数量有限且相对较少（最多几百种状态），使用 BlockState；如果状态数量无限或接近无限，则使用 Block Entity。
+如果你想创建具有不同变体的方块（例如具有下半、上半和双层变体的台阶），应使用[方块状态][blockstates]。最后，如果你想让方块存储额外数据（例如箱子存储其物品栏），应使用[方块实体][blockentities]。
+
+经验法则是：如果状态数量有限且相对较少（最多几百种状态），使用 `BlockState`；如果状态数量无限或接近无限，则使用 `BlockEntity`。
 
 #### `Block Type`
 
-Block Type 是用于序列化和反序列化 Block 对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 设置，并[注册][registration]到 Block Type 注册表。目前，它只在生成方块列表报告时使用。每个 `Block` 子类都应创建一个 Block Type。例如，`FlowerBlock#CODEC` 表示大多数花使用的 Block Type，而其子类 `WitherRoseBlock` 则拥有单独的 Block Type。
+**方块类型（Block Type）**是用于序列化和反序列化方块对象的 [`MapCodec`][codec]。这个 `MapCodec` 通过 `BlockBehaviour#codec` 进行设置，并[注册][registration]到 `Block Type` 注册表中。
 
-如果 Block 子类只接收 `BlockBehaviour.Properties`，则可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
+目前，它只在生成方块列表报告时使用。每个 `Block` 子类都应创建一个 `Block Type`。例如，`FlowerBlock#CODEC` 表示大多数花朵方块使用的 `Block Type`，而其子类 `WitherRoseBlock` 则拥有单独的 `Block Type`。
+
+如果 `Block` 子类只接收 `BlockBehaviour.Properties`，则可以使用 `BlockBehaviour#simpleCodec` 创建 `MapCodec`。
 
 ```java
 // 对于某个 Block 子类
@@ -124,7 +128,7 @@ public static final Supplier<MapCodec<SimpleBlock>> SIMPLE_CODEC = REGISTRAR.reg
 );
 ```
 
-如果 Block 子类包含更多参数，则应使用 [`RecordCodecBuilder#mapCodec`][codec] 创建 `MapCodec`，并为 `BlockBehaviour.Properties` 参数传入 `BlockBehaviour#propertiesCodec`。
+如果 `Block` 子类包含更多参数，则应使用 [`RecordCodecBuilder#mapCodec`][codec] 创建 `MapCodec`，并为 `BlockBehaviour.Properties` 参数传入 `BlockBehaviour#propertiesCodec`。
 
 ```java
 // 对于某个 Block 子类
@@ -163,7 +167,7 @@ public static final Supplier<MapCodec<ComplexBlock>> COMPLEX_CODEC = REGISTRAR.r
 
 ### `DeferredRegister.Blocks` 辅助方法
 
-上文已经介绍了如何创建 `DeferredRegister.Blocks`，以及它会返回 `DeferredBlock`。现在，让我们看看这个特殊的 `DeferredRegister` 还提供了哪些其他工具。先从 `#registerBlock` 开始：
+我们已经在[上文][above]讨论了如何创建 `DeferredRegister.Blocks`，以及它会返回 `DeferredBlock`。现在，让我们看看这个专用的 `DeferredRegister` 还提供了哪些其他实用方法。先从 `#registerBlock` 开始：
 
 ```java
 public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks("yourmodid");
@@ -171,39 +175,39 @@ public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBloc
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.register(
     "example_block", registryName -> new Block(
         BlockBehaviour.Properties.of()
-            // 必须为 Block 设置 ID
+            // 必须为方块设置 ID
             .setId(ResourceKey.create(Registries.BLOCK, registryName))
     )
 );
 
-// 与上面相同，不同之处在于 Block 属性被单独提供。
-// 还会在内部对 Properties 对象调用 setId。
+// 与上面的写法相同，只是方块属性被单独提供。
+// 内部也会在 properties 对象上调用 setId。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // Properties 将被传入的工厂。
-    () -> BlockBehaviour.Properties.of() // 要使用的 Properties。
+    Block::new, // properties 将被传入的工厂。
+    () -> BlockBehaviour.Properties.of() // 要使用的 properties。
 );
 
-// 与上面相同，不同之处在于提供并操作 `Properties#of`。
-// 还会在内部对 Properties 对象调用 setId。
+// 与上面的写法相同，只是传入并操作的是 `Properties#of`。
+// 内部也会在 properties 对象上调用 setId。
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerBlock(
     "example_block",
-    Block::new, // Properties 将被传入的工厂。
-    props -> props // 用于处理 Properties 的一元运算符。
+    Block::new, // properties 将被传入的工厂。
+    props -> props // 用于处理 properties 的一元运算符。
 );
 ```
 
-如果你想使用 `Block::new`，可以完全省略工厂：
+如果你想使用 `Block::new`，则可以完全省略工厂参数：
 
 ```java
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    () -> BlockBehaviour.Properties.of() // 要使用的 Properties。
+    () -> BlockBehaviour.Properties.of() // 要使用的 properties。
 );
 
 public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock(
     "example_block",
-    props -> props // 用于处理 Properties 的一元运算符。
+    props -> props // 用于处理 properties 的一元运算符。
 );
 ```
 
@@ -211,17 +215,17 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 
 ### 资源
 
-如果你注册了 Block 并将其放置在世界中，会发现它缺少纹理等内容。这是因为包括[纹理][textures]在内的内容由 Minecraft 的资源系统处理。在 Minecraft 中添加新 Block 时，应编写或[生成][datagen]以下文件：
+如果你注册了方块并将其放置在世界中，会发现它缺少纹理等内容。这是因为包括[纹理][textures]在内的内容由 Minecraft 的资源系统处理。在 Minecraft 中添加新方块时，应编写或[生成][datagen]以下文件：
 
 - [BlockState 文件][bsfile]
 - [方块模型][model]
 - [翻译][i18n]
 - [掉落表][loottable]
-- Block [Tag][tags]，例如用于挖掘的 Tag
+- 方块[Tag][tags]，例如用于挖掘的 Tag
 
-对于以上所有内容，也可以参考相似原版 Block 的文件和 Data Generator。
+对于以上所有内容，也可以参考类似原版方块的文件和数据生成器。
 
-## 使用 Block
+## 使用方块
 
 Block 很少被直接用于执行操作。事实上，在整个 Minecraft 中，可能最常见的两个操作——获取某个位置的 Block，以及在某个位置设置 Block——使用的都是 BlockState，而不是 Block。通常的设计方式是让 Block 定义行为，但让行为实际通过 BlockState 执行。因此，`BlockState` 经常作为参数传递给 `Block` 的方法。有关 BlockState 的使用方式，以及如何从 Block 获取 BlockState，请参见[使用 BlockState][usingblockstates]。
 
@@ -373,6 +377,7 @@ Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）�
 
 Minecraft 中有许多机制使用随机 ticking，例如植物生长、冰和雪融化以及铜氧化。
 
+[above]: #一个方块统御一切
 [attributes]: ../entities/attributes.md
 [below]: #deferredregisterblocks-辅助方法
 [blockentities]: ../blockentities/index.md
