@@ -1,12 +1,12 @@
 # 方块状态（BlockState）
 
-你经常会遇到希望一个 Block 具有不同状态的情况。例如，小麦作物有八个生长阶段，为每个阶段分别创建一个 Block 显然不太合适。又或者，你有一个台阶或类似台阶的 Block，一种下半状态、一种上半状态，以及一种同时包含上下两部分的状态。
+你经常会遇到希望一个方块具有不同状态的情况。例如，小麦作物有八个生长阶段，为每个阶段分别创建一个方块显然不太合适。又或者，你有一个台阶或类似台阶的 Block，一种下半状态、一种上半状态，以及一种同时包含上下两部分的状态。
 
-这正是 BlockState 发挥作用的地方。BlockState 是表示一个 Block 所能拥有的不同状态的一种简单方式，例如生长阶段或台阶的放置类型。
+这正是**方块状态（BlockState）**发挥作用的地方。**方块状态**是表达一个方块所能拥有的不同状态的一种简单方式，例如生长阶段或台阶的放置类型。
 
-## BlockState Property
+## 方块状态属性（BlockState Property）
 
-BlockState 使用一套 Property 系统。一个 Block 可以拥有多个不同类型的 Property。例如，末地传送门框架有两个 Property：是否放置了末影之眼（`eye`，2 种取值），以及它所朝向的方向（`facing`，4 种取值）。因此，末地传送门框架总共有 8（2 * 4）种不同的 BlockState：
+**方块状态**使用一套 Property 系统。一个方块可以拥有多个不同类型的 Property。例如，末地传送门框架有两个 Property：是否放置了末影之眼（`eye`，2 种取值），以及它所朝向的方向（`facing`，4 种取值）。因此，末地传送门框架总共有 8（2 * 4）种不同的方块状态：
 
 ```
 minecraft:end_portal_frame[facing=north,eye=false]
@@ -19,27 +19,29 @@ minecraft:end_portal_frame[facing=south,eye=true]
 minecraft:end_portal_frame[facing=west,eye=true]
 ```
 
-`blockid[property1=value1,property2=value,...]` 这种写法是在文本中表示 BlockState 的标准格式，并被原版游戏用于某些位置，例如命令中。
+`blockid[property1=value1,property2=value,...]` 这种写法是在文本中表示方块状态的标准格式，并被原版游戏用于某些位置，例如命令中。
 
-如果你的 Block 没有定义任何 BlockState Property，它仍然恰好拥有一个 BlockState——也就是不包含任何 Property 的状态，因为没有 Property 需要指定。它可以表示为 `minecraft:oak_planks[]`，也可以直接表示为 `minecraft:oak_planks`。
+如果你的方块没有定义任何 `BlockState Property`，它仍然恰好拥有一个**方块状态** — 也就是不包含任何 `Property` 的状态，因为没有 `Property` 需要指定。
 
-与 Block 一样，每个 `BlockState` 在内存中也只存在一个实例。这意味着可以并且应该使用 `==` 比较 `BlockState`。`BlockState` 还是一个 final 类，这意味着它不能被继承。**所有功能都应放在对应的 [Block][block] 类中！**
+它可以表示为 `minecraft:oak_planks[]`，也可以直接表示为 `minecraft:oak_planks`。
 
-## 何时使用 BlockState
+与方块一样，每个 `BlockState` 在内存中也只存在一个实例。这意味着可以并且应该使用 `==` 比较 `BlockState`。`BlockState` 还是一个 final 类，这意味着它不能被继承。**所有功能都应放在对应的 [Block][block] 类中！**
 
-### BlockState vs 单独 Block
+## 何时使用方块状态
 
-优秀经验法则是：**如果名称不同，就应该是不同的 Block**。例如，在制作椅子 Block 时，椅子的方向应该是一个 Property，而不同的木材类型应该分别使用不同的 Block。因此，每种木材类型都应有一个对应的椅子 Block，而每个椅子 Block 都有四种 BlockState（每个方向一种）。
+### 方块状态 vs 独立方块
 
-### BlockState vs [Block Entity][blockentity]
+优秀经验法则是：**如果名称不同，就应该是不同的方块**。例如，在制作椅子方块时，椅子的方向应该是一个 Property，而不同的木材类型应该分别使用不同的方块。因此，每种木材类型都应有一个对应的椅子方块，而每个椅子方块都有四种方块状态（每个方向一种）。
 
-这里的经验法则是：**如果状态数量有限，则使用 BlockState；如果状态数量无限或接近无限，则使用 Block Entity。** Block Entity 可以存储任意数量的数据，但速度比 BlockState 慢。
+### 方块状态 vs [方块实体][blockentity]
 
-BlockState 和 Block Entity 可以结合使用。例如，箱子使用 BlockState Property 表示方向、是否含水或是否组成大箱子等状态，而物品栏的存储、当前是否打开以及与漏斗的交互，则由 Block Entity 处理。
+这里的经验法则是：**如果状态数量有限，则使用方块状态；如果状态数量无限或接近无限，则使用方块实体。**方块实体可以存储任意数量的数据，但速度比方块状态慢。
 
-对于“一个 Block 拥有多少种状态才算过多？”这个问题，并没有标准答案，但我们建议，如果需要超过 8 到 9 bit 的数据（即超过几百种状态），则应该改用 Block Entity。
+**方块状态**和**方块实体**可以结合使用。例如，箱子使用 BlockState Property 表示方向、是否含水或是否组成大箱子等状态，而物品栏的存储、当前是否打开以及与漏斗的交互，则由方块实体处理。
 
-## 实现 BlockState
+对于“一个方块拥有多少种状态才算过多？”这个问题，并没有标准答案，但我们建议，如果需要超过 8 到 9 bit 的数据（即超过几百种状态），则应该改用 Block Entity。
+
+## 实现方块状态
 
 要实现一个 BlockState Property，请在你的 Block 类中创建或引用一个 `public static final Property<?>` 常量。虽然你可以自由创建自己的 `Property<?>` 实现，但原版代码提供了几种便捷实现，应该能够覆盖大多数使用场景：
 
@@ -58,9 +60,9 @@ BlockState 和 Block Entity 可以结合使用。例如，箱子使用 BlockStat
 
 获得 Property 常量后，在你的 Block 类中重写 `Block#createBlockStateDefinition(StateDefinition.Builder)`。在该方法中，调用 `StateDefinition.Builder#add(YOUR_PROPERTY);`。`StateDefinition.Builder#add` 使用可变参数，因此，如果你有多个 Property，可以一次性将它们全部添加。
 
-每个 Block 还会拥有一个默认状态。如果没有另行指定，默认状态会使用每个 Property 的默认值。你可以在构造方法中调用 `Block#registerDefaultState(BlockState)` 来修改默认状态。
+每个方块还会拥有一个默认状态。如果没有另行指定，默认状态会使用每个 Property 的默认值。你可以在构造方法中调用 `Block#registerDefaultState(BlockState)` 来修改默认状态。
 
-如果希望修改放置 Block 时所使用的 `BlockState`，请重写 `Block#getStateForPlacement(BlockPlaceContext)`。例如，可以通过该方法根据玩家放置 Block 时所站的位置或视线方向设置 Block 的朝向。
+如果希望修改放置方块时所使用的 `BlockState`，请重写 `Block#getStateForPlacement(BlockPlaceContext)`。例如，可以通过该方法根据玩家放置方块时所站的位置或视线方向设置方块的朝向。
 
 为了进一步说明，下面是 `EndPortalFrameBlock` 类中相关部分的代码：
 
@@ -90,7 +92,7 @@ public class EndPortalFrameBlock extends Block {
     @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        // 根据 BlockPlaceContext，确定放置该 Block 时
+        // 根据 BlockPlaceContext，确定放置该方块时
         // 将使用哪个状态的代码
     }
 }
@@ -127,16 +129,16 @@ endPortalFrameBlockState = endPortalFrameBlockState.setValue(EndPortalFrameBlock
 
 为了帮助正确设置更新标志，`Block` 中提供了多个以 `UPDATE_` 开头的 `int` 常量。如果希望将它们组合起来，可以对这些常量执行按位或运算（例如 `Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS`）。
 
-- `Block.UPDATE_NEIGHBORS` 向相邻 Block 发送更新。更准确地说，它会调用 `Block#neighborChanged`，而该方法会调用多个其他方法，其中大多数都以某种方式与红石相关。
-- `Block.UPDATE_CLIENTS` 将 Block 更新同步到客户端。
+- `Block.UPDATE_NEIGHBORS` 向相邻方块发送更新。更准确地说，它会调用 `Block#neighborChanged`，而该方法会调用多个其他方法，其中大多数都以某种方式与红石相关。
+- `Block.UPDATE_CLIENTS` 将方块更新同步到客户端。
 - `Block.UPDATE_INVISIBLE` 明确表示不在客户端更新。它还会覆盖 `Block.UPDATE_CLIENTS`，使该更新不同步。Block 始终会在服务端更新。
 - `Block.UPDATE_IMMEDIATE` 强制在客户端主线程中重新渲染。
-- `Block.UPDATE_KNOWN_SHAPE` 停止相邻 Block 更新递归。
-- `Block.UPDATE_SUPPRESS_DROPS` 禁用该位置原有 Block 的掉落物。
-- `Block.UPDATE_MOVE_BY_PISTON` 仅由活塞代码使用，用于表示该 Block 是由活塞移动的。它主要负责延迟光照引擎更新。
+- `Block.UPDATE_KNOWN_SHAPE` 停止相邻方块更新递归。
+- `Block.UPDATE_SUPPRESS_DROPS` 禁用该位置原有方块的掉落物。
+- `Block.UPDATE_MOVE_BY_PISTON` 仅由活塞代码使用，用于表示该方块是由活塞移动的。它主要负责延迟光照引擎更新。
 - `Block.UPDATE_SKIP_SHAPE_UPDATE_ON_WIRE` 由 `ExperimentalRedstoneWireEvaluator` 使用，用于表示是否应该跳过形状更新。仅当能量强度的改变不是由放置引起，或者信号的原始来源不是当前红石线时，才会设置该标志。
 - `Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS` 阻止调用 `BlockEntity#preRemoveSideEffects`。这通常会阻止 Block Entity 清空其内容。
-- `Block.UPDATE_SKIP_ON_PLACE` 阻止调用 `Block#onPlace`。这通常会阻止任何 Block 处理其初始行为（例如更新铁轨以连接其他 Block，或生成铁傀儡）。
+- `Block.UPDATE_SKIP_ON_PLACE` 阻止调用 `Block#onPlace`。这通常会阻止任何方块处理其初始行为（例如更新铁轨以连接其他 Block，或生成铁傀儡）。
 - `Block.UPDATE_NONE` 是 `Block.UPDATE_INVISIBLE | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS` 的别名。
 - `Block.UPDATE_ALL` 是 `Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS` 的别名。
 - `Block.UPDATE_ALL_IMMEDIATE` 是 `Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE` 的别名。
