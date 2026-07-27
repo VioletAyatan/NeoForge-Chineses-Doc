@@ -34,9 +34,9 @@ level.getBlockState(position) // 返回给定 Level（世界）中给定位置�
 :::danger
 不要在注册之外调用 `new Block()`！一旦这样做，事情就可能并且一定会出问题：
 
-- Block 必须在注册表未冻结时创建。NeoForge 会为你解冻注册表，并在之后将其重新冻结，因此注册阶段就是创建 Block 的时间窗口。
+- 方块必须在注册表未冻结时创建。NeoForge 会为你解冻注册表，并在之后将其重新冻结，因此注册阶段就是创建方块的时间窗口。
 - 如果你在注册表重新冻结后尝试创建和/或注册 Block，游戏会崩溃并报告一个 `null` Block，这可能非常令人困惑。
-- 如果你仍然设法保留了一个悬空的 Block 实例，游戏在同步和保存时将无法识别它，并会将其替换为空气。
+- 如果你仍然设法保留了一个悬空的方块实例，游戏在同步和保存时将无法识别它，并会将其替换为空气。
 
 :::
 
@@ -227,31 +227,33 @@ public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBl
 
 ## 使用方块
 
-Block 很少被直接用于执行操作。事实上，在整个 Minecraft 中，可能最常见的两个操作——获取某个位置的 Block，以及在某个位置设置 Block——使用的都是 BlockState，而不是 Block。通常的设计方式是让 Block 定义行为，但让行为实际通过 BlockState 执行。因此，`BlockState` 经常作为参数传递给 `Block` 的方法。有关 BlockState 的使用方式，以及如何从 Block 获取 BlockState，请参见[使用 BlockState][usingblockstates]。
+方块很少被直接用于执行操作。事实上，在整个 Minecraft 中，可能最常见的两个操作——获取某个位置的方块，以及在某个位置放置方块 —— 使用的都是**方块状态（BlockState）**，而不是**方块（Block）**。通常的设计方式是让方块定义行为，但让行为实际通过方块状态执行。
 
-在一些情况下，`Block` 的多个方法会在不同时间使用。以下小节列出了最常见的 Block 相关调用流程。除非另有说明，否则所有方法都会在两个逻辑端调用，并且应在两端返回相同的结果。
+因此，`BlockState` 经常作为参数传递给 `Block` 的方法。有关方块状态的使用方式，以及如何从方块获取方块状态，请参见[使用方块状态][usingblockstates]。
 
-### 放置 Block
+在一些情况下，`Block` 的多个方法会在不同时间使用。以下小节列出了最常见的方块相关调用流程。除非另有说明，否则所有方法都会在两个逻辑端调用，并且应在两端返回相同的结果。
 
-Block 放置逻辑从 `BlockItem#useOn` 调用（或者从某个子类对该方法的实现调用，例如睡莲使用的 `PlaceOnWaterBlockItem`）。有关游戏如何进入此流程的更多信息，请参见[右键点击 Item][rightclick]。实际上，这意味着一旦右键点击一个 `BlockItem`（例如圆石 Item），就会调用此行为。
+### 放置方块
 
-- 会检查多个前置条件，例如你不能处于旁观者模式、Block 所需的所有 Feature Flag 都已启用，或者目标位置不在世界边界之外。如果其中至少一项检查失败，流程结束。
-- 对尝试放置 Block 的位置当前存在的 Block 调用 `BlockBehaviour#canBeReplaced`。如果返回 `false`，流程结束。这里返回 `true` 的常见情况包括高草或雪层。
-- 调用 `Block#getStateForPlacement`。这里可以根据上下文（其中包括位置、旋转方向以及 Block 被放置到的面等信息）返回不同的 BlockState。例如，这对于可以朝不同方向放置的 Block 很有用。
-- 使用上一步得到的 BlockState 调用 `BlockBehaviour#canSurvive`。如果返回 `false`，流程结束。
-- 通过调用 `Level#setBlock` 将 BlockState 设置到 Level 中。
+方块放置逻辑从 `BlockItem#useOn` 调用（或者从某个子类对该方法的实现调用，例如睡莲使用的 `PlaceOnWaterBlockItem`）。有关游戏如何进入此流程的更多信息，请参见[右键点击物品][rightclick]。实际上，这意味着一旦右键点击一个 `BlockItem`（例如圆石Item），就会调用此行为。
+
+- 会检查多个前置条件，例如你不能处于旁观者模式、方块所需的所有 Feature Flag 都已启用，或者目标位置不在世界边界之外。如果其中至少一项检查失败，流程结束。
+- 对尝试放置方块的位置当前存在的方块调用 `BlockBehaviour#canBeReplaced`。如果返回 `false`，流程结束。这里返回 `true` 的常见情况包括高草或雪层。
+- 调用 `Block#getStateForPlacement`。这里可以根据上下文（其中包括位置、旋转方向以及方块被放置的面等信息）返回不同的方块状态。举个例子，这对于可以朝不同方向放置的方块很有用。
+- 使用上一步得到的 `BlockState` 调用 `BlockBehaviour#canSurvive`。如果返回 `false`，流程结束。
+- 通过调用 `Level#setBlock` 将 `BlockState` 设置到 `Level` 中。
   - 在该 `Level#setBlock` 调用中，会调用 `BlockBehaviour#onPlace`。
 - 调用 `Block#setPlacedBy`。
 
-### 破坏 Block
+### 破坏方块
 
-破坏 Block 稍微复杂一些，因为它需要时间。该过程大致可分为三个阶段：“开始”、“挖掘”和“实际破坏”。
+破坏方块稍微复杂一些，因为它需要时间。该过程大致可分为三个阶段：“开始”、“挖掘”和“实际破坏”。
 
 - 点击鼠标左键时，进入“开始”阶段。
-- 现在需要按住鼠标左键，进入“挖掘”阶段。**此阶段的方法每个 tick 都会被调用。**
-- 如果“继续”阶段没有被中断（松开鼠标左键），并且 Block 被破坏，则进入“实际破坏”阶段。
+- 现在需要按住鼠标左键，进入“挖掘”阶段。**此阶段的方法每 tick 都会被调用。**
+- 如果“继续”阶段没有被中断（松开鼠标左键），并且方块被破坏，则进入“实际破坏”阶段。
 
-或者，对于喜欢伪代码的人：
+对于喜欢伪代码的人来说，大概类似如下流程：
 
 ```java
 leftClick();
@@ -269,7 +271,7 @@ while (leftClickIsBeingHeld()) {
 
 #### “开始”阶段
 
-- 会检查多个前置条件，例如你不能处于旁观者模式、主手中 `ItemStack` 所需的所有 Feature Flag 都已启用，或者相关 Block 不在世界边界之外。如果其中至少一项检查失败，流程结束。
+- 会检查多个前置条件，例如你不能处于旁观者模式、主手中 `ItemStack` 所需的所有 Feature Flag 都已启用，或者相关方块不在世界边界之外。如果其中至少一项检查失败，流程结束。
 - 触发 `PlayerInteractEvent.LeftClickBlock`。如果事件被取消，流程结束。
   - 请注意，当事件在客户端被取消时，不会向服务端发送数据包，因此服务端不会运行任何逻辑。
   - 但是，在服务端取消此事件仍会导致客户端代码运行，这可能导致不同步！
@@ -287,27 +289,27 @@ while (leftClickIsBeingHeld()) {
 
 #### “实际破坏”阶段
 
-- 调用 `Item#canDestroyBlock`。如果返回 `false`（表示不应破坏该 Block），流程进入“结束”阶段。
-- 如果 Block 是 `GameMasterBlock` 的实例，则调用 `Player#canUseGameMasterBlocks`。这决定玩家是否有能力破坏仅限 Creative Mode 的 Block。如果为 `false`，流程进入“结束”阶段。
-- 仅服务端：调用 `Player#blockActionRestricted`。这决定当前玩家是否不能破坏该 Block。如果为 `true`，流程进入“结束”阶段。
+- 调用 `Item#canDestroyBlock`。如果返回 `false`（表示不应破坏该方块），流程进入“结束”阶段。
+- 如果方块是 `GameMasterBlock` 的实例，则调用 `Player#canUseGameMasterBlocks`。这决定玩家是否有能力破坏仅限创造模式的方块。如果为 `false`，流程进入“结束”阶段。
+- 仅服务端：调用 `Player#blockActionRestricted`。这决定当前玩家是否不能破坏该方块。如果为 `true`，流程进入“结束”阶段。
 - 仅服务端：触发 `BlockEvent.BreakEvent`。如果被取消，流程进入“结束”阶段。初始取消状态由上述三个方法决定。
 - 调用 `Block#playerWillDestroy`。
-- 仅服务端：调用 `IBlockExtension#canHarvestBlock`。这决定 Block 是否可以被采集，即破坏时是否产生掉落物。如果 `Player#preventsBlockDrops` 返回 true，则会忽略该结果。
+- 仅服务端：调用 `IBlockExtension#canHarvestBlock`。这决定方块是否可以被采集，即破坏时是否产生掉落物。如果 `Player#preventsBlockDrops` 返回 true，则会忽略该结果。
   - 仅服务端：如果 `IBlockExtension#canHarvestBlock` 没有在不调用其 super 方法的情况下被重写，则触发 `PlayerEvent.HarvestCheck`。如果 `HarvestCheck#canHarvest` 返回 `false`，则不会调用 `Block#playerDestroy`，从而阻止任何资源或经验掉落。
 - 仅服务端：调用 `Item#mineBlock`。
 - 调用 `IBlockExtension#onDestroyedByPlayer`。如果返回 `false`，流程进入“结束”阶段。
-  - 通过调用 `Level#setBlock`，并将 `Blocks.AIR.defaultBlockState()` 或当前记录的 Fluid 作为 BlockState 参数，从 Level 中移除 BlockState。
+  - 通过调用 `Level#setBlock`，并将 `Blocks.AIR.defaultBlockState()` 或当前记录的 Fluid 作为 `BlockState` 参数，从 `Level` 中移除 `BlockState`。
     - 在该 `Level#setBlock` 调用中，会调用 `Block#onRemove`。
   - 如果 `IBlockExtension#onDestroyedByPlayer` 返回 `true`，则调用 `Block#destroy`。
 - 仅服务端：如果之前调用的 `IBlockExtension#canHarvestBlock` 和 `IBlockExtension#onDestroyedByPlayer` 都返回 `true`，则调用 `Block#playerDestroy`。
-  - 仅服务端：调用 `Block#dropResources`。这决定挖掘 Block 时会掉落什么，包括经验。
-    - 仅服务端：触发 `BlockDropsEvent`。如果事件被取消，则 Block 被破坏时不会掉落任何内容。否则，`BlockDropsEvent#getDrops` 中的每个 `ItemEntity` 都会被添加到当前 Level。此外，如果 `getDroppedExperience` 大于 0，则调用 `Block#popExperience`。
+  - 仅服务端：调用 `Block#dropResources`。这决定挖掘方块时会掉落什么，包括经验。
+    - 仅服务端：触发 `BlockDropsEvent`。如果事件被取消，则方块被破坏时不会掉落任何内容。否则，`BlockDropsEvent#getDrops` 中的每个 `ItemEntity` 都会被添加到当前 Level。此外，如果 `getDroppedExperience` 大于 0，则调用 `Block#popExperience`。
       - 仅服务端：调用 `IBlockExtension#getExpDrop`，并由 `EnchantmentHelper#processBlockExperience` 增强。这是 `BlockDropsEvent#getDroppedExperience` 在可能被修改之前设置的初始值。
-- 仅服务端：如果用于挖掘 Block 的 Item 在上述过程中的任意时刻损坏，则触发 `PlayerDestroyItemEvent`。
+- 仅服务端：如果用于挖掘方块的物品在上述过程中的任意时刻损坏，则触发 `PlayerDestroyItemEvent`。
 
 #### 挖掘速度
 
-挖掘速度根据 Block 的硬度、所用 [Tool][tool] 的速度以及 Entity 的多个 [Attribute][attributes]，按照以下规则计算：
+挖掘速度根据方块的硬度、所用[工具][tool]的速度以及实体的多个[属性][attributes]，按照以下规则计算：
 
 ```java
 // 这会返回 Tool 的挖掘速度；如果手持 Item 为空、不是 Tool，
@@ -355,7 +357,7 @@ return destroySpeed;
 
 ### Ticking
 
-Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）更新游戏各部分的机制。Block 提供了不同的 ticking 方法，它们以不同的方式被调用。
+Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）更新游戏各部分的机制。`Block` 提供了不同的 ticking 方法，它们以不同的方式被调用。
 
 #### 服务端 Ticking 和 Tick 调度
 
@@ -371,9 +373,9 @@ Ticking 是一种每 1 / 20 秒（即 50 毫秒，也就是“一个 tick”）�
 
 #### 随机 Ticking
 
-随机 tick 系统独立于常规 ticking 运行。必须通过 Block 的 `BlockBehaviour.Properties`，调用 `BlockBehaviour.Properties#randomTicks()` 方法启用随机 tick。这会使该 Block 参与随机 ticking 机制。
+随机 tick 系统独立于常规 ticking 运行。必须通过方块的 `BlockBehaviour.Properties`，调用 `BlockBehaviour.Properties#randomTicks()` 方法启用随机 tick。这会使该方块参与随机 ticking 机制。
 
-每个 tick，区块中的固定数量 Block 会发生随机 tick。该数量由 `randomTickSpeed` GameRule 定义。默认值为 3，因此每个 tick 会从区块中随机选择 3 个 Block。如果这些 Block 启用了随机 ticking，则会调用各自的 `BlockBehaviour#randomTick` 方法。
+每个 tick，区块中的固定数量方块会发生随机 tick。该数量由 `randomTickSpeed` GameRule 定义。默认值为 3，因此每个 tick 会从区块中随机选择 3 个方块。如果这些方块启用了随机 ticking，则会调用各自的 `BlockBehaviour#randomTick` 方法。
 
 Minecraft 中有许多机制使用随机 ticking，例如植物生长、冰和雪融化以及铜氧化。
 
@@ -396,5 +398,5 @@ Minecraft 中有许多机制使用随机 ticking，例如植物生长、冰和�
 [tags]: ../resources/server/tags.md
 [textures]: ../resources/client/textures.md
 [tool]: ../items/tools.md
-[usingblocks]: #using-blocks
+[usingblocks]: #使用方块
 [usingblockstates]: states.md#using-blockstates
