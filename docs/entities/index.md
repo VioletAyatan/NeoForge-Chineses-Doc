@@ -7,7 +7,7 @@
 一个简单实体由三部分构成：
 
 - [`Entity`][entity] 子类，保存实体的大部分逻辑
-- [`EntityType`][type]，它会被[注册][registration]并保存一些通用 property
+- [`EntityType`][type]，它会被[注册][registration]并保存一些通用属性
 - [`EntityRenderer`][renderer]，负责在游戏中显示实体
 
 更复杂的实体可能需要更多部分。例如，许多更复杂的 `EntityRenderer` 会使用底层的 `EntityModel` 实例。自然生成的实体则需要某种[生成机制][spawning]。
@@ -41,7 +41,7 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
     // 在原版中，只有史莱姆和岩浆怪使用这个参数，值都是 4.0f。
     .spawnDimensionsScale(4.0f)
     // 眼睛高度，单位为方块，表示从实体底部开始计算的高度，默认值为 height * 0.85。
-    // 必须在调用#sized方法之后才会生效。
+    // 必须在调用 #sized 方法之后才会生效。
     .eyeHeight(0.5f)
     // 禁用通过 /summon 指令召唤此实体。
     .noSummon()
@@ -62,8 +62,8 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
     // 注意：如果该值大于客户端设置的区块视距（view distance），
     // 那么实际会使用客户端的区块视距距离
     .clientTrackingRange(8)
-    // 实体更新包的发送频率，数值表示每隔多少tick发送一次更新数据包。
-    // 对于移动轨迹可预测的实体（例如投射物）通常会设置更高的值。默认值为3。
+    // 实体更新包的发送频率，数值表示每隔多少 tick 发送一次更新数据包。
+    // 对于移动轨迹可预测的实体（例如投射物）通常会设置更高的值。默认值为 3。
     .updateInterval(10)
     // 使用资源键构建实体类型。第二个参数应该与实体ID相同。
     .build(ResourceKey.create(
@@ -90,7 +90,7 @@ public static final Supplier<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.regi
 
 _另请参阅[自然生成][mobspawn]。_
 
-实体的 `MobCategory` 决定该实体与[生成及消失][mobspawn]有关的一些 property。原版默认共添加八种 `MobCategory`：
+实体的 `MobCategory` 决定该实体与[生成及消失][mobspawn]有关的一些属性。原版默认共添加八种 `MobCategory`：
 
 | 名称                         | 生成上限 | 示例                                                                                                                           |
 |------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------|
@@ -103,14 +103,14 @@ _另请参阅[自然生成][mobspawn]。_
 | `WATER_AMBIENT`              | 20       | 鱼                                                                                                                             |
 | `MISC`                       | 不适用   | 所有非生命实体，例如投射物；使用此 `MobCategory` 会使实体完全无法自然生成                                      |
 
-还有一些其他 property，各自只会在一两种 `MobCategory` 上设置：
+还有一些其他属性，各自只会在一两种 `MobCategory` 上设置：
 
 - `isFriendly`：`MONSTER` 设为 false，其余均为 true。
 - `isPersistent`：`CREATURE` 与 `MISC` 设为 true，其余均为 false。
 - `despawnDistance`：`WATER_AMBIENT` 设为 64，其余均为 128。
 
 :::info
-`MobCategory` 是[可扩展枚举][extenum]，因此可以向其添加自定义 entry。如果这样做，还必须为该自定义 `MobCategory` 的实体添加某种生成机制。
+`MobCategory` 是[可扩展枚举][extenum]，因此可以向其添加自定义条目。如果这样做，还必须为该自定义 `MobCategory` 的实体添加某种生成机制。
 :::
 
 ## 实体类
@@ -150,7 +150,7 @@ public class MyEntity extends Entity {
 
 ```java
 public MyEntity(EntityType<? extends MyEntity> type, Level level, double x, double y, double z) {
-    // 委托给工厂构造器，使用我们之前注册的EntityType。
+    // 委托给工厂构造器，使用我们之前注册的 EntityType。
     this(type, level);
     this.setPos(x, y, z);
 }
@@ -236,7 +236,7 @@ public boolean hurtServer(ServerLevel level, DamageSource damageSource, float am
 ```java
 @Override
 public void tick() {
-    // 应始终调用super，除非你有明确的理由不这样做
+    // 应始终调用 super，除非你有明确的理由不这样做。
     super.tick();
     // 每 5 tick 运行一次此代码。
     if (this.tickCount % 5 == 0) {
@@ -287,16 +287,16 @@ _不要与[数据附件][dataattachments]混淆。_
 
 | 名称           | 默认位置                                  | 用途                                                                    |
 |----------------|-------------------------------------------|-------------------------------------------------------------------------|
-| `PASSENGER`    | hitbox的 X 中心／Y 顶部／Z 中心         | 马等可骑乘实体，用于定义乘客出现的位置                               |
-| `VEHICLE`      | hitbox的 X 中心／Y 底部／Z 中心         | 所有实体，用于定义骑乘其他实体时自身出现的位置                    |
-| `NAME_TAG`     | hitbox的 X 中心／Y 顶部／Z 中心         | 定义实体名牌出现的位置（如果适用）                                   |
-| `WARDEN_CHEST` | hitbox的 X 中心／Y 中心／Z 中心         | 监守者使用，用于定义音波攻击的起始位置                                   |
+| `PASSENGER`    | 碰撞箱的 X 中心／Y 顶部／Z 中心         | 马等可骑乘实体，用于定义乘客出现的位置                               |
+| `VEHICLE`      | 碰撞箱的 X 中心／Y 底部／Z 中心         | 所有实体，用于定义骑乘其他实体时自身出现的位置                    |
+| `NAME_TAG`     | 碰撞箱的 X 中心／Y 顶部／Z 中心         | 定义实体名牌出现的位置（如果适用）                                   |
+| `WARDEN_CHEST` | 碰撞箱的 X 中心／Y 中心／Z 中心         | 监守者使用，用于定义音波攻击的起始位置                                   |
 
 :::info
 `PASSENGER` 与 `VEHICLE` 彼此相关，因为它们在同一上下文中使用。首先应用 `PASSENGER` 来定位骑乘者，然后在骑乘者上应用 `VEHICLE`。
 :::
 
-每个附件都可理解为从 `EntityAttachment` 到 `List<Vec3>` 的映射。实际使用的点数量取决于消费系统。例如，船与骆驼会使用两个 `PASSENGER` 点，而马或矿车等实体只使用一个 `PASSENGER` 点。
+每个附件都可理解为从 `EntityAttachment` 到 `List<Vec3>` 的映射。实际使用的点数量取决于使用该附件的系统。例如，船与骆驼会使用两个 `PASSENGER` 点，而马或矿车等实体只使用一个 `PASSENGER` 点。
 
 `EntityType.Builder` 还提供一些与 `EntityAttachment` 相关的辅助方法：
 
@@ -312,8 +312,8 @@ _不要与[数据附件][dataattachments]混淆。_
 ```java
 // 在一些 EntityType<?> 创建中
 EntityType.Builder.of(...)
-    // 这个 EntityAttachment 将使姓名标签 float 距地面半个街区。
-    // 如果未设置此，则默认为实体的碰撞箱高度。
+    // 这个 EntityAttachment 会让名牌悬浮在离地半个方块的位置。
+    // 如果未设置，则默认使用实体的碰撞箱高度。
     .attach(EntityAttachment.NAME_TAG, 0, 0.5f, 0)
     .build();
 ```
@@ -360,10 +360,10 @@ graph LR;
 下面分别说明：
 
 - `Projectile`：各种投射物的基础类，包括箭、火球、雪球、烟花及类似实体。更多信息参见[下文][projectile]。
-- `LivingEntity`：任何“活着”的对象所使用的基础类，即具有生命值、装备、[生物效果][mobeffect]及其他一些 property 的对象。包括怪物、动物、村民与玩家等。更多信息参见 [生命实体文章][livingentity]。
+- `LivingEntity`：任何“活着”的对象所使用的基础类，即具有生命值、装备、[生物效果][mobeffect]及其他一些属性的对象。包括怪物、动物、村民与玩家等。更多信息参见 [生命实体文章][livingentity]。
 - `BlockAttachedEntity`：无法移动且附着于方块的实体所使用的基础类，包括拴绳结、物品展示框与画。其子类主要用于复用通用代码。
 - `PartEntity`：NeoForge 添加的复合实体基础类，即由多个较小实体组成的实体。`EnderDragonPart` 经过修改，会扩展 `PartEntity` 而不是 `Entity`。
-- `VehicleEntity`：船与矿车的基础类。虽然这些实体与 `LivingEntity` 大致共用生命值概念，但不共用许多其他 property，因此彼此分离。其子类主要用于复用通用代码。
+- `VehicleEntity`：船与矿车的基础类。虽然这些实体与 `LivingEntity` 大致共用生命值概念，但不共用许多其他属性，因此彼此分离。其子类主要用于复用通用代码。
 
 还有多个实体是 `Entity` 的直接子类，仅仅因为没有其他合适的超类。其中大多数应当不言自明：
 
@@ -421,7 +421,7 @@ graph LR;
 
 值得注意的是 `Projectile` 的三个直接抽象子类：
 
-- `AbstractArrow`：涵盖不同种类的箭，以及三叉戟。一个重要的共同 property 是它们不会直线飞行，而会受到重力影响。
+- `AbstractArrow`：涵盖不同种类的箭，以及三叉戟。一个重要的共同特性是它们不会直线飞行，而会受到重力影响。
 - `AbstractHurtingProjectile`：涵盖风弹、各种火球与凋零之首。它们是不受重力影响、会造成伤害的投射物。
 - `ThrowableProjectile`：涵盖鸡蛋、雪球与末影珍珠等对象。与箭一样，它们受重力影响；但与箭不同，它们命中目标时不会造成伤害。它们也全都通过使用相应 [物品][item] 生成。
 
@@ -438,10 +438,10 @@ graph LR;
 [block]: ../blocks/index.md
 [damageevents]: livingentity.md#伤害事件
 [damagesource]: ../resources/server/damagetypes.md#创建和使用伤害来源
-[damaging]:#伤害实体
+[damaging]: #伤害实体
 [data]: data.md
 [dataattachments]: ../datastorage/attachments.md
-[entity]: #实体entity
+[entity]: #实体类
 [event]: ../concepts/events.md
 [extenum]: ../advanced/extensibleenums.md
 [hierarchy]: #实体类层次结构

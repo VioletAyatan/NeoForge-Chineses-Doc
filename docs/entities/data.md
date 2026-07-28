@@ -11,7 +11,7 @@
 `SynchedEntityData` 是用于在运行时存储值并通过网络同步这些值的系统。它分为三个类：
 
 - `EntityDataSerializer` 基本上是对 [`StreamCodec`][streamcodec] 的封装。
-  - Minecraft 使用硬编码的 serializer map。NeoForge 将这个 map 转换为 registry，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
+  - Minecraft 使用硬编码的序列化器映射。NeoForge 将这个映射转换为注册表，这意味着如果想添加新的 `EntityDataSerializer`，就必须通过[注册][registration]添加。
   - Minecraft 在 `EntityDataSerializers` 类中定义了多种默认 `EntityDataSerializer`。
 - `EntityDataAccessor` 由实体持有，用于获取与设置数据值。
 - `SynchedEntityData` 本身持有某个实体的所有 `EntityDataAccessor`，并根据需要自动调用 `EntityDataSerializer` 来同步值。
@@ -105,7 +105,7 @@ public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> p
 
 ## 数据附件
 
-实体类已经过修改，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。它的主要用途是在不属于你的实体（即 Minecraft 或其他模组添加的实体）上定义自定义数据。更多信息请参阅所链接的文章。
+实体类已经过修改，会扩展 `AttachmentHolder`，因此支持通过[数据附件][attachment]存储数据。该功能主要用于在不属于你的实体（即 Minecraft 或其他模组添加的实体）上定义自定义数据。更多信息请参阅所链接的文章。
 
 ## 自定义网络消息
 
@@ -115,6 +115,6 @@ public void sendPairingData(ServerPlayer player, Consumer<CustomPacketPayload> p
 [custom]: #自定义网络消息
 [entitytype]: index.md#entitytype
 [networking]: ../networking/index.md
-[registration]: ../concepts/registries.md#methods-for-registering
+[registration]: ../concepts/registries.md#注册方法
 [streamcodec]: ../networking/streamcodecs.md
 [valueio]: ../datastorage/valueio.md

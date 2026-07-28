@@ -2,17 +2,17 @@
 
 生命实体（LivingEntity）是 [实体][entities] 的一个大型子群体，它们都继承了同样的 `LivingEntity` 父类。其中包括生物（继承 `Mob`）、玩家（继承 `Player`）与盔甲架（继承 `ArmorStand`）。
 
-生命实体具有普通实体所没有的多种额外 property，包括[实体属性][attributes]、[生物效果][mobeffects]、伤害追踪等。
+生命实体具有普通实体所没有的多种额外属性，包括[属性][attributes]、[生物效果][mobeffects]、伤害追踪等。
 
 ## 生命值、伤害与治疗
 
-_另请参阅：[实体属性][attributes]。_
+_另请参阅：[属性][attributes]。_
 
-使生命实体有别于其他实体的最显著功能之一，是完善的生命值系统。生命实体通常有最大生命值、当前生命值，有时还具有盔甲或自然恢复等机制。
+使生命实体有别于其他实体的最显著功能之一，是完善的生命值系统。生命实体通常有最大生命值、当前生命值，有时还具有护甲或自然恢复等机制。
 
-默认情况下，最大生命值由 `minecraft:max_health` [实体属性][attributes]决定，[生成][spawning]时会把当前生命值设置为相同数值。当对实体调用 [`Entity#hurtServer`][hurt] 使其受到伤害时，会根据伤害计算降低当前生命值。许多实体（例如僵尸）默认会保持降低后的生命值，而玩家等一些实体则能重新恢复失去的生命值。
+默认情况下，最大生命值由 `minecraft:max_health` [属性][attributes]决定，[生成][spawning]时会把当前生命值设置为相同数值。当对实体调用 [`Entity#hurtServer`][hurt] 使其受到伤害时，会根据伤害计算降低当前生命值。许多实体（例如僵尸）默认会保持降低后的生命值，而玩家等一些实体则能重新恢复失去的生命值。
 
-要获取或设置最大生命值，可直接读取或写入实体属性：
+要获取或设置最大生命值，可直接读取或写入属性：
 
 ```java
 // 获取我们实体的属性映射。
@@ -23,18 +23,18 @@ float maxHealth = attributes.getValue(Attributes.MAX_HEALTH);
 // 上述内容的快捷方式。
 maxHealth = entity.getMaxHealth();
 
-// 设置最大健康状况必须通过获取 AttributeInstance 并调用 #setBaseValue 来完成，或者通过
-// 添加属性修饰符。我们将在这里做前者。更多详细信息请参阅 Attributes 文章。
+// 设置最大生命值必须通过获取 AttributeInstance 并调用 #setBaseValue 来完成，或者通过
+// 添加属性修饰符。这里演示前一种方式。更多详细信息请参阅属性文章。
 attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 ```
 
-[受到伤害][damage]时，生命实体会应用一些额外计算，例如考虑 `minecraft:armor` 实体属性（对于位于 `minecraft:bypasses_armor` [标签][tags] 中的[伤害类型][damagetypes]除外），以及 `minecraft:absorption` 实体属性。生命实体还可覆盖 `#onDamageTaken` 来执行攻击后行为；只有最终伤害值大于零时才会调用该方法。
+[受到伤害][damage]时，生命实体会应用一些额外计算，例如考虑 `minecraft:armor` 属性（对于位于 `minecraft:bypasses_armor` [标签][tags] 中的[伤害类型][damagetypes]除外），以及 `minecraft:absorption` 属性。生命实体还可覆盖 `#onDamageTaken` 来执行攻击后行为；只有最终伤害值大于零时才会调用该方法。
 
 ### 伤害事件
 
 由于伤害流程十分复杂，因此提供了多个可供挂接的事件，它们按下列顺序触发。这通常用于修改并不属于你（或不一定属于你）的实体所受伤害：例如修改 Minecraft 或其他模组中实体所受的伤害，或修改任意实体所受伤害，而该实体可能属于你，也可能不属于你。
 
-所有这些事件都会使用 `DamageContainer`。每次攻击开始时实例化新的 `DamageContainer`，攻击结束后将其丢弃。它包含原始 [`DamageSource`][damagesources]、原始伤害值，以及所有单独修改项的列表——盔甲、伤害吸收、[附魔][enchantments]、[生物效果][mobeffects]等。`DamageContainer` 会传给下列所有事件，你可以检查已经进行的修改，再按需要自行更改。
+所有这些事件都会使用 `DamageContainer`。每次攻击开始时实例化新的 `DamageContainer`，攻击结束后将其丢弃。它包含原始 [`DamageSource`][damagesources]、原始伤害值，以及所有单独修改项的列表——护甲、伤害吸收、[附魔][enchantments]、[生物效果][mobeffects]等。`DamageContainer` 会传给下列所有事件，你可以检查已经进行的修改，再按需要自行更改。
 
 #### `EntityInvulnerabilityCheckEvent`
 
@@ -48,14 +48,14 @@ attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50);
 
 动态取消攻击基本等同于添加非确定性无敌，例如按随机概率取消伤害、取决于时间或所受伤害量的无敌等。稳定的无敌效果应通过 `EntityInvulnerabilityCheckEvent` 实现（见上文）。
 
-减免修饰符回调允许修改已执行伤害减免的某一部分。例如，它可以让盔甲的伤害减免效果降低 50%。随后，这种变化也会正确传递到生物效果，使其基于不同的伤害值继续计算，依此类推。可按如下方式添加减免修饰符回调：
+减免修饰符回调允许修改已执行伤害减免的某一部分。例如，它可以让护甲的伤害减免效果降低 50%。随后，这种变化也会正确传递到生物效果，使其基于不同的伤害值继续计算，依此类推。可按如下方式添加减免修饰符回调：
 
 ```java
 @SubscribeEvent // 位于游戏事件总线上
 public static void decreaseArmor(LivingIncomingDamageEvent event) {
     // 我们只对玩家应用此减少，而僵尸等保持不变
     if (event.getEntity() instanceof Player) {
-        // 添加我们的归约修饰符回调。
+        // 添加我们的减免修饰符回调。
         event.addReductionModifier(
             // 减少至目标。有关可能的值，请参阅 DamageContainer.Reduction 枚举。
             DamageContainer.Reduction.ARMOR,
@@ -164,8 +164,8 @@ graph LR;
 
 下面介绍最重要的类：
 
-- `PathfinderMob`：包含（不出所料！）寻路逻辑。
-- `AgeableMob`：包含年龄增长与幼年实体的逻辑。僵尸及其他具有幼年变体的怪物不会扩展此类，而是 `Monster` 的后代。
+- `PathfinderMob`：顾名思义，包含寻路逻辑。
+- `AgeableMob`：包含年龄增长与幼年实体的逻辑。僵尸及其他具有幼年变体的怪物不会扩展此类，而是 `Monster` 的子类。
 - `Animal`：大多数动物扩展的类。它还有 `AbstractHorse`、`TamableAnimal` 等更多抽象子类。
 - `Monster`：游戏认为是怪物的大多数实体使用的抽象类。与 `Animal` 类似，它还有 `AbstractPiglin`、`AbstractSkeleton`、`Raider` 和 `Zombie` 等更多抽象子类。
 - `WaterAnimal`：鱼、鱿鱼与海豚等水生动物使用的抽象类。由于寻路方式显著不同，它们与其他动物分开。
@@ -203,14 +203,14 @@ graph LR;
 
 ### 刷怪蛋
 
-为生物 [注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` 类与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
+为生物[注册][register]刷怪蛋是常见做法（但非必需）。这通过 `SpawnEggItem` 类与 `DataComponents#ENTITY_DATA` [数据组件][datacomponent] 完成：
 
 ```java
 // 假设我们有一个名为 ITEMS 的 DeferredRegister.Items
 DeferredItem<SpawnEggItem> MY_ENTITY_SPAWN_EGG = ITEMS.registerItem("my_entity_spawn_egg",
     properties -> new SpawnEggItem(
-        // 传递到 lambda 的 property。
-        // 使用 `spawnEgg` 设置 DataComponent。
+        // 传递到 lambda 的 properties。
+        // 使用 `spawnEgg` 设置数据组件。
         // 这是在 lambda 中完成的，以防止在注册之前解析实体类型。
         properties.spawnEgg(MY_ENTITY_TYPE.get())
     ));
@@ -234,7 +234,7 @@ _另请参阅 [Entity/`MobCategory`][mobcategory]、[世界生成／生物群系
 
 听起来很复杂？下面以平原生物群系中的动物为例进行说明。
 
-在平原生物群系中，游戏每 tick 都会尝试生成 `CREATURE` MobCategory 中的实体，该类别包含以下条目：
+在平原生物群系中，游戏每 tick 都会尝试生成 `CREATURE` 这个 `MobCategory` 中的实体，该类别包含以下条目：
 
 ```json5
 [
@@ -257,13 +257,13 @@ _另请参阅 [Entity/`MobCategory`][mobcategory]、[世界生成／生物群系
 [clientitem]: ../resources/client/models/items.md
 [containers]: ../inventories/container.md
 [creative]: ../items/index.md#creative-tabs
-[damage]: index.md#damaging-entities
+[damage]: index.md#伤害实体
 [damagesources]: ../resources/server/damagetypes.md#创建和使用伤害来源
 [damagetypes]: ../resources/server/damagetypes.md
 [datacomponent]: ../items/datacomponents.md
 [enchantments]: ../resources/server/enchantments/index.md
 [entities]: index.md
-[hurt]: index.md#damaging-entities
+[hurt]: index.md#伤害实体
 [logicalsides]: ../concepts/sides.md#the-logical-side
 [mcwiki]: https://minecraft.wiki
 [mobcategory]: index.md#mobcategory

@@ -240,8 +240,8 @@ public static final ModelLayerLocation MY_LAYER = new ModelLayerLocation(
     // 应为此层所属实体的名称。
     // 如果此层可用于多个实体，则可能更通用。
     Identifier.fromNamespaceAndPath("examplemod", "example_entity"),
-    // 图层本身的名称。应该是实体基本模型的 main，
-    // 以及更具描述性的 name (例如"wings") 用于更具体的层。
+    // 层本身的名称。实体基础模型通常使用 main，
+    // 更具体的层则使用更具描述性的名称（例如 "wings"）。
     "main"
 );
 
