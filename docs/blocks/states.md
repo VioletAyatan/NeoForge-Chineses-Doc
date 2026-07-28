@@ -98,7 +98,7 @@ public class EndPortalFrameBlock extends Block {
 }
 ```
 
-## 使用 BlockState
+## 使用方块状态
 
 要从 `Block` 获取 `BlockState`，请调用 `Block#defaultBlockState()`。如上文所述，可以通过 `Block#registerDefaultState` 修改默认 BlockState。
 
