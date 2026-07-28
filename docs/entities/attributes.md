@@ -1,21 +1,21 @@
-# 实体属性（Attribute）
+# 属性（Attributes）
 
-实体属性是 [生命实体][livingentity] 的特殊字段，决定最大生命值、速度或盔甲值等基础数值。所有实体属性都以 double 值存储，并自动同步。原版提供了大量默认实体属性，你也可以添加自定义实体属性。
+属性是 [生命实体][livingentity] 的特殊字段，决定最大生命值、速度或护甲值等基础数值。所有属性都以 double 值存储，并自动同步。原版提供了大量默认属性，你也可以添加自定义属性。
 
-由于历史实现原因，并非所有实体属性都适用于所有实体。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
+由于历史实现原因，并非所有属性都适用于所有实体。例如，恶魂会忽略飞行速度，跳跃力度也只影响马，不影响玩家。
 
-## 内置实体属性（Attribute）
+## 内置属性
 
 ### Minecraft
 
-以下实体属性位于 `minecraft` 命名空间，其代码内的值可在 `Attributes` 类中找到。
+以下属性位于 `minecraft` 命名空间，其代码内的值可在 `Attributes` 类中找到。
 
 | 名称                             | 代码中                           | 范围           | 默认值 | 用途                                                                                                                                                                  |
 |----------------------------------|----------------------------------|----------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `armor`                          | `ARMOR`                          | `[0,30]`       | 0      | 实体的盔甲值。值 1 表示快捷栏上方半个胸甲图标。                                                                                                                     |
-| `armor_toughness`                | `ARMOR_TOUGHNESS`                | `[0,20]`       | 0      | 实体的盔甲韧性值。更多信息参见 [Minecraft Wiki][wiki] 上的[盔甲韧性][toughness]。                                                                                    |
+| `armor`                          | `ARMOR`                          | `[0,30]`       | 0      | 实体的护甲值。值 1 表示快捷栏上方半个胸甲图标。                                                                                                                     |
+| `armor_toughness`                | `ARMOR_TOUGHNESS`                | `[0,20]`       | 0      | 实体的盔甲强度值。更多信息参见 [Minecraft Wiki][wiki] 上的[盔甲强度][toughness]。                                                                                    |
 | `attack_damage`                  | `ATTACK_DAMAGE`                  | `[0,2048]`     | 2      | 实体不使用任何武器或类似物品时造成的基础攻击伤害。                                                                                                               |
-| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | 实体造成的额外击退。击退还有一项不由此实体属性表示的基础强度。                                                                                                   |
+| `attack_knockback`               | `ATTACK_KNOCKBACK`               | `[0,5]`        | 0      | 实体造成的额外击退。击退还有一项不由此属性表示的基础强度。                                                                                                      |
 | `attack_speed`                   | `ATTACK_SPEED`                   | `[0,1024]`     | 4      | 实体的攻击冷却。数值越高，冷却越多；设置为 0 实际上会重新启用 1.9 之前的战斗方式。                                                                                   |
 | `block_break_speed`              | `BLOCK_BREAK_SPEED`              | `[0,1024]`     | 1      | 实体挖掘方块的速度，作为乘法修饰符。更多信息参见[挖掘速度][miningspeed]。                                                                                      |
 | `block_interaction_range`        | `BLOCK_INTERACTION_RANGE`        | `[0,64]`       | 4.5    | 实体能与方块交互的距离，以方块为单位。                                                                                                                        |
@@ -25,7 +25,7 @@
 | `entity_interaction_range`       | `ENTITY_INTERACTION_RANGE`       | `[0,64]`       | 3      | 实体能与其他实体交互的距离，以方块为单位。                                                                                                                   |
 | `fall_damage_multiplier`         | `FALL_DAMAGE_MULTIPLIER`         | `[0,100]`      | 1      | 实体所受摔落伤害的倍数。                                                                                                                                     |
 | `flying_speed`                   | `FLYING_SPEED`                   | `[0,1024]`     | 0.4    | 飞行速度倍数。并非所有飞行实体实际都会使用它，例如恶魂会忽略它。                                                                                           |
-| `follow_range`                   | `FOLLOW_RANGE`                   | `[0,2048]`     | 32     | 实体以玩家为目标／跟随玩家的距离，以方块为单位。                                                                                                                |
+| `follow_range`                   | `FOLLOW_RANGE`                   | `[0,2048]`     | 32     | 实体锁定或跟随玩家的距离，以方块为单位。                                                                                                                |
 | `gravity`                        | `GRAVITY`                        | `[1,1]`        | 0.08   | 影响实体的重力，以每游戏刻的方块数平方表示。                                                                                                                    |
 | `jump_strength`                  | `JUMP_STRENGTH`                  | `[0,32]`       | 0.42   | 实体的跳跃力度。值越高，跳得越高。                                                                                                                                  |
 | `knockback_resistance`           | `KNOCKBACK_RESISTANCE`           | `[0,1]`        | 0      | 实体的击退抗性，以比例表示：0 表示无抗性，0.5 表示一半抗性，1 表示完全抗性。                                                                                        |
@@ -46,15 +46,15 @@
 | `tempt_range`                    | `TEMPT_RANGE`                    | `[0,2048]`     | 10     | 可使用物品引诱实体的距离。主要用于牛或猪等被动动物。                                                                                                            |
 | `water_movement_efficiency`      | `WATER_MOVEMENT_EFFICIENCY`      | `[0,1]`        | 0      | 实体位于水下时应用的移动速度倍数。                                                                                                                          |
 | `waypoint_transmit_range`        | `WAYPOINT_TRANSMIT_RANGE`        | `[0,60000000]` | 0      | 实体可将自身位置发送到某个路径点追踪器的距离。                                                                                                                   |
-| `waypoint_receive_range`         | `WAYPOINT_RECEIVE_RANGE`         | `[0,60000000]` | 0      | 实体可接收另一个 transmitter 的距离。                                                                                                                               |
+| `waypoint_receive_range`         | `WAYPOINT_RECEIVE_RANGE`         | `[0,60000000]` | 0      | 实体可接收另一个发送器的距离。                                                                                                                               |
 
 :::warning
-Mojang 相当随意地设置了某些实体属性的上限，其中尤其明显的是上限为 30 的盔甲值。NeoForge 不会修改这些上限，但有模组可以更改它们。
+Mojang 相当随意地设置了某些属性的上限，其中尤其明显的是上限为 30 的护甲值。NeoForge 不会修改这些上限，但有模组可以更改它们。
 :::
 
 ### NeoForge
 
-以下实体属性位于 `neoforge` 命名空间，其代码内的值可在 `NeoForgeMod` 类中找到。
+以下属性位于 `neoforge` 命名空间，其代码内的值可在 `NeoForgeMod` 类中找到。
 
 | 名称               | 代码中             | 范围       | 默认值 | 用途                                                                                                                                                           |
 |--------------------|--------------------|------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -62,9 +62,9 @@ Mojang 相当随意地设置了某些实体属性的上限，其中尤其明显�
 | `nametag_distance` | `NAMETAG_DISTANCE` | `[0,32]`   | 32     | 实体名牌可见的最远距离，以方块为单位。                                                                                                                   |
 | `swim_speed`       | `SWIM_SPEED`       | `[0,1024]` | 1      | 实体位于水下时应用的移动速度倍数。它独立于 `minecraft:water_movement_efficiency` 应用。                                                              |
 
-## 默认实体属性
+## 默认属性
 
-创建 `LivingEntity` 时，必须为其注册一组默认实体属性。实体[生成][spawning]时，会为其设置默认实体属性。默认实体属性在 [`EntityAttributeCreationEvent`][event] 中注册：
+创建 `LivingEntity` 时，必须为其注册一组默认属性。实体[生成][spawning]时，会为其设置默认属性。默认属性在 [`EntityAttributeCreationEvent`][event] 中注册：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -72,9 +72,9 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
     event.put(
         // 你的实体类型。
         MY_ENTITY.get(),
-        // AttributeSupplier。这通常是通过调用 LivingEntity#createLivingAttributes 创建的，
-        // 在其上设置你的值，并调用 #build。你还可以从头开始创建 AttributeSupplier
-        // 如果需要，请参阅 LivingEntity#createLivingAttributes 的源代码作为示例。
+        // AttributeSupplier。这通常是通过调用 LivingEntity#createLivingAttributes、
+        // 在其上设置你的值并调用 #build 创建的。你也可以根据需要从头创建
+        // AttributeSupplier；有关示例，请参阅 LivingEntity#createLivingAttributes 的源代码。
         LivingEntity.createLivingAttributes()
             // 添加具有默认值的属性。
             .add(Attributes.MAX_HEALTH)
@@ -90,7 +90,7 @@ public static void createDefaultAttributes(EntityAttributeCreationEvent event) {
 某些类有 `LivingEntity#createLivingAttributes` 的专用版本。例如，`Monster` 类提供了可改用的 `Monster#createMonsterAttributes` 方法。
 :::
 
-某些情况下，例如创建[自定义实体属性][custom]时，需要向现有实体的 `AttributeSupplier` 添加实体属性。这通过 `EntityAttributeModificationEvent` 完成：
+某些情况下，例如创建[自定义属性][custom]时，需要向现有实体的 `AttributeSupplier` 添加属性。这通过 `EntityAttributeModificationEvent` 完成：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -101,22 +101,22 @@ public static void modifyDefaultAttributes(EntityAttributeModificationEvent even
         // 要添加到 EntityType 的 Holder<Attribute>，也可以是自定义属性。
         Attributes.ARMOR,
         // 要添加的属性值。
-        // 可以省略，如果省略，将使用属性的默认值。
+        // 可以省略；省略时会使用属性的默认值。
         10.0
     );
     // 我们还可以检查给定的 EntityType 是否已经具有给定的属性。
-    // 在此示例中，如果村民还没有盔甲属性，我们会添加它。
+    // 在此示例中，如果村民还没有护甲属性，我们会添加它。
     if (!event.has(EntityType.VILLAGER, Attributes.ARMOR)) {
         event.add(...);
     }
 }
 ```
 
-请注意，与其他一些注册表不同，自定义实体属性的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` 命名空间中的实体属性。
+请注意，与其他一些注册表不同，自定义属性的存在不会阻止原版客户端连接 NeoForge 服务端。如果原版客户端连接，它只会收到 `minecraft` 命名空间中的属性。
 
-## 查询实体属性
+## 查询属性
 
-实体属性值存储在实体的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。实体属性实例与`物品堆叠（ItemStack）`之于`物品（Item）`基本类似：实体属性是已注册的单例，而实体属性实例是绑定到具体实体的具体实体属性对象。
+属性值存储在实体的 `AttributeMap` 中，它基本上是 `Map<Attribute, AttributeInstance>`。属性实例与 `物品堆叠（ItemStack）` 之于 `物品（Item）` 基本类似：属性是已注册的单例，而属性实例是绑定到具体实体的具体属性对象。
 
 可以调用 `LivingEntity#getAttributes` 获取实体的 `AttributeMap`，随后按如下方式查询 map：
 
@@ -136,22 +136,22 @@ double value = livingEntity.getAttributeValue(Attributes.ARMOR);
 ```
 
 :::info
-处理实体属性时，几乎始终使用 `Holder<Attribute>` 而不是 `Attribute`。这也是为什么对于自定义实体属性（见下文），我们会明确存储 `Holder<Attribute>`。
+处理属性时，几乎始终使用 `Holder<Attribute>` 而不是 `Attribute`。这也是为什么对于自定义属性（见下文），我们会明确存储 `Holder<Attribute>`。
 :::
 
-## 实体属性修饰符（Attribute Modifier） {#attribute-modifiers}
+## 属性修饰符 {#attribute-modifiers}
 
-与查询不同，更改实体属性值并不容易。主要原因在于，可能需要同时对一个实体属性进行多项更改。
+与查询不同，更改属性值并不容易。主要原因在于，可能需要同时对一个属性进行多项更改。
 
-考虑以下情况：你是一名玩家，攻击伤害实体属性为 1。你手持钻石剑，它额外造成 6 点攻击伤害，因此总攻击伤害为 7。然后你喝下力量药水，添加了伤害倍数。随后又装备了某种饰品，添加另一个倍数。
+考虑以下情况：你是一名玩家，攻击伤害属性为 1。你手持钻石剑，它额外造成 6 点攻击伤害，因此总攻击伤害为 7。然后你喝下力量药水，添加了伤害倍数。随后又装备了某种饰品，添加另一个倍数。
 
-为避免计算错误，并更清楚地表达实体属性值如何修改，Minecraft 引入了实体属性修饰符系统。在该系统中，每个实体属性都有一个**基础值**，通常来源于之前讨论的默认实体属性。随后可以添加任意数量的**实体属性修饰符**，并可逐个移除，无需担心是否正确应用操作。
+为避免计算错误，并更清楚地表达属性值如何修改，Minecraft 引入了属性修饰符系统。在该系统中，每个属性都有一个**基础值**，通常来源于之前讨论的默认属性。随后可以添加任意数量的**属性修饰符**，并可逐个移除，无需担心是否正确应用操作。
 
-首先创建实体属性修饰符：
+首先创建属性修饰符：
 
 ```java
-// 修改器的名称。稍后用于从属性映射中查询修饰符
-// 和 be（语义上）必须是唯一的。
+// 修饰符的名称。稍后用于从属性映射中查询修饰符，
+// 因此在语义上必须唯一。
 Identifier id = Identifier.fromNamespaceAndPath("yourmodid", "my_modifier");
 // 修饰符本身。
 AttributeModifier modifier = new AttributeModifier(
@@ -159,28 +159,28 @@ AttributeModifier modifier = new AttributeModifier(
     id,
     // 我们修改属性值的量。
     2.0,
-    // 用于应用修改器的操作。可能的值为：
+    // 用于应用修饰符的操作。可能的值为：
     // - AttributeModifier.Operation.ADD_VALUE：将该值添加到总属性值中。
     // - AttributeModifier.Operation.ADD_MULTIPLIED_BASE：将该值与属性基值相乘
     //   并将其添加到总属性值中。
     // - AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL：将该值与总属性值相乘，
-    //   即已执行所有先前修改的属性基值，
+    //   即已经应用所有先前修改后的属性基值，
     //   并将其添加到总属性值中。
     AttributeModifier.Operation.ADD_VALUE
 );
 ```
 
-要应用修饰符，有两个选项：作为`临时修饰符（transient modifier）`添加，或作为`永久修饰符（permanent modifier）`添加。永久修饰符会保存到磁盘，临时修饰符不会。永久修饰符用于永久属性加成（例如某种盔甲或生命值技能），临时修饰符则主要用于[装备][equipment]、[生物效果][mobeffect]及依赖玩家当前状态的其他修饰符。
+要应用修饰符，有两个选项：作为 `临时修饰符（transient modifier）` 添加，或作为 `永久修饰符（permanent modifier）` 添加。永久修饰符会保存到磁盘，临时修饰符不会。永久修饰符用于永久属性加成（例如某种盔甲或生命值技能），临时修饰符则主要用于[装备][equipment]、[生物效果][mobeffect]及依赖玩家当前状态的其他修饰符。
 
 ```java
 AttributeMap attributes = livingEntity.getAttributes();
-// 添加瞬态修饰符。如果具有相同 ID 的修饰符已经存在，此将抛出异常。
+// 添加临时修饰符。如果具有相同 ID 的修饰符已经存在，此调用会抛出异常。
 attributes.getInstance(Attributes.ARMOR).addTransientModifier(modifier);
-// 添加瞬态修饰符。如果具有相同 ID 的修饰符已存在，则首先将其删除。
+// 添加临时修饰符。如果具有相同 ID 的修饰符已存在，则先将其删除。
 attributes.getInstance(Attributes.ARMOR).addOrUpdateTransientModifier(modifier);
-// 添加永久修饰符。如果具有相同 ID 的修饰符已经存在，此将抛出异常。
+// 添加永久修饰符。如果具有相同 ID 的修饰符已经存在，此调用会抛出异常。
 attributes.getInstance(Attributes.ARMOR).addPermanentModifier(modifier);
-// 添加永久修饰符。如果具有相同 ID 的修饰符已存在，则首先将其删除。
+// 添加永久修饰符。如果具有相同 ID 的修饰符已存在，则先将其删除。
 attributes.getInstance(Attributes.ARMOR).addOrReplacePermanentModifier(modifier);
 ```
 
@@ -195,7 +195,7 @@ attributes.getInstance(Attributes.ARMOR).removeModifier(id);
 attributes.getInstance(Attributes.ARMOR).removeModifiers();
 ```
 
-最后，还可以查询实体属性映射中是否有某个 ID 的修饰符，并分别查询基础值与修饰符值：
+最后，还可以查询属性映射中是否有某个 ID 的修饰符，并分别查询基础值与修饰符值：
 
 ```java
 // 检查修饰符是否存在。
@@ -206,22 +206,22 @@ double baseValue = attributes.getBaseValue(Attributes.ARMOR);
 double modifierValue = attributes.getModifierValue(Attributes.ARMOR, id);
 ```
 
-## 自定义实体属性 {#custom-attributes}
+## 自定义属性 {#custom-attributes}
 
-如有需要，也可以添加自定义实体属性。与许多其他系统一样，实体属性本身也是[注册表对象][registry]，可以注册自定义实现。首先创建 `DeferredRegister<Attribute>`：
+如有需要，也可以添加自定义属性。与许多其他系统一样，属性本身也是[注册表对象][registry]，可以注册自定义实现。首先创建 `DeferredRegister<Attribute>`：
 
 ```java
 public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(
     BuiltInRegistries.ATTRIBUTE, "yourmodid");
 ```
 
-实体属性本身可以从三个类中选择：
+属性本身可以从三个类中选择：
 
-- `RangedAttribute`：大多数实体属性使用的类，定义实体属性的下限、上限与默认值。
+- `RangedAttribute`：大多数属性使用的类，定义属性的下限、上限与默认值。
 - `PercentageAttribute`：与 `RangedAttribute` 类似，但以百分比而不是 float 值显示。由 NeoForge 添加。
-- `BooleanAttribute`：只具有语义上的 true（\> 0）与 false（\<\= 0）的实体属性，内部仍使用 double。由 NeoForge 添加。
+- `BooleanAttribute`：只具有语义上的 true（\> 0）与 false（\<\= 0）的属性，内部仍使用 double。由 NeoForge 添加。
 
-以 `RangedAttribute` 为例（另外两种的工作方式类似），注册实体属性如下：
+以 `RangedAttribute` 为例（另外两种的工作方式类似），注册属性如下：
 
 ```java
 public static final Holder<Attribute> MY_ATTRIBUTE = ATTRIBUTES.register("my_attribute", () -> new RangedAttribute(

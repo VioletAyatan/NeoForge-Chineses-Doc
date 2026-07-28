@@ -54,8 +54,8 @@
 | Payload | 载荷 | payload、Payload（普通说明文字中） | 指通过网络连接发送的自定义数据内容。`CustomPacketPayload`、各类 Payload 注册器与数据包类名保持原文。 |
 | Loot Table | 战利品表 | Loot Table（普通说明文字中） | 指用于生成战利品的数据文件与机制。类名 `LootTable`、JSON 键和资源路径保持原文。 |
 | Armor | 盔甲 | Armor（普通说明文字中） | 泛指角色穿戴的盔甲及其模型、槽位等概念。`ArmorItem`、`ArmorMaterial` 等类名和代码标识符保持原文。 |
-| Attribute | 实体属性 | Attribute、属性（指实体数值系统时） | 指注册到 Attribute Registry、由 `LivingEntity` 的 `AttributeMap` 保存并参与生命值、速度、盔甲值等计算的实体数值。`Attribute`、`Attributes`、`AttributeInstance` 等代码标识符保持原文；`EnvironmentAttribute` 不属于此概念。 |
-| Attribute Modifier | 实体属性修饰符 | Attribute Modifier、属性修饰符（指实体数值系统时） | 指通过 `AttributeModifier` 修改实体属性基础值或最终值的机制。类名、操作枚举和资源标识符保持原文。 |
+| Attribute | 属性 | Attribute、实体属性（普通说明文字中） | 指注册到 Attribute Registry、由 `LivingEntity` 的 `AttributeMap` 保存并参与生命值、速度、护甲值等计算的数值。`Attribute`、`Attributes`、`AttributeInstance` 等代码标识符保持原文；`EnvironmentAttribute` 不属于此概念。 |
+| Attribute Modifier | 属性修饰符 | Attribute Modifier、实体属性修饰符（普通说明文字中） | 指通过 `AttributeModifier` 修改属性基础值或最终值的机制。类名、操作枚举和资源标识符保持原文。 |
 | BlockState property / Property | 方块状态属性 | Property、方块属性 | 指 `BlockState` 中由 `Property<?>` 表示的有限取值维度，例如朝向、含水状态和生长阶段。`Property`、`BooleanProperty`、`BlockStateProperties` 等代码标识符保持原文。 |
 | item model property | 物品模型属性 | Property、方块属性 | 指 Item Model 根据 `ItemStack` 状态选择 Model 时使用的属性，例如 `RangeSelectItemModelProperty`、`SelectItemModelProperty` 和条件属性；具体类型名与 JSON 键保持原文。 |
 | registry | 注册表 | registry（普通说明文字中） | 一般概念使用"注册表"；代码中的 `Registry` 类名和 `BuiltInRegistries` 等标识符保持原文。 |
@@ -69,7 +69,6 @@
 | data pack | 数据包 | data pack（普通说明文字中） | 存放服务端数据文件的包。`Datapack` 等代码标识符保持原文。 |
 | data generation / datagen | 数据生成（datagen） | 数据生成器 | NeoForge 的数据文件自动生成系统。代码中 `GatherDataEvent`、`datagen` 保持原文。 |
 | data provider | 数据提供器 | data provider（普通说明文字中） | 数据生成系统中负责为特定数据类型生成文件的类。`DataProvider` 类名保持原文。 |
-| capability | 能力 | capability（普通说明文字中） | 指 NeoForge 用于查询方块、实体、物品堆叠等对象所提供功能的能力系统。`BlockCapability`、`EntityCapability`、`ItemCapability` 等代码标识符保持原文。 |
 
 ## Java 语言术语
 
