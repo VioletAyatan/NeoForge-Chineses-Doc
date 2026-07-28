@@ -2,9 +2,9 @@
 
 物品与方块一样，是 Minecraft 的核心组成部分。方块构成你周围的世界，而物品存在于物品栏中。
 
-## 物品究竟是什么？（What Even Is an Item?）
+## 物品究竟是什么？
 
-在进一步创建物品前，务必理解物品实际是什么，以及它与[方块][block]等对象有何区别。以下用一个示例说明：
+在进一步创建**物品（Item）**前，务必理解物品实际是什么，以及它与[方块][block]等对象有何区别。以下用一个示例说明：
 
 - 在世界中，你遇到一个泥土方块并想挖掘它，它是一个**方块**，因为它被放置在世界中（实际上，它并不是方块，而是方块状态。更详细的信息请参阅 [方块状态][blockstates]）。
   - 并非所有方块被破坏时都会掉落自身（例如树叶），更多信息请参阅 [战利品表][loottables] 文章。
@@ -13,7 +13,7 @@
 - **物品堆叠（ItemStack）**由其对应的 **物品（Item）**（也就是我们要创建的对象）提供支持。物品持有[数据组件][datacomponents]，其中包含所有物品堆叠初始化时使用的默认信息（例如每把铁剑的最大耐久度都是 250）；物品堆叠可以修改这些数据组件，因此同一**物品**的两个不同**物品堆叠**可拥有不同信息（例如一把铁剑剩余 100 次使用次数，另一把剩余 200 次）。有关哪些内容由物品处理、哪些由物品堆叠处理，参见下文。
   - **物品**与**物品堆叠**的关系，大致类似[方块][block]与[方块状态][blockstates]的关系，因为**方块状态**始终由**方块**提供支持。这并不是十分准确的类比（例如物品堆叠不是单例），但有助于建立对此概念的基本认识。
 
-## 创建物品（Creating an Item）
+## 创建物品
 
 理解物品是什么后，下面来创建一个。
 
@@ -34,7 +34,7 @@
 
 如需示例或查看 Minecraft 使用的不同值，请查看 `Items` 类。
 
-### 剩余物与冷却时间（Remainders and Cooldowns）
+### 剩余物与冷却时间
 
 物品可具有在使用时应用，或在固定时间内阻止物品再次使用的额外 property：
 
@@ -42,7 +42,7 @@
 - `usingConvertsTo`——设置物品通过 `Item#use`、`IItemExtension#finishUsingItem` 或 `Item#releaseUsing` 使用完毕后返回的 Item。该 `ItemStack` 存储在 `DataComponents#USE_REMAINDER` 上。
 - `useCooldown`——设置物品再次可用前需要等待的秒数（通过 `DataComponents#USE_COOLDOWN`）。
 
-### 工具与盔甲（Tools and Armor）
+### 工具与盔甲
 
 有些物品作为[工具][tools]与[盔甲][armor]使用。它们通过一系列物品property 构造，只有部分用途会委托给关联类：
 
@@ -53,7 +53,7 @@
 
 更多信息可在各自相关页面找到。
 
-### 更多功能（More Functionality）
+### 更多功能
 
 直接使用 `Item` 只能实现非常基础的物品。如果想添加右键交互等功能，就需要扩展 `Item` 的自定义类。`Item` 类有许多可重写的方法，可用于实现不同功能；更多信息请参阅 `Item` 与 `IItemExtension` 类。
 
@@ -143,9 +143,11 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 对于以上所有内容，还应参考类似原版方块的文件与数据生成实现。
 
-## 物品堆叠（ItemStack）
+## 物品堆叠
 
-与方块和方块状态类似，大多数你以为会使用 `Item` 的位置实际上使用 `ItemStack`。`ItemStack` 表示容器（例如物品栏）中一件或多件物品的堆叠。仍然与方块和方块状态类似，应由 `Item` 重写方法、在 `ItemStack` 上调用方法；`Item` 中许多方法也会传入 `ItemStack` 实例。
+与方块和方块状态类似，大多数你以为会使用 `Item` 的位置实际上使用 `ItemStack`。
+
+`ItemStack` 表示容器（例如物品栏）中一件或多件物品的堆叠。仍然与方块和方块状态类似，应由 `Item` 重写方法、在 `ItemStack` 上调用方法；`Item` 中许多方法也会传入 `ItemStack` 实例。
 
 `ItemStack` 由三个主要部分构成：
 
@@ -169,7 +171,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 如果不确定，谨慎行事，使用 `#copy` 复制 ItemStack。
 :::
 
-## 物品堆叠模板（ItemStackTemplate）
+## ItemStackTemplate
 
 `ItemStackTemplate` 是 `ItemStack` 的不可变形式，通常表示不可变上下文（例如配方）中的 ItemStack。Template 包含组成 `ItemStack` 的基本元素：所持 `Holder<Item>`、堆叠数量，以及 `Item` 拥有并以补丁形式存储的[数据组件][datacomponents]。
 
@@ -200,7 +202,7 @@ public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerS
 
 ## 创造模式标签页
 
-默认情况下，Item 只能通过 `/give` 获得，不会出现在创造模式物品栏中。下面来改变这一点。
+默认情况下，物品只能通过 `/give` 指令获得，不会出现在创造模式物品栏中。下面来改变这一点。
 
 将物品放入创造模式菜单的方式取决于要添加到哪个标签页。
 
@@ -259,7 +261,7 @@ public static final Supplier<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.r
 [blockstates]: ../blocks/states.md
 [breaking]: ../blocks/index.md#breaking-a-block
 [citems]: ../resources/client/models/items.md
-[creativetabs]: #creative-tabs
+[creativetabs]: #创造模式标签页
 [datacomponents]: datacomponents.md
 [datagen]: ../resources/index.md#data-generation
 [enchantment]: ../resources/server/enchantments/index.md#enchantment-costs-and-levels
