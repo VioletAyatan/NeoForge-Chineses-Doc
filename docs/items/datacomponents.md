@@ -4,7 +4,7 @@
 
 ## `DataComponentType`
 
-每个数据组件都有关联的 `DataComponentType<T>`，其中 `T` 是组件值类型。`DataComponentType` 表示引用所存组件值的键，并可按需要包含处理磁盘和网络读写的 Codec。
+每个数据组件都有关联的 `DataComponentType<T>`，其中 `T` 是组件值类型。`DataComponentType` 表示引用所存组件值的键，并可按需要包含用于处理磁盘和网络读写的 Codec。
 
 现有组件列表可在 `DataComponents` 中找到。
 
@@ -66,10 +66,10 @@ Builder 中必须提供 `persistent` 或 `networkSynchronized`，否则会抛出
 
 ```java
 // 使用 ExampleRecord(int、boolean)
-// 下面只能使用一个 Codec and/or StreamCodec
-// 提供多个作为示例
+// 实际使用时只应选择一个 Codec 或 StreamCodec
+// 这里提供多个只是为了示例
 
-// 基本编解码器
+// 基础 Codec
 public static final Codec<ExampleRecord> BASIC_CODEC = RecordCodecBuilder.create(instance ->
     instance.group(
         Codec.INT.fieldOf("value1").forGetter(ExampleRecord::value1),
@@ -82,7 +82,7 @@ public static final StreamCodec<ByteBuf, ExampleRecord> BASIC_STREAM_CODEC = Str
     ExampleRecord::new
 );
 
-// 如果不应该通过网络发送任何内容，则单元流编解码器
+// 如果不应该通过网络发送任何内容，则使用单位 StreamCodec
 public static final StreamCodec<ByteBuf, ExampleRecord> UNIT_STREAM_CODEC = StreamCodec.unit(new ExampleRecord(0, false));
 
 
@@ -93,9 +93,9 @@ public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister
 public static final Supplier<DataComponentType<ExampleRecord>> BASIC_EXAMPLE = REGISTRAR.registerComponentType(
     "basic",
     builder -> builder
-        // 用于将数据读写到磁盘的编解码器
+        // 用于将数据读写到磁盘的 Codec
         .persistent(BASIC_CODEC)
-        // 用于通过网络读写数据的流编解码器
+        // 用于通过网络读写数据的 StreamCodec
         .networkSynchronized(BASIC_STREAM_CODEC)
 );
 
@@ -110,14 +110,14 @@ public static final Supplier<DataComponentType<ExampleRecord>> NO_NETWORK_EXAMPL
    "no_network",
    builder -> builder
         .persistent(BASIC_CODEC)
-        // 注意我们这里使用单位流编解码器
+        // 注意这里使用的是UNIT_STREAM_CODEC
         .networkSynchronized(UNIT_STREAM_CODEC)
 );
 ```
 
 ## 组件映射
 
-所有数据组件都存储在 `DataComponentMap` 中，以 `DataComponentType` 为键、对象为值。`DataComponentMap` 的作用类似只读 `Map`。因此，它提供了按给定 `DataComponentType` `#get` 条目的方法，也可在条目不存在时通过 `#getOrDefault` 提供默认值。
+所有数据组件都存储在 `DataComponentMap` 中，以 `DataComponentType` 为键、对象为值。`DataComponentMap` 的作用类似只读 `Map`。因此，它提供了按给定 `DataComponentType` 通过 `#get` 获取条目的方法，也可在条目不存在时通过 `#getOrDefault` 提供默认值。
 
 对于注册表对象，可以通过 `Holder#components` 获取 `DataComponentMap`。
 
@@ -134,7 +134,7 @@ DyeColor color = item.builtInRegistryHolder().components().get(DataComponents.BA
 
 默认 `DataComponentMap` 只提供读取操作的方法，写入操作则由子类 `PatchedDataComponentMap` 支持，包括 `#set` 组件值或通过 `#remove` 将其完全移除。
 
-`PatchedDataComponentMap` 使用原型与补丁映射存储更改。原型是 `DataComponentMap`，包含该映射应具有的默认组件及其值。补丁映射是从 `DataComponentType` 到 `Optional` 值的映射，包含对默认组件所做的更改。
+`PatchedDataComponentMap` 使用原型与补丁映射存储更改。原型是 `DataComponentMap`，包含该映射应具有的默认组件及其值。补丁映射则是从 `DataComponentType` 到 `Optional` 值的映射，记录对默认组件所做的更改。
 
 ```java
 // 对于某个 PatchedDataComponentMap map
@@ -149,16 +149,16 @@ map.remove(DataComponents.BASE_COLOR);
 ```
 
 :::danger
-原型与补丁映射都是 `PatchedDataComponentMap` 哈希码的一部分。因此，映射中的所有组件值都应视为**不可变**。修改数据组件的值后，始终调用 `#set` 或下文所述引用它的方法之一。
+原型与补丁映射都是 `PatchedDataComponentMap` 哈希码的一部分。因此，映射中的所有组件值都应视为**不可变**。修改数据组件的值后，始终调用 `#set` 或下文所述的相关方法之一。
 :::
 
 ## 组件 Getter
 
-所有能够提供数据组件的实例通常都实现 `DataComponentGetter`。`DataComponentGetter` 实际上会从底层映射获取某个数据类型的组件值，或即时创建该值。
+所有能够提供数据组件的实例通常都实现 `DataComponentGetter`。`DataComponentGetter` 实际上会从底层映射获取某个数据类型的组件值，或按需创建该值。
 
 ## 组件持有者
 
-所有引用底层数据组件映射的实例都实现 `DataComponentHolder`，后者扩展 `DataComponentGetter`。`DataComponentHolder` 实质上会委托给 `DataComponentMap` 中的只读方法。
+所有引用底层数据组件映射的实例都实现 `DataComponentHolder`，后者扩展 `DataComponentGetter`。`DataComponentHolder` 实质上会把读取操作委托给 `DataComponentMap` 中的只读方法。
 
 ```java
 // 对于某个 DataComponentHolder holder
@@ -170,7 +170,7 @@ DyeColor color = holder.get(DataComponents.BASE_COLOR);
 
 ### `MutableDataComponentHolder`
 
-`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件映射进行写入操作的方法。原版与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名委托方法 `#set` 与 `#remove`。
+`MutableDataComponentHolder` 是 NeoForge 提供的接口，用于支持对组件映射进行写入操作。原版与 NeoForge 中的所有实现都使用 `PatchedDataComponentMap` 存储数据组件，因此也提供了同名委托方法 `#set` 与 `#remove`。
 
 此外，`MutableDataComponentHolder` 还提供 `#update` 方法：它会获取组件值；如果未设置则使用所提供的默认值；随后对值执行操作，并将其重新设置到映射。操作函数可以是 `UnaryOperator`（接受组件值并返回组件值），也可以是 `BiFunction`（接受组件值与另一个对象，并返回组件值）。
 
@@ -291,7 +291,7 @@ public class ExampleHolder implements MutableDataComponentHolder {
 
 ### `DataComponentPatch` 与 Codec
 
-要将组件持久化到磁盘，或通过网络发送信息，持有者可以发送整个 `DataComponentMap`。但这通常会浪费信息，因为无论数据发送到哪里，默认值都已存在。因此改用 `DataComponentPatch` 发送关联数据。`DataComponentPatch` 只包含组件映射的补丁信息，不包含任何默认值。随后在接收端将补丁应用到原型。
+要将组件持久化到磁盘，或通过网络发送信息，持有者可以发送整个 `DataComponentMap`。但这通常会浪费信息，因为无论数据发送到哪里，默认值都已存在。因此，应改用 `DataComponentPatch` 发送关联数据。`DataComponentPatch` 只包含组件映射的补丁信息，不包含任何默认值。随后，接收端会将补丁应用到原型上。
 
 可以通过 `#patch` 从 `PatchedDataComponentMap` 创建 `DataComponentPatch`。同样，给定原型 `DataComponentMap` 与 `DataComponentPatch` 后，`PatchedDataComponentMap#fromPatch` 可构造 `PatchedDataComponentMap`。
 
@@ -316,7 +316,7 @@ public class ExampleHolder implements MutableDataComponentHolder {
     public ExampleHolder(int data, DataComponentPatch patch) {
         this.data = data;
         this.components = PatchedDataComponentMap.fromPatch(
-            // 适用的原型图
+            // 要应用到的原型映射
             DataComponentMap.EMPTY,
             // 相关补丁
             patch

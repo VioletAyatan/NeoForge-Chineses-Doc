@@ -27,13 +27,13 @@ public static final DeferredItem<Item> CONSUMABLE = ITEMS.registerSimpleItem(
     props -> props.component(
         DataComponents.CONSUMABLE,
         Consumable.builder()
-            // 花费 2 秒，即 40 个节拍，消耗
+            // 花费 2 秒，即 40 tick 来完成消耗
             .consumeSeconds(2f)
-            // 设置消费时播放的动画
+            // 设置消耗期间播放的动画
             .animation(ItemUseAnimation.BLOCK)
             // 消耗期间每个 tick 都播放声音
             .sound(SoundEvents.ARMOR_EQUIP_CHAIN)
-            // 消费完成后播放声音
+            // 消耗完成后播放声音
             .soundAfterConsume(SoundEvents.BREEZE_WIND_CHARGE_BURST)
             // 进食时不显示粒子
             .hasConsumeParticles(false)
@@ -53,7 +53,7 @@ public static final DeferredItem<Item> CONSUMABLE = ITEMS.registerSimpleItem(
 
 ### `ConsumeEffect`
 
-消耗品使用完成后，你可能希望触发某种逻辑，例如添加药水效果。这由 `ConsumeEffect` 处理；通过调用 `Consumable.Builder#onConsume` 将其添加到 `Consumable`。
+消耗品使用完成后，你可能希望触发某种逻辑，例如添加状态效果。这由 `ConsumeEffect` 处理；通过调用 `Consumable.Builder#onConsume` 将其添加到 `Consumable`。
 
 原版效果列表可在 `ConsumeEffect` 中找到。
 
@@ -70,11 +70,11 @@ public record UsePortalConsumeEffect(ResourceKey<Level> level)
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, entity.blockPosition());
 
-            // 可以成功使用门户
+            // 可以成功使用传送门
             return true;
         }
 
-        // 无法使用门户
+        // 无法使用传送门
         return false;
     }
 
@@ -91,7 +91,7 @@ public record UsePortalConsumeEffect(ResourceKey<Level> level)
     }
 }
 
-// 在某些注册商类别中
+// 在某个注册类中
 // 假设有一些 DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECT_TYPES
 public static final Supplier<ConsumeEffect.Type<UsePortalConsumeEffect>> USE_PORTAL =
     CONSUME_EFFECT_TYPES.register("use_portal", () -> new ConsumeEffect.Type<>(
@@ -101,7 +101,7 @@ public static final Supplier<ConsumeEffect.Type<UsePortalConsumeEffect>> USE_POR
             .map(UsePortalConsumeEffect::new, UsePortalConsumeEffect::level)
     ));
 
-// 对于某些正在添加 CONSUMABLE 组件的 Item.Properties
+// 对于某个正在添加 CONSUMABLE 组件的 Item.Properties
 Consumable.builder()
     .onConsume(
         new UsePortalConsumeEffect(Level.END)
@@ -127,7 +127,7 @@ Consumable.builder()
             "name": "EXAMPLEMOD_ITEM_USE_ANIMATION",
             "constructor": "(ILjava/lang/String;)V",
             "parameters": [
-                // ID，应始终为-1
+                // ID，应始终为 -1
                 -1,
                 // 名称，应该是唯一标识符
                 "examplemod:item_use_animation"
@@ -184,7 +184,7 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
             entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0
             && usingArm == arm && itemInHand.getUseAnimation() == EXAMPLE_ANIMATION
         ) {
-            // 应用变换来姿势 stack（平移、缩放、mulPose）
+            // 对 pose stack 应用变换（平移、缩放、mulPose）
             // ...
             return true;
         }
@@ -266,7 +266,7 @@ public class ConsumableClientItemExtensions implements IClientItemExtensions {
             && entity.getUsedItemHand() == hand
             && itemInHand.getUseAnimation() == EXAMPLE_ANIMATION
         ) {
-            // 返回姿势应用
+            // 返回要应用的姿势
             return EXAMPLE_POSE;
         }
 
@@ -287,14 +287,14 @@ public class MyEntity extends LivingEntity implements Consumable.OverrideConsume
 
     @Override
     public SoundEvent getConsumeSound(ItemStack stack) {
-        // 返回播放声音
+        // 返回要播放的声音
     }
 }
 ```
 
 ## `ConsumableListener`
 
-消耗品与消耗后应用的效果非常有用，但有时某种效果的 property 需要作为其他 [数据组件][datacomponents] 对外提供。例如，猫和狼也会食用[食物][food]并查询其营养值，带有 Potion 内容的 Item 则会查询其颜色以进行渲染。在这些情况下，数据组件会实现 `ConsumableListener` 以提供消耗逻辑。
+消耗品以及消耗后应用的效果非常有用，但有时某种效果的 property 需要作为其他 [数据组件][datacomponents] 对外提供。例如，猫和狼也会食用[食物][food]并查询其营养值，带有 Potion 内容的 Item 则会查询其颜色以进行渲染。在这些情况下，数据组件会实现 `ConsumableListener` 以提供消耗逻辑。
 
 `ConsumableListener` 只有一个方法：`#onConsume`，它接受当前 Level、正在消耗 Item 的 Entity、被消耗的 Item，以及 Item 上的 `Consumable` 实例。Item 完全消耗后，在 `Item#finishUsingItem` 期间调用 `onConsume`。
 
@@ -328,16 +328,15 @@ public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
     "food",
     props -> props.food(
         new FoodProperties.Builder()
-            // 治愈 1.5 颗心
+            // 恢复 1.5 格饥饿值
             .nutrition(3)
             // 胡萝卜 0.3
             // 生鳕鱼为 0.1
-            // 熟鸡为0.6
-            // 熟牛肉为0.8
+            // 熟鸡肉为 0.6
+            // 牛排为 0.8
             // 金苹果 1.2
             .saturationModifier(0.3f)
-            // 设置后，即使有食物也可以食用
-            //  满饥饿吧。
+            // 设置后，即使饥饿条已满也可以食用。
             .alwaysEdible()
     )
 );
@@ -345,9 +344,9 @@ public static final DeferredItem<Item> FOOD = ITEMS.registerSimpleItem(
 
 如需示例或查看 Minecraft 使用的不同值，请查看 `Foods` 类。
 
-要获取某个 Item 的 `FoodProperties`，调用 `ItemStack.get(DataComponents.FOOD)`。它可能返回 null，因为并非每个 Item 都可食用。要判断 Item 是否可食用，请对 `getFoodProperties` 调用的结果进行 null 检查。
+要获取某个 Item 的 `FoodProperties`，调用 `ItemStack.get(DataComponents.FOOD)`。它可能返回 null，因为并非每个 Item 都可食用。要判断 Item 是否可食用，请对 `getFoodProperties` 调用结果进行 null 检查。
 
-### Potion 内容
+### 药水内容
 
 通过 `PotionContents` 表示的[药水][potions]内容是另一种 `ConsumableListener`，其效果会在消耗时应用。它包含要应用的可选 `Potion`、`Potion` 颜色的可选着色值、与 `Potion` 一同应用的自定义 [`MobEffectInstance`][mobeffectinstance] 列表，以及获取 ItemStack 名称时使用的可选翻译键。如果 Item 不是 `PotionItem` 子类型，模组开发者需要重写 `Item#getName`。
 

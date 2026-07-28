@@ -2,7 +2,7 @@
 
 盔甲是主要通过各种抗性与效果保护 [`LivingEntity`][livingentity] 免受伤害的 [物品][item]。许多模组会添加新的盔甲套装（例如铜制盔甲）。
 
-## 自定义盔甲套装（Custom Armor Sets）
+## 自定义盔甲套装
 
 人形实体的一套盔甲通常由四种物品组成：头部的头盔、胸部的胸甲、腿部的护腿与脚部的靴子。此外，狼、马和羊驼也有装备到专为动物设置的“身体”盔甲槽位的盔甲。所有这些物品通常通过七种 [数据组件][datacomponents] 实现：
 
@@ -10,10 +10,10 @@
 - `#MAX_STACK_SIZE`：将堆叠数量设置为 `1`
 - `#REPAIRABLE`：在铁砧中修复盔甲部件
 - `#ENCHANTABLE`：最大[附魔][enchantment]值
-- `#ATTRIBUTE_MODIFIERS`：盔甲值、盔甲韧性与击退抗性
+- `#ATTRIBUTE_MODIFIERS`：护甲值、盔甲强度与击退抗性
 - `#EQUIPPABLE`：实体如何装备物品
 
-通常，人形实体的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都使用 `ArmorMaterial`，人形盔甲还会结合 `ArmorType` 来设置组件。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
+通常，人形实体的每件盔甲使用 `Item.Properties#humanoidArmor` 设置，狼使用 `wolfArmor`，马使用 `horseArmor`，鹦鹉螺使用 `nautilusArmor`。它们都会通过 `ArmorMaterial` 设置组件；人形盔甲还会结合 `ArmorType`。参考值可在 `ArmorMaterials` 中找到。此示例使用铜制盔甲材料，你可以按需要调整其值。
 
 ```java
 // 用于链接下文所述装备资源的 ResourceKey，
@@ -30,7 +30,7 @@ public static final ArmorMaterial COPPER_ARMOR_MATERIAL = new ArmorMaterial(
     // - BOOTS: 13
     // - BODY: 16
     15,
-    // 确定防御值（即盔甲条上显示的半格盔甲数）。
+    // 决定护甲值（即盔甲条上显示的半个盔甲图标数量）。
     // 基于 ArmorType。
     Util.make(new EnumMap<>(ArmorType.class), map -> {
         map.put(ArmorItem.Type.BOOTS, 2);
@@ -39,13 +39,13 @@ public static final ArmorMaterial COPPER_ARMOR_MATERIAL = new ArmorMaterial(
         map.put(ArmorItem.Type.HELMET, 2);
         map.put(ArmorItem.Type.BODY, 4);
     }),
-    // 决定盔甲的附魔能力。这代表了此盔甲上的附魔会有多好。
+    // 决定盔甲的附魔能力。这表示此盔甲可获得的附魔质量。
     // 黄金使用 25；这里将铜设为略低的值。
     20,
     // 决定装备此盔甲时播放的声音。
     // 这是用 Holder 包装的。
     SoundEvents.ARMOR_EQUIP_GENERIC,
-     // 返回盔甲的韧性值。韧性是伤害计算中使用的附加值，
+     // 返回盔甲强度值。盔甲强度是伤害计算中使用的附加值，
     // 更多信息请参阅 Minecraft Wiki 的盔甲机制文章：
     // https://minecraft.wiki/w/Armor#Armor_toughness
     // 这里只有钻石和下界合金的值大于 0，所以我们只是返回 0。
@@ -55,7 +55,7 @@ public static final ArmorMaterial COPPER_ARMOR_MATERIAL = new ArmorMaterial(
     // （由所有盔甲部件合计），就完全不会受到击退。
     // 这里只有下界合金的值大于 0，所以我们只是返回 0。
     0,
-    // 确定哪些物品可以修复此盔甲的标签。
+    // 决定哪些物品可以修复此盔甲的标签。
     Tags.Items.INGOTS_COPPER,
     // 下面讨论的 EquipmentClientInfo JSON 的资源键。
     COPPER_ASSET
@@ -103,7 +103,7 @@ public static final DeferredItem<Item> COPPER_NAUTILUS_ARMOR =
 如果想从头创建盔甲或类似盔甲的物品，可以使用以下部分的组合实现：
 
 - 通过 `Item.Properties#component` 设置 `DataComponents#EQUIPPABLE`，添加带有自定义要求的 `Equippable`。
-- 通过 `Item.Properties#attributes` 向物品添加实体属性修饰符（例如盔甲值、韧性、击退抗性）。
+- 通过 `Item.Properties#attributes` 向物品添加实体属性修饰符（例如护甲值、盔甲强度、击退抗性）。
 - 通过 `Item.Properties#durability` 添加物品耐久度。
 - 通过 `Item.Properties#repariable` 允许修复物品。
 - 通过 `Item.Properties#enchantable` 允许为物品附魔。
@@ -111,7 +111,7 @@ public static final DeferredItem<Item> COPPER_NAUTILUS_ARMOR =
 
 ### `Equippable`
 
-`Equippable` 是一种数据组件，包含实体如何装备该物品，以及游戏中由什么来处理其渲染。只要有此组件，任何物品都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的物品只能装备到单个 `EquipmentSlot`。
+`Equippable` 是一种数据组件，包含实体如何装备该物品，以及游戏中由什么处理其渲染。只要有此组件，任何物品都可以装备，而不论它是否被视为“盔甲”（例如鞍、羊驼身上的地毯）。每个带有此组件的物品只能装备到单个 `EquipmentSlot`。
 
 可以直接调用 record 构造器创建 `Equippable`，也可以通过 `Equippable#builder` 创建；后者会为每个字段设置默认值，完成后再调用 `build`：
 
@@ -128,7 +128,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
         DataComponents.EQUIPPABLE,
         // 设置此物品可以装备的槽位。
         Equippable.builder(EquipmentSlot.HELMET)
-            // 确定装备此物品时播放的声音。
+            // 决定装备此物品时播放的声音。
             // 这是用 Holder 包装的。
             // 默认为 SoundEvents#ARMOR_EQUIP_GENERIC。
             .setEquipSound(SoundEvents.ARMOR_EQUIP_GENERIC)
@@ -139,20 +139,20 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
             // 指向 assets/examplemod/textures/equippable.png
             // 未设置时，不渲染叠加层。
             .setCameraOverlay(Identifier.withDefaultNamespace("examplemod", "equippable"))
-            // 可装备此物品的 Entity type HolderSet（直接值或标签）。
+            // 可装备此物品的 Entity 类型 HolderSet（直接值或标签）。
             // 未设置时，任何实体都可以装备此物品。
             .setAllowedEntities(EntityType.ZOMBIE)
-            // 从分配器分配该物品时是否可以装备。
+            // 从发射器发射该物品时是否可以装备。
             // 默认为 true。
             .setDispensable(true),
-            // 是否可以在快速装备期间从玩家身上交换该物品。
+            // 快速装备时是否可以把该物品从玩家身上换下。
             // 默认为 true。
             .setSwappable(false),
-            // 物品受到攻击时是否应损失耐久（通常用于装备）。
+            // 物品受到伤害时是否应损失耐久（通常用于装备）。
             // 也必须是易损物品。
             // 默认为 true。
             .setDamageOnHurt(false)
-            // 该物品是否可以通过交互装备到另一个 Entity 上（例如右键单击）。
+            // 该物品是否可以通过交互装备到另一个 Entity 上（例如右键点击）。
             // 默认为 false。
             .setEquipOnInteract(true)
             // 为 true 时，具有 SHEAR_REMOVE_ARMOR 物品能力的物品可以移除已装备的物品。
@@ -167,7 +167,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 );
 ```
 
-## 装备资源（Equipment Assets）
+## 装备资源
 
 现在游戏中已经有了盔甲，但如果尝试穿戴，什么都不会渲染，因为我们从未指定如何渲染装备。为此，需要在 `Equippable#assetId` 指定的位置创建 `EquipmentClientInfo` JSON；该位置相对于[资源包][respack]（`assets` 文件夹）的 `equipment` 文件夹。`EquipmentClientInfo` 指定每个待渲染层使用的关联纹理。
 
@@ -185,7 +185,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 
 第三个参数是布尔值，表示是否应使用渲染期间提供的纹理来替代 `Layer` 中定义的纹理。玩家的自定义披风或鞘翅纹理就是一个示例。
 
-下面为铜制盔甲材料创建装备信息。还假设每个层有两张纹理：一张是实际盔甲，另一张叠加在其上并进行着色。对于动物盔甲，假设存在某个可传入的动态纹理。
+下面为铜制盔甲材料创建装备信息。这里还假设每个图层都有两张纹理：一张是实际盔甲，另一张叠加在其上并进行着色。对于动物盔甲，假设存在某个可传入的动态纹理。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -193,7 +193,7 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
 ```json5
 // 在 assets/examplemod/equipment/copper.json 中
 {
-    // 图层图
+    // 图层映射
     "layers": {
         // 要应用的 EquipmentClientInfo.LayerType 的序列化名称。
         // 用于人形头部、胸部和脚部
@@ -212,8 +212,8 @@ public static final DeferredItem<Item> EQUIPPABLE = ITEMS.registerSimpleItem(
                 // 否则无法着色
                 "dyeable": {
                     // 一个 RGB 值（始终为不透明颜色）
-                    // 0x7683DE 十进制
-                    // 不指定时设置为0（表示透明或不可见）
+                    // 0x7683DE 的十进制值
+                    // 未指定时设为 0（表示透明或不可见）
                     "color_when_undyed": 7767006
                 }
             }
@@ -295,7 +295,7 @@ public class MyEquipmentInfoProvider extends EquipmentAssetProvider {
                         // 指向 assets/examplemod/textures/entity/equipment/humanoid/copper/outer_overlay.png
                         Identifier.fromNamespaceAndPath("examplemod", "copper/outer_overlay"),
                         // 一个 RGB 值（始终为不透明颜色）
-                        // 不指定时设置为0（表示透明或不可见）
+                        // 未指定时设为 0（表示透明或不可见）
                         Optional.of(new EquipmentClientInfo.Dyeable(Optional.of(0x7683DE))),
                         false
                     )
@@ -364,7 +364,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 </TabItem>
 </Tabs>
 
-## 装备渲染（Equipment Rendering）
+## 装备渲染
 
 装备信息通过 `EntityRenderer` 或其某个 `RenderLayer` 的渲染函数中的 `EquipmentLayerRenderer` 渲染。`EquipmentLayerRenderer` 作为渲染上下文的一部分，通过 `EntityRendererProvider.Context#getEquipmentRenderer` 获取。如果需要 `EquipmentClientInfo`，也可以通过 `EntityRendererProvider.Context#getEquipmentAssets` 获取。
 
@@ -402,26 +402,26 @@ this.equipmentLayerRenderer.renderLayers(
     // 表示 EquipmentClientInfo JSON 的资源键
     // 这将通过 `assetId` 在 `EQUIPPABLE` 数据组件中设置
     stack.get(DataComponents.EQUIPPABLE).assetId().orElseThrow(),
-    // 应用设备信息的模型
-    // 这些通常是与实体模型分开的模型
-    // 和 ModelLayers 是单独链接到 LayerDefinition
+    // 要应用装备信息的模型
+    // 这些通常是与实体模型分开的模型，
+    // 并通过单独的 ModelLayers 链接到 LayerDefinition
     model,
-    // 表示正在渲染为模型的物品的ItemStack
-    // 这仅用于获取可染色、箔和盔甲装饰信息
+    // 表示正在作为模型渲染的物品的 ItemStack
+    // 这仅用于获取可染色、附魔闪光和盔甲纹饰信息
     stack,
-    // 用于在正确位置渲染模型的姿势堆栈
+    // 用于在正确位置渲染模型的 pose stack
     poseStack,
     // 模型数据提交到的收集器
     collector,
     // 打包的灯光坐标
     lightCoords,
-    // 当 use_player_texture 为其中一层的 true（如果不是 null）时要渲染的纹理的绝对路径
-    // 表示资产文件夹内的绝对位置
+    // 当其中某个图层的 use_player_texture 为 true 且此值不为 null 时，要渲染的纹理绝对路径
+    // 表示 assets 文件夹内的绝对位置
     Identifier.fromNamespaceAndPath("examplemod", "textures/other_texture.png"),
     // 模型轮廓的颜色
-    // 仅当轮廓颜色不为 0 并且 `RenderType` 具有或是轮廓类型时使用
+    // 仅当轮廓颜色不为 0，并且 `RenderType` 具有轮廓类型或本身就是轮廓类型时使用
     outlineColor,
-    // 提交 layer 与纹饰时的起始顺序优先级；每提交一个模型就递增一次
+    // 提交图层与纹饰时的起始顺序优先级；每提交一个模型就递增一次
     // 默认情况下，此为 1
     order
 );
