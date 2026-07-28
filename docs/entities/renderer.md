@@ -2,14 +2,14 @@
 
 实体渲染器用于定义实体的渲染行为。它只存在于 [逻辑客户端和物理客户端][sides]。
 
-实体渲染使用所谓的实体渲染状态。简单来说，它是一个保存渲染器所需全部值的对象。每次渲染实体时，渲染状态都会更新，随后 `#submit` 方法使用它提交所需的[功能][features]，以便稍后渲染实体。
+实体渲染使用所谓的实体渲染状态（Entity Render State）。简单来说，它是一个保存渲染器所需全部值的对象。每次渲染实体时，渲染状态都会更新，随后 `#submit` 方法使用它提交所需的 [Feature][features]，以便稍后渲染实体。
 
 ## 创建实体渲染器
 
 最简单的实体渲染器直接扩展 `EntityRenderer`：
 
 ```java
-// 父类中的泛型类型应设置为要呈现的实体。
+// 父类中的泛型类型应设置为要渲染的实体。
 // 如果你想为任何实体启用渲染，你可以使用实体，就像我们在这里所做的那样。
 // 你还可以使用适合你的用例的 EntityRenderState。有关其更多信息如下。
 public class MyEntityRenderer extends EntityRenderer<Entity, EntityRenderState> {
@@ -33,9 +33,9 @@ public class MyEntityRenderer extends EntityRenderer<Entity, EntityRenderState> 
         // 提取任何附加值并将其存储在此处的状态中。
     }
     
-    // 实际提交实体的特征进行渲染。
+    // 实际提交渲染实体所需的 Feature。
     // 第一个参数与渲染状态的泛型类型匹配。
-    // 致电 super 将为你处理皮带和姓名标签提交（如果适用）。
+    // 调用 super 会为你处理拴绳和名牌提交（如果适用）。
     @Override
     public void submit(EntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
         super.submit(renderState, poseStack, collector, cameraState);
@@ -53,9 +53,9 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 }
 ```
 
-## 实体渲染状态（Entity Render State）
+## 实体渲染状态
 
-如前所述，Entity Render State 用于将渲染所用值与实际实体的值分离。它本质上只是可变数据存储对象，因此非常容易扩展：
+如前所述，实体渲染状态用于将渲染所用值与实际实体的值分离。它本质上只是可变数据存储对象，代码中通常对应 `EntityRenderState` 及其子类，因此非常容易扩展：
 
 ```java
 public class MyEntityRenderState extends EntityRenderState {
@@ -65,22 +65,22 @@ public class MyEntityRenderState extends EntityRenderState {
 
 就是这样。扩展该类、添加字段，并把 `EntityRenderer` 中的泛型类型改为你的类即可。最后只需按上文所述，在 `EntityRenderer#extractRenderState` 中更新 `stackInHand` 字段。
 
-### 修改 Render State
+### 修改渲染状态
 
-除了可以定义新的实体渲染状态，NeoForge 还引入了修改现有渲染状态的系统。
+除了可以定义新的实体渲染状态，NeoForge 还引入了渲染状态修改系统（Render State Modifications），用于修改现有渲染状态。
 
 为此，可以创建 `ContextKey<T>`（其中 `T` 是要更改的数据类型）并存入静态字段。随后，可在 `RegisterRenderStateModifiersEvent` 的事件处理器中使用它：
 
 ```java
 public static final ContextKey<String> EXAMPLE_CONTEXT = new ContextKey<>(
-    // 你的上下文键的 ID。用于内部区分按键。
+    // 你的上下文键的 ID。用于在内部区分不同的键。
     Identifier.fromNamespaceAndPath("examplemod", "example_context"));
 
 @SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
     event.registerEntityModifier(
-        // 渲染器的 TypeToken。 此实例化为匿名类是必填
-        // （即末尾有 {}），并且受 Java 泛型限制，需要显式指定泛型参数。
+        // 渲染器的 TypeToken。受 Java 泛型限制，这里必须实例化为匿名类
+        // （即末尾带有 {}），并且需要显式指定泛型参数。
         new TypeToken<LivingEntityRenderer<LivingEntity, LivingEntityRenderState, ?>>(){},
         // 修饰符本身。这是实体和实体渲染状态的 BiConsumer。
         // 精确的泛型类型是从所使用的渲染器类中的泛型推断出来的。
@@ -94,8 +94,7 @@ public static void registerRenderStateModifiers(RegisterRenderStateModifiersEven
         (entity, state) -> state.setRenderData(EXAMPLE_CONTEXT, "Hello World!");
     );
 
-    // 解决修改头像问题的便捷方法
-    // 渲染 state（例如玩家）。
+    // 用于绕过修改 avatar 渲染状态（例如玩家）时遇到的问题的便捷方法。
     event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
         @Override
         public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState state) {
@@ -114,7 +113,7 @@ state.setRenderData(EXAMPLE_CONTEXT, null);
 
 :::
 
-需要时，可以通过 `EntityRenderState#getRenderData` 取回该数据。还可以使用辅助方法方法 `#getRenderDataOrThrow` 和 `#getRenderDataOrDefault`。
+需要时，可以通过 `EntityRenderState#getRenderData` 取回该数据。还可以使用辅助方法 `#getRenderDataOrThrow` 和 `#getRenderDataOrDefault`。
 
 ## 层次结构
 
@@ -147,11 +146,11 @@ graph LR;
 
 与各种实体类一样，请选择最符合用例的类。注意，很多类的泛型都具有相应类型边界；例如，`LivingEntityRenderer` 对 `LivingEntity` 和 `LivingEntityRenderState` 设有类型边界。
 
-## 实体模型、层定义和渲染层（Entity Model、Layer Definition 和 Render Layer）
+## 实体模型、层定义和渲染层
 
-更复杂的实体渲染器（尤其是 `LivingEntityRenderer`）使用层（Layer）系统，每一层都表示为一个 `RenderLayer`。一个渲染器可以使用多个 `RenderLayer`，并决定何时提交哪些层。例如，鞘翅使用独立层，不依赖穿戴它的 `LivingEntity` 单独处理。玩家披风也同样是独立层。
+本节涉及实体模型（Entity Model）、层定义（Layer Definition）和渲染层（Render Layer）三个概念。更复杂的实体渲染器（尤其是 `LivingEntityRenderer`）使用层（Layer）系统，每一层都表示为一个 `RenderLayer`。一个渲染器可以使用多个 `RenderLayer`，并决定何时提交哪些层。例如，鞘翅使用独立层，不依赖穿戴它的 `LivingEntity` 单独处理。玩家披风也同样是独立层。
 
-`RenderLayer` 定义一个 `#submit` 方法，它会提交渲染该层所需的[功能][features]。与多数其他提交方法一样，这里基本可以提交任何内容。不过，一种非常常见的用途是在此提交独立模型，例如盔甲或类似装备。
+`RenderLayer` 定义一个 `#submit` 方法，它会提交渲染该层所需的 [Feature][features]。与多数其他提交方法一样，这里基本可以提交任何内容。不过，一种非常常见的用途是在此提交独立模型，例如盔甲或类似装备。
 
 为此，首先需要可供提交的模型。我们使用 `Model` 类。`Model` 本质上是供渲染器使用的立方体及关联纹理列表。通常会在首次创建实体渲染器的构造器时，以静态方式创建它。
 
@@ -161,7 +160,7 @@ graph LR;
 
 ### 创建实体模型类和层定义
 
-先创建实体模型类：
+先创建实体模型（Entity Model）类：
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {}
@@ -169,22 +168,22 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {}
 
 上例直接扩展 `EntityModel`；根据用例，使用其某个子类，甚至直接使用 `Model` 或 `Model` 的非实体相关子类可能更加合适。创建新模型时，建议先查看最接近用例的现有模型，再以此为基础进行开发。
 
-接下来创建 `LayerDefinition`。`LayerDefinition` 本质上是可烘焙为 `EntityModel` 的立方体列表。`LayerDefinition` 的定义方式如下：
+接下来创建层定义（Layer Definition），也就是 `LayerDefinition`。`LayerDefinition` 本质上是可烘焙为 `EntityModel` 的立方体列表。定义方式如下：
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {
-    // 一个 static 方法，我们在其中创建图层定义。 createBodyLayer() 是名称
-    // 大多数原版模型使用。如果你有多个层，你将拥有多个 static 方法。
+    // 一个 static 方法，我们在其中创建层定义。createBodyLayer() 是
+    // 大多数原版模型使用的名称。如果你有多个层，就会有多个这样的 static 方法。
     public static LayerDefinition createBodyLayer() {
         // 创建我们的网格。
         MeshDefinition mesh = new MeshDefinition();
-        // 网格最初除根部之外不包含任何对象，根部为 invisible（大小为 0x0x0）。
+        // 网格最初除根部之外不包含任何对象，根部不可见（大小为 0x0x0）。
         PartDefinition root = mesh.getRoot();
         // 我们添加了头部部分。
         PartDefinition head = root.addOrReplaceChild(
             // 零件的名称。
             "head",
-            // 我们要添加的CubeListBuilder。
+            // 我们要添加的 CubeListBuilder。
             CubeListBuilder.create()
                 // 在纹理内使用的 UV 坐标。下面解释纹理绑定本身。
                 // 在本例中，从 U=10、V=20 开始。
@@ -201,13 +200,13 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
                 // 再次调用 texOffs 和 addBox 添加另一个立方体。
                 .texOffs(30, 40)
                 .addBox(-1, -1, -1, 1, 1, 1)
-                // addBox()的各种重载可用，允许附加操作
+                // addBox() 的各种重载可用，允许执行附加操作，
                 // 如纹理镜像、纹理缩放、指定要渲染的方向、
-                // 和全局范围内的所有多维数据集，称为 CubeDeformation。
+                // 以及应用于所有立方体的全局缩放，称为 CubeDeformation。
                 // 本示例使用后者，更多示例请查看各个方法的用法。
                 .texOffs(50, 60)
                 .addBox(5, 5, 5, 4, 4, 4, CubeDeformation.extend(1.2f)),
-            // 适用于 CubeListBuilder 的所有元素的初始定位。除了PartPose#offset之外，
+            // 适用于 CubeListBuilder 的所有元素的初始定位。除了 PartPose#offset 之外，
             // PartPose#offsetAndRotation 也可用。这可以在多个 PartDefinitions 之间重复使用。
             // 这可能不适用于所有模型。例如，制作自定义盔甲层将使用关联的
             // 玩家（或其他人形）渲染器的 PartPose，使盔甲“贴合”玩家模型。
@@ -230,9 +229,9 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
 Blockbench 还提供将模型导出为 `LayerDefinition` 创建方法的选项，位于 `File -> Export -> Export Java Entity`。
 :::
 
-### 注册 Layer Definition
+### 注册层定义
 
-有了 Entity Layer Definition 后，需要在 `EntityRenderersEvent.RegisterLayerDefinitions` 中注册它。为此，需要使用 `ModelLayerLocation`，它实质上是 Layer 的 Identifier（请记住，一个 Entity 可以有多个 Layer）。
+有了实体层（Layer Definition）定义后，需要在 `EntityRenderersEvent.RegisterLayerDefinitions` 中注册它。为此，需要使用 `ModelLayerLocation`，它实质上是该层的 `Identifier`（请记住，一个实体可以有多个层）。
 
 ```java
 // 我们的 ModelLayerLocation。
@@ -247,26 +246,26 @@ public static final ModelLayerLocation MY_LAYER = new ModelLayerLocation(
 
 @SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-    // 在这里添加我们的图层。
+    // 在这里添加我们的层。
     event.add(MY_LAYER, MyEntityModel::createBodyLayer);
 }
 ```
 
-### 创建 Render Layer 与烘培 Layer Definition
+### 创建渲染层并烘焙层定义
 
-下一步是烘培 Layer Definition；首先回到 Entity Model 类：
+下一步是烘焙层定义（Layer Definition）；首先回到实体模型类：
 
 ```java
 public class MyEntityModel extends EntityModel<MyEntityRenderState> {
     // 将特定模型零件存储为字段以供下面使用。
     private final ModelPart head;
     
-    // 这里传递的ModelPart是我们烘焙模型的根。
+    // 这里传递的 ModelPart 是我们烘焙模型的根。
     // 我们很快就会开始实际的烘焙。
     public MyEntityModel(ModelPart root) {
         // super 构造器调用可以选择指定 RenderType。
         super(root);
-        // 将头部存放在下面以供使用。
+        // 存储 head 部件以供下面使用。
         this.head = root.getChild("head");
     }
 
@@ -276,7 +275,7 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
     // EntityModel 超类的泛型参数，此参数类型随之变化。
     @Override
     public void setupAnim(MyEntityRenderState state) {
-        // 调用super 将所有值重置为默认值。
+        // 调用 super 将所有值重置为默认值。
         super.setupAnim(state);
         // 更改模型零件。
         head.visible = state.myBoolean();
@@ -287,10 +286,10 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
 }
 ```
 
-现在模型已能正确接收烘焙后的 `ModelPart`，可以创建 `RenderLayer` 子类，并用它烘焙 `LayerDefinition`：
+现在模型已能正确接收烘焙后的 `ModelPart`，可以创建渲染层（Render Layer）的 `RenderLayer` 子类，并用它烘焙 `LayerDefinition`：
 
 ```java
-// 泛型参数需要你在其他地方使用的正确类型，直到此点。
+// 泛型参数需要与前文其他位置使用的类型保持一致。
 public class MyRenderLayer extends RenderLayer<MyEntityRenderState, MyEntityModel> {
     private final MyEntityModel model;
     
@@ -298,24 +297,24 @@ public class MyRenderLayer extends RenderLayer<MyEntityRenderState, MyEntityMode
     // 可以按需添加其他参数。例如，模型烘焙需要 EntityModelSet。
     public MyRenderLayer(MyEntityRenderer renderer, EntityModelSet entityModelSet) {
         super(renderer);
-        // 使用我们注册图层定义时的 ModelLayerLocation 烘焙并存储我们的图层定义。
-        // 如果适用，你还可以以其方式存储多个模型并在下面使用它们。
+        // 使用注册层定义时的 ModelLayerLocation 烘焙并存储我们的层定义。
+        // 如果适用，你也可以通过这种方式存储多个模型并在下面使用它们。
         this.model = new MyEntityModel(entityModelSet.bakeLayer(MY_LAYER));
     }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, MyEntityRenderState renderState, float yRot, float xRot) {
-        // 在此处提交图层的要素。我们已将实体模型存储在一个字段中，你可能想以某种方式使用它。
+        // 在此处提交该层的 Feature。我们已将实体模型存储在一个字段中，你可能想以某种方式使用它。
         collector
-            .order(1) // 我们在稍后的迭代中提交该功能，以便它呈现在实体之上
+            .order(1) // 使用较后的 order 提交该 Feature，使其渲染在实体之上
             .submitModel(this.model, renderState, poseStack, ...);
     }
 }
 ```
 
-### 向 Entity Renderer 添加 Render Layer
+### 向实体渲染器添加渲染层
 
-最后，把 Layer 添加到 Renderer（现在它必须是 Living Renderer），将所有部分连接起来：
+最后，把渲染层（Render Layer）添加到实体渲染器（Entity Renderer），将所有部分连接起来。此时它必须是生命实体渲染器：
 
 ```java
 // 插入我们的自定义渲染状态类作为泛型类型。
@@ -324,8 +323,8 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityRen
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         // 对于 LivingEntityRenderer，super 构造器需要提供 "base" 模型和阴影半径。
         super(context, new MyEntityModel(context.bakeLayer(MY_LAYER)), 0.5f);
-        // 添加图层。从上下文中获取 EntityModelSet。出于示例的目的，
-        // 我们忽略渲染层提交 "base" 模型，此在实践中将是不同的模型。
+        // 添加层。从上下文中获取 EntityModelSet。出于示例目的，
+        // 我们忽略渲染层提交 "base" 模型这一点；实际项目中这通常会是不同的模型。
         this.addLayer(new MyRenderLayer(this, context.getModelSet()));
     }
 
@@ -342,13 +341,13 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityRen
 
     @Override
     public void submit(MyEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
-        // 调用super会自动为你提交该图层的特征。
+        // 调用 super 会自动为你提交该层的 Feature。
         super.submit(renderState, poseStack, collector, cameraState);
         // 然后，在此处进行自定义提交（如果适用）。
     }
 
     // getTextureLocation 是我们需要重写的 LivingEntityRenderer 中的 abstract 方法。
-    // 纹理路径是相对于命名空间的，因此必须在assets目录中指定命名空间内的确切路径。
+    // 纹理路径是相对于命名空间的，因此必须指定 `assets` 目录中该命名空间下的确切路径。
     // 在此示例中，纹理应位于 `assets/examplemod/textures/entity/example_entity.png`。
     // 然后纹理将提供给模型并由模型使用。
     @Override
@@ -470,14 +469,14 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
 ```java
 @SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void addLayers(EntityRenderersEvent.AddLayers event) {
-    // 向每个实体类型添加一个Layer。
+    // 向每个实体类型添加一个层。
     for (EntityType<?> entityType : event.getEntityTypes()) {
         // 获取我们的渲染器。
         EntityRenderer<?, ?> renderer = event.getRenderer(entityType);
         // 我们检查渲染器是否支持渲染层。
         // 如果你想要更通用的渲染层，则需要使用通配符泛型。
         if (renderer instanceof MyEntityRenderer myEntityRenderer) {
-            // 将图层添加到渲染器。同上，构造一个新 MyRenderLayer。
+            // 将层添加到渲染器。同上，构造一个新的 MyRenderLayer。
             // 可以通过 #getEntityModels 从事件中检索 EntityModelSet。
             myEntityRenderer.addLayer(new MyRenderLayer(renderer, event.getEntityModels()));
         }
@@ -495,7 +494,7 @@ public static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
         // 获取关联的 AvatarRenderer。
         AvatarRenderer<AbstractClientPlayer> playerRenderer = event.getPlayerRenderer(type);
         if (playerRenderer != null) {
-            // 将图层添加到渲染器。这假设渲染层
+            // 将层添加到渲染器。这假设渲染层
             // 有适当的泛型来支持玩家和玩家渲染器。
             playerRenderer.addLayer(new MyRenderLayer(playerRenderer, event.getEntityModels()));
         }
@@ -513,15 +512,15 @@ Minecraft 通过 `AnimationDefinition` 类为实体模型提供动画系统。Ne
 {
     // 动画的持续时间，以秒为单位。
     "length": 1.5,
-    // 动画完成后是否应为 loop (true) 或 stop (false)。
+    // 动画完成后是否应循环（true）或停止（false）。
     // 可选，默认为 false。
     "loop": true,
-    // 要动画的部件列表及其动画数据。
+    // 要参与动画的部件列表及其动画数据。
     "animations": [
         {
-            // 要动画的部分的名称。必须与零件名称匹配
+            // 要参与动画的部件名称。必须与零件名称匹配
             // 在你的 LayerDefinition 中定义（见上文）。如果有多个匹配项，
-            // 将选取执行的深度优先搜索中的第一个匹配项。
+            // 将选取深度优先搜索中的第一个匹配项。
             "bone": "head",
             // 要更改的值。请参阅下文了解可用目标。
             "target": "minecraft:rotation",
@@ -554,22 +553,22 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
     public static final AnimationHolder EXAMPLE_ANIMATION =
             Model.getAnimation(Identifier.fromNamespaceAndPath("examplemod", "example"));
 
-    // 保存烘焙动画的字段
+    // 保存烘焙动画的字段。
     private final KeyframeAnimation example;
 
     public MyEntityModel(ModelPart root) {
-        // 烘焙模型动画
-        // 传入应用动画的 'ModelPart'
-        // 它应该覆盖所有引用的骨骼
+        // 烘焙模型动画。
+        // 传入要应用动画的 'ModelPart'。
+        // 它应覆盖所有引用的骨骼。
         this.example = EXAMPLE_ANIMATION.get().bake(root);
     }
     
-    // 这里还有其他东西。
+    // 这里还有其他内容。
     
     @Override
     public void setupAnim(MyEntityRenderState state) {
         super.setupAnim(state);
-        // 这里还有其他东西。
+        // 这里还有其他内容。
         
         this.example.apply(
             // 从 EntityRenderState 获取要使用的动画状态。
@@ -587,7 +586,7 @@ public class MyEntityModel extends EntityModel<MyEntityRenderState> {
 
 ### 关键帧目标
 
-NeoForge 默认添加以下关键帧目标：
+NeoForge 默认添加以下关键帧目标（Keyframe Target）：
 
 - `minecraft:position`：将目标值设为 Part 的位置值。
 - `minecraft:rotation`：将目标值设为 Part 的旋转值。
@@ -609,7 +608,7 @@ public static void registerJsonAnimationTypes(RegisterJsonAnimationTypesEvent ev
 
 ### 关键帧插值
 
-NeoForge 默认添加以下关键帧插值：
+NeoForge 默认添加以下关键帧插值（Keyframe Interpolation）：
 
 - `minecraft:linear`：线性插值。
 - `minecraft:catmullrom`：沿 [Catmull-Rom Spline][catmullrom] 插值。
@@ -620,7 +619,7 @@ NeoForge 默认添加以下关键帧插值：
 @SubscribeEvent // 仅在物理客户端上的模组事件总线上
 public static void registerJsonAnimationTypes(RegisterJsonAnimationTypesEvent event) {
     event.registerInterpolation(
-        // 新插值的名称，用于JSON等地方。
+        // 新插值的名称，用于 JSON 等地方。
         Identifier.fromNamespaceAndPath("examplemod", "example"),
         // 要注册的 AnimationChannel.Interpolation。
         (vector, keyframeDelta, keyframes, currentKeyframe, nextKeyframe, scale) -> {...}
@@ -635,6 +634,6 @@ public static void registerJsonAnimationTypes(RegisterJsonAnimationTypesEvent ev
 [features]: ../rendering/feature.md
 [geckolib]: https://github.com/bernie-g/geckolib
 [livingentity]: livingentity.md
-[renderlayer]: #创建-render-layer-与烘培-layer-definition
+[renderlayer]: #创建渲染层并烘焙层定义
 [rl]: ../misc/identifier.md
 [sides]: ../concepts/sides.md
