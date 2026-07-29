@@ -1,4 +1,4 @@
-# 值输入输出（Value I/O）
+# Value I/O
 
 Value I/O 系统是一种标准化序列化方式，用于操作某个底层对象中的数据，例如[用于 NBT 的 `CompoundTag`][nbt]。
 
@@ -133,7 +133,7 @@ protected void loadAdditional(ValueInput input) {
 
     // 从输入读取数据
 
-    // 不需要键，因为它们存储在根值访问中
+    // 不需要键，因为它们存储在根 value access 中
     Optional<SingleFile> file = input.read(SingleFile.MAP_CODEC);
     // 当 `SingleFile` 写入 `resource` 参数时出现
     String resource = input.getStringOr("resource", "Not present!");
@@ -146,7 +146,7 @@ protected void loadAdditional(ValueInput input) {
 
 ### List
 
-可以通过两种方式创建和读取 list：使用子 Value I/O，或使用 [`Codec`][codec]。
+可以通过两种方式创建和读取 list：使用子 value I/O，或使用 [`Codec`][codec]。
 
 调用 `ValueOutput#childrenList` 并传入键可以创建 list。它返回 `ValueOutput.ValueOutputList`，后者相当于只写的 value 对象 list。调用 `ValueOutputList#addChild` 可以向 list 添加新的 value 对象，并返回一个 `ValueOutput`，用于写入该 value 对象的数据。随后可以通过 `ValueInput#childrenList` 读取 list；如果希望在 list 不存在时默认为空 list，则使用 `childrenListOrEmpty`。这些方法返回 `ValueInput.ValueInputList`，它相当于只读的 iterable，也可以通过 `stream` 作为 stream 使用。
 
@@ -295,11 +295,11 @@ public class ExampleObject implements ValueIOSerializable {
 
 ### NBT
 
-[NBT][nbt] 的值 I/O 由 `TagValueOutput` 和 `TagValueInput` 处理。
+[NBT][nbt] 的 value I/O 由 `TagValueOutput` 和 `TagValueInput` 处理。
 
 可以通过 `createWithContext` 或 `createWithoutContext` 创建 `TagValueOutput`。`createWithContext` 表示输出可以访问 `HolderLookup.Provider`，从而获得所有注册表条目（静态条目和数据包条目）；`createWithoutContext` 则不提供任何数据包访问能力。原版只使用 `createWithContext`。使用完 `ValueOutput` 后，可以通过 `TagValueOutput#buildResult` 取得 `CompoundTag`。另一方面，可以调用 `create` 并传入 `HolderLookup.Provider` 以及输入所访问的 `CompoundTag`，创建 `TagValueInput`。
 
-两个 Value I/O 还都接收 `ProblemReporter`。`ProblemReporter` 用于收集读写过程中的所有内部错误；目前只跟踪 `Codec` 错误。错误如何处理由模组开发者决定。原版实现在 `ProblemReporter` 不为空时会抛出异常。
+两个 value I/O 还都接收 `ProblemReporter`。`ProblemReporter` 用于收集读写过程中的所有内部错误；目前只跟踪 `Codec` 错误。错误如何处理由模组开发者决定。原版实现在 `ProblemReporter` 不为空时会抛出异常。
 
 ```java
 // 假设我们可以访问 HolderLookup.Provider lookupProvider

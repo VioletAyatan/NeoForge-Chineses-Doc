@@ -69,6 +69,8 @@
 | data pack | 数据包 | data pack（普通说明文字中） | 存放服务端数据文件的包。`Datapack` 等代码标识符保持原文。 |
 | data generation / datagen | 数据生成（datagen） | 数据生成器 | NeoForge 的数据文件自动生成系统。代码中 `GatherDataEvent`、`datagen` 保持原文。 |
 | data provider | 数据提供器 | data provider（普通说明文字中） | 数据生成系统中负责为特定数据类型生成文件的类。`DataProvider` 类名保持原文。 |
+| value access | value access | 值访问 | NeoForge 文档中对底层数据读写访问的称呼，通常指向 value I/O 相关机制。普通说明文字保留英文原词；`ValueInput`、`ValueOutput` 等 API 名称保持原文。 |
+| value I/O | value I/O | 值 I/O、值输入输出 | NeoForge 用于通过 `ValueInput` 与 `ValueOutput` 读写底层数据对象的序列化系统。普通说明文字保留英文原词；类名、接口名和方法名保持原文。 |
 
 ## Java 语言术语
 

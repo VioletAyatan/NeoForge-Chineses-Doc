@@ -6,7 +6,7 @@
 如果你的方块只有数量有限且相对较少（最多几百种）的可能状态，可以考虑改用 [方块状态][blockstate]。
 :::
 
-## 创建并注册方块实体 {#creating-and-registering-block-entities}
+## 创建并注册方块实体
 
 与实体相同、但与方块不同，`BlockEntity` 类表示方块实体实例，而不是[已注册][registration]的单例对象。单例改由 `BlockEntityType<?>` 类表示。创建新的方块实体时，两者都需要。
 
@@ -89,15 +89,15 @@ public static final DeferredBlock<MyEntityBlock> MY_BLOCK_2 =
         BLOCKS.register("my_block_2", () -> new MyEntityBlock( /* ...*/ ));
 ```
 
-## 存储数据 {#storing-data}
+## 存储数据
 
-`BlockEntity` 的主要用途之一是存储数据。方块实体上的数据存储可通过两种方式完成：读取和写入 [值 I/O][valueio]，或使用[数据附件][dataattachments]。本节介绍值 I/O 的读写；数据附件请参阅所链接的文章。
+`BlockEntity` 的主要用途之一是存储数据。方块实体上的数据存储可通过两种方式完成：读取和写入 [value I/O][valueio]，或使用[数据附件][dataattachments]。本节介绍 value I/O 的读写；数据附件请参阅所链接的文章。
 
 :::info
-顾名思义，数据附件的主要用途是将数据附加到现有方块实体，例如原版或其他模组提供的方块实体。对于你自己模组中的方块实体，建议直接向值 I/O 保存数据、并直接从中加载数据。
+顾名思义，数据附件的主要用途是将数据附加到现有方块实体，例如原版或其他模组提供的方块实体。对于你自己模组中的方块实体，建议直接向 value I/O 保存数据、并直接从中加载数据。
 :::
 
-可以分别使用 `#loadAdditional` 和 `#saveAdditional` 方法从 [值 I/O][valueio] 读取数据及向其写入数据。方块实体同步到磁盘或通过网络同步时会调用这些方法。
+可以分别使用 `#loadAdditional` 和 `#saveAdditional` 方法从 [value I/O][valueio] 读取数据及向其写入数据。方块实体同步到磁盘或通过网络同步时会调用这些方法。
 
 ```java
 public class MyBlockEntity extends BlockEntity {
@@ -113,7 +113,7 @@ public class MyBlockEntity extends BlockEntity {
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        // 如果不存在则默认为 0。有关详细信息，请参阅 ValueIO 文章。
+        // 如果不存在则默认为 0。有关详细信息，请参阅 value I/O 文章。
         this.value = input.getIntOr("value", 0);
     }
 
@@ -130,7 +130,7 @@ public class MyBlockEntity extends BlockEntity {
 
 当然，你会希望设置其他值，而不是只使用默认值。可以像处理其他字段一样自由设置。不过，如果希望游戏保存这些更改，之后必须调用 `#setChanged()`，该方法会将方块实体所在区块标记为已更改（即需要保存）。如果不调用此方法，保存时可能会跳过该方块实体，因为 Minecraft 的保存系统只保存标记为已更改的区块。
 
-### 移除方块实体 {#removing-block-entities}
+### 移除方块实体
 
 有时你可能希望方块实体在移除时导出所存储的数据（例如被玩家破坏时掉落其物品栏内容）。在这些情况下，应在 `BlockEntity#preRemoveSideEffects` 中处理逻辑。默认情况下，如果你的方块实体实现了 [`Container`][container]，它就会掉落所存储的内容。
 
@@ -146,7 +146,7 @@ public class MyBlockEntity extends BlockEntity {
 ```
 
 :::warning
-使用 `Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS` 标志移除的方块不会调用此方法。使用 `clone` 命令，或以`严格模式`放置结构时，通常就是这种情况。
+使用 `Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS` 标志移除的方块不会调用此方法。使用 `clone` 命令，或以严格模式放置结构时，通常就是这种情况。
 :::
 
 如果相邻方块需要知道方块实体被破坏（例如容器通过红石比较器输出红石信号），则你的方块应覆盖 `BlockBehaviour#affectNeighborsAfterRemoval`。输出红石信号的方块实体通常会在这里调用 `Containers#updateNeighboursAfterDestroy`。
@@ -162,9 +162,9 @@ public class MyEntityBlock extends Block implements EntityBlock {
 }
 ```
 
-## Ticker {#tickers}
+## Ticker
 
-方块实体的另一个常见用途是按游戏刻更新，通常会与所存储的数据配合使用。Tick 表示每个 game tick 都执行一些代码。具体方法是覆盖 `EntityBlock#getTicker` 并返回 `BlockEntityTicker`；后者基本上是一个带四个参数（`Level`、位置、方块状态和方块实体）的 `Consumer`，如下所示：
+方块实体的另一个常见用途是按 tick 更新，通常会与所存储的数据配合使用。Ticking 表示每个游戏 tick 都执行一些代码的机制。具体方法是覆盖 `EntityBlock#getTicker` 并返回 `BlockEntityTicker`；后者基本上是一个带四个参数（`Level`、位置、方块状态和方块实体）的 `Consumer`，如下所示：
 
 ```java
 // 注意：ticker 定义在方块中，而不是方块实体中。不过，通常最好
@@ -184,7 +184,7 @@ public class MyEntityBlock extends Block implements EntityBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         // 可以根据任意条件返回不同的 ticker。常见用法包括
         // 在客户端和服务端返回不同的 ticker、从一开始就只在一端执行 tick，
-        // 或仅为某些方块状态返回 ticker（例如使用 "机器正在工作" 的方块状态 property 时）。
+        // 或仅为某些方块状态返回 ticker（例如使用 "机器正在工作" 这样的方块状态属性时）。
         return createTickerHelper(type, MY_BLOCK_ENTITY.get(), MyBlockEntity::tick);
     }
 }
@@ -200,13 +200,13 @@ public class MyBlockEntity extends BlockEntity {
 }
 ```
 
-请注意，`#tick` 方法确实会在每个 tick 调用。因此应尽量避免在这里进行大量复杂计算，例如可以只每隔 X 个 tick 计算一次，或缓存结果。
+请注意，`#tick` 方法实际上每 tick 都会调用。因此应尽量避免在这里进行大量复杂计算，例如可以只每隔 X 个 tick 计算一次，或缓存结果。
 
-## 同步 {#syncing}
+## 同步
 
 方块实体逻辑通常在服务端运行。因此，我们需要把正在进行的操作告知客户端。共有三种方式：加载区块时同步、更新方块时同步，或使用自定义数据包。通常只应在必要时同步信息，以免不必要地阻塞网络。
 
-### 加载区块时同步 {#syncing-on-chunk-load}
+### 加载区块时同步
 
 每当从网络或磁盘读取区块时，区块都会加载（因此会使用此方法）。要在此发送数据，需要覆盖以下方法：
 
@@ -229,7 +229,7 @@ public class MyBlockEntity extends BlockEntity {
 }
 ```
 
-### 更新方块时同步 {#syncing-on-block-update}
+### 更新方块时同步
 
 每次发生方块更新时都会使用此方法。方块更新必须手动触发，但通常比区块同步处理得更快。
 
@@ -263,7 +263,7 @@ public class MyBlockEntity extends BlockEntity {
 
 要实际发送数据包，必须在服务端调用 `Level#sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags)` 来触发更新通知。位置应是方块实体的位置，可通过 `BlockEntity#getBlockPos` 获取。两个方块状态参数都可以是方块实体所在位置的方块状态，可通过 `BlockEntity#getBlockState` 获取。最后，`flags` 参数是更新掩码，与 [`Level#setBlock`][setblock] 中使用的相同。
 
-### 使用自定义数据包 {#using-a-custom-packet}
+### 使用自定义数据包
 
 使用专用更新数据包后，可以在任何需要的时候自行发送数据包。这是用途最广泛、但也最复杂的变体，因为它需要设置网络处理器。可以使用 `PacketDistrubtor#sendToPlayersTrackingChunk` 向所有正在追踪该方块实体的玩家发送数据包。更多信息请参阅[网络][networking]章节。
 
@@ -272,13 +272,13 @@ public class MyBlockEntity extends BlockEntity {
 :::
 
 [block]: ../blocks/index.md
-[blockreg]: ../blocks/index.md#basic-blocks
+[blockreg]: ../blocks/index.md#基础方块
 [blockstate]: ../blocks/states.md
 [container]: ../inventories/container.md
 [dataattachments]: ../datastorage/attachments.md
 [entities]: ../entities/index.md
 [modbus]: ../concepts/events.md#事件总线
 [networking]: ../networking/index.md
-[registration]: ../concepts/registries.md#methods-for-registering
+[registration]: ../concepts/registries.md#注册方法
 [setblock]: ../blocks/states.md#levelsetblock
 [valueio]: ../datastorage/valueio.md

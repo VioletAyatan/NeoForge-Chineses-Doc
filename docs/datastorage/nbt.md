@@ -87,7 +87,7 @@ tag.getCompoundOrEmpty("Tag");
 
 ## NBT 的用途
 
-Minecraft 在许多地方使用 NBT。[`BlockEntity`][blockentity] 和 [`Entity`][entity] 会把 NBT 操作抽象为[值访问][valueio]；`ItemStack` 则将其抽象为[数据组件][datacomponents]。
+Minecraft 在许多地方使用 NBT。[`BlockEntity`][blockentity] 和 [`Entity`][entity] 会把 NBT 操作抽象为 [value access][valueio]；`ItemStack` 则将其抽象为[数据组件][datacomponents]。
 
 ## 另请参阅
 
