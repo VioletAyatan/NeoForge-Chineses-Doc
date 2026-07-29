@@ -1,12 +1,12 @@
 # 模型数据生成（Model Datagen）
 
-与大多数 JSON 数据一样，Block 和 Item Model 及其必需的 Blockstate 文件和[客户端 Item][citems] 都可以通过 [Datagen][datagen] 生成。全部工作由原版 `ModelProvider` 处理，NeoForge 则通过 `ExtendedModelTemplateBuilder` 提供扩展。由于 Block Model 和 Item Model 的 Model JSON 本身相似，Datagen 代码也相对相似。
+与大多数 JSON 数据一样，方块和物品模型及其必需的 blockstate 文件和[客户端物品][citems]都可以通过[数据生成][datagen]生成。全部工作由原版 `ModelProvider` 处理，NeoForge 则通过 `ExtendedModelTemplateBuilder` 提供扩展。由于方块模型和物品模型的模型 JSON 本身相似，数据生成代码也相对相似。
 
-## Model Template
+## 模型模板
 
-每个 Model 都始于 `ModelTemplate`。对于原版，`ModelTemplate` 作为某个预生成 Model 文件的 Parent，定义 Parent Model、必需的 Texture Slot 和要应用的文件后缀。对于 NeoForge，`ExtendedModelTemplate` 通过 `ExtendedModelTemplateBuilder` 构造，使用户能够生成 Model 的基础 Element 和 Face，并使用 NeoForge 添加的所有功能。
+每个模型都始于模型模板（Model Template）`ModelTemplate`。对于原版，`ModelTemplate` 作为某个预生成模型文件的父级，定义父模型、必需的纹理槽（Texture Slot）和要应用的文件后缀。对于 NeoForge，`ExtendedModelTemplate` 通过 `ExtendedModelTemplateBuilder` 构造，使用户能够生成模型的基础元素和面，并使用 NeoForge 添加的所有功能。
 
-可以使用 `ModelTemplates` 中的某个方法或调用构造器创建 `ModelTemplate`。构造器接收相对于 `models` 目录的可选 Parent Model `Identifier`、要附加到文件路径末尾的可选 String（例如按下状态的 Button 使用 `_pressed` 后缀），以及必须定义、否则 Datagen 会崩溃的 `TextureSlot` varargs。`TextureSlot` 只是定义 `textures` Map 中纹理“键”的 String。每个键还可拥有一个 Parent `TextureSlot`，当具体 Slot 未指定纹理时会解析到 Parent。例如，`TextureSlot#PARTICLE` 会先查找已定义的 `particle` 纹理，然后检查已定义的 `texture` 值，最后检查 `all`。如果 Slot 及其 Parent 均未定义，数据生成期间会崩溃。
+可以使用 `ModelTemplates` 中的某个方法或调用构造器创建 `ModelTemplate`。构造器接收相对于 `models` 目录的可选父模型 `Identifier`、要附加到文件路径末尾的可选 string（例如按下状态的按钮使用 `_pressed` 后缀），以及必须定义、否则数据生成会崩溃的 `TextureSlot` varargs。`TextureSlot` 只是定义 `textures` map 中纹理“键”的 string。每个键还可拥有一个父级 `TextureSlot`，当具体槽位未指定纹理时会解析到父级。例如，`TextureSlot#PARTICLE` 会先查找已定义的 `particle` 纹理，然后检查已定义的 `texture` 值，最后检查 `all`。如果槽位及其父级均未定义，数据生成期间会崩溃。
 
 ```java
 // 假设有一个引用为 '#base' 的纹理
@@ -28,30 +28,30 @@ public static final ModelTemplate EXAMPLE_TEMPLATE = new ModelTemplate(
 );
 ```
 
-NeoForge 添加的 `ExtendedModelTemplate` 可以通过 `ExtendedModelTemplateBuilder#builder` 构造，也可以对现有原版 Template 调用 `ModelTemplate#extend` 构造。随后可用 `#build` 将 Builder 解析为 Template。Builder 方法可以完整控制 Model JSON 的构造：
+NeoForge 添加的 `ExtendedModelTemplate` 可以通过 `ExtendedModelTemplateBuilder#builder` 构造，也可以对现有原版模板调用 `ModelTemplate#extend` 构造。随后可用 `#build` 将 builder 解析为模板。builder 方法可以完整控制模型 JSON 的构造：
 
 | 方法                                           | 效果                                                                                                                                                                                                                                                                                                                                                  |
 |--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `#parent(Identifier parent)`                                         | 设置相对于 `models` 目录的 Parent Model 位置。 |
-| `#suffix(String suffix)`                                                   | 将 String 附加到 Model 文件路径末尾。 |
-| `#requiredTextureSlot(TextureSlot slot)`                                   | 添加生成时必须在 `TextureMapping` 中定义的 Texture Slot。 |
-| `transform(ItemDisplayContext type, Consumer<TransformVecBuilder> action)` | 添加由 Consumer 配置的 `TransformVecBuilder`，用于设置 Model 的 `display`。 |
-| `#ambientOcclusion(boolean ambientOcclusion)`                              | 设置是否使用 [Ambient Occlusion][ao]。                                                                                                                                                                                                                                                                                                     |
-| `#guiLight(UnbakedModel.GuiLight light)`                                   | 设置 GUI Light，可以是 `GuiLight.FRONT` 或 `GuiLight.SIDE`。                                                                                                                                                                                                                                                                                         |
-| `#element(Consumer<ElementBuilder> action)`                                | 添加一个由 Consumer 配置的新 `ElementBuilder`（相当于向 Model 添加新 [Element][elements]）。                                                                                                                                                                                                 |                                                                                                                                                                                                                                                            |
-| `#customLoader(Supplier customLoaderFactory, Consumer action)`            | 使用给定 Factory，让此 Model 使用[自定义 Loader][custommodelloader]，以及由 Consumer 配置的自定义 Loader Builder。这会改变 Builder 类型，因此根据 Loader 实现可能使用不同方法。NeoForge 默认提供多个自定义 Loader；更多信息（包括 Datagen）参见链接文章。 |
-| `#rootTransforms(Consumer<RootTransformsBuilder> action)`                  | 通过 Consumer 配置在 Item Display Transform 和 BlockState Transform 前应用的 Model Transform。 |
+| `#parent(Identifier parent)`                                         | 设置相对于 `models` 目录的父模型位置。 |
+| `#suffix(String suffix)`                                                   | 将 string 附加到模型文件路径末尾。 |
+| `#requiredTextureSlot(TextureSlot slot)`                                   | 添加生成时必须在 `TextureMapping` 中定义的纹理槽。 |
+| `transform(ItemDisplayContext type, Consumer<TransformVecBuilder> action)` | 添加由 consumer 配置的 `TransformVecBuilder`，用于设置模型的 `display`。 |
+| `#ambientOcclusion(boolean ambientOcclusion)`                              | 设置是否使用[环境光遮蔽][ao]。                                                                                                                                                                                                                                                                                                     |
+| `#guiLight(UnbakedModel.GuiLight light)`                                   | 设置 GUI light，可以是 `GuiLight.FRONT` 或 `GuiLight.SIDE`。                                                                                                                                                                                                                                                                                         |
+| `#element(Consumer<ElementBuilder> action)`                                | 添加一个由 consumer 配置的新 `ElementBuilder`（相当于向模型添加新[元素][elements]）。                                                                                                                                                                                                 |                                                                                                                                                                                                                                                            |
+| `#customLoader(Supplier customLoaderFactory, Consumer action)`            | 使用给定 factory，让此模型使用[自定义加载器][custommodelloader]，以及由 consumer 配置的自定义加载器 builder。这会改变 builder 类型，因此根据加载器实现可能使用不同方法。NeoForge 默认提供多个自定义加载器；更多信息（包括数据生成）参见链接文章。 |
+| `#rootTransforms(Consumer<RootTransformsBuilder> action)`                  | 通过 consumer 配置在物品显示变换和方块状态变换前应用的模型变换。 |
 
 :::tip
-虽然可以通过 Datagen 创建复杂精细的 Model，但更建议使用 [Blockbench][blockbench] 等建模软件创建复杂 Model，再直接使用导出的 Model，或把它作为其他 Model 的 Parent。
+虽然可以通过数据生成创建复杂精细的模型，但更建议使用 [Blockbench][blockbench] 等建模软件创建复杂模型，再直接使用导出的模型，或把它作为其他模型的父级。
 :::
 
-### 创建 Model 实例
+### 创建模型实例
 
-有了 `ModelTemplate` 后，可以调用某个 `ModelTemplate#create*` 方法生成 Model 本身。虽然各 create 方法接收不同参数，但本质上都接收表示文件名的 `Identifier`、将 `TextureSlot` 映射到相对于 `textures` 目录的某个 `Identifier` 的 `TextureMapping`，以及作为 `BiConsumer<Identifier, ModelInstance>` 的 Model Output。随后，该方法实际创建用于生成 Model 的 `JsonObject`；如果提供任何重复项，则抛出错误。
+有了 `ModelTemplate` 后，可以调用某个 `ModelTemplate#create*` 方法生成模型本身。虽然各 create 方法接收不同参数，但本质上都接收表示文件名的 `Identifier`、将 `TextureSlot` 映射到相对于 `textures` 目录的某个 `Identifier` 的 `TextureMapping`，以及作为 `BiConsumer<Identifier, ModelInstance>` 的模型输出。随后，该方法实际创建用于生成模型的 `JsonObject`；如果提供任何重复项，则抛出错误。
 
 :::info
-调用基础 `create` 方法不会应用已保存的后缀。只有接收 Block 或 Item 的 `create*` 方法才会应用。
+调用基础 `create` 方法不会应用已保存的后缀。只有接收方块或物品的 `create*` 方法才会应用。
 :::
 
 ```java
@@ -66,12 +66,12 @@ EXAMPLE_TEMPLATE.create(
         .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(EXAMPLE_BLOCK.get()))
         // "base": "examplemod:item/example_block_base"
         .put(TextureSlot.BASE, TextureMapping.getBlockTexture(EXAMPLE_BLOCK.get(), "_base")),
-    // 生成模型json的消费者
+    // 生成模型 JSON 的 consumer。
     modelOutput
 );
 ```
 
-有时，生成的 Model 使用相似的 Model Template 和纹理命名模式（例如普通 Block 的纹理就是 Block 名称）。在这种情况下，可以创建 `TexturedModel.Provider` 来消除重复。该 Provider 实际上是一个函数式接口，接收某个 `Block` 并返回用于生成 Model 的 `TexturedModel`（`ModelTemplate`/`TextureMapping` 对）。接口通过 `TexturedModel#createDefault` 构造；该方法接收将 `Block` 映射到 `TextureMapping` 的函数以及要使用的 `ModelTemplate`。随后，以要生成的 `Block` 调用 `TexturedModel.Provider#create` 即可生成 Model。
+有时，生成的模型使用相似的模型模板和纹理命名模式（例如普通方块的纹理就是方块名称）。在这种情况下，可以创建 `TexturedModel.Provider` 来消除重复。该提供器实际上是一个函数式接口，接收某个 `Block` 并返回用于生成模型的 `TexturedModel`（`ModelTemplate`/`TextureMapping` 对）。接口通过 `TexturedModel#createDefault` 构造；该方法接收将 `Block` 映射到 `TextureMapping` 的函数以及要使用的 `ModelTemplate`。随后，以要生成的 `Block` 调用 `TexturedModel.Provider#create` 即可生成模型。
 
 ```java
 public static final TexturedModel.Provider EXAMPLE_TEMPLATE_PROVIDER = TexturedModel.createDefault(
@@ -88,14 +88,14 @@ public static final TexturedModel.Provider EXAMPLE_TEMPLATE_PROVIDER = TexturedM
 EXAMPLE_TEMPLATE_PROVIDER.create(
     // 在 'assets/minecraft/models/block/example_block_example.json' 创建模型
     EXAMPLE_BLOCK.get(),
-    // 生成模型json的消费者
+    // 生成模型 JSON 的 consumer。
     modelOutput
 );
 ```
 
 ## `ModelProvider`
 
-Block 和 Item Model Datagen 分别使用 `registerModels` 提供的 Generator：`BlockModelGenerators` 和 `ItemModelGenerators`。每个 Generator 都会生成 Model JSON 以及其他所有必需文件（Blockstate、客户端 Item）。每个 Generator 都包含多种 Helper 方法，可将全部文件的构造批量合并到单个易用方法中。例如，使用 `ItemModelGenerators#generateFlatItem` 和 `ModelTemplates#FLAT_ITEM` 创建基础 `item/generated` Model，或使用 `BlockModelGenerators#createTrivialCube` 创建基础 `block/cube_all` Model。
+方块和物品模型的数据生成分别使用 `registerModels` 提供的生成器：`BlockModelGenerators` 和 `ItemModelGenerators`。每个生成器都会生成模型 JSON 以及其他所有必需文件（blockstate、客户端物品）。每个生成器都包含多种 helper 方法，可将全部文件的构造批量合并到单个易用方法中。例如，使用 `ItemModelGenerators#generateFlatItem` 和 `ModelTemplates#FLAT_ITEM` 创建基础 `item/generated` 模型，或使用 `BlockModelGenerators#createTrivialCube` 创建基础 `block/cube_all` 模型。
 
 ```java
 public class ExampleModelProvider extends ModelProvider {
@@ -112,7 +112,7 @@ public class ExampleModelProvider extends ModelProvider {
 }
 ```
 
-与所有 Data Provider 一样，不要忘记把 Provider 注册到事件：
+与所有数据提供器一样，不要忘记把提供器注册到事件：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -121,12 +121,12 @@ public static void gatherData(GatherDataEvent.Client event) {
 }
 ```
 
-### Block Model Datagen
+### 方块模型数据生成
 
-要实际生成 Blockstate 和 Block Model 文件，可以在 `ModelProvider#registerModels` 中调用 `BlockModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给 Blockstate 文件的 `blockStateOutput`、非简单客户端 Item 的 `itemModelOutput`，以及 Model JSON 的 `modelOutput`。
+要实际生成 blockstate 和方块模型文件，可以在 `ModelProvider#registerModels` 中调用 `BlockModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给 blockstate 文件的 `blockStateOutput`、非简单客户端物品的 `itemModelOutput`，以及模型 JSON 的 `modelOutput`。
 
 :::info
-如果为 Block 注册了关联 `BlockItem`，但没有生成客户端 Item，`ModelProvider` 会自动生成客户端 Item，并使用默认 Block Model 位置 `assets/<namespace>/models/block/<path>.json` 作为其 Model。
+如果为方块注册了关联 `BlockItem`，但没有生成客户端物品，`ModelProvider` 会自动生成客户端物品，并使用默认方块模型位置 `assets/<namespace>/models/block/<path>.json` 作为其模型。
 :::
 
 ```java
@@ -157,7 +157,7 @@ public class ExampleModelProvider extends ModelProvider {
         blockModels.registerSimpleFlatItemModel(block);
 
         // 添加原木方块模型。需要位于 assets/<namespace>/textures/block/<path>.png 和
-        // assets/<namespace>/textures/block/<path>_top.png, referencing the side and top texture, respectively.
+        // assets/<namespace>/textures/block/<path>_top.png，分别引用侧面和顶部纹理。
         // 请注意，此处的方块输入仅限于 RotatedPillarBlock，这是普通日志使用的类。
         blockModels.woodProvider(block).log(block);
         
@@ -176,7 +176,7 @@ public class ExampleModelProvider extends ModelProvider {
 
         // 指定具有侧面纹理、正面纹理和顶部纹理的水平旋转方块模型。
         // 底部也将使用侧面纹理。如果不需要正面或顶部纹理，
-        // 只需传入侧面纹理两次。由例如使用。熔炉和类似的方块。
+        // 只需传入侧面纹理两次。例如熔炉和类似方块会使用它。
         blockModels.createHorizontallyRotatedBlock(
             block,
             TexturedModel.Provider.ORIENTABLE_ONLY_TOP.updateTexture(mapping ->
@@ -186,7 +186,7 @@ public class ExampleModelProvider extends ModelProvider {
             )
         );
 
-        // 指定附加到面例如的水平旋转方块模型。对于按钮。
+        // 指定附着到某个面的水平旋转方块模型，例如按钮。
         // 考虑将方块放置在地面和天花板上，并相应地旋转它们。
         blockModels.familyWithExistingFullBlock(block).button(block);
 
@@ -225,8 +225,8 @@ public class ExampleModelProvider extends ModelProvider {
                 // 创建基本多变体
                 BlockModelGenerators.variant(variant)
             ).with(
-                // 申请物业调度
-                // 将根据提供的变异器对变体进行变异
+                // 应用 property dispatch。
+                // 将根据提供的 mutator 改变 variant。
                 PropertyDispatch.modify(BlockStateProperties.AXIS)
                     .select(Direction.Axis.Y, BlockModelGenerators.NOP)
                     .select(Direction.Axis.Z, BlockModelGenerators.X_ROT_90)
@@ -241,11 +241,11 @@ public class ExampleModelProvider extends ModelProvider {
                 .with(BlockModelGenerators.variant(variant))
                 // 添加变体出现的条件
                 .with(
-                    // 添加申请条件
+                    // 添加要应用的条件。
                     new CombinedCondition(
                         CombinedCondition.Operation.OR,
                         List.of(
-                            // 其中至少一个条件为 true
+                    // 至少一个条件为 true。
                             BlockModelGenerators.condition().term(BlockStateProperties.FACING, Direction.NORTH, Direction.SOUTH)
                             // 可以根据需要嵌套任意多个条件或组
                             new CombinedCondition(
@@ -256,7 +256,7 @@ public class ExampleModelProvider extends ModelProvider {
                             )
                         )
                     ),
-                    // 提供变异变体
+                    // 提供要改变的 variant。
                     BlockModelGenerators.variant(variant)
                 )
         );
@@ -264,9 +264,9 @@ public class ExampleModelProvider extends ModelProvider {
 }
 ```
 
-## Item Model Datagen
+## 物品模型数据生成
 
-生成 Item Model 要简单得多，这主要得益于 `ItemModelGenerators` 中的大量 Helper 方法，以及用于 Property 信息的 `ItemModelUtils`。与上文类似，可以在 `ModelProvider#registerModels` 中调用 `ItemModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给非简单客户端 Item 的 `itemModelOutput` 和 Model JSON 的 `modelOutput`。
+生成物品模型要简单得多，这主要得益于 `ItemModelGenerators` 中的大量 helper 方法，以及用于 property 信息的 `ItemModelUtils`。与上文类似，可以在 `ModelProvider#registerModels` 中调用 `ItemModelGenerators` 的众多 public 方法之一，也可以自行把生成文件传给非简单客户端物品的 `itemModelOutput` 和模型 JSON 的 `modelOutput`。
 
 ```java
 public class ExampleModelProvider extends ModelProvider {
@@ -279,7 +279,7 @@ public class ExampleModelProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // 最常见的物品
-        // item/generated with the layer0 texture as the item name
+        // 使用 item/generated，并以物品名称作为 layer0 纹理。
         itemModels.generateFlatItem(MyItemsClass.EXAMPLE_ITEM.get(), ModelTemplates.FLAT_ITEM);
 
         // 弓状物品
@@ -327,7 +327,7 @@ public class ExampleModelProvider extends ModelProvider {
 [ao]: https://en.wikipedia.org/wiki/Ambient_occlusion
 [blockbench]: https://www.blockbench.net
 [citems]: items.md
-[custommodelloader]: modelloaders.md#datagen
-[datagen]: ../../index.md#data-generation
-[elements]: index.md#elements
+[custommodelloader]: modelloaders.md#模型加载器数据生成
+[datagen]: ../../index.md#数据生成
+[elements]: index.md#元素
 

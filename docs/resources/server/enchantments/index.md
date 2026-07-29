@@ -1,6 +1,6 @@
 # 附魔（Enchantments）
 
-附魔是可以应用于工具及其他 Item 的特殊效果。从 1.21 开始，附魔以[数据组件][数据组件]的形式存储在 Item 上，在 JSON 中定义，并由所谓的附魔效果组件构成。游戏运行期间，特定 Item 上的附魔存放在 `DataComponents.ENCHANTMENTS` 组件中的 `ItemEnchantments` 实例里。
+附魔是可以应用于工具及其他物品的特殊效果。从 1.21 开始，附魔以[数据组件][数据组件]的形式存储在物品上，在 JSON 中定义，并由所谓的附魔效果组件构成。游戏运行期间，特定物品上的附魔存放在 `DataComponents.ENCHANTMENTS` 组件中的 `ItemEnchantments` 实例里。
 
 在命名空间的数据包 `enchantment` 子文件夹中创建 JSON 文件即可添加新附魔。例如，要创建名为 `examplemod:example_enchant` 的附魔，应创建文件 `data/examplemod/enchantment/example_enchantment.json`。
 
@@ -96,13 +96,13 @@
 
 `max_cost` 与 `min_cost` 字段指定生成此附魔所需附魔能力的上下界。不过，实际使用这些值的过程略显复杂。
 
-首先，附魔台会考虑周围 Block 的 `IBlockExtension#getEnchantPowerBonus()` 返回值。然后据此调用 `EnchantmentHelper#getEnchantmentCost`，为每个槽位算出一个“基础等级”。该等级在游戏菜单中显示为附魔旁边的绿色数字。对于每个附魔，基础等级会被来自 Item 附魔能力的随机值修改两次（附魔能力取自 `DataComponents#ENCHANTABLE` 数据组件，并通过 `Enchantable#value` 提取），如下所示：
+首先，附魔台会考虑周围方块的 `IBlockExtension#getEnchantPowerBonus()` 返回值。然后据此调用 `EnchantmentHelper#getEnchantmentCost`，为每个槽位算出一个“基础等级”。该等级在游戏菜单中显示为附魔旁边的绿色数字。对于每个附魔，基础等级会被来自物品附魔能力的随机值修改两次（附魔能力取自 `DataComponents#ENCHANTABLE` 数据组件，并通过 `Enchantable#value` 提取），如下所示：
 
 `(Modified Level) = (Base Level) + random.nextInt(e / 4 + 1) + random.nextInt(e / 4 + 1)`，其中 `e` 为附魔能力数值。
 
 随后，该修正等级会随机上调或下调 15%，最终用于选择附魔。只有该等级落在自定义附魔的花费范围内，附魔才可能被选中。
 
-在实践中，这意味着附魔定义中的花费值可能高于 30，有时甚至高出很多。例如，对于附魔能力为 10 的 Item，附魔台能够生成花费最高为 `1.15 * (30 + 2 * (10 / 4) + 1) = 40` 的附魔。
+在实践中，这意味着附魔定义中的花费值可能高于 30，有时甚至高出很多。例如，对于附魔能力为 10 的物品，附魔台能够生成花费最高为 `1.15 * (30 + 2 * (10 / 4) + 1) = 40` 的附魔。
 
 ## 附魔效果组件
 
@@ -167,7 +167,7 @@ int modifiedValue = atomicValue.get();
 
 首先，调用 `EnchantmentHelper#runIterationOnItem` 的某个重载。该函数接受 `EnchantmentHelper.EnchantmentVisitor`；这是一个接收附魔及其等级的函数式接口，会对给定 ItemStack 拥有的所有附魔调用（本质上是 `BiConsumer<Holder<Enchantment>, Integer>`）。
 
-要实际执行调整，请使用提供的 `Increment#add` 方法。由于它位于 lambda 表达式内，因此需要使用可进行原子更新的类型（例如 `AtomicInteger`）来修改该值。这也允许多个 `INCREMENT` 组件在同一个 Item 上运行并叠加效果，与原版行为相同。
+要实际执行调整，请使用提供的 `Increment#add` 方法。由于它位于 lambda 表达式内，因此需要使用可进行原子更新的类型（例如 `AtomicInteger`）来修改该值。这也允许多个 `INCREMENT` 组件在同一个物品上运行并叠加效果，与原版行为相同。
 
 ### `ConditionalEffect`
 使用 `ConditionalEffect<?>` 包装类型后，附魔效果组件可以根据给定 [LootContext] 选择性生效。
@@ -207,7 +207,7 @@ public static final DeferredHolder<DataComponentType<?>, DataComponentType<Condi
 
 可以使用[数据生成][data generation]系统自动创建附魔 JSON 文件：通过 `GatherDataEvent#createDatapackRegistryObjects` 将 `RegistrySetBuilder` 传给 `DatapackBuiltInEntriesProvider`。生成的 JSON 位于 `<project root>/src/generated/data/<modid>/enchantment/<path>.json`。
 
-有关 `RegistrySetBuilder` 与 `DatapackBuiltinEntriesProvider` 工作方式的更多信息，请参阅[数据包 Registry 的数据生成][Data Generation for Datapack Registries]一文。
+有关 `RegistrySetBuilder` 与 `DatapackBuiltinEntriesProvider` 工作方式的更多信息，请参阅[数据包注册表的数据生成][drdatagen]一文。
 
 <Tabs>
 <TabItem value="datagen" label="数据生成">
@@ -230,7 +230,7 @@ BUILDER.add(
             
             // 指定此附魔的定义。
             new Enchantment.EnchantmentDefinition(
-                // 与此附魔兼容的 Item HolderSet。
+                // 与此附魔兼容的物品 HolderSet。
                 HolderSet.direct(...), 
 
                 // 此附魔视为 primary 的物品 Optional<HolderSet>。
@@ -321,8 +321,8 @@ BUILDER.add(
 [Enchantment definition Minecraft wiki page]: https://minecraft.wiki/w/Enchantment_definition
 [registered]: ../../../concepts/registries.md
 [Predicate]: https://minecraft.wiki/w/Predicate
-[data generation]: ../../../resources/index.md#data-generation
-[Data Generation for Datapack Registries]: https://docs.neoforged.net/docs/concepts/registries/#data-generation-for-datapack-registries
+[data generation]: ../../../resources/index.md#数据生成
+[drdatagen]: ../../../concepts/registries.md#数据包注册表的数据生成
 [relevant minecraft wiki page]: https://minecraft.wiki/w/Enchantment_definition#Entity_effects
 [built-in enchantment effect components]: builtin.md
-[LootContext]: ../loottables/index.md#loot-context
+[LootContext]: ../loottables/index.md#战利品上下文

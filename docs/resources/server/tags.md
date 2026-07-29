@@ -1,13 +1,13 @@
 # 标签（Tags）
 
-简单来说，标签是由同一类型的已注册对象组成的列表。标签从数据文件加载，可用于检查成员关系。例如，合成木棍时接受任意组合的木板（带有 `minecraft:planks` 标签的 Item）。标签通常通过 `#` 前缀与“普通”对象区分开（例如 `#minecraft:planks`，而普通对象为 `minecraft:oak_planks`）。
+简单来说，标签是由同一类型的已注册对象组成的列表。标签从数据文件加载，可用于检查成员关系。例如，合成木棍时接受任意组合的木板（带有 `minecraft:planks` 标签的物品）。标签通常通过 `#` 前缀与“普通”对象区分开（例如 `#minecraft:planks`，而普通对象为 `minecraft:oak_planks`）。
 
-任何 [Registry][registry] 都可以拥有标签文件——虽然 Block 和 Item 是最常见的用例，但流体、Entity Type 或伤害类型等其他 Registry 也经常使用标签。如有需要，也可以创建自己的标签。
+任何[注册表][registry]都可以拥有标签文件——虽然方块和物品是最常见的用例，但流体、实体类型或伤害类型等其他注册表也经常使用标签。如有需要，也可以创建自己的标签。
 
-对于 Minecraft Registry，标签位于 `data/<tag_namespace>/tags/<registry_path>/<tag_path>.json`；对于非 Minecraft Registry，标签位于 `data/<tag_namespace>/tags/<registry_namespace>/<registry_path>/<tag_path>.json`。例如，要修改 `minecraft:planks` Item 标签，应将标签文件放在 `data/minecraft/tags/item/planks.json`。
+对于 Minecraft 注册表，标签位于 `data/<tag_namespace>/tags/<registry_path>/<tag_path>.json`；对于非 Minecraft 注册表，标签位于 `data/<tag_namespace>/tags/<registry_namespace>/<registry_path>/<tag_path>.json`。例如，要修改 `minecraft:planks` 物品标签，应将标签文件放在 `data/minecraft/tags/item/planks.json`。
 
 :::info
-与大多数其他 NeoForge 数据文件不同，NeoForge 添加的标签通常不使用 `neoforge` 命名空间，而是使用 `c` 命名空间（例如 `c:ingots/gold`）。这是应许多同时面向多个加载器开发的 mod 开发者要求，在 NeoForge 与 Fabric mod 加载器之间统一标签的结果。
+与大多数其他 NeoForge 数据文件不同，NeoForge 添加的标签通常不使用 `neoforge` 命名空间，而是使用 `c` 命名空间（例如 `c:ingots/gold`）。这是应许多同时面向多个加载器开发的模组开发者要求，在 NeoForge 与 Fabric 模组加载器之间统一标签的结果。
 
 少数与 NeoForge 系统紧密关联的标签不遵循此规则，例如许多 [伤害类型][damagetype] 标签。
 :::
@@ -57,9 +57,9 @@
 
 创建自己的标签时，应考虑以下问题：
 
-- 它是否用于修改自己的 mod 行为？如果是，该标签应放在 mod 自己的命名空间中。（例如，“我的对象可以在这种 Block 上生成”一类标签经常如此。）
-- 其他 mod 是否也会想使用该标签？如果是，该标签应放在 `c` 命名空间中。（例如，新金属或宝石经常如此。）
-- 其他情况下，使用自己的 mod 命名空间。
+- 它是否用于修改自己的模组行为？如果是，该标签应放在模组自己的命名空间中。（例如，“我的对象可以在这种方块上生成”一类标签经常如此。）
+- 其他模组是否也会想使用该标签？如果是，该标签应放在 `c` 命名空间中。（例如，新金属或宝石经常如此。）
+- 其他情况下，使用自己的模组命名空间。
 
 标签本身的命名也应遵循一些约定：
 
@@ -68,7 +68,7 @@
 
 ## 使用标签
 
-要在代码中引用标签，必须使用 [Registry 键][regkey]和[标识符][identifier]创建 `TagKey<T>`，其中 `T` 是标签类型（`Block`、`Item`、`EntityType<?>` 等）：
+要在代码中引用标签，必须使用[注册表键][regkey]和[标识符][identifier]创建 `TagKey<T>`，其中 `T` 是标签类型（`Block`、`Item`、`EntityType<?>` 等）：
 
 ```java
 public static final TagKey<Block> MY_TAG = TagKey.create(
@@ -83,7 +83,7 @@ public static final TagKey<Block> MY_TAG = TagKey.create(
 由于 `TagKey` 是 record，其构造器是 public。不过，不应直接使用该构造器，否则可能引发各种问题，例如查询标签条目时出现问题。
 :::
 
-随后可以使用标签执行各种操作。先从最直观的操作开始：检查对象是否位于标签中。以下示例使用 Block 标签，但除非另有说明，所有类型的标签都具有完全相同的功能：
+随后可以使用标签执行各种操作。先从最直观的操作开始：检查对象是否位于标签中。以下示例使用方块标签，但除非另有说明，所有类型的标签都具有完全相同的功能：
 
 ```java
 // 检查泥土是否位于我们的标签中。
@@ -107,9 +107,9 @@ boolean isInItemTag = itemStack.is(MY_ITEM_TAG);
 Stream<Holder<Block>> blocksInTag = level.registryAccess().lookupOrThrow(BuiltInRegistries.BLOCK).getOrThrow(MY_TAG).stream();
 ```
 
-### 引导期间静态 Registry 的标签
+### 引导期间静态注册表的标签
 
-有时需要在 Registry 过程中访问 `HolderSet`。在[数据组件上下文][datacomponent]中，初始化器会提供 `HolderLookup.Provider` 以供解析：
+有时需要在注册过程中访问 `HolderSet`。在[数据组件上下文][datacomponent]中，初始化器会提供 `HolderLookup.Provider` 以供解析：
 
 ```java
 Item.Properties props = new Item.Properties().delayedComponent(
@@ -123,7 +123,7 @@ Item.Properties props = new Item.Properties().delayedComponent(
 );
 ```
 
-在数据组件上下文之外，**仅对静态 Registry**，可以通过 `BuiltInRegistries#acquireBootstrapRegistrationLookup` 获取所需的 `HolderGetter`：
+在数据组件上下文之外，**仅对静态注册表**，可以通过 `BuiltInRegistries#acquireBootstrapRegistrationLookup` 获取所需的 `HolderGetter`：
 
 ```java
 // 假设可访问 Level level
@@ -132,7 +132,7 @@ HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup
 
 ## 数据生成
 
-与许多其他 JSON 文件一样，标签可以通过[数据生成][datagen]创建。每种标签都有自己的数据生成基类——Block 标签一个类、Item 标签一个类，依此类推——因此每种标签也都需要一个类。所有这些类都扩展 `TagsProvider<T>` 基类，其中 `T` 同样是标签类型（`Block`、`Item` 等）。`TagsProvider` 又主要分为两类：`IntrinsicHolderTagsProvider<T>` 通常用于静态 Registry 对象，允许直接把对象传给标签；`KeyTagProvider` 通常用于数据包 Registry 对象，允许把对象的 `ResourceKey` 传给标签。另有 `HolderTagProvider<T>`，用于由 `Holder` 包装的静态 Registry 对象，不过原版只将它用于药水标签。
+与许多其他 JSON 文件一样，标签可以通过[数据生成][datagen]创建。每种标签都有自己的数据生成基类——方块标签一个类、物品标签一个类，依此类推——因此每种标签也都需要一个类。所有这些类都扩展 `TagsProvider<T>` 基类，其中 `T` 同样是标签类型（`Block`、`Item` 等）。`TagsProvider` 又主要分为两类：`IntrinsicHolderTagsProvider<T>` 通常用于静态注册表对象，允许直接把对象传给标签；`KeyTagProvider` 通常用于数据包注册表对象，允许把对象的 `ResourceKey` 传给标签。另有 `HolderTagProvider<T>`，用于由 `Holder` 包装的静态注册表对象，不过原版只将它用于药水标签。
 
 下表列出了不同对象所使用的标签提供器：
 
@@ -162,7 +162,7 @@ HolderSet<Block> blockTag = BuiltInRegistries.acquireBootstrapRegistrationLookup
 
 \* 这些提供器由 NeoForge 提供。
 
-作为示例，假设我们要生成 Block 标签（内在 Holder）：
+作为示例，假设我们要生成方块标签（内在 Holder）：
 
 ```java
 public class MyBlockTagsProvider extends BlockTagsProvider {
@@ -192,9 +192,9 @@ public class MyBlockTagsProvider extends BlockTagsProvider {
             // 添加多个可选标签条目。这是一个可变参数。
             // 可能导致未经检查的警告，但可以安全地抑制。
             .addOptionalTags(ItemTags.create(Identifier.fromNamespaceAndPath("c", "nuggets/tin")), ItemTags.create(Identifier.fromNamespaceAndPath("c", "storage_blocks/tin")))
-            // 设置将 property 替换为 true。
+            // 将 replace 属性设置为 true。
             .replace()
-            // 设置将 property 替换回 false。
+            // 将 replace 属性设置回 false。
             .replace(false)
             // 删除条目。这是一个可变参数。
             // 键标签提供器必须在此处提供 ResourceKeys 而不是实际对象。
@@ -251,7 +251,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 ### 自定义标签提供器
 
-无论面向现有还是自定义 [Registry][registry]，只需扩展 `TagsProvider<T>` 即可创建自定义标签提供器，其中 `T` 是要为其生成标签的 Registry 对象。
+无论面向现有还是自定义[注册表][registry]，只需扩展 `TagsProvider<T>` 即可创建自定义标签提供器，其中 `T` 是要为其生成标签的注册表对象。
 
 ```java
 public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
@@ -287,9 +287,9 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
             .addTag(SMELTERS.location())
             // 添加可选标签条目，如果不存在则将被忽略。
             .addOptionalTag(CRAFTERS.location())
-            // 设置将 property 替换为 true。
+            // 将 replace 属性设置为 true。
             .setReplace(true)
-            // 设置将 property 替换回 false。
+            // 将 replace 属性设置回 false。
             .setReplace(false)
             // 删除条目。
             .removeElement(Identifier.fromNamespaceAndPath("minecraft", "campfire_cooking"))
@@ -299,7 +299,7 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
 }
 ```
 
-目前，整个标签都由 `Identifier` 构造。然而，每次都指定原始标识符可能很繁琐，尤其是在已有 `ResourceKey` 或直接对象时。`TagAppender` 正是为此而生。`TagAppender<E, T>` 在功能上是对 `TagBuilder` 的包装：它接收某个任意条目对象 `E`，并将其转换为针对 Registry 对象 `T` 的 `TagBuilder` 调用。只要能将新的对象类型转换为先前的条目对象 `E`，便可通过 `map` 将 `TagAppender` 重映射为任意对象。这基本就是 `KeyTagProvider` 与 `IntrinsicHolderTagsProvider` 所做的事情。二者都提供 `tag` 方法，用于创建 `TagAppender`，分别将 `ResourceKey` 映射为 `Identifier`，或将直接对象映射为 `Identifier`：
+目前，整个标签都由 `Identifier` 构造。然而，每次都指定原始标识符可能很繁琐，尤其是在已有 `ResourceKey` 或直接对象时。`TagAppender` 正是为此而生。`TagAppender<E, T>` 在功能上是对 `TagBuilder` 的包装：它接收某个任意条目对象 `E`，并将其转换为针对注册表对象 `T` 的 `TagBuilder` 调用。只要能将新的对象类型转换为先前的条目对象 `E`，便可通过 `map` 将 `TagAppender` 重映射为任意对象。这基本就是 `KeyTagProvider` 与 `IntrinsicHolderTagsProvider` 所做的事情。二者都提供 `tag` 方法，用于创建 `TagAppender`，分别将 `ResourceKey` 映射为 `Identifier`，或将直接对象映射为 `Identifier`：
 
 ```java
 
@@ -312,18 +312,18 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
     protected void addTags(HolderLookup.Provider lookupProvider) {
         // 为 `Identifier` 创建 TagAppender。
         this.tag(MY_TAG)
-            // 替换 property 信息
+            // 替换 replace 属性信息
             .replace()
             // 处理可能不存在的任何可选元素
             .addOptional(Identifier.fromNamespaceAndPath("examplemod", "example_type"))
-            // 可以接收TagKey
+            // 可以接收 TagKey
             .addOptionalTag(CRAFTERS)
 
-            // Map 至 ResourceKey (KeyTagProvider)
+            // 映射至 ResourceKey（KeyTagProvider）
             .map((Function<ResourceKey<RecipeType<?>>, Identifier>) ResourceKey::location)
             .add(BuiltInRegistries.RECIPE_TYPE.getResourceKey(RecipeType.CRAFTING).orElseThrow())
 
-            // Map 直接对象 (IntrinsicHolderTagsProvider)
+            // 映射直接对象（IntrinsicHolderTagsProvider）
             .map((Function<RecipeType<?>, ResourceKey<RecipeType<?>>) type -> BuiltInRegistries.RECIPE_TYPE.getResourceKey(type).orElseThrow())
             .add(RecipeType.SMELTING)
             .addTag(SMELTERS)
@@ -393,7 +393,7 @@ public class MyRecipeTypeTagsProvider extends TagsProvider<RecipeType<?>> {
 
 #### 复制标签内容
 
-NeoForge 提供了一种特殊的 `IntrinsicHolderTagsProvider`，名为 `BlockTagCopyingItemTagProvider`，用于内容需要与关联 Block 标签保持一致的 Item 标签。此时不使用 `TagAppender`，而应调用 `copy`，传入要复制到 Item 标签的 Block 标签。
+NeoForge 提供了一种特殊的 `IntrinsicHolderTagsProvider`，名为 `BlockTagCopyingItemTagProvider`，用于内容需要与关联方块标签保持一致的物品标签。此时不使用 `TagAppender`，而应调用 `copy`，传入要复制到物品标签的方块标签。
 
 ```java
 public class ExampleBlockTagCopyingItemTagProvider extends BlockTagCopyingItemTagProvider {
@@ -430,7 +430,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 
 [damagetype]: damagetypes.md
 [datacomponent]: ../../items/datacomponents.md
-[datagen]: ../index.md#data-generation
+[datagen]: ../index.md#数据生成
 [registry]: ../../concepts/registries.md
 [regkey]: ../../misc/identifier.md#resourcekeys
 [identifier]: ../../misc/identifier.md

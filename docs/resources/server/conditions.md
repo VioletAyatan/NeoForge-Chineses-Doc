@@ -1,6 +1,6 @@
 # 数据加载条件（Data Load Conditions）
 
-有时，我们会希望在另一个 mod 存在时，或者任意 mod 添加了另一种矿石时，禁用或启用某些功能。针对这类用例，NeoForge 添加了数据加载条件。它们最初称为配方条件，因为配方是该系统最早的使用场景；此后，该系统已扩展到其他系统。这也是部分内置条件仅适用于 Item 的原因。
+有时，我们会希望在另一个模组存在时，或者任意模组添加了另一种矿石时，禁用或启用某些功能。针对这类用例，NeoForge 添加了数据加载条件。它们最初称为配方条件，因为配方是该系统最早的使用场景；此后，该系统已扩展到其他系统。这也是部分内置条件仅适用于物品的原因。
 
 大多数 JSON 文件都可以选择在根对象中声明一个 `neoforge:conditions` 块；在真正加载数据文件之前，会先对该块求值。当且仅当所有条件均通过时才会继续加载，否则将忽略该数据文件。（此规则的例外是[战利品表][loottable]，它会改为被一个空战利品表替代。）
 
@@ -121,7 +121,7 @@
 
 ### `neoforge:registered`
 
-如果特定 Registry 中具有给定 Registry 名称的对象已经注册，此条件返回 true；否则返回 false。
+如果特定注册表中具有给定注册名的对象已经注册，此条件返回 true；否则返回 false。
 
 ```json5
 {
@@ -136,7 +136,7 @@
 
 ### `neoforge:tag_empty`
 
-如果给定 Registry [标签][tag]为空，此条件返回 true；否则返回 false。
+如果给定注册表[标签][tag]为空，此条件返回 true；否则返回 false。
 
 ```json5
 {
@@ -165,7 +165,7 @@
 
 ## 创建自定义条件
 
-可以通过实现 `ICondition` 及其 `#test(IContext)` 方法，并为其创建一个[映射 codec][codec] 来创建自定义条件。`#test` 中的 `IContext` 参数能够访问游戏状态的一部分。目前，它只允许你查询 Registry 中的标签。某些带条件的对象可能早于标签加载，此时上下文将是 `IContext.EMPTY`，且完全不包含标签信息。
+可以通过实现 `ICondition` 及其 `#test(IContext)` 方法，并为其创建一个[映射 codec][codec] 来创建自定义条件。`#test` 中的 `IContext` 参数能够访问游戏状态的一部分。目前，它只允许你查询注册表中的标签。某些带条件的对象可能早于标签加载，此时上下文将是 `IContext.EMPTY`，且完全不包含标签信息。
 
 例如，假设我们想实现一个 `xor` 条件，那么该条件大致如下：
 
@@ -188,7 +188,7 @@ public record XorCondition(ICondition first, ICondition second) implements ICond
 }
 ```
 
-条件使用一个 codec Registry。因此，我们需要像下面这样[注册][register]自己的 codec：
+条件使用一个 codec 注册表。因此，我们需要像下面这样[注册][register]自己的 codec：
 
 ```java
 public static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS =
@@ -232,12 +232,12 @@ public static final Supplier<MapCodec<XorCondition>> XOR =
 对于条件本身，`NeoForgeConditions` 类为每种内置条件类型提供了静态辅助方法，用于返回相应的 `ICondition`。
 
 [codec]: ../../datastorage/codecs
-[datagen]: ../index.md#data-generation
-[datamapprovider]: datamaps/index.md#data-generation
-[datapackentries]: ../../concepts/registries.md#data-generation-for-datapack-registries
+[datagen]: ../index.md#数据生成
+[datamapprovider]: datamaps/index.md#数据生成
+[datapackentries]: ../../concepts/registries.md#数据包注册表的数据生成
 [flags]: ../../advanced/featureflags.md
-[glmprovider]: loottables/glm.md#datagen
+[glmprovider]: loottables/glm.md#数据生成
 [loottable]: loottables/index.md
-[recipeprovider]: recipes/index.md#data-generation
+[recipeprovider]: recipes/index.md#数据生成
 [register]: ../../concepts/registries
 [tag]: tags.md

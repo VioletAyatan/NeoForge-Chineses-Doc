@@ -1,12 +1,12 @@
 # 自定义战利品对象（Custom Loot Objects）
 
-由于战利品表系统较为复杂，其中会使用多个 [Registry][registries]；mod 开发者可以利用它们中的任何一个来添加更多行为。
+由于战利品表系统较为复杂，其中会使用多个[注册表][registries]；模组开发者可以利用它们中的任何一个来添加更多行为。
 
-所有与战利品表有关的 Registry 都遵循相似模式。要添加新的 Registry 条目，通常需要扩展某个类或实现某个承载功能的接口；随后为序列化定义一个 [codec]，并像往常一样使用 `DeferredRegister` 将该 codec 注册到相应 Registry。这个过程符合大多数 Registry 所采用的“一个基础对象，多个实例”方式（例如 Block/BlockState 和 Item/ItemStack 也是如此）。
+所有与战利品表有关的注册表都遵循相似模式。要添加新的注册表条目，通常需要扩展某个类或实现某个承载功能的接口；随后为序列化定义一个 [codec]，并像往常一样使用 `DeferredRegister` 将该 codec 注册到相应注册表。这个过程符合大多数注册表所采用的“一个基础对象，多个实例”方式（例如方块/方块状态和物品/物品堆叠也是如此）。
 
 ## 自定义战利品条目
 
-要创建自定义战利品条目，请扩展 `LootPoolEntryContainer`，或扩展它的两个直接子类之一：`LootPoolSingletonContainer` 或 `CompositeEntryBase`。作为示例，我们要创建一个能够返回某个 [Entity][entity] 掉落物的战利品条目——这纯粹用于演示，实践中更理想的做法是直接引用另一个战利品表。首先创建战利品条目类：
+要创建自定义战利品条目，请扩展 `LootPoolEntryContainer`，或扩展它的两个直接子类之一：`LootPoolSingletonContainer` 或 `CompositeEntryBase`。作为示例，我们要创建一个能够返回某个[实体][entity]掉落物的战利品条目——这纯粹用于演示，实践中更理想的做法是直接引用另一个战利品表。首先创建战利品条目类：
 
 ```java
 // 我们扩展了 LootPoolSingletonContainer，因为我们有 "finite" 的 drop 集。
@@ -155,7 +155,7 @@ public static final Supplier<MapCodec<InvertedSignLevelBasedValue>> INVERTED_SIG
 
 ## 自定义战利品条件
 
-首先创建实现 `LootItemCondition` 的战利品 Item 条件类。作为示例，假设我们只想在击杀生物的玩家达到特定经验等级时让条件通过：
+首先创建实现 `LootItemCondition` 的战利品物品条件类。作为示例，假设我们只想在击杀生物的玩家达到特定经验等级时让条件通过：
 
 ```java
 public record HasXpLevelCondition(int level) implements LootItemCondition {
@@ -187,7 +187,7 @@ public record HasXpLevelCondition(int level) implements LootItemCondition {
 }
 ```
 
-可以将该映射 codec [注册][registries]到 Registry：
+可以将该映射 codec [注册][registries]到注册表：
 
 ```java
 public static final DeferredRegister<MapCodec<? extends LootItemCondition>> LOOT_CONDITION_TYPES =
@@ -199,7 +199,7 @@ public static final Supplier<MapCodec<HasXpLevelCondition>> MIN_XP_LEVEL =
 
 ## 自定义战利品函数
 
-首先创建一个扩展 `LootItemFunction` 的自定义类。`LootItemFunction` 扩展了 `BiFunction<ItemStack, LootContext, ItemStack>`，因此我们的目标是使用现有 ItemStack 与战利品上下文，返回一个经过修改的新 ItemStack。不过，几乎所有战利品函数都不会直接扩展 `LootItemFunction`，而是改为扩展 `LootItemConditionalFunction`。该类内置了将战利品条件应用到函数的功能——只有战利品条件成立时才会应用函数。作为示例，我们为 Item 应用一个具有指定等级的随机附魔：
+首先创建一个扩展 `LootItemFunction` 的自定义类。`LootItemFunction` 扩展了 `BiFunction<ItemStack, LootContext, ItemStack>`，因此我们的目标是使用现有物品堆叠与战利品上下文，返回一个经过修改的新物品堆叠。不过，几乎所有战利品函数都不会直接扩展 `LootItemFunction`，而是改为扩展 `LootItemConditionalFunction`。该类内置了将战利品条件应用到函数的功能——只有战利品条件成立时才会应用函数。作为示例，我们为物品应用一个具有指定等级的随机附魔：
 
 ```java
 // 代码改编自原版 EnchantRandomlyFunction 类。
@@ -252,7 +252,7 @@ public class RandomEnchantmentWithLevelFunction extends LootItemConditionalFunct
 }
 ```
 
-随后可以将该映射 codec [注册][registries]到 Registry：
+随后可以将该映射 codec [注册][registries]到注册表：
 
 ```java
 public static final DeferredRegister<MapCodec<? extends LootItemFunction>> LOOT_FUNCTION_TYPES =

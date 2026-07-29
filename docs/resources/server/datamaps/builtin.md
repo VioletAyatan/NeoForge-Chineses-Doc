@@ -32,7 +32,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 
 ```json5
 {
-    // A 0 到 1（含） float 代表该物品更新堆肥器等级的机会
+    // 0 到 1（含）的浮点数，表示该物品更新堆肥器等级的概率
     "chance": 1,
     // 可选，默认为false - 农民村民是否可以堆肥此物品
     "can_villager_compost": false
@@ -54,7 +54,7 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 
 ## `neoforge:furnace_fuels`
 
-允许配置 Item 的燃烧时间。此数据映射位于 `neoforge/data_maps/item/furnace_fuels.json`，其对象具有以下结构：
+允许配置物品的燃烧时间。此数据映射位于 `neoforge/data_maps/item/furnace_fuels.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -77,11 +77,11 @@ NeoForge 为常见用例提供了多种内置 [数据映射][datamap]，用于�
 ```
 
 :::info
-NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime` 方法，该方法的结果会覆盖此数据映射。只有在数据映射无法满足需求的场景中才应使用 `#getBurnTime`，例如燃烧时间取决于[数据组件][datacomponent]时。
+NeoForge 还添加了可由自定义物品重写的 `IItemExtension#getBurnTime` 方法，该方法的结果会覆盖此数据映射。只有在数据映射无法满足需求的场景中才应使用 `#getBurnTime`，例如燃烧时间取决于[数据组件][datacomponent]时。
 :::
 
 :::warning
-原版会为 `#minecraft:logs` 和 `#minecraft:planks` 隐式添加 300 tick（15 秒）的燃烧时间，随后又通过硬编码将绯红与诡异木制 Item 排除在外。这意味着，如果你添加了另一种不可燃木材，应像下面这样在此映射中为该木材类型的 Item 添加移除项：
+原版会为 `#minecraft:logs` 和 `#minecraft:planks` 隐式添加 300 tick（15 秒）的燃烧时间，随后又通过硬编码将绯红与诡异木制物品排除在外。这意味着，如果你添加了另一种不可燃木材，应像下面这样在此映射中为该木材类型的物品添加移除项：
 
 ```json5
 {
@@ -136,7 +136,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 ```
 
 :::info
-自定义 Block 必须实现 `WeatheringCopperFullBlock` 或 `WeatheringCopper`，并在 `randomTick` 中调用 `changeOverTime`，才能自然氧化。
+自定义方块必须实现 `WeatheringCopperFullBlock` 或 `WeatheringCopper`，并在 `randomTick` 中调用 `changeOverTime`，才能自然氧化。
 :::
 
 示例：
@@ -202,7 +202,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:strippables`
 
-允许配置 Block 被去皮时（用斧或具有 Item 能力 `ItemAbilities#AXE_STRIP` 的 Item 右键点击）将变成的 Block，用于取代 `AxeItem#STRIPPABLES`（该字段将在 26.2 中被忽略）。此数据映射位于 `neoforge/data_maps/block/strippables.json`，其对象具有以下结构：
+允许配置方块被去皮时（用斧或具有物品能力 `ItemAbilities#AXE_STRIP` 的物品右键点击）将变成的方块，用于取代 `AxeItem#STRIPPABLES`（该字段将在 26.2 中被忽略）。此数据映射位于 `neoforge/data_maps/block/strippables.json`，其对象具有以下结构：
 
 ```json5
 {
@@ -276,7 +276,7 @@ NeoForge 还添加了可由自定义 Item 重写的 `IItemExtension#getBurnTime`
 
 ## `neoforge:waxables`
 
-允许配置 Block 上蜡时（用蜜脾右键点击）将变成的 Block，用于取代 `HoneycombItem#WAXABLES`。此数据映射还用于构建反向的除蜡映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/waxables.json`，其对象具有以下结构：
+允许配置方块上蜡时（用蜜脾右键点击）将变成的方块，用于取代 `HoneycombItem#WAXABLES`。此数据映射还用于构建反向的除蜡映射（供斧刮除时使用）。它位于 `neoforge/data_maps/block/waxables.json`，其对象具有以下结构：
 
 ```json5
 {

@@ -38,7 +38,7 @@ Minecraft 的每个选项卡始终只有一个根成就，并且总是将根成�
 
 ## 条件触发器
 
-要完成成就，必须满足指定条件。条件通过触发器进行跟踪；当关联动作发生时，会从代码执行触发器（例如，当玩家击杀指定 [Entity][entity] 时执行 `player_killed_entity` 触发器）。每当游戏加载一个成就时，都会读取其中定义的条件，并将其作为监听器添加到触发器。执行触发器时，会重新检查所有为相应条件注册了监听器的成就是否完成。如果成就完成，则移除监听器。
+要完成成就，必须满足指定条件。条件通过触发器进行跟踪；当关联动作发生时，会从代码执行触发器（例如，当玩家击杀指定[实体][entity]时执行 `player_killed_entity` 触发器）。每当游戏加载一个成就时，都会读取其中定义的条件，并将其作为监听器添加到触发器。执行触发器时，会重新检查所有为相应条件注册了监听器的成就是否完成。如果成就完成，则移除监听器。
 
 自定义条件触发器由两部分组成：触发器本身，通过在代码中调用 `#trigger` 激活；以及实例，用于判定该条件在何种情况下满足。触发器扩展 `SimpleCriterionTrigger<T>`，实例则实现 `SimpleCriterionTrigger.SimpleInstance`。泛型值 `T` 表示触发器实例类型。
 
@@ -98,7 +98,7 @@ public class ExampleCriterionTrigger extends SimpleCriterionTrigger<ExampleTrigg
 }
 ```
 
-触发器必须注册到 `Registries.TRIGGER_TYPE` [Registry][registration]：
+触发器必须注册到 `Registries.TRIGGER_TYPE` [注册表][registration]：
 
 ```java
 public static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES =
@@ -179,16 +179,16 @@ public class MyAdvancementGenerator implements AdvancementSubProvider {
 
     @Override
     public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver) {
-        // 在此生成你的进步。
+        // 在此生成你的成就。
     }
 }
 
 // 方法示例
 public class ExampleClass {
 
-    // 匹配AdvancementSubProvider#generate提供的参数
+    // 匹配 AdvancementSubProvider#generate 提供的参数
     public static void generateExampleAdvancements(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver) {
-        // 在此生成你的进步。
+        // 在此生成你的成就。
     }
 }
 
@@ -211,64 +211,64 @@ event.createProvider((output, lookupProvider) -> new AdvancementProvider(
 // 所有方法都遵循 builder 模式，这意味着链接是可能的并且受到鼓励。
 // 为了提高解释的可读性，这里不会进行链接。
 
-// 使用 static #advancement() 方法创建进度 builder。
+// 使用 static #advancement() 方法创建成就 builder。
 // 使用 #advancement() 自动启用遥测事件。如果你不想要此， 可以用
 // #recipeAdvancement()代替，没有其他功能差异。
 Advancement.Builder builder = Advancement.Builder.advancement();
 
-// 设置进度的父级。你可以使用你已经生成的另一个进步，
-// 或使用 static AdvancementSubProvider#createPlaceholder 方法创建占位符进度。
+// 设置成就的父级。你可以使用你已经生成的另一个成就，
+// 或使用 static AdvancementSubProvider#createPlaceholder 方法创建占位符成就。
 builder.parent(AdvancementSubProvider.createPlaceholder("minecraft:story/root"));
 
-// 设置进度的显示 property。这可以是 DisplayInfo 对象，
+// 设置成就的显示属性。这可以是 DisplayInfo 对象，
 // 或者直接传入值。如果直接传入值，将为你创建一个 DisplayInfo 对象。
 builder.display(
-        // 进度图标。可以是 ItemStackTemplate 或 ItemLike。
+        // 成就图标。可以是 ItemStackTemplate 或 ItemLike。
         new ItemStackTemplate(Items.GRASS_BLOCK),
-        // 进度标题和描述。不要忘记添加这些内容的翻译！
+        // 成就标题和描述。不要忘记添加这些内容的翻译！
         Component.translatable("advancements.examplemod.example_advancement.title"),
         Component.translatable("advancements.examplemod.example_advancement.description"),
-        // 背景纹理。如果你不需要后台纹理（用于非 root 升级），请使用 null。
+        // 背景纹理。如果你不需要背景纹理（用于非根成就），请使用 null。
         null,
         // 帧类型。有效值为 AdvancementType.TASK、CHALLENGE 或 GOAL。
         AdvancementType.GOAL,
-        // 是否显示进度吐司。
+        // 是否显示成就弹窗。
         true,
-        // 是否宣布进入聊天状态。
+        // 是否在聊天中宣布。
         true,
-        // 是否应隐藏进度。
+        // 是否应隐藏成就。
         false
 );
 
-// 进步奖励 builder。可以使用四种奖励类型中的任何一种以及更多奖励来创建
-// 可以使用以 add 为前缀的方法添加。这也可以预先构建， 然后，
-// 和生成的 AdvancementRewards 可以在多个高级 builder 中重复使用。
+// 成就奖励 builder。可以使用四种奖励类型中的任何一种创建，
+// 并可以使用以 add 为前缀的方法添加更多奖励。这也可以预先构建，
+// 然后生成的 AdvancementRewards 可以在多个成就 builder 中重复使用。
 builder.rewards(
     // 或者，使用 addExperience() 添加到现有 builder。
     AdvancementRewards.Builder.experience(100)
     // 或者，使用 loot() 创建新 builder。
     .addLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("minecraft", "chests/igloo")))
-    // 或者，使用配方() 创建新 builder。
+    // 或者，使用 addRecipe() 创建新 builder。
     .addRecipe(ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath("minecraft", "iron_ingot")))
-    // 或者，使用函数() 创建新 builder。
+    // 或者，使用 runs() 创建新 builder。
     .runs(Identifier.fromNamespaceAndPath("examplemod", "example_function"))
 );
 
-// 将具有给定名称的条件添加到进度中。使用相应的触发器实例的static方法。
+// 将具有给定名称的条件添加到成就中。使用相应触发器实例的 static 方法。
 builder.addCriterion("pickup_dirt", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIRT));
 
-// 添加需求处理器。 Minecraft原生提供allOf()和anyOf()，需求比较复杂
-// 必须手动实现。仅具有两个或多个标准的效果。
+// 添加条件组合规则。Minecraft 原版提供 allOf() 和 anyOf()，更复杂的规则
+// 必须手动实现。仅在具有两个或更多条件时才有效果。
 builder.requirements(AdvancementRequirements.allOf(List.of("pickup_dirt")));
 
-// 使用给定的资源位置将进度保存到磁盘。这将返回 AdvancementHolder，
-// 可以存储在变量中并由其他进度 builder 用作父级。
+// 使用给定的资源位置将成就保存到磁盘。这将返回 AdvancementHolder，
+// 可以存储在变量中，并由其他成就 builder 用作父级。
 builder.save(saver, Identifier.fromNamespaceAndPath("examplemod", "example_advancement"));
 ```
 
 [codec]: ../../datastorage/codecs.md
 [conditions]: conditions.md
-[datagen]: ../index.md#data-generation
+[datagen]: ../index.md#数据生成
 [entity]: ../../entities/index.md
 [function]: https://minecraft.wiki/w/Function_(Java_Edition)
 [itemstackjson]: ../../items/index.md#json-representation

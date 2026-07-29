@@ -10,7 +10,7 @@
 
 ## `minecraft:set_item`
 
-设置结果 ItemStack 使用的另一个 Item。
+设置结果物品堆叠使用的另一个物品。
 
 ```json5
 {
@@ -24,7 +24,7 @@
 
 ## `minecraft:set_count`
 
-设置结果 ItemStack 使用的 Item 数量。使用[数值提供器][numberprovider]。
+设置结果物品堆叠使用的物品数量。使用[数值提供器][numberprovider]。
 
 ```json5
 {
@@ -44,7 +44,7 @@
 
 ## `minecraft:explosion_decay`
 
-应用爆炸衰减。Item 有 1 / `explosion_radius` 的概率“存留”。根据数量，该过程会运行多次。它需要 `minecraft:explosion_radius` 战利品参数；如果该参数缺失，则不执行修改。
+应用爆炸衰减。物品有 1 / `explosion_radius` 的概率“存留”。根据数量，该过程会运行多次。它需要 `minecraft:explosion_radius` 战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -91,7 +91,7 @@
 
 ## `minecraft:copy_custom_data`
 
-将自定义 NBT 数据从 BlockEntity 或 Entity 来源复制到 ItemStack。对于 BlockEntity，不建议使用此函数，请改用 `minecraft:copy_components` 或 `minecraft:set_contents`。对于 Entity，需要设置[目标 Entity][entitytarget]。它需要与指定来源（目标 Entity 或 BlockEntity）对应的战利品参数；如果该参数缺失，则不执行修改。
+将自定义 NBT 数据从方块实体或实体来源复制到物品堆叠。对于方块实体，不建议使用此函数，请改用 `minecraft:copy_components` 或 `minecraft:set_contents`。对于实体，需要设置[目标实体][entitytarget]。它需要与指定来源（目标实体或方块实体）对应的战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -157,25 +157,25 @@
 }
 ```
 
-数据生成期间，对于 BlockEntity 来源调用 `CopyComponentsFunction#copyComponentsFromBlockEntity`，对于 Entity 来源调用 `copyComponentsFromEntity`，为此函数构造 builder。也可以使用 `CopyComponentsFunction.ItemStackSource`，前提是[扩大 builder 构造器的访问权限][at]。
+数据生成期间，对于方块实体来源调用 `CopyComponentsFunction#copyComponentsFromBlockEntity`，对于实体来源调用 `copyComponentsFromEntity`，为此函数构造 builder。也可以使用 `CopyComponentsFunction.ItemStackSource`，前提是[扩大 builder 构造器的访问权限][at]。
 
 ## `minecraft:copy_state`
 
-将 BlockState property 复制到 ItemStack 的 `block_state` [数据组件][datacomponent]中，供尝试放置 Block 时使用。必须明确指定要复制的 BlockState property。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则不执行修改。
+将方块状态属性复制到物品堆叠的 `block_state` [数据组件][datacomponent]中，供尝试放置方块时使用。必须明确指定要复制的方块状态属性。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
     "function": "minecraft:copy_state",
     // 预期的方块。如果与实际被破坏的方块不匹配，函数就不会运行。
     "block": "minecraft:oak_slab",
-    // 要保存的方块状态 property。
+    // 要保存的方块状态属性。
     "properties": {
         "type": "top"
     }
 }
 ```
 
-数据生成期间，以 Block 调用 `CopyBlockState#copyState`，为此函数构造 builder。随后可使用 `#copy` 在 builder 上设置所需 BlockState property 值。
+数据生成期间，以方块调用 `CopyBlockState#copyState`，为此函数构造 builder。随后可使用 `#copy` 在 builder 上设置所需方块状态属性值。
 
 ## `minecraft:set_contents`
 
@@ -238,7 +238,7 @@
 
 ## `minecraft:set_name`
 
-为结果 ItemStack 设置名称。名称可以是 [`Component`][component]，而非字面字符串；也可以从[目标 Entity][entitytarget] 解析。适用时需要对应的 Entity 战利品参数；如果该参数缺失，则不执行修改。
+为结果物品堆叠设置名称。名称可以是 [`Component`][component]，而非字面字符串；也可以从[目标实体][entitytarget]解析。适用时需要对应的实体战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -252,11 +252,11 @@
 }
 ```
 
-数据生成期间，以所需名称组件、名称目标及可选目标 Entity 调用 `SetNameFunction#setName`，为此函数构造 builder。
+数据生成期间，以所需名称组件、名称目标及可选目标实体调用 `SetNameFunction#setName`，为此函数构造 builder。
 
 ## `minecraft:copy_name`
 
-将[目标 Entity][entitytarget] 或 BlockEntity 的名称复制到结果 ItemStack。它需要与指定来源（目标 Entity 或 BlockEntity）对应的战利品参数；如果该参数缺失，则不执行修改。
+将[目标实体][entitytarget]或方块实体的名称复制到结果物品堆叠。它需要与指定来源（目标实体或方块实体）对应的战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -270,7 +270,7 @@
 
 ## `minecraft:set_lore`
 
-为结果 ItemStack 设置 lore（工具提示行）。各行可以是 [`Component`][component]，而非字面字符串；也可以从[目标 Entity][entitytarget] 解析。适用时需要对应的 Entity 战利品参数；如果该参数缺失，则不执行修改。
+为结果物品堆叠设置 lore（工具提示行）。各行可以是 [`Component`][component]，而非字面字符串；也可以从[目标实体][entitytarget]解析。适用时需要对应的实体战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
@@ -350,7 +350,7 @@
 
 ## `minecraft:enchant_randomly`
 
-为 Item 添加一个随机附魔。
+为物品添加一个随机附魔。
 
 ```json5
 {
@@ -441,7 +441,7 @@
 
 ## `minecraft:furnace_smelt`
 
-尝试像在熔炉中一样烧炼 Item；如果无法烧炼，则返回未经修改的 ItemStack。
+尝试像在熔炉中一样烧炼物品；如果无法烧炼，则返回未经修改的物品堆叠。
 
 ```json5
 {
@@ -617,21 +617,21 @@
 
 ## `minecraft:fill_player_head`
 
-根据给定[目标 Entity][entitytarget]，在结果 ItemStack 上设置玩家头颅所有者。它需要对应的战利品参数；如果该参数缺失，则不执行修改。
+根据给定[目标实体][entitytarget]，在结果物品堆叠上设置玩家头颅所有者。它需要对应的战利品参数；如果该参数缺失，则不执行修改。
 
 ```json5
 {
     "function": "minecraft:fill_player_head",
-    // 要使用的 Entity target。如果未解析为 Player，则不会修改 ItemStack。
+    // 要使用的实体目标。如果未解析为 Player，则不会修改 ItemStack。
     "entity": "this_entity"
 }
 ```
 
-数据生成期间，以所需目标 Entity 调用 `FillPlayerHead#fillPlayerHead`，为此函数构造 builder。
+数据生成期间，以所需目标实体调用 `FillPlayerHead#fillPlayerHead`，为此函数构造 builder。
 
 ## `minecraft:set_banner_pattern`
 
-在结果 ItemStack 上设置旗帜图案。此函数面向旗帜，而非旗帜图案 Item。
+在结果物品堆叠上设置旗帜图案。此函数面向旗帜，而非旗帜图案物品。
 
 ```json5
 {
@@ -858,7 +858,7 @@
 
 ## `minecraft:filtered`
 
-此函数接受一个 `ItemPredicate`，并针对生成的 ItemStack 进行检查。根据检查成功（`on_pass`）或失败（`on_fail`），运行相应的已定义函数。`ItemPredicate` 可以指定有效 Item id 列表（`items`）、Item 数量的最小/最大范围（`count`）、`DataComponentPredicate`（`components`）以及 `ItemSubPredicate` Map（`predicates`）；所有字段均为可选。
+此函数接受一个 `ItemPredicate`，并针对生成的物品堆叠进行检查。根据检查成功（`on_pass`）或失败（`on_fail`），运行相应的已定义函数。`ItemPredicate` 可以指定有效物品 id 列表（`items`）、物品数量的最小/最大范围（`count`）、`DataComponentPredicate`（`components`）以及 `ItemSubPredicate` Map（`predicates`）；所有字段均为可选。
 
 ```json5
 {
@@ -886,7 +886,7 @@
 
 ## `minecraft:reference`
 
-此函数引用 Item 修改器，并将其应用到结果 ItemStack。更多信息请参阅 [Item 修改器][itemmodifiers]。
+此函数引用物品修改器，并将其应用到结果物品堆叠。更多信息请参阅[物品修改器][itemmodifiers]。
 
 ```json5
 {
@@ -922,7 +922,7 @@
 
 ## `minecraft:discard`
 
-此函数丢弃原始 ItemStack，并返回空 Item。
+此函数丢弃原始物品堆叠，并返回空物品。
 
 ```json5
 {
@@ -935,16 +935,16 @@
 
 ## 另请参阅
 
-- [Minecraft Wiki][mcwiki] 上的 [Item 修改器][itemmodifiers]
+- [Minecraft Wiki][mcwiki] 上的[物品修改器][itemmodifiers]
 
 [at]: ../../../advanced/accesstransformers.md
 [attributemodifier]: ../../../entities/attributes.md#attribute-modifiers
 [component]: ../../client/i18n.md#components
 [conditions]: lootconditions
-[custom]: custom.md#custom-loot-functions
+[custom]: custom.md#自定义战利品函数
 [datacomponent]: ../../../items/datacomponents.md
 [entitytarget]: index.md#entity-targets
-[entry]: index.md#loot-entry
+[entry]: index.md#战利品条目
 [itemmodifiers]: https://minecraft.wiki/w/Item_modifier#JSON_format
 [mcwiki]: https://minecraft.wiki
 [nbt]: ../../../datastorage/nbt.md

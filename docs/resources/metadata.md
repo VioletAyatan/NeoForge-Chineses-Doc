@@ -1,41 +1,41 @@
 # 资源元数据（Resource Metadata）
 
-`.mcmeta` 文件扩展名可用于保存游戏中任何 Asset 或 Data 对象的 JSON Metadata。它最常用于定义 Pack 信息以及纹理的应用方式；不过，只要在文件名末尾加上 `.mcmeta`，任何文件都可以使用它（例如，`apple.png` 的资源 Metadata 为 `apple.png.mcmeta`）。
+`.mcmeta` 文件扩展名可用于保存游戏中任何客户端资源或服务端数据对象的 JSON 元数据。它最常用于定义包信息以及纹理的应用方式；不过，只要在文件名末尾加上 `.mcmeta`，任何文件都可以使用它（例如，`apple.png` 的资源元数据为 `apple.png.mcmeta`）。
 
 :::info
-虽然 Data Pack 中的 JSON 对象可以拥有资源 Metadata，但它不会被使用，因为 Metadata 可以直接放在 JSON 文件本身中。
+虽然数据包中的 JSON 对象可以拥有资源元数据，但它不会被使用，因为元数据可以直接放在 JSON 文件本身中。
 :::
 
-## Metadata Section
+## 元数据节
 
-JSON Metadata 对象划分为多个 Section，其中键表示 Section 类型，值是该 Section 的数据。在代码库中，它称为 `MetadataSectionType`，接收一个 `String` 键，以及用于序列化值的 [`Codec`][codec]。
+JSON 元数据对象划分为多个元数据节（Metadata Section），其中键表示节类型，值是该节的数据。在代码库中，它称为 `MetadataSectionType`，接收一个 `String` 键，以及用于序列化值的 [`Codec`][codec]。
 
-原版和 NeoForge 当前提供以下 Metadata Section：
+原版和 NeoForge 当前提供以下元数据节：
 
 | Section                          | 类                                                         | 应用于                      | 用途                                                           |
 |:--------------------------------:|:-------------------------------------------------------------:|:-----------------------:|:--------------------------------------------------------------|
-| `pack`                           | `PackMetadataSection`                                         | `pack.mcmeta`           | [Pack 信息][pack]                                      |
+| `pack`                           | `PackMetadataSection`                                         | `pack.mcmeta`           | [包信息][pack]                                      |
 | `features`                       | `FeatureFlagsMetadataSection`                                 | `pack.mcmeta`           | [启用实验性功能][features]                    |
-| `filter`                         | `ResourceFilterSection`                                       | `pack.mcmeta`           | 筛选在此 Pack 之后应用的 Pack 文件             |
-| `overlays` / `neoforge:overlays` | `OverlayMetadataSection` / `GeneratingOverlayMetadataSection` | `pack.mcmeta`           | 在给定条件下覆盖到主 Pack 之上的子 Pack |
-| `language`                       | `LanguageMetadataSection`                                     | `pack.mcmeta`           | 额外语言，仅供 Resource Pack 使用                 |
-| `animation`                      | `AnimationMetadataSection`                                    | `.png.mcmeta`（纹理） | [动画 Atlas 纹理][animation]                          |
-| `gui`                            | `GuiMetadataSection`                                          | `.png.mcmeta`（纹理） | [GUI Sprite 纹理][texture]                                |
+| `filter`                         | `ResourceFilterSection`                                       | `pack.mcmeta`           | 筛选在此包之后应用的包文件             |
+| `overlays` / `neoforge:overlays` | `OverlayMetadataSection` / `GeneratingOverlayMetadataSection` | `pack.mcmeta`           | 在给定条件下覆盖到主包之上的子包 |
+| `language`                       | `LanguageMetadataSection`                                     | `pack.mcmeta`           | 额外语言，仅供资源包使用                 |
+| `animation`                      | `AnimationMetadataSection`                                    | `.png.mcmeta`（纹理） | [动画图集纹理][animation]                          |
+| `gui`                            | `GuiMetadataSection`                                          | `.png.mcmeta`（纹理） | [GUI sprite 纹理][texture]                                |
 | `texture`                        | `TextureMetadataSection`                                      | `.png.mcmeta`（纹理） | [纹理][texture]                                           |
-| `villager`                       | `VillagerMetadataSection`                                     | `.png.mcmeta`（纹理） | Villager 帽子可见性                                       |
+| `villager`                       | `VillagerMetadataSection`                                     | `.png.mcmeta`（纹理） | 村民帽子可见性                                       |
 
 :::info
-主模组 `pack.mcmeta` 不需要 `PackMetadataSection`，因为 NeoForge 会以合成方式生成它。不过，通过 [`AddPackFindersEvent` 模组总线事件][events]添加的任何捆绑 Pack 都需要它。
+主模组 `pack.mcmeta` 不需要 `PackMetadataSection`，因为 NeoForge 会以合成方式生成它。不过，通过 [`AddPackFindersEvent` 模组总线事件][events]添加的任何捆绑包都需要它。
 :::
 
-要获取 Metadata Section 中的数据，需要访问从 `ResourceManager` 取得的文件 `Resource`，调用 `Resource#metadata` 获取 `ResourceMetadata`，再使用 `MetadataSectionType` 调用 `ResourceMetadata#getSection`。
+要获取元数据节中的数据，需要访问从 `ResourceManager` 取得的文件 `Resource`，调用 `Resource#metadata` 获取 `ResourceMetadata`，再使用 `MetadataSectionType` 调用 `ResourceMetadata#getSection`。
 
 ```java
 // 对于某些 `ResourceManager` resourceManager
 
 // 获取最顶层资源的元数据
 Optional<AnimationMetadataSection> waterStillMetadata = resourceManager.getResource(
-    // Identifier 必须指定后备资源资源的确切路径。
+    // Identifier 必须指定底层资源的确切路径。
     Identifier.fromNamespaceAndPath("minecraft", "textures/block/water_still.png")
 ).flatMap(resource -> {
     try {
@@ -49,7 +49,7 @@ Optional<AnimationMetadataSection> waterStillMetadata = resourceManager.getResou
 
 // 获取标识符的每个资源的元数据
 List<AnimationMetadataSection> waterStillsMetadata = resourceManager.getResourceStack(
-    // Identifier 必须指定后备资源资源的确切路径。
+    // Identifier 必须指定底层资源的确切路径。
     Identifier.fromNamespaceAndPath("minecraft", "textures/block/water_still.png")
 ).map(resource -> {
     try {
@@ -64,9 +64,9 @@ List<AnimationMetadataSection> waterStillsMetadata = resourceManager.getResource
 
 客户端 `ResourceManager` 可以通过 `Minecraft#getResourceManager` 获取。另一方面，服务端除了在 `MinecraftServer#reloadResources` 中，不会公开 `ResourceManager`。使用它的唯一方式是将其作为 `PreparableReloadListener` 的一部分。
 
-### 自定义 Section
+### 自定义节
 
-自定义 Metadata Section 只需要创建对象、用于序列化和反序列化对象的 `Codec`，以及从 `mcmeta` 读取数据的 `MetadataSectionType`。
+自定义元数据节只需要创建对象、用于序列化和反序列化对象的 `Codec`，以及从 `mcmeta` 读取数据的 `MetadataSectionType`。
 
 ```java
 public record ExampleMetadataSection(String value) {
@@ -81,7 +81,7 @@ public record ExampleMetadataSection(String value) {
 }
 ```
 
-完成后，就可以把该 Metadata Section 添加到对象的 `.mcmeta` 中：
+完成后，就可以把该元数据节添加到对象的 `.mcmeta` 中：
 
 ```json5
 // 在 'assets/examplemod/textures/block/example_block.png.mcmeta'
@@ -90,15 +90,15 @@ public record ExampleMetadataSection(String value) {
 }
 ```
 
-并且可以像其他 Metadata Section 一样，使用对应类型获取它。
+并且可以像其他元数据节一样，使用对应类型获取它。
 
 ## 数据生成
 
-原版通过 `PackMetadataGenerator` 提供 `pack.mcmeta` 的数据生成。任何其他文件的 Metadata 都需要自定义 `DataProvider`。
+原版通过 `PackMetadataGenerator` 提供 `pack.mcmeta` 的数据生成。任何其他文件的元数据都需要自定义 `DataProvider`。
 
 ### `PackMetadataGenerator`
 
-`PackMetadataGenerator` 用于生成模组或其捆绑子 Pack 的 `pack.mcmeta`。Metadata Section 通过 `add` 方法添加，该方法接收 `MetadataSectionType` 及其值。`PackMetadataGenerator` 还提供 `forFeaturePack`，用于生成包含 `PackMetadataSection` 以及可选 `FeatureFlagsMetadataSection` 的 `pack.mcmeta`：
+`PackMetadataGenerator` 用于生成模组或其捆绑子包的 `pack.mcmeta`。元数据节通过 `add` 方法添加，该方法接收 `MetadataSectionType` 及其值。`PackMetadataGenerator` 还提供 `forFeaturePack`，用于生成包含 `PackMetadataSection` 以及可选 `FeatureFlagsMetadataSection` 的 `pack.mcmeta`：
 
 ```java
 @SubscribeEvent // 位于模组事件总线上
@@ -121,9 +121,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 }
 ```
 
-### 其他资源 Metadata
+### 其他资源元数据
 
-其他文件上的资源 Metadata 需要自定义 `DataProvider`：
+其他文件上的资源元数据需要自定义 `DataProvider`：
 
 ```java
 public class ResourceMetadataProvider implements DataProvider {
@@ -216,5 +216,5 @@ public static void gatherData(GatherDataEvent.Client event) {
 [events]: ../concepts/events.md
 [features]: ../advanced/featureflags.md#feature-packs
 [pack]: index.md#packmcmeta
-[texture]: client/textures.md#texture-metadata
+[texture]: client/textures.md#纹理元数据
 

@@ -12,9 +12,9 @@ GLM 的工作方式是先抽取关联的[战利品表][loottable]，再将 GLM �
 
 ## 战利品修改器 JSON
 
-此文件包含与修改器相关的全部值，例如应用概率、要添加哪些 Item 等。JSON 位于 `data/<namespace>/loot_modifiers/<path>.json`，其中 `<namespace>` 与 `<path>` 是唯一 [`Identifier`][identifier] 的组成部分。建议尽可能避免硬编码数值，以便数据包制作者按需调整平衡。战利品修改器至少必须包含两个字段，并可根据实际情况包含更多字段：
+此文件包含与修改器相关的全部值，例如应用概率、要添加哪些物品等。JSON 位于 `data/<namespace>/loot_modifiers/<path>.json`，其中 `<namespace>` 与 `<path>` 是唯一 [`Identifier`][identifier] 的组成部分。建议尽可能避免硬编码数值，以便数据包制作者按需调整平衡。战利品修改器至少必须包含两个字段，并可根据实际情况包含更多字段：
 
-- `type` 字段包含战利品修改器的 Registry 名称。
+- `type` 字段包含战利品修改器的注册名。
 - `conditions` 字段是用于激活该修改器的战利品表条件列表。
 - 根据所使用的 codec，可能还需要或可以选择提供其他属性。
 
@@ -31,12 +31,12 @@ GLM 的一个常见用途是向某个特定战利品表添加额外战利品。�
     "conditions": [
         // 战利品表条件在这里
     ],
-    // 通常由战利品修改器提供的可选 property
+    // 通常由战利品修改器提供的可选属性
     // 表示修饰符的应用顺序，
     // 从最高到最低。
     // 通常默认为 1000。
     "priority": 900,
-    // 编解码器指定的额外 property
+    // 编解码器指定的额外属性
     "field1": "somestring",
     "field2": 10,
     "field3": "minecraft:dirt"
@@ -52,12 +52,12 @@ GLM 的一个常见用途是向某个特定战利品表添加额外战利品。�
 public class MyLootModifier extends LootModifier {
     // 请参阅下文了解编解码器的工作原理。
     public static final MapCodec<MyLootModifier> CODEC = ...;
-    // 我们的额外 property。
+    // 我们的额外属性。
     private final String field1;
     private final int field2;
     private final Item field3;
     
-    // 构造器的第一个参数是条件列表。剩下的就是我们的额外 property。
+    // 构造器的第一个参数是条件列表。剩下的就是我们的额外属性。
     public MyLootModifier(LootItemCondition[] conditions, int priority, String field1, int field2, Item field3) {
         super(conditions, priority);
         this.field1 = field1;
@@ -71,7 +71,7 @@ public class MyLootModifier extends LootModifier {
         return CODEC;
     }
     
-    // 这就是奇迹发生的地方。如果需要，请在此处使用你的额外 property。
+    // 这是执行实际修改的位置。如果需要，请在此处使用你的额外属性。
     // 参数是现有的战利品和战利品上下文。
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
@@ -100,7 +100,7 @@ public static final MapCodec<MyLootModifier> CODEC = RecordCodecBuilder.mapCodec
 );
 ```
 
-随后将该 codec [注册][register]到 Registry：
+随后将该 codec [注册][register]到注册表：
 
 ```java
 public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODIFIER_SERIALIZERS =
@@ -169,7 +169,7 @@ public static void onGatherData(GatherDataEvent.Client event) {
 ```
 
 [codec]: ../../../datastorage/codecs.md
-[datagen]: ../../index.md#data-generation
+[datagen]: ../../index.md#数据生成
 [loottable]: index.md
 [loottableid]: lootconditions#neoforgeloot_table_id
 [register]: ../../../concepts/registries.md#methods-for-registering

@@ -2,11 +2,11 @@
 
 添加自定义配方至少需要三项内容：`Recipe`、`RecipeType` 和 `RecipeSerializer`。根据所实现的功能，如果无法复用现有子类，可能还需要自定义 `RecipeInput`、`RecipeDisplay`、`SlotDisplay`、`RecipeBookCategory` 与 `RecipePropertySet`。
 
-为便于演示并突出多项功能，我们将实现一种由配方驱动的机制：玩家需要用特定 Item 右键点击世界中的 `BlockState`，破坏该 `BlockState` 并掉落结果 Item。
+为便于演示并突出多项功能，我们将实现一种由配方驱动的机制：玩家需要用特定物品右键点击世界中的 `BlockState`，破坏该 `BlockState` 并掉落结果物品。
 
 ## 配方输入
 
-首先定义要放入配方的内容。必须理解，配方输入表示玩家当前实际使用的输入。因此，这里不使用标签或 Ingredient，而使用当前可用的实际 ItemStack 与 BlockState。
+首先定义要放入配方的内容。必须理解，配方输入表示玩家当前实际使用的输入。因此，这里不使用标签或原料，而使用当前可用的实际物品堆叠与方块状态。
 
 ```java
 // 输入为 BlockState 和 ItemStack。
@@ -30,7 +30,7 @@ public record RightClickBlockInput(BlockState state, ItemStack stack) implements
 
 配方输入按需创建，因此无需以任何方式注册或序列化。并非总要创建自定义输入；原版输入（`CraftingInput`、`SingleRecipeInput` 和 `SmithingRecipeInput`）足以满足许多用例。
 
-## Recipe 类
+## 配方类
 
 有了输入之后，接下来处理配方本身。它保存配方数据，同时负责匹配并返回配方结果，因此通常是自定义配方中最长的类。
 
@@ -46,7 +46,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
     private final Ingredient inputItem;
     private final ItemStackTemplate result;
 
-    // 添加一个设置所有 property 的构造器。
+    // 添加一个设置所有属性的构造器。
     public RightClickBlockRecipe(Recipe.CommonInfo commonInfo, RightClickBlockRecipe.BlockBookInfo bookInfo, BlockState inputState, Ingredient inputItem, ItemStackTemplate result) {
         this.commonInfo = commonInfo;
         this.bookInfo = bookInfo;
@@ -223,7 +223,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 从技术上讲，所有 `RecipeBookCategory` 都是 `ExtendedRecipeBookCategory`。另有一种名为 `SearchRecipeBookCategory` 的 `ExtendedRecipeBookCategory`，用于在配方书中查看所有配方时聚合多个 `RecipeBookCategory`。
 
-NeoForge 允许用户在模组事件总线上通过 `RegisterRecipeBookSearchCategoriesEvent#register`，将自己的 `ExtendedRecipeBookCategory` 指定为搜索分类。`register` 接收代表搜索分类的 `ExtendedRecipeBookCategory`，以及组成该搜索分类的各个 `RecipeBookCategory`。作为搜索分类的 `ExtendedRecipeBookCategory` 无需注册到任何原版静态 Registry。
+NeoForge 允许用户在模组事件总线上通过 `RegisterRecipeBookSearchCategoriesEvent#register`，将自己的 `ExtendedRecipeBookCategory` 指定为搜索分类。`register` 接收代表搜索分类的 `ExtendedRecipeBookCategory`，以及组成该搜索分类的各个 `RecipeBookCategory`。作为搜索分类的 `ExtendedRecipeBookCategory` 无需注册到任何原版静态注册表。
 
 ```java
 // 在某些位置
@@ -245,9 +245,9 @@ public static void registerSearchCategories(RegisterRecipeBookSearchCategoriesEv
 
 ## 放置信息
 
-`PlacementInfo` 用于定义配方使用者采用的合成要求，以及内容能否、应如何放入关联工作站（例如工作台、熔炉）。`PlacementInfo` 只面向 Item Ingredient；如果需要其他类型的 Ingredient（如流体、Block），则必须从头实现外围逻辑。在这些情况下，可以通过 `PlacementInfo#NOT_PLACEABLE` 将配方标记为不可放置。不过，如果配方中至少包含一个类似 Item 的对象，就应创建 `PlacementInfo`。
+`PlacementInfo` 用于定义配方使用者采用的合成要求，以及内容能否、应如何放入关联工作站（例如工作台、熔炉）。`PlacementInfo` 只面向物品原料；如果需要其他类型的原料（如流体、方块），则必须从头实现外围逻辑。在这些情况下，可以通过 `PlacementInfo#NOT_PLACEABLE` 将配方标记为不可放置。不过，如果配方中至少包含一个类似物品的对象，就应创建 `PlacementInfo`。
 
-可以通过 `create` 创建 `PlacementInfo`，它接收一个或一组 Ingredient；也可通过 `createFromOptionals` 创建，它接收可选 Ingredient 列表。如果配方包含空槽位的表示形式，应使用 `createFromOptionals`，并为每个空槽位提供空 Optional：
+可以通过 `create` 创建 `PlacementInfo`，它接收一个或一组原料；也可通过 `createFromOptionals` 创建，它接收可选原料列表。如果配方包含空槽位的表示形式，应使用 `createFromOptionals`，并为每个空槽位提供空 Optional：
 
 ```java
 public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
@@ -276,20 +276,20 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 ## 槽位显示
 
-`SlotDisplay` 表示由配方使用者（如配方书）查看时，各槽位应渲染何种内容。`SlotDisplay` 有两个方法。其一是 `resolve`：它接收包含可用 Registry 与燃料值的 `ContextMap`（如 `SlotDisplayContext` 所示），以及当前 `DisplayContentsFactory`；后者接收该槽位要显示的内容，并返回转换后的内容列表供输出使用。其二是 `type`，其中保存用于编码/解码显示内容的 [`MapCodec`][codec] 与 [`StreamCodec`][streamcodec]。
+`SlotDisplay` 表示由配方使用者（如配方书）查看时，各槽位应渲染何种内容。`SlotDisplay` 有两个方法。其一是 `resolve`：它接收包含可用注册表与燃料值的 `ContextMap`（如 `SlotDisplayContext` 所示），以及当前 `DisplayContentsFactory`；后者接收该槽位要显示的内容，并返回转换后的内容列表供输出使用。其二是 `type`，其中保存用于编码/解码显示内容的 [`MapCodec`][codec] 与 [`StreamCodec`][streamcodec]。
 
-`SlotDisplay` 通常通过 [`Ingredient` 的 `#display` 实现；对于 mod Ingredient，则通过 `ICustomIngredient#display` 实现][ingredients]。不过，有些输入可能不是 Ingredient，此时需要使用现有 `SlotDisplay` 或创建新的 `SlotDisplay`。
+`SlotDisplay` 通常通过 [`Ingredient` 的 `#display` 实现；对于模组原料，则通过 `ICustomIngredient#display` 实现][ingredients]。不过，有些输入可能不是原料，此时需要使用现有 `SlotDisplay` 或创建新的 `SlotDisplay`。
 
 原版与 NeoForge 提供以下可用槽位显示：
 
 - `SlotDisplay.Empty`：表示无内容的槽位。
-- `SlotDisplay.ItemSlotDisplay`：表示 Item 的槽位。
+- `SlotDisplay.ItemSlotDisplay`：表示物品的槽位。
 - `SlotDisplay.ItemStackSlotDisplay`：表示 ItemStack 模板的槽位。
-- `SlotDisplay.TagSlotDisplay`：表示 Item 标签的槽位。
-- `SlotDisplay.OnlyWithComponent`：对其他显示进行筛选，只保留具有给定数据组件的 Item。
+- `SlotDisplay.TagSlotDisplay`：表示物品标签的槽位。
+- `SlotDisplay.OnlyWithComponent`：对其他显示进行筛选，只保留具有给定数据组件的物品。
 - `SlotDisplay.WithAnyPotion`：表示具有随机 `DataComponents#POTION_CONTENTS` 值的输入。
 - `SlotDisplay.WithRemainder`：表示具有某种合成剩余物的输入。
-- `SlotDisplay.AnyFuel`：表示所有燃料 Item 的槽位。
+- `SlotDisplay.AnyFuel`：表示所有燃料物品的槽位。
 - `SlotDisplay.Composite`：表示多个其他槽位显示组合的槽位。
 - `SlotDisplay.DyedSlotDemo`：表示将染料应用到目标并设置 `DataComponents#DYED_COLOR` 的槽位。
 - `SlotDisplay.SmithingTrimDemoSlotDisplay`：表示使用给定材料将随机锻造纹饰应用到基础对象的槽位。
@@ -297,7 +297,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 - `FluidStackSlotDisplay`：表示 FluidStack 的槽位。
 - `FluidTagSlotDisplay`：表示流体标签的槽位。
 
-我们的配方有三个“槽位”：`BlockState` 输入、`Ingredient` 输入和 `ItemStack` 结果。`Ingredient` 输入已经关联 `SlotDisplay`，`ItemStack` 可由 `SlotDisplay.ItemStackSlotDisplay` 表示。另一方面，`BlockState` 需要自定义 `SlotDisplay` 与 `DisplayContentsFactory`，因为现有实现只接收 ItemStack，而本示例会以不同方式处理 BlockState。
+我们的配方有三个“槽位”：`BlockState` 输入、原料输入和 `ItemStack` 结果。原料输入已经关联 `SlotDisplay`，`ItemStack` 可由 `SlotDisplay.ItemStackSlotDisplay` 表示。另一方面，`BlockState` 需要自定义 `SlotDisplay` 与 `DisplayContentsFactory`，因为现有实现只接收 `ItemStack`，而本示例会以不同方式处理 `BlockState`。
 
 先看 `DisplayContentsFactory`，它用于将某种类型转换为所需的内容显示类型。可用工厂包括：
 
@@ -398,7 +398,7 @@ public static final Supplier<SlotDisplay.Type<BlockStateSlotDisplay>> BLOCK_STAT
 
 `RecipeDisplay` 与 `SlotDisplay` 相似，但它表示完整配方。默认接口只跟踪配方的 `result` 和 `craftingStation`，后者表示应用配方的工作台。`RecipeDisplay` 也有一个 `type`，其中保存用于编码/解码显示内容的 [`MapCodec`][codec] 与 [`StreamCodec`][streamcodec]。然而，现有 `RecipeDisplay` 子类型都不包含在客户端正确渲染本配方所需的全部信息，因此需要创建自己的 `RecipeDisplay`。
 
-所有槽位与 Ingredient 都应表示为 `SlotDisplay`。网格大小等限制可以由用户选择任意方式提供。
+所有槽位与原料都应表示为 `SlotDisplay`。网格大小等限制可以由用户选择任意方式提供。
 
 ```java
 // 一个简单的菜谱展示
@@ -469,7 +469,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 ## 配方类型
 
-接下来是配方类型。这相当直接，因为配方类型除名称外不关联其他数据。它是配方系统中两个需要[注册][registry]的部分之一，因此与其他 Registry 一样，创建 `DeferredRegister` 并向其中注册：
+接下来是配方类型。这相当直接，因为配方类型除名称外不关联其他数据。它是配方系统中两个需要[注册][registry]的部分之一，因此与其他注册表一样，创建 `DeferredRegister` 并向其中注册：
 
 ```java
 public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
@@ -548,7 +548,7 @@ public class RightClickBlockRecipe implements Recipe<RightClickBlockInput> {
 
 现在配方的所有部分都已完成，可以制作配方 JSON（参阅[数据生成][datagen]一节），再像上面那样从配方管理器查询配方。随后如何使用配方由你决定。常见用例是能够处理配方的机器，并将当前配方存储为字段。
 
-不过在本例中，我们要在用 Item 右键点击 Block 时应用配方。为此将使用[事件处理器][event]。请记住，这只是示例实现，可以任意修改（只要在服务器上运行）。由于交互状态需要在客户端与服务器保持一致，还必须[通过网络同步所有相关输入状态][networking]。
+不过在本例中，我们要在用物品右键点击方块时应用配方。为此将使用[事件处理器][event]。请记住，这只是示例实现，可以任意修改（只要在服务器上运行）。由于交互状态需要在客户端与服务器保持一致，还必须[通过网络同步所有相关输入状态][networking]。
 
 可以建立一个简单的网络实现来同步配方输入：
 
@@ -1009,12 +1009,12 @@ protected void buildRecipes(RecipeOutput output) {
 
 [clientrecipes]: index.md#client-side-recipes
 [codec]: ../../../datastorage/codecs.md
-[datagen]: #data-generation
+[datagen]: #数据生成
 [event]: ../../../concepts/events.md
 [gui]: ../../../rendering/screens.md
 [ingredients]: ingredients.md
 [networking]: ../../../networking/payload.md
-[recipedatagen]: index.md#data-generation
+[recipedatagen]: index.md#数据生成
 [registry]: ../../../concepts/registries.md#methods-for-registering
 [serializer]: #the-recipe-serializer
 [streamcodec]: ../../../networking/streamcodecs.md

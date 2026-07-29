@@ -1,6 +1,6 @@
 # 配方（Recipes）
 
-配方是在 Minecraft 世界中将一组对象转换成其他对象的方式。虽然 Minecraft 只将该系统用于 Item 转换，但系统本身允许转换任意类型的对象——Block、Entity 等。几乎所有配方都使用配方数据文件；除非另有明确说明，本文中的“配方”均指由数据驱动的配方。
+配方是在 Minecraft 世界中将一组对象转换成其他对象的方式。虽然 Minecraft 只将该系统用于物品转换，但系统本身允许转换任意类型的对象——方块、实体等。几乎所有配方都使用配方数据文件；除非另有明确说明，本文中的“配方”均指由数据驱动的配方。
 
 配方数据文件位于 `data/<namespace>/recipe/<path>.json`。例如，配方 `minecraft:diamond_block` 位于 `data/minecraft/recipe/diamond_block.json`。
 
@@ -9,16 +9,16 @@
 - **配方 JSON** 或**配方文件**：由 `RecipeManager` 加载并存储的 JSON 文件。它包含配方类型、输入、输出以及其他信息（例如处理时间）。
 - **`Recipe`**：保存所有 JSON 字段在代码中的表示形式，以及匹配逻辑（“此输入是否匹配该配方？”）和其他一些属性。
 - **`RecipeInput`**：为配方提供输入的类型。它有多个子类，例如 `CraftingInput` 或 `SingleRecipeInput`（用于熔炉及类似设备）。
-- **配方 Ingredient**，简称 **Ingredient**：配方的单个输入（而 `RecipeInput` 通常表示用于与配方 Ingredient 进行检查的一组输入）。Ingredient 是一套非常强大的系统，因此在[独立文章][ingredients]中说明。
-- **`PlacementInfo`**：定义配方包含哪些 Item，以及这些 Item 应填入哪些索引。如果无法依据所提供的 Item 在一定程度上描述配方（例如只修改数据组件），则使用 `PlacementInfo#NOT_PLACEABLE`。
+- **配方原料（Ingredient）**：配方的单个输入（而 `RecipeInput` 通常表示用于与配方原料进行检查的一组输入）。原料是一套非常强大的系统，因此在[独立文章][ingredients]中说明。
+- **`PlacementInfo`**：定义配方包含哪些物品，以及这些物品应填入哪些索引。如果无法依据所提供的物品在一定程度上描述配方（例如只修改数据组件），则使用 `PlacementInfo#NOT_PLACEABLE`。
 - **`SlotDisplay`**：定义单个槽位在配方查看器（如配方书）中的显示方式。
-- **`RecipeDisplay`**：定义供配方查看器（如配方书）使用的配方 `SlotDisplay`。该接口本身只包含配方结果与执行配方所用工作站的方法，但其子类型可以保存 Ingredient 或网格大小等信息。
+- **`RecipeDisplay`**：定义供配方查看器（如配方书）使用的配方 `SlotDisplay`。该接口本身只包含配方结果与执行配方所用工作站的方法，但其子类型可以保存原料或网格大小等信息。
 - **`RecipeManager`**：服务器上的单例字段，保存所有已加载配方。
 - **`RecipeSerializer`**：本质上是对 [`MapCodec`][codec] 与 [`StreamCodec`][streamcodec] 的包装，两者均用于序列化。
 - **`RecipeType`**：与 `Recipe` 对应的已注册类型，主要用于按类型查询配方。通常，不同的合成容器应使用不同的 `RecipeType`。例如，`minecraft:crafting` 配方类型涵盖 `minecraft:crafting_shaped`、`minecraft:crafting_shapeless` 配方序列化器以及特殊合成序列化器。
 - **`RecipeBookCategory`**：在配方书中查看时代表一组配方的分组。
 - **[配方成就][advancement]**：负责在配方书中解锁配方的成就。它不是必需的，而且玩家通常会使用配方查看器 mod 而忽略它；不过[配方数据提供器][datagen]会自动生成，因此建议沿用。
-- **`RecipePropertySet`**：定义菜单中指定输入槽位可以接受的 Ingredient 列表。
+- **`RecipePropertySet`**：定义菜单中指定输入槽位可以接受的原料列表。
 - **`RecipeBuilder`**：在数据生成期间用于创建 JSON 配方。
 - **配方工厂**：用于根据 `RecipeBuilder` 创建 `Recipe` 的方法引用。它可以是构造器引用、静态 builder 方法，或专门为此目的创建的函数式接口（通常命名为 `Factory`）。
 
@@ -71,7 +71,7 @@ Optional<RecipeHolder<? extends CraftingRecipe>> optional = recipes.getRecipeFor
         // 我们的关卡上下文。
         serverLevel
 );
-// This returns the diamond block -> 9 diamonds recipe (unless a datapack changes that recipe).
+// 这会返回钻石块 -> 9 个钻石的配方（除非数据包更改了该配方）。
 optional.map(RecipeHolder::value).ifPresent(recipe -> {
     // 在此执行所需逻辑。请注意，配方现在是 CraftingRecipe，而不是 Recipe<?>。
 });
@@ -112,9 +112,9 @@ Collection<RecipeHolder<?>> list = recipes.recipeMap().byType(RecipeType.CRAFTIN
 
 ## 配方优先级
 
-配方有时会与其他配方重叠，通常是因为一个图案使用特定 Item，而另一个相同图案使用了包含该 Item 的标签。在这种情况下，原版会采用找到的第一个配方，而这取决于哪个配方最先被读取并加载。这可能造成问题：如果特定 Item 配方晚于基于标签的配方加载，那么将永远无法获得该特定 Item 配方。
+配方有时会与其他配方重叠，通常是因为一个图案使用特定物品，而另一个相同图案使用了包含该物品的标签。在这种情况下，原版会采用找到的第一个配方，而这取决于哪个配方最先被读取并加载。这可能造成问题：如果特定物品配方晚于基于标签的配方加载，那么将永远无法获得该特定物品配方。
 
-为解决这一问题，NeoForge 引入配方优先级，用于安排哪些配方应先显示。条目表示为从配方 Registry 键映射到整数优先级值的 Map。优先级按值从高到低排序，未指定的配方默认为 `0`。这意味着优先级大于 `0` 的配方排在前面，小于 `0` 的配方排在最后。优先级 Map 位于 `data/<namespace>/recipe_priorities.json`，其中所有配方优先级会合并在一起；但如果 `replace` 为 true，则会清除先前加载的所有条目。
+为解决这一问题，NeoForge 引入配方优先级，用于安排哪些配方应先显示。条目表示为从配方注册表键映射到整数优先级值的 Map。优先级按值从高到低排序，未指定的配方默认为 `0`。这意味着优先级大于 `0` 的配方排在前面，小于 `0` 的配方排在最后。优先级 Map 位于 `data/<namespace>/recipe_priorities.json`，其中所有配方优先级会合并在一起；但如果 `replace` 为 true，则会清除先前加载的所有条目。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -258,7 +258,7 @@ public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
 ```
 
 :::warning
-如果计划同步自定义配方类型的配方，应在两个物理端都调用 `OnDatapackSyncEvent`。所有世界（包括单人游戏）都明确区分服务器与客户端，因此在客户端引用来自服务器的数据包 Registry 条目很可能导致游戏崩溃。
+如果计划同步自定义配方类型的配方，应在两个物理端都调用 `OnDatapackSyncEvent`。所有世界（包括单人游戏）都明确区分服务器与客户端，因此在客户端引用来自服务器的数据包注册表条目很可能导致游戏崩溃。
 :::
 
 ## 数据生成
@@ -268,7 +268,7 @@ public static void clientLogOut(ClientPlayerNetworkEvent.LoggingOut event) {
 ```java
 public class MyRecipeProvider extends RecipeProvider {
 
-    // 构建provider运行
+    // 构建 provider 时运行
     protected MyRecipeProvider(HolderLookup.Provider provider, RecipeOutput output) {
         super(provider, output);
     }
@@ -278,9 +278,9 @@ public class MyRecipeProvider extends RecipeProvider {
         // 在此添加你的配方。
     }
 
-    // 添加到数据生成器的运行程序
+    // 添加到数据生成器的 runner
     public static class Runner extends RecipeProvider.Runner {
-        // 从`GatherDataEvent`中获取参数。
+        // 从 `GatherDataEvent` 中获取参数。
         public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
             super(output, lookupProvider);
         }
@@ -308,7 +308,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 }
 ```
 
-配方提供器还为常见场景添加了辅助方法，例如 `twoByTwoPacker`（用于 2x2 Block 配方）、`threeByThreePacker`（用于 3x3 Block 配方）和 `nineBlockStorageRecipes`（用于 3x3 Block 配方，以及 1 个 Block 分解为 9 个 Item 的配方）。
+配方提供器还为常见场景添加了辅助方法，例如 `twoByTwoPacker`（用于 2x2 方块配方）、`threeByThreePacker`（用于 3x3 方块配方）和 `nineBlockStorageRecipes`（用于 3x3 方块配方，以及 1 个方块分解为 9 个物品的配方）。
 
 [advancement]: ../advancements.md
 [brewing]: ../../../items/mobeffects.md#brewing
@@ -316,9 +316,9 @@ public static void gatherData(GatherDataEvent.Client event) {
 [cancel]: ../../../concepts/events.md#可取消事件
 [codec]: ../../../datastorage/codecs.md
 [conditions]: ../conditions.md
-[customdatagen]: custom.md#data-generation
+[customdatagen]: custom.md#数据生成
 [customrecipes]: custom.md
-[datagen]: #data-generation
+[datagen]: #数据生成
 [event]: ../../../concepts/events.md
 [ingredients]: ingredients.md
 [logicalside]: ../../../concepts/sides.md#the-logical-side

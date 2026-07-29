@@ -89,7 +89,7 @@ float modifiedValue = valueEffect.process(enchantLevel, server.random, baseValue
 
 与盔甲有关：
 - `minecraft:armor_effectiveness`：决定盔甲抵御此武器的有效程度，范围从 0（无保护）到 1（正常保护）。破甲使用此组件。
-- `minecraft:damage_protection`：每“点”伤害减免都会使持有此 Item 时受到的伤害降低 4%，最多降低 80%。爆炸保护、摔落缓冲、火焰保护、保护和弹射物保护使用此组件。
+- `minecraft:damage_protection`：每“点”伤害减免都会使持有此物品时受到的伤害降低 4%，最多降低 80%。爆炸保护、摔落缓冲、火焰保护、保护和弹射物保护使用此组件。
 
 与攻击有关：
 - `minecraft:damage`：修改使用此武器造成的攻击伤害。锋利、穿刺、节肢杀手、力量和亡灵杀手使用此组件。
@@ -98,32 +98,32 @@ float modifiedValue = valueEffect.process(enchantLevel, server.random, baseValue
 - `minecraft:mob_experience`：修改击杀生物获得的经验量。未使用。
 
 与耐久有关：
-- `minecraft:item_damage`：修改 Item 受到的耐久损耗。低于 1 的值表示 Item 受到损耗的概率。耐久使用此组件。
-- `minecraft:repair_with_xp`：使 Item 使用获得的经验自行修复，并决定修复效率。经验修补使用此组件。
+- `minecraft:item_damage`：修改物品受到的耐久损耗。低于 1 的值表示物品受到损耗的概率。耐久使用此组件。
+- `minecraft:repair_with_xp`：使物品使用获得的经验自行修复，并决定修复效率。经验修补使用此组件。
 
 与弹射物有关：
 - `minecraft:ammo_use`：修改发射弓或弩时消耗的弹药量。该值会被限制为整数，因此低于 1 时弹药消耗为 0。无限使用此组件。
-- `minecraft:projectile_piercing`：修改此武器发射的弹射物可穿透的 Entity 数量。穿透使用此组件。
+- `minecraft:projectile_piercing`：修改此武器发射的弹射物可穿透的实体数量。穿透使用此组件。
 - `minecraft:projectile_count`：修改使用此弓射击时生成的弹射物数量。多重射击使用此组件。
 - `minecraft:projectile_spread`：修改弹射物相对于发射方向的最大散布角度。多重射击使用此组件。
 - `minecraft:trident_return_acceleration`：使三叉戟返回其所有者，并修改返回过程中施加于三叉戟的加速度。忠诚使用此组件。
 
 其他：
-- `minecraft:block_experience`：修改破坏 Block 获得的经验量。精准采集使用此组件。
+- `minecraft:block_experience`：修改破坏方块获得的经验量。精准采集使用此组件。
 - `minecraft:fishing_time_reduction`：使用此钓鱼竿钓鱼时，将浮漂下沉所需时间减少给定秒数。饵钓使用此组件。
 - `minecraft:fishing_luck_bonus`：修改钓鱼战利品表使用的[幸运值][luck]。海之眷顾使用此组件。
 
 #### 定义为 `DataComponentType<List<TargetedConditionalEffect<EnchantmentValueEffect>>>`
 
-- `minecraft:equipment_drops`：修改被此武器击杀的 Entity 掉落装备的概率。抢夺使用此组件。
+- `minecraft:equipment_drops`：修改被此武器击杀的实体掉落装备的概率。抢夺使用此组件。
 
 ## 基于位置的效果组件
 
 _另请参阅 Minecraft Wiki 上的[基于位置的效果组件][Location Based Effect Components]。_
 
-基于位置的效果组件是实现 `EnchantmentLocationBasedEffect` 的组件。它们定义需要知道附魔持有者在 Level 中所处位置才能执行的动作。其工作依赖两个主要方法：`EnchantmentEntityEffect#onChangedBlock`，在装备附魔 Item 以及持有者改变 `BlockPos` 时调用；`onDeactivate`，在移除附魔 Item 时调用。
+基于位置的效果组件是实现 `EnchantmentLocationBasedEffect` 的组件。它们定义需要知道附魔持有者在世界中所处位置才能执行的动作。其工作依赖两个主要方法：`EnchantmentEntityEffect#onChangedBlock`，在装备附魔物品以及持有者改变 `BlockPos` 时调用；`onDeactivate`，在移除附魔物品时调用。
 
-以下示例使用基于位置的效果组件类型 `minecraft:attributes` 来改变持有者 Entity 的缩放比例：
+以下示例使用基于位置的效果组件类型 `minecraft:attributes` 来改变持有者实体的缩放比例：
 
 <Tabs>
 <TabItem value="attribute.json" label="JSON">
@@ -175,40 +175,40 @@ DataComponentMap.builder().set(
 
 原版添加了以下基于位置的效果：
 
-- `minecraft:all_of`：按顺序运行 Entity 效果列表。
+- `minecraft:all_of`：按顺序运行实体效果列表。
 - `minecraft:apply_mob_effect`：对受影响的生物应用[生物效果][mob effect]。
 - `minecraft:attribute`：向附魔持有者应用[属性修改器][attribute modifier]。
-- `minecraft:change_item_damage`：损耗此 Item 的耐久度。
-- `minecraft:damage_entity`：伤害受影响的 Entity。在攻击上下文中会与攻击伤害叠加。
+- `minecraft:change_item_damage`：损耗此物品的耐久度。
+- `minecraft:damage_entity`：伤害受影响的实体。在攻击上下文中会与攻击伤害叠加。
 - `minecraft:explode`：生成爆炸。
-- `minecraft:ignite`：点燃 Entity。
-- `minecraft:apply_impulse`：向 Entity 施加指定速度（分解为方向、坐标和大小）。
+- `minecraft:ignite`：点燃实体。
+- `minecraft:apply_impulse`：向实体施加指定速度（分解为方向、坐标和大小）。
 - `minecraft:apply_exhaustion`：为玩家增加指定数量的饥饿消耗。
 - `minecraft:play_sound`：播放指定声音。
-- `minecraft:replace_block`：替换给定偏移位置的 Block。
-- `minecraft:replace_disk`：替换圆盘形区域内的 Block。
+- `minecraft:replace_block`：替换给定偏移位置的方块。
+- `minecraft:replace_disk`：替换圆盘形区域内的方块。
 - `minecraft:run_function`：运行指定的[数据包函数][datapack function]。
-- `minecraft:set_block_properies`：修改指定 Block 的 BlockState property。
+- `minecraft:set_block_properies`：修改指定方块的方块状态属性。
 - `minecraft:spawn_particles`：生成粒子。
-- `minecraft:summon_entity`：生成 Entity。
+- `minecraft:summon_entity`：生成实体。
 
 ### 原版基于位置的效果组件类型
 
 #### 定义为 `DataComponentType<List<ConditionalEffect<EnchantmentLocationBasedEffect>>>`
 
-- `minecraft:location_changed`：持有者的 Block 位置发生变化以及装备此 Item 时，运行基于位置的效果。冰霜行者和灵魂疾行使用此组件。
+- `minecraft:location_changed`：持有者的方块位置发生变化以及装备此物品时，运行基于位置的效果。冰霜行者和灵魂疾行使用此组件。
 
 #### 定义为 `DataComponentType<List<EnchantmentAttributeEffect>>`
 
-- `minecraft:attributes`：向持有者应用属性修改器，并在不再装备附魔 Item 时移除。
+- `minecraft:attributes`：向持有者应用属性修饰符，并在不再装备附魔物品时移除。
 
-## Entity 效果组件
+## 实体效果组件
 
-_另请参阅 Minecraft Wiki 上的 [Entity 效果组件][Entity Effect Components]。_
+_另请参阅 Minecraft Wiki 上的[实体效果组件][Entity Effect Components]。_
 
-Entity 效果组件是实现 `EnchantmentEntityEffect` 的组件，后者是 `EnchantmentLocationBasedEffect` 的子类型。这些组件会重写 `EnchantmentLocationBasedEffect#onChangedBlock`，转而运行 `EnchantmentEntityEffect#apply`；根据组件具体类型，代码库中的其他位置也会直接调用该 `apply` 方法。因此，效果无需等待持有者的 Block 位置改变即可发生。
+实体效果组件是实现 `EnchantmentEntityEffect` 的组件，后者是 `EnchantmentLocationBasedEffect` 的子类型。这些组件会重写 `EnchantmentLocationBasedEffect#onChangedBlock`，转而运行 `EnchantmentEntityEffect#apply`；根据组件具体类型，代码库中的其他位置也会直接调用该 `apply` 方法。因此，效果无需等待持有者的方块位置改变即可发生。
 
-除仅注册为基于位置效果组件的 `minecraft:attribute` 外，所有基于位置的效果组件类型也都是有效的 Entity 效果组件类型。
+除仅注册为基于位置效果组件的 `minecraft:attribute` 外，所有基于位置的效果组件类型也都是有效的实体效果组件类型。
 
 以下是火焰附加附魔中此类组件的 JSON 定义示例：
 
@@ -292,20 +292,20 @@ DataComponentMap.builder().set(
 </TabItem>
 </Tabs>
 
-此处的 Entity 效果组件是 `minecraft:post_attack`，其效果是 `minecraft:ignite`，由 `Ignite` record 实现。该 record 对 `EnchantmentEntityEffect#apply` 的实现会点燃目标 Entity。
+此处的实体效果组件是 `minecraft:post_attack`，其效果是 `minecraft:ignite`，由 `Ignite` record 实现。该 record 对 `EnchantmentEntityEffect#apply` 的实现会点燃目标实体。
 
-### 原版附魔 Entity 效果组件类型
+### 原版附魔实体效果组件类型
 
 #### 定义为 `DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>>`
 
-- `minecraft:post_piercing_attack`：LivingEntity 向前突进时运行 Entity 效果。突进使用此组件。
-- `minecraft:hit_block`：Entity（例如弹射物）命中 Block 时运行 Entity 效果。引雷使用此组件。
-- `minecraft:tick`：每个 tick 运行 Entity 效果。灵魂疾行使用此组件。
-- `minecraft:projectile_spawned`：弓或弩生成弹射物 Entity 后运行 Entity 效果。火矢使用此组件。
+- `minecraft:post_piercing_attack`：`LivingEntity` 向前突进时运行实体效果。突进使用此组件。
+- `minecraft:hit_block`：实体（例如弹射物）命中方块时运行实体效果。引雷使用此组件。
+- `minecraft:tick`：每个 tick 运行实体效果。灵魂疾行使用此组件。
+- `minecraft:projectile_spawned`：弓或弩生成弹射物实体后运行实体效果。火矢使用此组件。
 
 #### 定义为 `DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>>`
 
-- `minecraft:post_attack`：攻击对 Entity 造成伤害后运行 Entity 效果。节肢杀手、引雷、火焰附加、荆棘和风爆使用此组件。
+- `minecraft:post_attack`：攻击对实体造成伤害后运行实体效果。节肢杀手、引雷、火焰附加、荆棘和风爆使用此组件。
 
 有关各项的更多细节，请查看[相关 Minecraft Wiki 页面][relevant minecraft wiki page]。
 
@@ -317,8 +317,8 @@ DataComponentMap.builder().set(
 
 #### 定义为 `DataComponentType<Unit>`
 
-- `minecraft:prevent_equipment_drop`：阻止玩家死亡时掉落此 Item。消失诅咒使用此组件。
-- `minecraft:prevent_armor_change`：阻止从盔甲槽位卸下此 Item。绑定诅咒使用此组件。
+- `minecraft:prevent_equipment_drop`：阻止玩家死亡时掉落此物品。消失诅咒使用此组件。
+- `minecraft:prevent_armor_change`：阻止从盔甲槽位卸下此物品。绑定诅咒使用此组件。
 
 #### 定义为 `DataComponentType<List<CrossbowItem.ChargingSounds>>`
 

@@ -1,16 +1,16 @@
 # 客户端物品（Client Item）
 
-客户端 Item 是代码中表示 `ItemStack` 应如何提交给游戏进行渲染的对象，用于指定在给定 State 下使用哪些 Model。客户端 Item 位于 [`assets` 文件夹][assets]中的 `items` 子目录，其相对位置由 `DataComponents#ITEM_MODEL` 指定。默认情况下，它就是对象的 Registry Name（例如 `minecraft:apple` 默认位于 `assets/minecraft/items/apple.json`）。
+客户端物品（Client Item）是代码中表示 `ItemStack` 应如何提交给游戏进行渲染的对象，用于指定在给定状态下使用哪些模型。客户端物品位于 [`assets` 文件夹][assets]中的 `items` 子目录，其相对位置由 `DataComponents#ITEM_MODEL` 指定。默认情况下，它就是对象的注册名（例如 `minecraft:apple` 默认位于 `assets/minecraft/items/apple.json`）。
 
-客户端 Item 存储在 `ModelManager` 中，可通过 `Minecraft.getInstance().modelManager` 访问。随后，可以使用 [`Identifier`][rl] 调用 `ModelManager#getItemModel` 或 `getItemProperties`，取得客户端 Item 信息。
+客户端物品存储在 `ModelManager` 中，可通过 `Minecraft.getInstance().modelManager` 访问。随后，可以使用 [`Identifier`][rl] 调用 `ModelManager#getItemModel` 或 `getItemProperties`，取得客户端物品信息。
 
 :::warning
-不要把它与游戏中[经过 Bake 并实际渲染的 Model][models] 混淆。
+不要把它与游戏中[经过烘焙并实际渲染的模型][models]混淆。
 :::
 
 ## 概览
 
-客户端 Item JSON 可分成两部分：由 `model` 定义的 Model，以及由 `properties` 定义的 Property。`model` 负责定义在给定上下文中提交 `ItemStack` 进行渲染时使用哪些 Model JSON。另一方面，`properties` 负责 Renderer 所使用的设置。
+客户端物品 JSON 可分成两部分：由 `model` 定义的模型，以及由 `properties` 定义的属性。`model` 负责定义在给定上下文中提交 `ItemStack` 进行渲染时使用哪些模型 JSON。另一方面，`properties` 负责渲染器所使用的设置。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -32,7 +32,7 @@
         // 上升到物品交换的正常位置
         "hand_animation_on_swap": false,
         // 当 true 时，允许模型在其定义之外渲染
-        // 槽位 bounds（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
+        // 槽位边界（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
         // 而不是被剪
         "oversized_in_gui": false,
         // 交换时将标量应用于手的高度
@@ -66,7 +66,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
             // 上升到物品交换的正常位置
             false,
             // 当 true 时，允许模型在其定义之外渲染
-            // 槽位 bounds（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
+            // 槽位边界（在 GuiItemRenderState#bounds 中定义）位于 GUI 中
             // 而不是被剪
             false,
             // 交换时将标量应用于手的高度
@@ -79,9 +79,9 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-## 基础 Model
+## 基础模型
 
-`model` 中的 `type` 字段决定如何选择为 Item 提交渲染的 Model。最简单的类型由 `minecraft:model`（或 `CuboidItemModelWrapper`）处理，它实际定义相对于 `models` 目录（例如 `assets/<namespace>/models/<path>.json`）提交渲染的 Model JSON。
+`model` 中的 `type` 字段决定如何选择为物品提交渲染的模型。最简单的类型由 `minecraft:model`（或 `CuboidItemModelWrapper`）处理，它实际定义相对于 `models` 目录（例如 `assets/<namespace>/models/<path>.json`）提交渲染的模型 JSON。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -124,9 +124,9 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-### 本地 Transform
+### 本地变换
 
-大多数客户端 Item Model 都能为 Item Model 指定 `Transformation`，类似于 Model JSON。这些 `Transformation` 会在关联 Display Context 的 Model JSON Transform 之后应用。它通过 `minecraft:model` 类型的 `transformation` 字段设置。
+大多数客户端物品模型都能为物品模型指定 `Transformation`，类似于模型 JSON。这些 `Transformation` 会在关联显示上下文的模型 JSON 变换之后应用。它通过 `minecraft:model` 类型的 `transformation` 字段设置。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -162,7 +162,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                 1.0,
                 1.0
             ],
-            // 缩放后客户端项的旋转，指定为：
+            // 缩放后客户端物品的旋转，指定为：
             // - `[x, y, z, w]`
             // - {角度,[x,y,z]旋转轴}
             "right_rotation": {
@@ -214,7 +214,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 ### 着色
 
-与大多数 Model 一样，客户端 Item 可以根据 Stack Property 更改指定纹理的颜色。因此，`minecraft:model` 类型提供 `tints` 字段，用于定义要应用的不透明颜色。这些对象称为 `ItemTintSource`，定义在 `ItemTintSources` 中。它们也有 `type` 字段，用于定义使用哪个 Source。应用到的 `tintindex` 由它们在列表中的索引指定。
+与大多数模型一样，客户端物品可以根据堆叠属性更改指定纹理的颜色。因此，`minecraft:model` 类型提供 `tints` 字段，用于定义要应用的不透明颜色。这些对象称为着色源（Tint Source），由 `ItemTintSource` 表示并定义在 `ItemTintSources` 中。它们也有 `type` 字段，用于定义使用哪个来源。应用到的 `tintindex` 由它们在列表中的索引指定。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -284,7 +284,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `ItemTintSource` 与其他基于 Codec 的 Registry Object 类似。创建一个实现 `ItemTintSource` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterColorHandlersEvent.ItemTintSources` 将 Codec 注册到其 Registry。`ItemTintSource` 只包含一个 `calculate` 方法，它接收当前 `ItemStack`、Stack 所在 Level 和持有 Stack 的 Entity，返回 ARGB 格式的不透明颜色，其中最高 8 Bit 为 0xFF。
+创建自己的 `ItemTintSource` 与其他基于 Codec 的注册表对象类似。创建一个实现 `ItemTintSource` 的类，创建用于编码和解码对象的 `MapCodec`，再通过[模组事件总线][modbus]上的 `RegisterColorHandlersEvent.ItemTintSources` 将 Codec 注册到其注册表。`ItemTintSource` 只包含一个 `calculate` 方法，它接收当前 `ItemStack`、堆叠所在的世界和持有堆叠的实体，返回 ARGB 格式的不透明颜色，其中最高 8 位为 0xFF。
 
 ```java
 public record DamageBar(int defaultColor) implements ItemTintSource {
@@ -376,9 +376,9 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-## Composite Model
+## 组合模型
 
-有时可能需要为单个 Item 注册多个 Model。虽然可以直接使用 [Composite Model Loader][composite] 完成，但对于 Item Model，还有自定义 `minecraft:composite` 类型，它接收要提交渲染的 Model 列表。
+有时可能需要为单个物品注册多个模型。虽然可以直接使用[组合模型加载器][composite]完成，但对于物品模型，还有自定义 `minecraft:composite` 类型，它接收要提交渲染的模型列表。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -444,13 +444,13 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-## Property Model
+## 属性模型
 
-有些 Item 会根据 Stack 中保存的数据改变 State（例如拉弓、Elytra 损坏、Clock 处于给定 Dimension 等）。为了让 Model 根据 State 改变，Item Model 可以指定要跟踪的 Property，并根据相应条件选择 Model。Property Model 有三种类型：Range Dispatch、Select 和 Conditional，分别相当于针对 Float、Switch Case 和 Boolean 的表达式。
+有些物品会根据堆叠中保存的数据改变状态（例如拉弓、鞘翅损坏、时钟处于给定维度等）。为了让模型根据状态改变，物品模型可以指定要跟踪的属性，并根据相应条件选择模型。属性模型（Property Model）有三种类型：范围分派、选择和条件，分别相当于针对浮点数、switch case 和布尔值的表达式。
 
-### Range Dispatch Model
+### 范围分派模型
 
-Range Dispatch Model 通过类型定义某个 `RangeSelectItemModelProperty`，取得用于切换 Model 的 Float。每个 Entry 都有某个 Threshold 值；Float 必须大于它，才会提交相应 Model 进行渲染。所选 Model 是不超过 Property 值、且 Threshold 最接近的 Model（例如，Property 值为 `4`，Threshold 为 `3` 和 `5` 时，会绘制与 `3` 关联的 Model；值为 `6` 时，会绘制与 `5` 关联的 Model）。可用的 `RangeSelectItemModelProperty` 位于 `RangeSelectItemModelProperties`。
+范围分派模型（Range Dispatch Model）通过类型定义某个 `RangeSelectItemModelProperty`，取得用于切换模型的浮点数。每个条目都有某个阈值；浮点数必须大于它，才会提交相应模型进行渲染。所选模型是不超过属性值、且阈值最接近的模型（例如，属性值为 `4`，阈值为 `3` 和 `5` 时，会绘制与 `3` 关联的模型；值为 `6` 时，会绘制与 `5` 关联的模型）。可用的 `RangeSelectItemModelProperty` 位于 `RangeSelectItemModelProperties`。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -464,7 +464,7 @@ Range Dispatch Model 通过类型定义某个 `RangeSelectItemModelProperty`，�
 
         // 使用的`RangeSelectItemModelProperty`
         "property": "minecraft:count",
-        // 与计算的 property 值相乘的标量
+        // 与计算的属性值相乘的标量
         // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
         "scale": 1,
         "fallback": {
@@ -475,7 +475,7 @@ Range Dispatch Model 通过类型定义某个 `RangeSelectItemModelProperty`，�
             "model": "examplemod:item/example_item"
         },
 
-        // `Count` 定义的 property
+        // `Count` 定义的属性
         // 当 true 时，使用其最大堆栈大小标准化计数
         "normalize": true,
 
@@ -522,7 +522,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                 // 当 true 时，使用其最大堆栈大小标准化计数
                 true
             ),
-            // 与计算的 property 值相乘的标量
+            // 与计算的属性值相乘的标量
             // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
             1,
             // 具有阈值信息的条目
@@ -567,7 +567,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `RangeSelectItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `RangeSelectItemModelProperty` 的类，创建用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterRangeSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，它接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity 以及某个带 Seed 的值，返回由 Range Dispatch Model 解释的任意 Float。
+创建自己的 `RangeSelectItemModelProperty` 与其他基于 Codec 的注册表对象类似。创建实现 `RangeSelectItemModelProperty` 的类，创建用于编码和解码对象的 `MapCodec`，再通过[模组事件总线][modbus]上的 `RegisterRangeSelectItemModelPropertyEvent` 将 Codec 注册到其注册表。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，它接收当前 `ItemStack`、堆叠所在的世界、持有堆叠的实体以及某个带种子的值，返回由范围分派模型解释的任意浮点数。
 
 ```java
 public record AppliedEnchantments() implements RangeSelectItemModelProperty {
@@ -609,7 +609,7 @@ public static void registerRangeProperties(RegisterRangeSelectItemModelPropertyE
 
         // 使用的`RangeSelectItemModelProperty`
         "property": "examplemod:applied_enchantments",
-        // 与计算的 property 值相乘的标量
+        // 与计算的属性值相乘的标量
         // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
         "scale": 0.5,
         "fallback": {
@@ -662,7 +662,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
         EXAMPLE_ITEM.get(),
         new RangeSelectItemModel.Unbaked(
             new AppliedEnchantments(),
-            // 与计算的 property 值相乘的标量
+            // 与计算的属性值相乘的标量
             // 如果 count 为 0.3，scale 为 0.2，则检查的阈值将为 0.3*0.2=0.06
             0.5,
             // 具有阈值信息的条目
@@ -708,11 +708,11 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </Tabs>
 
 
-有关 Item Model 如何提交渲染的更多信息，请参阅[下文][itemmodel]。
+有关物品模型如何提交渲染的更多信息，请参阅[下文][itemmodel]。
 
-### Select Model
+### 选择模型
 
-Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProperty` 定义的某个值切换，就像针对枚举的 Switch 语句。所选 Model 是与 Switch Case 中的值完全匹配的 Property。可用的 `SelectItemModelProperty` 位于 `SelectItemModelProperties`。
+选择模型（Select Model）与范围分派模型类似，但它根据 `SelectItemModelProperty` 定义的某个值切换，就像针对枚举的 switch 语句。所选模型是与 switch case 中的值完全匹配的属性。可用的 `SelectItemModelProperty` 位于 `SelectItemModelProperties`。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -727,13 +727,13 @@ Select Model 与 Range Dispatch Model 类似，但它根据 `SelectItemModelProp
         // 使用的`SelectItemModelProperty`
         "property": "minecraft:display_context",
         "fallback": {
-            // 没有大小写匹配时使用的后备模型
+            // 没有分支匹配时使用的后备模型
             // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
             "model": "examplemod:item/example_item"
         },
 
-        // 基于可选 property 的开关案例
+        // 基于可选属性的 switch case
         "cases": [
             {
                 // 当显示上下文为 `ItemDisplayContext#GUI` 时
@@ -775,7 +775,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
             new SelectItemModel.UnbakedSwitch(
                 // 使用的`SelectItemModelProperty`
                 new DisplayContext(),
-                // 基于可选 property 切换案例
+                // 基于可选属性切换 case
                 List.of(
                     new SelectItemModel.SwitchCase(
                         // 此模型要匹配的分支列表
@@ -801,7 +801,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                     )
                 )
             ),
-            // 没有大小写匹配时使用的后备模型
+            // 没有分支匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
                     // 指向 'assets/examplemod/models/item/example_item.json'
@@ -818,25 +818,25 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `SelectItemModelProperty` 与基于 Codec 的 Registry Object 类似。创建实现 `SelectItemModelProperty<T>` 的类、用于序列化和反序列化 Property 值的 `Codec`、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterSelectItemModelPropertyEvent` 将 Codec 注册到其 Registry。`SelectItemModelProperty` 的泛型 `T` 表示进行切换的值。它只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Select Model 解释的任意 `T`。
+创建自己的 `SelectItemModelProperty` 与基于 Codec 的注册表对象类似。创建实现 `SelectItemModelProperty<T>` 的类、用于序列化和反序列化属性值的 `Codec`、用于编码和解码对象的 `MapCodec`，再通过[模组事件总线][modbus]上的 `RegisterSelectItemModelPropertyEvent` 将 Codec 注册到其注册表。`SelectItemModelProperty` 的泛型 `T` 表示进行切换的值。它只包含一个 `get` 方法，接收当前 `ItemStack`、堆叠所在的世界、持有堆叠的实体、某个带种子的值，以及物品的显示上下文，返回由选择模型解释的任意 `T`。
 
 ```java
-// 选择 property 类
+// 选择属性类
 public record StackRarity() implements SelectItemModelProperty<Rarity> {
 
     // 包含相关编解码器的要注册的对象
     public static final SelectItemModelProperty.Type<StackRarity, Rarity> TYPE = SelectItemModelProperty.Type.create(
-        // 此 property 的映射编解码器
+        // 此属性的映射编解码器
         MapCodec.unit(new StackRarity()),
         // 正在选择的对象的编解码器
-        // 用于序列化案例 entries（"when"：<property 值>）
+        // 用于序列化 case 条目（"when"：<属性值>）
         Rarity.CODEC
     );
 
     @Nullable
     @Override
     public Rarity get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
-        // 当null时，使用后备模型
+        // 当为 null 时，使用后备模型
         return stack.get(DataComponents.RARITY);
     }
 
@@ -852,7 +852,7 @@ public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent
     event.register(
         // 作为类型引用的名称
         Identifier.fromNamespaceAndPath("examplemod", "rarity"),
-        // property 类型
+        // 属性类型
         StackRarity.TYPE
     )
 }
@@ -871,13 +871,13 @@ public static void registerSelectProperties(RegisterSelectItemModelPropertyEvent
         // 使用的`SelectItemModelProperty`
         "property": "examplemod:rarity",
         "fallback": {
-            // 没有大小写匹配时使用的后备模型
+            // 没有分支匹配时使用的后备模型
             // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
             "model": "examplemod:item/example_item"
         },
 
-        // 基于可选 property 的开关案例
+        // 基于可选属性的 switch case
         "cases": [
             {
                 // 当稀有度为 `Rarity#UNCOMMON` 时
@@ -919,7 +919,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
             new SelectItemModel.UnbakedSwitch(
                 // 使用的`SelectItemModelProperty`
                 new StackRarity(),
-                // 基于可选 property 切换案例
+                // 基于可选属性切换 case
                 List.of(
                     new SelectItemModel.SwitchCase(
                         // 此模型要匹配的分支列表
@@ -945,7 +945,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                     )
                 )
             ),
-            // 没有大小写匹配时使用的后备模型
+            // 没有分支匹配时使用的后备模型
             Optional.of(
                 new CuboidItemModelWrapper.Unbaked(
                     // 指向 'assets/examplemod/models/item/example_item.json'
@@ -962,9 +962,9 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-### Conditional Model
+### 条件模型
 
-Conditional Model 是三者中最简单的一种。类型定义某个 `ConditionalItemModelProperty`，取得用于切换 Model 的 Boolean。根据返回值是 true 还是 false 选择 Model。可用的 `ConditionalItemModelProperty` 位于 `ConditionalItemModelProperties`。
+条件模型（Conditional Model）是三者中最简单的一种。类型定义某个 `ConditionalItemModelProperty`，取得用于切换模型的布尔值。根据返回值是 true 还是 false 选择模型。可用的 `ConditionalItemModelProperty` 位于 `ConditionalItemModelProperties`。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -979,7 +979,7 @@ Conditional Model 是三者中最简单的一种。类型定义某个 `Condition
         // 使用的`ConditionalItemModelProperty`
         "property": "minecraft:damaged",
 
-        // boolean 结果是什么
+        // 布尔结果是什么
         "on_true": {
             // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
@@ -1009,16 +1009,16 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new ConditionalItemModel.Unbaked(
-            // 要检查的 property
+            // 要检查的属性
             new Damaged(),
-            // 当 boolean 为 true 时
+            // 当布尔值为 true 时
             new CuboidItemModelWrapper.Unbaked(
                 // 指向 'assets/examplemod/models/item/example_item_1.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                 Optional.empty(),
                 Collections.emptyList()
             ),
-            // 当 boolean 为 false 时
+            // 当布尔值为 false 时
             new CuboidItemModelWrapper.Unbaked(
                 // 指向 'assets/examplemod/models/item/example_item_2.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
@@ -1033,7 +1033,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `ConditionalItemModelProperty` 与其他基于 Codec 的 Registry Object 类似。创建实现 `ConditionalItemModelProperty` 的类、用于 Encode 和 Decode 对象的 `MapCodec`，再通过[模组事件总线][modbus] 上的 `RegisterConditionalItemModelPropertyEvent` 将 Codec 注册到其 Registry。`RangeSelectItemModelProperty` 只包含一个 `get` 方法，接收当前 `ItemStack`、Stack 所在 Level、持有 Stack 的 Entity、某个带 Seed 的值，以及 Item 的 Display Context，返回由 Conditional Model（`on_true` 或 `on_false`）解释的任意 Boolean。
+创建自己的 `ConditionalItemModelProperty` 与其他基于 Codec 的注册表对象类似。创建实现 `ConditionalItemModelProperty` 的类、用于编码和解码对象的 `MapCodec`，再通过[模组事件总线][modbus]上的 `RegisterConditionalItemModelPropertyEvent` 将 Codec 注册到其注册表。`ConditionalItemModelProperty` 只包含一个 `get` 方法，接收当前 `ItemStack`、堆叠所在的世界、持有堆叠的实体、某个带种子的值，以及物品的显示上下文，返回由条件模型（`on_true` 或 `on_false`）解释的任意布尔值。
 
 ```java
 public record BarVisible() implements ConditionalItemModelProperty {
@@ -1076,7 +1076,7 @@ public static void registerConditionalProperties(RegisterConditionalItemModelPro
         // 使用的`ConditionalItemModelProperty`
         "property": "examplemod:bar_visible",
 
-        // boolean 结果是什么
+        // 布尔结果是什么
         "on_true": {
             // 可以是任何未烘焙的模型类型
             "type": "minecraft:model",
@@ -1106,16 +1106,16 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
     itemModels.itemModelOutput.accept(
         EXAMPLE_ITEM.get(),
         new ConditionalItemModel.Unbaked(
-            // 要检查的 property
+            // 要检查的属性
             new BarVisible(),
-            // 当 boolean 为 true 时
+            // 当布尔值为 true 时
             new CuboidItemModelWrapper.Unbaked(
                 // 指向 'assets/examplemod/models/item/example_item_1.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_1"),
                 Optional.empty(),
                 Collections.emptyList()
             ),
-            // 当 boolean 为 false 时
+            // 当布尔值为 false 时
             new CuboidItemModelWrapper.Unbaked(
                 // 指向 'assets/examplemod/models/item/example_item_2.json'
                 Identifier.fromNamespaceAndPath("examplemod", "item/example_item_2"),
@@ -1129,9 +1129,9 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 
 </TabItem>
 </Tabs>
-## Special Model
+## 特殊模型
 
-并非所有 Model 都能用基础 Model JSON 表示。有些 Model 可能具有动态组件，或使用为 [`BlockEntityRenderer`][ber] 创建的现有 `Model`。在这些情况下，可以使用一种特殊 Model 类型，让用户指定要提交哪些[功能][features]进行渲染。它们称为 `SpecialModelRenderer`，定义在 `SpecialModelRenderers` 中。
+并非所有模型都能用基础模型 JSON 表示。有些模型可能具有动态组件，或使用为 [`BlockEntityRenderer`][ber] 创建的现有 `Model`。在这些情况下，可以使用一种特殊模型（Special Model）类型，让用户指定要提交哪些[功能][features]进行渲染。它们称为 `SpecialModelRenderer`，定义在 `SpecialModelRenderers` 中。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -1150,13 +1150,13 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
             // 使用的特殊模型渲染器
             "type": "minecraft:head",
 
-            // `SkullSpecialRenderer.Unbaked` 定义的 property
+            // `SkullSpecialRenderer.Unbaked` 定义的属性
             // 头骨方块的类型
             "kind": "wither_skeleton",
             // 渲染头部时使用的纹理
             // 指向 'assets/examplemod/textures/entity/heads/skeleton_override.png'
             "texture": "examplemod:heads/skeleton_override",
-            // 用于为头部模型制作动画的动画 float
+            // 用于为头部模型制作动画的浮点值
             "animation": 0.5
         }
     }
@@ -1187,7 +1187,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
                 Optional.of(
                     Identifier.fromNamespaceAndPath("examplemod", "heads/skeleton_override")
                 ),
-                // 用于为头部模型制作动画的动画 float
+                // 用于为头部模型制作动画的浮点值
                 0.5f
             )
         )
@@ -1198,15 +1198,15 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-创建自己的 `SpecialModelRenderer` 分为三部分：用于提交 Item 渲染[功能][features]的 `SpecialModelRenderer` 实例、用于读写 JSON 的 `SpecialModelRenderer.Unbaked` 实例，以及在作为 Item（必要时也作为 Block）时使用该 Renderer 的注册。
+创建自己的 `SpecialModelRenderer` 分为三部分：用于提交物品渲染[功能][features]的 `SpecialModelRenderer` 实例、用于读写 JSON 的 `SpecialModelRenderer.Unbaked` 实例，以及在作为物品（必要时也作为方块）时使用该渲染器的注册。
 
-首先是 `SpecialModelRenderer`。它的工作方式与其他 Renderer 类（例如 BlockEntity Renderer、Entity Renderer）类似，应接收提交过程中使用的静态数据（例如 `Model` 子类、纹理的 `SpriteId` 等）。需要注意两个方法。第一个是 `extractArgument`，它只提供 `ItemStack` 中的必要内容，从而限制 `submit` 方法可用的数据量。
+首先是 `SpecialModelRenderer`。它的工作方式与其他渲染器类（例如方块实体渲染器、实体渲染器）类似，应接收提交过程中使用的静态数据（例如 `Model` 子类、纹理的 `SpriteId` 等）。需要注意两个方法。第一个是 `extractArgument`，它只提供 `ItemStack` 中的必要内容，从而限制 `submit` 方法可用的数据量。
 
 :::info
 如果不确定需要哪些数据，可以直接让它返回相应 `ItemStack`。如果完全不需要 Stack 数据，则可使用已经替你实现该方法的 `NoDataSpecialModelRenderer`。
 :::
 
-接下来是 `submit` 方法。它接收 `extractArgument` 的返回值、Pose Stack、用于提交所需功能的 Collector、Packed Light、Overlay Texture、Stack 是否具有 Foil（例如已附魔），以及 Outline Color。所有功能都应在此方法中提交。
+接下来是 `submit` 方法。它接收 `extractArgument` 的返回值、姿势栈（Pose Stack）、用于提交所需功能的收集器、打包光照、叠加纹理、堆叠是否具有箔片效果（例如已附魔），以及轮廓颜色。所有功能都应在此方法中提交。
 
 ```java
 public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple model, SpriteId sprite) implements SpecialModelRenderer<Boolean> {
@@ -1229,7 +1229,7 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
 }
 ```
 
-接下来是 `SpecialModelRenderer.Unbaked` 实例。它应包含可从文件读取、用于确定向 Special Renderer 传入什么内容的数据。它也包含两个方法：用于构造 Special Renderer 实例的 `bake`，以及定义文件 Encode/Decode 所用 `MapCodec` 的 `type`。
+接下来是 `SpecialModelRenderer.Unbaked` 实例。它应包含可从文件读取、用于确定向特殊渲染器传入什么内容的数据。它也包含两个方法：用于构造特殊渲染器实例的 `bake`，以及定义文件编码/解码所用 `MapCodec` 的 `type`。
 
 ```java
 public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple model, SpriteId sprite) implements SpecialModelRenderer<Boolean> {
@@ -1251,14 +1251,14 @@ public record ExampleSpecialRenderer(SpriteGetter spriteGetter, Model.Simple mod
             // 将资源位置解析为绝对路径
             Identifier textureLoc = this.texture.withPath(path -> "textures/entity/" + path + ".png");
 
-            // 获取要渲染的模型和sprite
+            // 获取要渲染的模型和 sprite
             return new ExampleSpecialRenderer(ctx.sprites(), ...);
         }
     }
 }
 ```
 
-最后，把对象注册到所需位置。对于客户端 Item，通过[模组事件总线][modbus] 上的 `RegisterSpecialModelRendererEvent` 完成。如果 Special Renderer 还应作为 `BlockEntityRenderer` 的一部分使用，例如在类似 Item 的上下文中渲染（如 Enderman 手持 Block），则应通过[模组事件总线][modbus] 上的 `RegisterBlockModelsEvent` 注册 Block 的 `Unbaked` 版本。
+最后，把对象注册到所需位置。对于客户端物品，通过[模组事件总线][modbus]上的 `RegisterSpecialModelRendererEvent` 完成。如果特殊渲染器还应作为 `BlockEntityRenderer` 的一部分使用，例如在类似物品的上下文中渲染（如末影人手持方块），则应通过[模组事件总线][modbus]上的 `RegisterBlockModelsEvent` 注册方块的 `Unbaked` 版本。
 
 ```java
 // 在某些事件处理器类中
@@ -1305,7 +1305,7 @@ public static void registerSpecialBlockRenderers(RegisterBlockModelsEvent event)
             // 使用的特殊模型渲染器
             "type": "examplemod:example_special",
 
-            // `ExampleSpecialRenderer.Unbaked` 定义的 property
+            // `ExampleSpecialRenderer.Unbaked` 定义的属性
             // 使用的纹理
             // 指向 'assets/examplemod/textures/entity/example/example_texture.png'
             "texture": "examplemod:example/example_texture"
@@ -1343,12 +1343,12 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-## Dynamic Fluid Container
+## 动态流体容器
 
-NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以在运行时重新设置自身纹理，以匹配所装流体。
+NeoForge 添加了一种用于构造动态流体容器（Dynamic Fluid Container）的物品模型，它可以在运行时重新设置自身纹理，以匹配所装流体。
 
 :::info
-要把 Fluid Tint 应用于流体纹理，相应 Item 必须附加 `Capabilities.FluidHandler.ITEM`。如果 Item 没有直接使用 `BucketItem`（也不是其子类型），就需要[为 Item 注册 Capability][capability]。
+要把流体着色（Fluid Tint）应用于流体纹理，相应物品必须附加 `Capabilities.FluidHandler.ITEM`。如果物品没有直接使用 `BucketItem`（也不是其子类型），就需要[为物品注册能力][capability]。
 :::
 
 <Tabs>
@@ -1364,7 +1364,7 @@ NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以
         // 用于构造容器的纹理
         // 这些是参考方块图集的，因此它们是相对于 `textures` 目录的
         "textures": {
-            // 设置模型粒子sprite
+            // 设置模型粒子 sprite
             // 如果未设置，则使用不是 null 的第一个纹理：
             // - 流体静止纹理
             // - 容器基础纹理
@@ -1383,7 +1383,7 @@ NeoForge 添加了一种用于构造动态流体容器的 Item Model，它可以
             // 设置纹理以用作
             // - 'cover_is_mask' 为 false 时的叠加纹理
             // - 当 'cover_is_mask' 为 true 时，应用于底座纹理的遮罩（应该是纯白色才能看到）
-            // 如果'cover_is_mask'为true 时未设置或未设置基础纹理，则不绘制该图层
+            // 如果 'cover_is_mask' 为 true 时未设置或未设置基础纹理，则不绘制该图层
             // 指向 'assets/neoforge/textures/item/mask/bucket_fluid_cover.png'
             "cover": "neoforge:item/mask/bucket_fluid_cover",
         },
@@ -1417,7 +1417,7 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
             // 用于构造容器的纹理
             // 这些是参考方块图集的，因此它们是相对于 `textures` 目录的
             new DynamicFluidContainerModel.Textures(
-                // 设置模型粒子sprite
+                // 设置模型粒子 sprite
                 // 如果未设置，则使用不是 null 的第一个纹理：
                 // - 流体静止纹理
                 // - 容器基础纹理
@@ -1457,27 +1457,27 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-## 手动提交 Item 进行渲染
+## 手动提交物品进行渲染
 
-如果需要提交 Item [功能][features]，例如在某个 `BlockEntityRenderer` 或 `EntityRenderer` 中，可以通过三个步骤完成。首先，Renderer 创建 `ItemStackRenderState` 保存 Stack State。随后，`ItemModelResolver` 使用其某个方法更新 `ItemStackRenderState`，使其对应当前提交的 Item。最后，通过 `ItemStackRenderState#submit` 提交 Item。
+如果需要提交物品[功能][features]，例如在某个 `BlockEntityRenderer` 或 `EntityRenderer` 中，可以通过三个步骤完成。首先，渲染器创建 `ItemStackRenderState` 保存堆叠状态。随后，`ItemModelResolver` 使用其某个方法更新 `ItemStackRenderState`，使其对应当前提交的物品。最后，通过 `ItemStackRenderState#submit` 提交物品。
 
-`ItemStackRenderState` 跟踪绘制所用数据。每个“Model”都有自己的 `ItemStackRenderState.LayerRenderState`，其中包含待渲染的 `BakedQuad`，以及 Render Type、Foil 状态、Tint 信息、Animated 标记、Extents 和所用 Special Renderer。使用 `newLayer` 创建 Layer，使用 `clear` 清除以便渲染。如果使用预先确定数量的 Layer，则用 `ensureCapacity` 确保存在足够的 `LayerRenderStates` 正确渲染。
+`ItemStackRenderState` 跟踪绘制所用数据。每个“模型”都有自己的 `ItemStackRenderState.LayerRenderState`，其中包含待渲染的 `BakedQuad`，以及渲染类型、箔片状态、着色信息、动画标记、范围和所用特殊渲染器。使用 `newLayer` 创建层，使用 `clear` 清除以便渲染。如果使用预先确定数量的层，则用 `ensureCapacity` 确保存在足够的 `LayerRenderStates` 正确渲染。
 
 :::info
-[Screen][screens] 使用子类 `TrackingItemStackRenderState` 保存 Model Identity Element，以便跨 Frame 缓存 Render State。
+[屏幕][screens]使用子类 `TrackingItemStackRenderState` 保存模型身份元素，以便跨帧缓存渲染状态。
 :::
 
-`ItemModelResolver` 负责更新 `ItemStackRenderState`：Living Entity 持有的 Item 使用 `updateForLiving`，其他类型 Entity 持有的 Item 使用 `updateForNonLiving`，其余情况使用 `updateForTopItem`。这些方法接收 Render State、待渲染 Stack 和当前 Display Context；其他参数更新持有的手、Level、Item Owner 和 Seed 值等信息。每个方法都会先调用 `ItemStackRenderState#clear`，再对从 `DataComponents#ITEM_MODEL` 取得的 `ItemModel` 调用 `update`。若不在某个 Renderer 上下文中（如 `BlockEntityRenderer`、`EntityRenderer`），始终可以通过 `Minecraft#getItemModelResolver` 取得 `ItemModelResolver`。
+`ItemModelResolver` 负责更新 `ItemStackRenderState`：生物实体持有的物品使用 `updateForLiving`，其他类型实体持有的物品使用 `updateForNonLiving`，其余情况使用 `updateForTopItem`。这些方法接收渲染状态、待渲染堆叠和当前显示上下文；其他参数更新持有的手、世界、物品持有者和种子值等信息。每个方法都会先调用 `ItemStackRenderState#clear`，再对从 `DataComponents#ITEM_MODEL` 取得的 `ItemModel` 调用 `update`。若不在某个渲染器上下文中（如 `BlockEntityRenderer`、`EntityRenderer`），始终可以通过 `Minecraft#getItemModelResolver` 取得 `ItemModelResolver`。
 
-## 自定义 Item Model Definition
+## 自定义物品模型定义
 
-创建自己的 `ItemModel` 分为三部分：用于更新 Render State 的 `ItemModel` 实例、用于读写 JSON 的 `ItemModel.Unbaked` 实例，以及使用该 `ItemModel` 的注册。
+创建自己的 `ItemModel` 分为三部分：用于更新渲染状态的 `ItemModel` 实例、用于读写 JSON 的 `ItemModel.Unbaked` 实例，以及使用该 `ItemModel` 的注册。
 
 :::warning
-请务必先确认所需 Item Model 无法通过上述现有系统创建。多数情况下，没有必要创建自定义 `ItemModel`。
+请务必先确认所需物品模型无法通过上述现有系统创建。多数情况下，没有必要创建自定义 `ItemModel`。
 :::
 
-首先是 `ItemModel`。它负责更新 `ItemStackRenderState`，以正确绘制 Item。它应接收提交过程中使用的静态数据（例如 `BakedQuad` 列表、Property 信息等）。唯一的方法是 `update`，它接收 Render State、Stack、Model Resolver、Display Context、Level、Item Owner 和某个 Seed 值，用于更新 `ItemStackRenderState`。只有 `ItemStackRenderState` 参数应被修改，其余参数应视为只读数据。
+首先是 `ItemModel`。它负责更新 `ItemStackRenderState`，以正确绘制物品。它应接收提交过程中使用的静态数据（例如 `BakedQuad` 列表、属性信息等）。唯一的方法是 `update`，它接收渲染状态、堆叠、模型解析器、显示上下文、世界、物品持有者和某个种子值，用于更新 `ItemStackRenderState`。只有 `ItemStackRenderState` 参数应被修改，其余参数应视为只读数据。
 
 ```java
 public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tints, ModelRenderProperties properties, Matrix4fc transformation) implements ItemModel {
@@ -1509,19 +1509,19 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
         }
 
         // 计算模型的边界
-        // 用于 GUI 渲染 bounds（超大时）和物品实体摆动
+        // 用于 GUI 渲染边界（超大时）和物品实体摆动
         layerState.setExtents(CuboidItemModelWrapper.computeExtents(this.quads.getAll()));
 
-        // 设置本地转换申请客户项
+        // 设置要应用到客户端物品的本地变换
         layerState.setLocalTransform(this.transformation);
 
-        // 设置其他常见模型 property
+        // 设置其他常见模型属性
         this.properties.applyToLayer(layerState, displayContext);
 
         // 添加要提交的四边形
         layerState.prepareQuadList().addAll(this.quads.getAll());
 
-        // 设置如果具有关联的材质标志，则进行动画处理
+        // 如果具有关联的材质标志，则设置为动画
         if (this.quads.hasMaterialFlag(BakedQuad.FLAG_ANIMATED)) {
             layerState.setAnimated();
         }
@@ -1529,7 +1529,7 @@ public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tin
 }
 ```
 
-接下来是 `ItemModel.Unbaked` 实例。它应包含可从文件读取、用于确定向 Item Model 传入什么内容的数据。它也包含两个方法：用于构造 `ItemModel` 实例的 `bake`，以及定义文件 Encode/Decode 所用 `MapCodec` 的 `type`。
+接下来是 `ItemModel.Unbaked` 实例。它应包含可从文件读取、用于确定向物品模型传入什么内容的数据。它也包含两个方法：用于构造 `ItemModel` 实例的 `bake`，以及定义文件编码/解码所用 `MapCodec` 的 `type`。
 
 ```java
 public record ExampleModelWrapper(QuadCollection quads, List<ItemTintSource> tints, ModelRenderProperties properties, Matrix4fc transformation) implements ItemModel {
@@ -1591,7 +1591,7 @@ public static void registerItemModels(RegisterItemModelsEvent event) {
 }
 ```
 
-最后，可以在 JSON 中使用 `ItemModel`，或将其作为 Datagen 流程的一部分。
+最后，可以在 JSON 中使用 `ItemModel`，或将其作为数据生成流程的一部分。
 
 <Tabs>
 <TabItem value="json" label="JSON" default>
@@ -1636,12 +1636,12 @@ protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerat
 </TabItem>
 </Tabs>
 
-[assets]: ../../index.md#assets
+[assets]: ../../index.md#客户端资源
 [ber]: ../../../blockentities/ber.md
 [capability]: ../../../inventories/capabilities.md#registering-capabilities
-[composite]: modelloaders.md#composite-model
+[composite]: modelloaders.md#组合模型
 [features]: ../../../rendering/feature.md
-[itemmodel]: #manually-rendering-an-item
+[itemmodel]: #手动提交物品进行渲染
 [modbus]: ../../../concepts/events.md#事件总线
 [models]: modelsystem.md
 [rl]: ../../../misc/identifier.md

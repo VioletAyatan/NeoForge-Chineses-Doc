@@ -1,8 +1,8 @@
 # 数据映射（Data Map）
 
-数据映射包含由数据驱动、可重新加载，并可附加到已注册对象上的对象。该系统提供同步、冲突解决等功能，让游戏行为更容易由数据驱动，从而带来更好且更具可配置性的用户体验。可以把[标签][tags]理解为“Registry 对象 ➜ 布尔值”的映射，而数据映射则是更加灵活的“Registry 对象 ➜ 对象”映射。与[标签][tags]类似，数据映射会向对应的数据映射中追加内容，而不是覆盖它。
+数据映射包含由数据驱动、可重新加载，并可附加到已注册对象上的对象。该系统提供同步、冲突解决等功能，让游戏行为更容易由数据驱动，从而带来更好且更具可配置性的用户体验。可以把[标签][tags]理解为“注册表对象 ➜ 布尔值”的映射，而数据映射则是更加灵活的“注册表对象 ➜ 对象”映射。与[标签][tags]类似，数据映射会向对应的数据映射中追加内容，而不是覆盖它。
 
-数据映射既可以附加到静态内置 Registry，也可以附加到动态、由数据驱动的数据包 Registry。数据映射支持通过 `/reload` 命令或任何其他会重新加载服务器资源的方式进行重载。
+数据映射既可以附加到静态内置注册表，也可以附加到动态、由数据驱动的数据包注册表。数据映射支持通过 `/reload` 命令或任何其他会重新加载服务器资源的方式进行重载。
 
 NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于取代原版中硬编码的字段。更多信息请参阅所链接的文章。
 
@@ -12,14 +12,14 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 
 - `<mapNamespace>` 是数据映射 ID 的命名空间；
 - `<mapPath>` 是数据映射 ID 的路径；
-- `<registryNamespace>` 是 Registry ID 的命名空间（如果是 `minecraft` 则省略）；
-- `<registryPath>` 是 Registry ID 的路径。
+- `<registryNamespace>` 是注册表 ID 的命名空间（如果是 `minecraft` 则省略）；
+- `<registryPath>` 是注册表 ID 的路径。
 
 示例：
 
-- 对于 `minecraft:item` Registry 中名为 `mymod:drop_healing` 的数据映射（如下方示例），路径是 `mymod/data_maps/item/drop_healing.json`。
-- 对于 `minecraft:block` Registry 中名为 `somemod:somemap` 的数据映射，路径是 `somemod/data_maps/block/somemap.json`。
-- 对于 `somemod:custom` Registry 中名为 `example:stuff` 的数据映射，路径是 `example/data_maps/somemod/custom/stuff.json`。
+- 对于 `minecraft:item` 注册表中名为 `mymod:drop_healing` 的数据映射（如下方示例），路径是 `mymod/data_maps/item/drop_healing.json`。
+- 对于 `minecraft:block` 注册表中名为 `somemod:somemap` 的数据映射，路径是 `somemod/data_maps/block/somemap.json`。
+- 对于 `somemod:custom` 注册表中名为 `example:stuff` 的数据映射，路径是 `example/data_maps/somemod/custom/stuff.json`。
 
 ## JSON 结构
 
@@ -27,12 +27,12 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 
 - `replace`：布尔值；添加此文件的值之前先清空数据映射。mod 绝不应随附此字段，它只应由需要按照自身需求覆盖此 Map 的数据包开发者使用。
 - `neoforge:conditions`：[加载条件][conditions]列表。
-- `values`：从 Registry ID 或标签 ID 映射到相应值的 Map；这些值应由你的 mod 添加到数据映射。值本身的结构由数据映射的 codec 定义（见下文）。
-- `remove`：要从数据映射中移除的 Registry ID 或标签 ID 列表。
+- `values`：从注册表 ID 或标签 ID 映射到相应值的 Map；这些值应由你的模组添加到数据映射。值本身的结构由数据映射的 codec 定义（见下文）。
+- `remove`：要从数据映射中移除的注册表 ID 或标签 ID 列表。
 
 ### 添加值
 
-例如，假设 `minecraft:item` Registry 有一个数据映射对象，其中包含两个 float 键 `amount` 和 `chance`。对应的数据映射文件大致如下：
+例如，假设 `minecraft:item` 注册表有一个数据映射对象，其中包含两个浮点数键 `amount` 和 `chance`。对应的数据映射文件大致如下：
 
 ```json5
 {
@@ -51,7 +51,7 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 }
 ```
 
-数据映射可以支持[合并器][mergers]；发生冲突时，例如两个 mod 为同一个 Item 添加数据映射值时，合并器会执行自定义合并行为。若要避免触发合并器，可以在元素层级指定 `replace` 字段：
+数据映射可以支持[合并器][mergers]；发生冲突时，例如两个模组为同一个物品添加数据映射值时，合并器会执行自定义合并行为。若要避免触发合并器，可以在元素层级指定 `replace` 字段：
 
 ```json5
 {
@@ -72,7 +72,7 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 
 ### 移除现有值
 
-可以通过指定要移除的 Item ID 或标签 ID 列表来移除元素：
+可以通过指定要移除的物品 ID 或标签 ID 列表来移除元素：
 
 ```json5
 {
@@ -111,7 +111,7 @@ NeoForge 针对常见用例提供了多种[内置数据映射][builtin]，用于
 
 ## 自定义数据映射
 
-首先定义数据映射条目的格式。**数据映射条目必须不可变**，因此 record 非常适合。继续使用上面包含两个 float 值 `amount` 和 `chance` 的示例，数据映射条目大致如下：
+首先定义数据映射条目的格式。**数据映射条目必须不可变**，因此 record 非常适合。继续使用上面包含两个浮点数值 `amount` 和 `chance` 的示例，数据映射条目大致如下：
 
 ```java
 public record ExampleData(float amount, float chance) {}
@@ -171,9 +171,9 @@ public static final DataMapType<Item, ExampleData> EXAMPLE_DATA = DataMapType.bu
 
 ### 用法
 
-由于数据映射可用于任意 Registry，因此必须通过 `Holder` 查询，而不能通过实际的 Registry 对象查询。此外，它只适用于引用 Holder，不适用于 `Direct` Holder。不过，大多数位置返回的都是引用 Holder，例如 `Registry#wrapAsHolder`、`Registry#getHolder` 或各种 `builtInRegistryHolder` 方法，所以通常不会成为问题。
+由于数据映射可用于任意注册表，因此必须通过 `Holder` 查询，而不能通过实际的注册表对象查询。此外，它只适用于引用 Holder，不适用于 `Direct` Holder。不过，大多数位置返回的都是引用 Holder，例如 `Registry#wrapAsHolder`、`Registry#getHolder` 或各种 `builtInRegistryHolder` 方法，所以通常不会成为问题。
 
-随后可通过 `Holder#getData(DataMapType)` 查询数据映射值。如果对象没有附加数据映射值，该方法会返回 `null`。继续使用之前的 `ExampleData`，让玩家每次拾取这些 Item 时获得治疗：
+随后可通过 `Holder#getData(DataMapType)` 查询数据映射值。如果对象没有附加数据映射值，该方法会返回 `null`。继续使用之前的 `ExampleData`，让玩家每次拾取这些物品时获得治疗：
 
 ```java
 @SubscribeEvent // 位于游戏事件总线上
@@ -200,7 +200,7 @@ public static void itemPickup(ItemEntityPickupEvent.Post event) {
 
 高级数据映射使用 `AdvancedDataMapType`，而不是标准的 `DataMapType`（`AdvancedDataMapType` 是后者的子类）。它们提供了一些额外功能，即可以指定自定义合并器与自定义移除器。对于值是集合或类似集合类型（如 `List` 或 `Map`）的数据映射，强烈建议采用此实现。
 
-`DataMapType` 有两个泛型：`R`（Registry 类型）与 `T`（数据映射值类型）；`AdvancedDataMapType` 则多一个：`VR extends DataMapValueRemover<R, T>`。该泛型允许在保证正确类型安全的情况下通过数据生成创建移除器。
+`DataMapType` 有两个泛型：`R`（注册表类型）与 `T`（数据映射值类型）；`AdvancedDataMapType` 则多一个：`VR extends DataMapValueRemover<R, T>`。该泛型允许在保证正确类型安全的情况下通过数据生成创建移除器。
 
 `AdvancedDataMapType` 使用 `AdvancedDataMapType#builder()` 而不是 `DataMapType#builder()` 创建，并返回 `AdvancedDataMapType.Builder`。该 builder 额外提供 `#remover` 与 `#merger` 两个方法，分别用于指定移除器与合并器（见下文）。包括同步在内的其他功能均保持不变。
 
@@ -208,9 +208,9 @@ public static void itemPickup(ItemEntityPickupEvent.Post event) {
 
 合并器可用于处理多个数据包尝试为同一对象添加值时产生的冲突。默认合并器（`DataMapValueMerger#defaultMerger`）会用新值覆盖现有值（例如来自优先级较低数据包的值），因此，如果不希望出现这种行为，就需要自定义合并器。
 
-合并器会收到两个冲突值、这些值附加到的对象（表示为 `Either<TagKey<R>, ResourceKey<R>>`，因为值既可附加到标签中的所有对象，也可附加到单个对象），以及对象所属的 Registry；它应返回最终实际附加的值。一般来说，合并器应尽可能只做合并，不执行覆盖（即仅在常规方式无法合并时才覆盖）。如果数据包希望绕过合并器，应在对象上指定 `replace` 字段（参见[添加值][add]）。
+合并器会收到两个冲突值、这些值附加到的对象（表示为 `Either<TagKey<R>, ResourceKey<R>>`，因为值既可附加到标签中的所有对象，也可附加到单个对象），以及对象所属的注册表；它应返回最终实际附加的值。一般来说，合并器应尽可能只做合并，不执行覆盖（即仅在常规方式无法合并时才覆盖）。如果数据包希望绕过合并器，应在对象上指定 `replace` 字段（参见[添加值][add]）。
 
-假设有一个为 Item 添加整数的数据映射，那么可以通过将两个值相加来解决冲突：
+假设有一个为物品添加整数的数据映射，那么可以通过将两个值相加来解决冲突：
 
 ```java
 public class IntMerger implements DataMapValueMerger<Item, Integer> {
@@ -299,7 +299,7 @@ public record MapRemover(String key) implements DataMapValueRemover<Item, Map<St
 与合并器一样，不要忘记将移除器添加到 builder。请注意，这里只需使用 codec：
 
 ```java
-// 假设 AdvancedData 包含某种 Map<String, String> property。
+// 假设 AdvancedData 包含某种 Map<String, String> 属性。
 AdvancedDataMapType<Item, AdvancedData> ADVANCED_MAP = AdvancedDataMapType.builder(...)
         .remover(MapRemover.CODEC)
         .build();
@@ -307,7 +307,7 @@ AdvancedDataMapType<Item, AdvancedData> ADVANCED_MAP = AdvancedDataMapType.build
 
 ## 数据生成
 
-可以通过扩展 `DataMapProvider` 并重写 `#gather` 来创建条目，从而通过[数据生成][datagen]创建数据映射。继续使用之前包含 float 值 `amount` 和 `chance` 的 `ExampleData`，数据生成文件大致如下：
+可以通过扩展 `DataMapProvider` 并重写 `#gather` 来创建条目，从而通过[数据生成][datagen]创建数据映射。继续使用之前包含浮点数值 `amount` 和 `chance` 的 `ExampleData`，数据生成文件大致如下：
 
 ```java
 public class MyDataMapProvider extends DataMapProvider {
@@ -375,7 +375,7 @@ public static void gatherData(GatherDataEvent.Client event) {
 [builtin]: builtin.md
 [codecs]: ../../../datastorage/codecs.md
 [conditions]: ../conditions.md
-[datagen]: ../../index.md#data-generation
+[datagen]: ../../index.md#数据生成
 [events]: ../../../concepts/events.md
 [add]: #adding-values
 [mergers]: #mergers

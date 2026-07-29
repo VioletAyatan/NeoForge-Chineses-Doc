@@ -96,7 +96,7 @@
 }
 ```
 
-数据生成期间，以 Registry 查询（`HolderLookup.Provider`）、基础值和每级增量调用 `LootItemRandomChanceWithEnchantedBonusCondition#randomChanceAndLootingBoost`，为此条件构造 builder。也可以调用 `new LootItemRandomChanceWithEnchantedBonusCondition` 进一步指定各值。
+数据生成期间，以注册表查询（`HolderLookup.Provider`）、基础值和每级增量调用 `LootItemRandomChanceWithEnchantedBonusCondition#randomChanceAndLootingBoost`，为此条件构造 builder。也可以调用 `new LootItemRandomChanceWithEnchantedBonusCondition` 进一步指定各值。
 
 ## `minecraft:value_check`
 
@@ -186,27 +186,27 @@
 
 ## `minecraft:block_state_property`
 
-此条件检查被破坏的 BlockState 中，指定 BlockState property 是否具有指定值。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则始终失败。
+此条件检查被破坏的方块状态中，指定方块状态属性是否具有指定值。它需要 `minecraft:block_state` 战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
     "condition": "minecraft:block_state_property",
     // 预期的方块。如果与实际被破坏的方块不匹配，条件就会失败。
     "block": "minecraft:oak_slab",
-    // 要匹配的方块状态 property。未指定的 property 可以具有任一值。
+    // 要匹配的方块状态属性。未指定的属性可以具有任一值。
     // 本例只希望在上半台阶被破坏时成功，无论其是否含水。
-    // 如果此指定方块上不存在的 property，则会打印日志警告。
+    // 如果此指定方块上不存在的属性，则会打印日志警告。
     "properties": {
         "type": "top"
     }
 }
 ```
 
-数据生成期间，以 Block 调用 `LootItemBlockStatePropertyCondition#hasBlockStateProperties`，为此条件构造 builder。随后可使用 `#setProperties` 在 builder 上设置所需的 BlockState property 值。
+数据生成期间，以方块调用 `LootItemBlockStatePropertyCondition#hasBlockStateProperties`，为此条件构造 builder。随后可使用 `#setProperties` 在 builder 上设置所需的方块状态属性值。
 
 ## `minecraft:survives_explosion`
 
-此条件会随机摧毁掉落物。掉落物存留的概率为 1 / `explosion_radius` 战利品参数。除信标或龙蛋等极少数例外外，所有 Block 掉落物都使用此函数。它需要 `minecraft:explosion_radius` 战利品参数；如果该参数缺失，则始终成功。
+此条件会随机摧毁掉落物。掉落物存留的概率为 1 / `explosion_radius` 战利品参数。除信标或龙蛋等极少数例外外，所有方块掉落物都使用此函数。它需要 `minecraft:explosion_radius` 战利品参数；如果该参数缺失，则始终成功。
 
 ```json5
 {
@@ -218,7 +218,7 @@
 
 ## `minecraft:match_tool`
 
-此条件接受一个 `ItemPredicate`，并将其与 `tool` 战利品参数进行检查。`ItemPredicate` 可以指定有效 Item id 列表（`items`）、Item 数量的最小/最大范围（`count`）、`DataComponentPredicate`（`components`）以及 `ItemSubPredicate` Map（`predicates`）；所有字段均为可选。它需要 `minecraft:tool` 战利品参数；如果该参数缺失，则始终失败。
+此条件接受一个 `ItemPredicate`，并将其与 `tool` 战利品参数进行检查。`ItemPredicate` 可以指定有效物品 id 列表（`items`）、物品数量的最小/最大范围（`count`）、`DataComponentPredicate`（`components`）以及 `ItemSubPredicate` Map（`predicates`）；所有字段均为可选。它需要 `minecraft:tool` 战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
@@ -268,7 +268,7 @@
 
 ## `minecraft:entity_properties`
 
-此条件针对[目标 Entity][entitytarget] 检查给定 `EntityPredicate`。`EntityPredicate` 可以检查 Entity Type、生物效果、NBT 值、装备、位置等。
+此条件针对[目标实体][entitytarget]检查给定 `EntityPredicate`。`EntityPredicate` 可以检查实体类型、生物效果、NBT 值、装备、位置等。
 
 ```json5
 {
@@ -285,7 +285,7 @@
 }
 ```
 
-数据生成期间，以目标 Entity 调用 `LootItemEntityPropertyCondition#entityPresent`，或以目标 Entity 和 `EntityPredicate` 调用 `LootItemEntityPropertyCondition#hasProperties`，为此条件构造 builder。
+数据生成期间，以目标实体调用 `LootItemEntityPropertyCondition#entityPresent`，或以目标实体和 `EntityPredicate` 调用 `LootItemEntityPropertyCondition#hasProperties`，为此条件构造 builder。
 
 ## `minecraft:damage_source_properties`
 
@@ -307,7 +307,7 @@
 
 ## `minecraft:killed_by_player`
 
-此条件判断击杀是否由玩家完成。部分 Entity 掉落物会使用它，例如烈焰人掉落的烈焰棒。它需要 `minecraft:last_player_damage` 战利品参数；如果该参数缺失，则始终失败。
+此条件判断击杀是否由玩家完成。部分实体掉落物会使用它，例如烈焰人掉落的烈焰棒。它需要 `minecraft:last_player_damage` 战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
@@ -319,7 +319,7 @@
 
 ## `minecraft:entity_scores`
 
-此条件检查[目标 Entity][entitytarget] 的记分板。它需要与指定目标 Entity 对应的战利品参数；如果该参数缺失，则始终失败。
+此条件检查[目标实体][entitytarget]的记分板。它需要与指定目标实体对应的战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
@@ -342,11 +342,11 @@
 }
 ```
 
-数据生成期间，以目标 Entity 调用 `EntityHasScoreCondition#hasScores`，为此条件构造 builder。随后使用 `#withScore` 向 builder 添加所需分数。
+数据生成期间，以目标实体调用 `EntityHasScoreCondition#hasScores`，为此条件构造 builder。随后使用 `#withScore` 向 builder 添加所需分数。
 
 ## `minecraft:reference`
 
-此条件引用谓词文件并返回其结果。更多信息请参阅 [Item 谓词][predicate]。
+此条件引用谓词文件并返回其结果。更多信息请参阅[物品谓词][predicate]。
 
 ```json5
 {
@@ -390,7 +390,7 @@
 
 ## `neoforge:can_item_perform_ability`
 
-仅当 `tool` 战利品上下文参数（`LootContextParams.TOOL`）中的 Item（通常是用于破坏 Block 或击杀 Entity 的 Item）能够执行指定 [`ItemAbility`][itemability] 时，此条件才返回 true。它需要 `minecraft:tool` 战利品参数；如果该参数缺失，则始终失败。
+仅当 `tool` 战利品上下文参数（`LootContextParams.TOOL`）中的物品（通常是用于破坏方块或击杀实体的物品）能够执行指定 [`ItemAbility`][itemability] 时，此条件才返回 true。它需要 `minecraft:tool` 战利品参数；如果该参数缺失，则始终失败。
 
 ```json5
 {
@@ -400,15 +400,15 @@
 }
 ```
 
-数据生成期间，以所需 Item 能力的 id 调用 `CanItemPerformAbility#canItemPerformAbility`，为此条件构造 builder。
+数据生成期间，以所需物品能力的 id 调用 `CanItemPerformAbility#canItemPerformAbility`，为此条件构造 builder。
 
 ## 另请参阅
 
-- [Minecraft Wiki][mcwiki] 上的 [Item 谓词][predicatejson]
+- [Minecraft Wiki][mcwiki] 上的[物品谓词][predicatejson]
 
-[custom]: custom.md#custom-loot-conditions
+[custom]: custom.md#自定义战利品条件
 [entitytarget]: index.md#entity-targets
-[entry]: index.md#loot-entry
+[entry]: index.md#战利品条目
 [glm]: glm.md
 [itemability]: ../../../items/tools.md#itemabilitys
 [mcwiki]: https://minecraft.wiki
