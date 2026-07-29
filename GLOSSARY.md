@@ -25,6 +25,7 @@
 | Projectile | 投射物 | Projectile（普通概念说明中） | 指箭、火球等在世界中飞行的投射物。Java 类型名 `Projectile` 及其子类保持原文。 |
 | Entity Renderer | 实体渲染器 | Entity Renderer、EntityRenderer（普通概念说明中） | 指负责渲染实体的客户端组件。Java 类型名 `EntityRenderer`、`EntityRenderers` 及其他代码标识符保持原文。 |
 | Model | 模型 | Model（普通说明文字中） | 泛指方块模型、物品模型和实体模型。Java 类型名、JSON 中的模型 ID、资源路径与文件名保持原文。 |
+| Sound（资源章节语境） | 音效 | 声音（指资源/API sound 概念时） | 适用于 `docs/resources/client/sounds.md` 中的 sound event、sound category、sound source、sound definition、sound object、sound file 等资源与客户端播放概念，可派生为“音效事件”“音效类别”“音效来源”“音效定义”“音效对象”“音效文件”。代码标识符、JSON 键、资源路径与 `sounds.json` 保持原文。 |
 | tag | 标签 | tag（普通说明文字中） | 指 Minecraft 用于归组注册项的标签机制。标签 ID、资源路径、JSON 键及代码类型名保持原文。 |
 | Ingredient | 原料 | Ingredient（普通概念说明中） | 指配方中用于匹配输入物品的原料概念。Java 类型名 `Ingredient`、JSON 键及序列化标识符保持原文。 |
 | swing | 挥手 | 挥臂、挥动手臂 | 指实体或玩家执行 `swing` 动作。方法名 `swing`、`LivingEntity#swing`、`SwingSource` 等代码标识符保持原文。 |
