@@ -21,7 +21,13 @@ export default defineConfig({
 			{ text: '文档', link: '/docs/gettingstarted/index' },
 			{
 				text: '版本',
-				items: [{ text: '26.1', link: '/docs/gettingstarted/index' }],
+				items: [
+					{
+						text: '26.1',
+						link: '/docs/gettingstarted/index',
+						activeMatch: '^/docs/',
+					},
+				],
 			},
 		],
 		sidebar: [
